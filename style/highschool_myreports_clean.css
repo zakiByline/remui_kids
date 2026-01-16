@@ -1,0 +1,334 @@
+/* ============================================================================
+   HIGH SCHOOL MY REPORTS - CLEAN STYLES
+   Professional, organized, no conflicts
+   ============================================================================ */
+
+/* === LAYOUT === */
+.modern-reports-page {
+    margin: 0;
+    padding: 30px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* === AI INSIGHTS CARD === */
+.ai-insights-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.ai-insights-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-insights-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ai-insights-card li {
+    padding: 12px 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* === NAVIGATION TABS === */
+.nav-tabs-container {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.nav-tabs-custom {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.nav-tab-item {
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.nav-tab-item:hover {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.nav-tab-item.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* === STATISTICS GRID === */
+.stats-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+}
+
+.stat-card-modern {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon-modern {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 15px;
+}
+
+.stat-card-modern.purple .stat-icon-modern {
+    background: #ede9fe;
+    color: #8b5cf6;
+}
+
+.stat-card-modern.pink .stat-icon-modern {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+.stat-card-modern.blue .stat-icon-modern {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.stat-card-modern.green .stat-icon-modern {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.stat-card-modern.orange .stat-icon-modern {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+.stat-card-modern.teal .stat-icon-modern {
+    background: #ccfbf1;
+    color: #14b8a6;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.stat-label-modern {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    line-height: 1.2;
+}
+
+/* === CHARTS SECTION === */
+.charts-section-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+}
+
+.chart-card-modern {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.chart-card-modern.full-width {
+    grid-column: 1 / -1;
+}
+
+.chart-header-modern {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.chart-header-modern h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+}
+
+.chart-header-modern p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.chart-canvas-wrapper {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.chart-canvas-wrapper canvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* === RECENT ACTIVITY === */
+.recent-activity-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.activity-item {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-text {
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.activity-time {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+/* === TAB CONTENT ANIMATIONS === */
+.tab-content-section {
+    animation: fadeIn 0.4s ease-in-out;
+    position: relative;
+    width: 100%;
+    clear: both;
+}
+
+.tab-content-section::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1200px) {
+    .charts-section-modern {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .modern-reports-page {
+        padding: 15px;
+    }
+
+    .stats-grid-modern {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .charts-section-modern {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-tabs-custom {
+        flex-wrap: wrap;
+    }
+
+    .chart-canvas-wrapper {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid-modern {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-tab-item {
+        font-size: 0.85rem;
+        padding: 10px 15px;
+    }
+}

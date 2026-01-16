@@ -1,0 +1,653 @@
+{{!
+    Simple Elementary Achievements Page
+}}
+
+{{! Include Sidebar }}
+{{> theme_remui_kids/dashboard/elementary_sidebar }}
+
+<style>
+/* Force body scroll lock */
+html, body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide default containers */
+.page-header,
+.context-header {
+    display: none !important;
+}
+
+.container,
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Main Container */
+.achievements-main-container {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    padding: 100px 30px 30px 30px;
+    background: #f5f7fa;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Welcome Header with Bubble Animations */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+.achievements-header-left h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin: 0 0 5px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.achievements-header-left h1 i {
+    color: #90CAF9;
+}
+
+.achievements-header-left p {
+    color: #7f8c8d;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8ecef;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #90CAF9, #64B5F6);
+    color: #1976D2;
+    box-shadow: 0 4px 15px rgba(144, 202, 249, 0.3);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Badges Grid */
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.badge-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+}
+
+.badge-header {
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Badge Category Header Backgrounds */
+.badge-card[data-category="Quiz Master"] .badge-header {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+}
+
+.badge-card[data-category="Assignment Expert"] .badge-header {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+}
+
+.badge-card[data-category="Lesson Learner"] .badge-header {
+    background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+}
+
+.badge-card[data-category="Discussion Leader"] .badge-header {
+    background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+}
+
+.badge-card[data-category="Course Completer"] .badge-header {
+    background: linear-gradient(135deg, #e0f2f1 0%, #e8f5e8 100%);
+}
+
+.badge-card[data-category="Active Participant"] .badge-header {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1f5fe 100%);
+}
+
+.badge-card[data-category="General"] .badge-header {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+}
+
+/* Default fallback for unknown categories */
+.badge-card:not([data-category]) .badge-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.badge-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: block;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Bright border colors for different badge categories */
+.badge-card[data-category="Quiz Master"] .badge-image {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.badge-card[data-category="Assignment Expert"] .badge-image {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+.badge-card[data-category="Lesson Learner"] .badge-image {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+}
+
+.badge-card[data-category="Discussion Leader"] .badge-image {
+    border-color: #9C27B0;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+}
+
+.badge-card[data-category="Course Completer"] .badge-image {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+}
+
+.badge-card[data-category="Active Participant"] .badge-image {
+    border-color: #E91E63;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.badge-card[data-category="General"] .badge-image {
+    border-color: #90CAF9;
+    box-shadow: 0 4px 15px rgba(144, 202, 249, 0.3);
+}
+
+.badge-card[data-category="Certificate"] .badge-header {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+}
+
+.badge-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+}
+
+.badge-body {
+    padding: 20px;
+}
+
+.badge-description {
+    font-size: 0.9rem;
+    color: #5a6c7d;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.badge-footer {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e8ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge-date {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.badge-action-btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    background: #90CAF9;
+    color: #1565C0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .achievements-main-container {
+        left: 0;
+        padding: 90px 20px 25px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+    
+    .welcome-header {
+        padding: 30px 20px;
+        min-height: 150px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .badges-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<!-- Main Container -->
+<div class="achievements-main-container">
+    
+    <!-- Welcome Header with Bubble Animations -->
+    <div class="welcome-header">
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-trophy"></i>
+                My Achievements
+            </h1>
+            <p class="welcome-subtitle">
+                Celebrate your learning milestones, certificates, and badges
+            </p>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa fa-certificate"></i>
+            </div>
+            <div class="stat-number">{{certificates_count}}</div>
+            <div class="stat-label">Certificates</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa fa-trophy"></i>
+            </div>
+            <div class="stat-number">{{badges_count}}</div>
+            <div class="stat-label">Badges</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="stat-number">{{total_achievements}}</div>
+            <div class="stat-label">Total Achievements</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa fa-chart-line"></i>
+            </div>
+            <div class="stat-number">{{completion_rate}}%</div>
+            <div class="stat-label">Progress</div>
+        </div>
+    </div>
+
+    <!-- Certificates Section -->
+    {{#has_certificates}}
+    <h2 style="font-size: 1.8rem; color: #2c3e50; margin: 30px 0 20px 0; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+        <i class="fa fa-certificate" style="color: #2196F3;"></i>
+        Certificates ({{certificates_count}})
+    </h2>
+    <div class="badges-grid">
+        {{#certificates}}
+        <div class="badge-card" data-category="Certificate">
+            <!-- Certificate Header -->
+            <div class="badge-header" style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);">
+                <div style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2196F3, #1976D2); border: 4px solid #fff; box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);">
+                    <i class="fa fa-certificate" style="font-size: 2.5rem; color: white;"></i>
+                </div>
+                <h3 class="badge-name">{{title}}</h3>
+            </div>
+
+            <!-- Certificate Body -->
+            <div class="badge-body">
+                <p class="badge-description">{{description}}</p>
+                {{#course_name}}
+                <p style="font-size: 0.85rem; color: #7f8c8d; margin-top: 10px;">
+                    <i class="fa fa-book"></i> {{course_name}}
+                </p>
+                {{/course_name}}
+            </div>
+
+            <!-- Certificate Footer -->
+            <div class="badge-footer">
+                <span class="badge-date">
+                    <i class="fa fa-calendar"></i> Earned {{date_formatted}}
+                </span>
+                
+                {{#download_action}}
+                <form action="{{download_action}}" method="post" style="display: inline;">
+                    <input type="hidden" name="id" value="{{cmid}}">
+                    <input type="hidden" name="issueid" value="{{issueid}}">
+                    <button type="submit" class="badge-action-btn" style="border: none; cursor: pointer;">
+                        <i class="fa fa-download"></i> Download
+                    </button>
+                </form>
+                {{/download_action}}
+            </div>
+        </div>
+        {{/certificates}}
+    </div>
+    {{/has_certificates}}
+
+    <!-- Badges Section -->
+    {{#has_badges}}
+    <h2 style="font-size: 1.8rem; color: #2c3e50; margin: 30px 0 20px 0; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+        <i class="fa fa-trophy" style="color: #FFC107;"></i>
+        Badges ({{badges_count}})
+    </h2>
+    <div class="badges-grid">
+        {{#badges}}
+        <div class="badge-card" data-category="{{category}}">
+            <!-- Badge Header -->
+            <div class="badge-header">
+                <img src="{{badge_image_url}}" alt="{{title}}" class="badge-image">
+                <h3 class="badge-name">{{title}}</h3>
+            </div>
+
+            <!-- Badge Body -->
+            <div class="badge-body">
+                <p class="badge-description">{{description}}</p>
+                {{#course_name}}
+                <p style="font-size: 0.85rem; color: #7f8c8d; margin-top: 10px;">
+                    <i class="fa fa-book"></i> {{course_name}}
+                </p>
+                {{/course_name}}
+            </div>
+
+            <!-- Badge Footer -->
+            <div class="badge-footer">
+                <span class="badge-date">
+                    <i class="fa fa-calendar"></i> Earned {{date_formatted}}
+                </span>
+                
+                <a href="{{badge_url}}" class="badge-action-btn">
+                    <i class="fa fa-external-link"></i> View
+                </a>
+            </div>
+        </div>
+        {{/badges}}
+    </div>
+    {{/has_badges}}
+
+    <!-- Empty State -->
+    {{^has_achievements}}
+    <div style="background: white; border-radius: 12px; padding: 60px 40px; text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);">
+        <div style="font-size: 5rem; color: #cfd8dc; margin-bottom: 20px;">
+            <i class="fa fa-trophy"></i>
+        </div>
+        <h3 style="font-size: 1.8rem; color: #2c3e50; margin-bottom: 10px; font-weight: 700;">No Achievements Yet</h3>
+        <p style="font-size: 1.1rem; color: #7f8c8d; margin-bottom: 25px;">Start completing activities and courses to earn your first achievement!</p>
+        <a href="{{{activitiesurl}}}" style="background: #90CAF9; color: #1565C0; padding: 12px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+            <i class="fa fa-tasks"></i> View Activities
+        </a>
+    </div>
+    {{/has_achievements}}
+
+</div>

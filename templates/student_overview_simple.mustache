@@ -1,0 +1,76 @@
+{{! Simple Student Overview Template for Testing }}
+
+{{> theme_remui_kids/common_start}}
+
+<div class="student-overview-wrapper">
+    <div class="overview-header">
+        <div class="student-id-block">
+            <img class="student-avatar" src="{{student.avatar_url}}" alt="{{student.fullname}}" onerror="this.style.display='none'">
+            <div class="student-meta">
+                <h1 class="student-name">{{student.fullname}}</h1>
+                <div class="student-submeta">{{student.email}}</div>
+            </div>
+        </div>
+        <a class="btn btn-outline" href="{{student.profile_url}}">View Moodle Profile</a>
+    </div>
+
+    <div class="overview-grid">
+        <div class="card simple">
+            <div class="card-title"><i class="fa fa-gauge"></i> Overall performance</div>
+            <div class="card-body overall">
+                <div class="overall-value">{{overall.percent}}%</div>
+                <div class="overall-label">Course completion rate</div>
+            </div>
+        </div>
+        <div class="card simple">
+            <div class="card-title"><i class="fa fa-layer-group"></i> Total enrol courses</div>
+            <div class="card-body stat"><span>{{overview_counts.total_courses}}</span></div>
+        </div>
+        <div class="card simple">
+            <div class="card-title"><i class="fa fa-check-circle"></i> Course completed</div>
+            <div class="card-body stat"><span>{{overview_counts.completed_courses}}</span></div>
+        </div>
+        <div class="card simple">
+            <div class="card-title"><i class="fa fa-clock"></i> Hours spent</div>
+            <div class="card-body stat"><span>{{overview_counts.hours_spent}}</span></div>
+        </div>
+    </div>
+
+    <div class="layout-grid">
+        <div class="left-column">
+            <div class="card">
+                <div class="card-title"><i class="fa fa-list-check"></i> Total courses</div>
+                <div class="table">
+                    <div class="thead">
+                        <div>Course name</div><div>Progress</div><div>Overall score</div><div>Status</div>
+                    </div>
+                    {{#courses}}
+                    <div class="trow">
+                        <div class="tcol name"><a href="{{url}}">{{name}}</a></div>
+                        <div class="tcol progress">
+                            <div class="bar"><span style="width: {{progress}}%;"></span></div>
+                        </div>
+                        <div class="tcol score">{{overall_score}}%</div>
+                        <div class="tcol status"><span class="badge {{status_class}}">{{status_label}}</span></div>
+                    </div>
+                    {{/courses}}
+                    {{^courses}}
+                    <div class="empty">No courses found</div>
+                    {{/courses}}
+                </div>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="card">
+                <div class="card-title"><i class="fa fa-fire"></i> Activity Summary</div>
+                <div class="card-body small">
+                    <p>Live classes attended: {{engagement.live_classes_percent}}%</p>
+                    <p>Quiz attempts: {{engagement.quiz_attempts}}</p>
+                    <p>Assignments done: {{engagement.assignments_done}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> theme_remui_kids/common_end}}

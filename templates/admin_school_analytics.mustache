@@ -1,0 +1,762 @@
+﻿<main class="maincontent">
+    <div class="admin-main-content">
+        <div class="school-analytics-wrapper" data-analytics-root data-analytics='{{{chartpayload}}}'>
+        <section class="step-card">
+            <div class="step-indicator"> Step 1: Select School (Mandatory)</div>
+            {{#stepone.has_schools}}
+            <form method="get" class="school-selector-form">
+                <div class="form-row">
+                    <label for="school-select">Select School</label>
+                    <select id="school-select" name="school" required>
+                        <option value="">-- Select --</option>
+                        {{#stepone.schools}}
+                        <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                        {{/stepone.schools}}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="view-select">View Mode</label>
+                    <select id="view-select" name="academicview">
+                        {{#viewoptions}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/viewoptions}}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="year-input">Academic Year</label>
+                    <input id="year-input" type="number" name="academicyear" value="{{academicyear}}" min="2000" max="2100">
+                </div>
+                <button type="submit" class="primary-btn">Load School Analytics</button>
+            </form>
+            {{/stepone.has_schools}}
+            {{^stepone.has_schools}}
+            <div class="empty-state">You do not have access to any Iomad schools.</div>
+            {{/stepone.has_schools}}
+        </section>
+
+        {{#showanalytics}}
+        <section class="step-card step-two">
+            
+             <nav class="section-nav">
+            <a href="#overview">Overview</a>
+            <a href="#academic-trend">Academic Trend</a>
+            <a href="#grade-performance">Grade Levels</a>
+            <a href="#course-insights">Course Insights</a>
+            <a href="#students-performance">Students</a>
+            <a href="#resource-utilization">Resources</a>
+            <a href="#teacher-effectiveness">Teachers</a>
+            <a href="#course-completion">Course Completion</a>
+            {{#attendance.enabled}}
+            <a href="#attendance-summary">Attendance</a>
+            {{/attendance.enabled}}
+            {{#competencies.enabled}}
+            <a href="#competencies">Competencies</a>
+            {{/competencies.enabled}}
+            <a href="#system-usage">System Usage</a>
+            <a href="#early-warning">Early Warning</a>
+        </nav>
+
+            <p class="step-description">Analytics for <strong>{{selectedschoolname}}</strong></p>
+            <div style="margin-top: 1rem;">
+                <button id="download-pdf-btn" type="button" class="primary-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <i class="fa fa-download"></i> Download PDF Report
+                </button>
+            </div>
+        </section>
+
+       
+        <section class="analytics-section overview-section" id="overview">
+            <h3>School Overview</h3>
+            <div class="overview-grid">
+                <div class="stat-card">
+                    <span>Total Students</span>
+                    <strong>{{overview.totalstudents}}</strong>
+                </div>
+                <div class="stat-card">
+                    <span>Total Teachers</span>
+                    <strong>{{overview.totalteachers}}</strong>
+                </div>
+                <div class="stat-card">
+                    <span>Average Grade</span>
+                    <strong>{{overview.averagegrade}}%</strong>
+                </div>
+                <div class="stat-card">
+                    <span>Completion Rate</span>
+                    <strong>{{overview.completionrate}}%</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="analytics-section" id="academic-trend">
+            <div class="section-header">
+                <h3>Academic Trend Over Time</h3>
+                <small>Average Grade, Assignment Completion, Quiz Scores & Completion Rate</small>
+            </div>
+            <div class="chart-container">
+                <canvas id="academicTrendChart"></canvas>
+            </div>
+            <div class="trend-table">
+                <div class="trend-row trend-header">
+                    <span>Month</span>
+                    <span>Avg Grade</span>
+                    <span>Assignment %</span>
+                    <span>Quiz %</span>
+                    <span>Completion %</span>
+                </div>
+                {{#academictrend}}
+                <div class="trend-row">
+                    <span>{{label}}</span>
+                    <span>{{avg_grade}}%</span>
+                    <span>{{assignment_completion}}%</span>
+                    <span>{{quiz_score}}%</span>
+                    <span>{{course_completion}}%</span>
+                </div>
+                {{/academictrend}}
+            </div>
+        </section>
+
+        <section class="analytics-section grid-two">
+            <div id="grade-performance">
+                <h3>Performance by Grade Level</h3>
+                <div class="chart-container-small">
+                    <canvas id="gradeLevelChart"></canvas>
+                </div>
+                <table class="simple-table paginated-table" data-table-id="grade-levels">
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Avg Grade</th>
+                            <th>Participation</th>
+                            <th>Completion</th>
+                            <th>Assessments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#gradelevels}}
+                        <tr>
+                            <td>{{label}}</td>
+                            <td>{{avg_grade}}%</td>
+                            <td>{{participation}}</td>
+                            <td>{{completion_rate}}%</td>
+                            <td>{{assessment_count}}</td>
+                        </tr>
+                        {{/gradelevels}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="grade-levels"></div>
+            </div>
+            <div id="course-insights">
+                <h3>Course Insights</h3>
+                <div class="chart-container-small">
+                    <canvas id="courseInsightsChart"></canvas>
+                </div>
+                <table class="simple-table paginated-table" data-table-id="course-insights">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Avg Grade</th>
+                            <th>Resource Views</th>
+                            <th>Time Spent (min)</th>
+                            <th>Quiz Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#courseinsights}}
+                        <tr>
+                            <td>{{course_name}}</td>
+                            <td>{{avg_grade}}%</td>
+                            <td>{{resource_views}}</td>
+                            <td>{{time_spent}}</td>
+                            <td>{{quiz_performance}}%</td>
+                        </tr>
+                        {{/courseinsights}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="course-insights"></div>
+            </div>
+        </section>
+
+        <section class="analytics-section grid-two" id="students-performance">
+            <div>
+                <h3>Top Performing Students</h3>
+                <table class="simple-table paginated-table" data-table-id="top-students">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th>Avg Grade</th>
+                            <th>Engagement</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#studentperformance.top}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{cohort}}</td>
+                            <td>{{avg_grade}}%</td>
+                            <td>{{engagement}}</td>
+                            <td>{{course_progress}}%</td>
+                        </tr>
+                        {{/studentperformance.top}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="top-students"></div>
+            </div>
+            <div>
+                <h3>Lowest Performing Students</h3>
+                <table class="simple-table paginated-table" data-table-id="bottom-students">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th>Avg Grade</th>
+                            <th>Engagement</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#studentperformance.bottom}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{cohort}}</td>
+                            <td>{{avg_grade}}%</td>
+                            <td>{{engagement}}</td>
+                            <td>{{course_progress}}%</td>
+                        </tr>
+                        {{/studentperformance.bottom}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="bottom-students"></div>
+            </div>
+        </section>
+
+        <section class="analytics-section grid-two">
+            <div id="resource-utilization">
+                <h3>Resource Utilization</h3>
+                <div class="chart-container-medium">
+                    <canvas id="resourceBarChart"></canvas>
+                </div>
+            </div>
+            <div id="teacher-effectiveness">
+                <h3>Teacher Effectiveness</h3>
+                <div class="chart-container-small">
+                    <canvas id="teacherRadar"></canvas>
+                </div>
+                <table class="simple-table paginated-table" data-table-id="teacher-effectiveness">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Score</th>
+                            <th>Student Perf</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#teacheranalytics.leaders}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{score}}%</td>
+                            <td>{{student_performance}}%</td>
+                            <td>{{activity_creation}}</td>
+                        </tr>
+                        {{/teacheranalytics.leaders}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="teacher-effectiveness"></div>
+            </div>
+        </section>
+
+        <section class="analytics-section" id="course-completion">
+            <div class="section-header">
+                <h3>Course Completion Trends</h3>
+                <small>Completed courses vs completion rate</small>
+            </div>
+            <div class="chart-container-medium">
+                <canvas id="courseCompletionChart"></canvas>
+            </div>
+            <div class="filter-controls" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div class="filter-group">
+                    <label for="filter-course" style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-right: 0.5rem;">Filter by Course:</label>
+                    <select id="filter-course" class="filter-select" style="padding: 0.5rem 0.75rem; border: 1px solid #d4d9e3; border-radius: 6px; min-width: 250px;">
+                        <option value="">All Courses</option>
+                        {{#coursecompletions.filters.courses}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{/coursecompletions.filters.courses}}
+                    </select>
+                </div>
+            </div>
+            <table class="simple-table paginated-table" data-table-id="course-completion">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Teachers</th>
+                        <th>Completed</th>
+                        <th>Total</th>
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#coursecompletions.percourse}}
+                    <tr data-course-name="{{name}}">
+                        <td>{{name}}</td>
+                        <td>
+                            {{#teachers}}
+                                {{.}}<br>
+                            {{/teachers}}
+                            {{^teachers}}<span style="color: #94a3b8; font-style: italic;">No teachers assigned</span>{{/teachers}}
+                        </td>
+                        <td>{{completed}}</td>
+                        <td>{{total}}</td>
+                        <td>{{rate}}%</td>
+                    </tr>
+                    {{/coursecompletions.percourse}}
+                </tbody>
+            </table>
+            <div class="pagination" data-pagination-for="course-completion"></div>
+        </section>
+
+        {{#attendance.enabled}}
+        <section class="analytics-section grid-two" id="attendance-summary">
+            <div>
+                <h3>Attendance Summary</h3>
+                <div class="chart-container-small">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+            <div>
+                <h4>Status Breakdown</h4>
+                <div class="attendance-list">
+                    {{#attendance.summary}}
+                    <div class="attendance-row">
+                        <span>{{label}}</span>
+                        <strong>{{value}}</strong>
+                    </div>
+                    {{/attendance.summary}}
+                </div>
+            </div>
+        </section>
+        {{/attendance.enabled}}
+
+        {{#competencies.enabled}}
+        <section class="analytics-section" id="competencies">
+            <h3>Competencies Details</h3>
+            
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Summary</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Total Frameworks</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #1e293b;">{{competencies.summary.total_frameworks}}</div>
+                    </div>
+                    <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Total Assigned</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #1e293b;">{{competencies.summary.total_assigned}}</div>
+                    </div>
+                    <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Total Achieved</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #22c55e;">{{competencies.summary.total_achieved}}</div>
+                    </div>
+                    <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Total Pending</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #f97316;">{{competencies.summary.total_pending}}</div>
+                    </div>
+                    <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Achievement Rate</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #2563eb;">{{competencies.summary.overall_achievement_rate}}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-section grid-two" style="margin-bottom: 2rem;">
+                <div>
+                    <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Achieved vs Pending</h4>
+                    <div class="chart-container-small">
+                        <canvas id="competenciesStatusChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Framework Distribution</h4>
+                    <div class="chart-container-small">
+                        <canvas id="competenciesFrameworkChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Achievement Rate by Course</h4>
+                <div class="chart-container-medium">
+                    <canvas id="competenciesCourseChart"></canvas>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Competency Frameworks</h4>
+                <div class="paginated-list" data-list-id="competencies-frameworks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+                    {{#competencies.frameworks}}
+                    <div class="framework-item" style="padding: 1rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">{{name}}</div>
+                        {{#idnumber}}
+                        <div style="font-size: 0.875rem; color: #64748b;">ID: {{idnumber}}</div>
+                        {{/idnumber}}
+                    </div>
+                    {{/competencies.frameworks}}
+                    {{^competencies.frameworks}}
+                    <div style="padding: 1rem; color: #94a3b8; font-style: italic; grid-column: 1 / -1;">No frameworks assigned to school courses</div>
+                    {{/competencies.frameworks}}
+                </div>
+                <div class="pagination" data-pagination-for="competencies-frameworks"></div>
+            </div>
+
+            <div>
+                <h4 style="font-size: 1rem; margin-bottom: 1rem; color: #1e293b;">Competencies Per Course</h4>
+                <table class="simple-table paginated-table" data-table-id="competencies-course">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Frameworks</th>
+                            <th>Assigned</th>
+                            <th>Achieved</th>
+                            <th>Pending</th>
+                            <th>Achievement Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#competencies.percourse}}
+                        <tr>
+                            <td>{{course_name}}</td>
+                            <td>
+                                {{#frameworks}}
+                                <div style="margin-bottom: 0.25rem;">
+                                    <strong>{{framework_name}}</strong>
+                                    <div style="font-size: 0.75rem; color: #64748b; margin-left: 0.5rem;">
+                                        ({{competencies.length}} competencies)
+                                    </div>
+                                </div>
+                                {{/frameworks}}
+                            </td>
+                            <td><strong>{{total_assigned}}</strong></td>
+                            <td style="color: #22c55e;"><strong>{{total_achieved}}</strong></td>
+                            <td style="color: #f97316;"><strong>{{total_pending}}</strong></td>
+                            <td><strong>{{achievement_rate}}%</strong></td>
+                        </tr>
+                        {{/competencies.percourse}}
+                        {{^competencies.percourse}}
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #94a3b8; font-style: italic;">No competencies assigned to courses</td>
+                        </tr>
+                        {{/competencies.percourse}}
+                    </tbody>
+                </table>
+                <div class="pagination" data-pagination-for="competencies-course"></div>
+            </div>
+        </section>
+        {{/competencies.enabled}}
+
+        <section class="analytics-section" id="system-usage">
+            <h3>System Usage Statistics</h3>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Comprehensive data on platform usage, peak times, and technical performance metrics</p>
+
+            <!-- Overall Statistics Cards -->
+            <div class="grid-four" style="margin-bottom: 2rem;">
+                <div class="overview-card">
+                    <div class="stat-label">Total Logins</div>
+                    <div class="stat-value">{{systemusage.overall.total_logins}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Total Page Views</div>
+                    <div class="stat-value">{{systemusage.overall.total_page_views}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Active Users</div>
+                    <div class="stat-value">{{systemusage.overall.unique_active_users}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Time Spent (Hours)</div>
+                    <div class="stat-value">{{systemusage.overall.total_time_spent}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Avg Session Duration (min)</div>
+                    <div class="stat-value">{{systemusage.overall.avg_session_duration}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Avg Logins per User</div>
+                    <div class="stat-value">{{systemusage.overall.avg_logins_per_user}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Active Days</div>
+                    <div class="stat-value">{{systemusage.overall.active_days}}</div>
+                </div>
+                <div class="overview-card">
+                    <div class="stat-label">Error Rate</div>
+                    <div class="stat-value">{{systemusage.performance.error_rate}}%</div>
+                </div>
+            </div>
+
+            <!-- Overall Usage Chart -->
+            <div class="grid-two" style="margin-bottom: 2rem;">
+                <div>
+                    <h4>Overall Usage Metrics</h4>
+                    <div class="chart-container-medium">
+                        <canvas id="systemUsageOverallChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4>Cohort Comparison</h4>
+                    <div class="chart-container-medium">
+                        <canvas id="systemUsageCohortChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Peak Times -->
+            <div class="grid-two" style="margin-bottom: 2rem;">
+                <div>
+                    <h4>Peak Hours (24-hour pattern)</h4>
+                    <div class="chart-container-medium">
+                        <canvas id="systemUsagePeakHoursChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4>Peak Days (Weekly pattern)</h4>
+                    <div class="chart-container-medium">
+                        <canvas id="systemUsagePeakDaysChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cohort-wise Statistics Table -->
+            <h4>Cohort-wise Usage Statistics</h4>
+            <table class="simple-table paginated-table" data-table-id="system-usage-cohort">
+                <thead>
+                    <tr>
+                        <th>Cohort Name</th>
+                        <th>Student Count</th>
+                        <th>Active Users</th>
+                        <th>Total Views</th>
+                        <th>Active Days</th>
+                        <th>Avg Views per User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#systemusage.cohort_wise}}
+                    <tr>
+                        <td>{{cohort_name}}</td>
+                        <td>{{student_count}}</td>
+                        <td>{{active_users}}</td>
+                        <td>{{total_views}}</td>
+                        <td>{{active_days}}</td>
+                        <td>{{avg_views_per_user}}</td>
+                    </tr>
+                    {{/systemusage.cohort_wise}}
+                    {{^systemusage.cohort_wise}}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #94a3b8; font-style: italic;">No cohort data available</td>
+                    </tr>
+                    {{/systemusage.cohort_wise}}
+                </tbody>
+            </table>
+            <div class="pagination" data-pagination-for="system-usage-cohort"></div>
+
+            <!-- Performance Metrics -->
+            <div style="margin-top: 2rem;">
+                <h4>Technical Performance Metrics</h4>
+                <div class="grid-three" style="margin-top: 1rem;">
+                    <div class="overview-card">
+                        <div class="stat-label">Total Requests</div>
+                        <div class="stat-value">{{systemusage.performance.total_requests}}</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="stat-label">Error Rate</div>
+                        <div class="stat-value" style="color: {{#systemusage.performance.error_rate}}{{#.}}#ef4444{{/.}}{{^.}}#22c55e{{/.}}{{/systemusage.performance.error_rate}};">
+                            {{systemusage.performance.error_rate}}%
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="stat-value">{{systemusage.performance.avg_response_time}}ms</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="analytics-section" id="early-warning">
+            <h3> Early Warning System</h3>
+            <div class="filter-controls" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div class="filter-group">
+                    <label for="filter-student" style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-right: 0.5rem;">Filter by Student:</label>
+                    <select id="filter-student" class="filter-select" style="padding: 0.5rem 0.75rem; border: 1px solid #d4d9e3; border-radius: 6px; min-width: 200px;">
+                        <option value="">All Students</option>
+                        {{#earlywarning_filters.students}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{/earlywarning_filters.students}}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-grade" style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-right: 0.5rem;">Filter by Grade:</label>
+                    <select id="filter-grade" class="filter-select" style="padding: 0.5rem 0.75rem; border: 1px solid #d4d9e3; border-radius: 6px; min-width: 200px;">
+                        <option value="">All Grades</option>
+                        {{#earlywarning_filters.grades}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{/earlywarning_filters.grades}}
+                    </select>
+                </div>
+            </div>
+            <table class="simple-table paginated-table" data-table-id="early-warning">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Grade</th>
+                        <th>Avg Grade</th>
+                        <th>Engagement</th>
+                        <th>Progress</th>
+                        <th>Risk</th>
+                        <th>Flags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#earlywarnings}}
+                    <tr data-student-name="{{name}}" data-student-grade="{{cohort}}">
+                        <td>{{name}}</td>
+                        <td>{{cohort}}</td>
+                        <td>{{avg_grade}}%</td>
+                        <td>{{engagement}}</td>
+                        <td>{{course_progress}}%</td>
+                        <td>{{risk}}%</td>
+                        <td>{{flags}}</td>
+                    </tr>
+                    {{/earlywarnings}}
+                </tbody>
+            </table>
+            <div class="pagination" data-pagination-for="early-warning"></div>
+        </section>
+        {{/showanalytics}}
+
+        {{^showanalytics}}
+        <div class="empty-state">Select a school above to load the analytics dashboard.</div>
+        {{/showanalytics}}
+        </div>
+    </div>
+</main>
+
+<script>
+window.schoolAnalyticsData = {{{chartpayload}}};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadBtn = document.getElementById('download-pdf-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const school = urlParams.get('school');
+            const academicview = urlParams.get('academicview') || 'month';
+            const academicyear = urlParams.get('academicyear') || new Date().getFullYear();
+            
+            if (!school) {
+                alert('Please select a school first.');
+                return;
+            }
+            
+            // Capture all chart images
+            downloadBtn.disabled = true;
+            const originalHtml = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Capturing Charts...';
+            
+            setTimeout(function() {
+                const chartImages = {};
+                const chartIds = [
+                    'academicTrendChart',
+                    'gradeLevelChart',
+                    'courseInsightsChart',
+                    'resourceBarChart',
+                    'courseCompletionChart',
+                    'attendanceChart',
+                    'competenciesStatusChart',
+                    'competenciesFrameworkChart',
+                    'competenciesCourseChart',
+                    'teacherRadar',
+                    'systemUsageOverallChart',
+                    'systemUsageCohortChart',
+                    'systemUsagePeakHoursChart',
+                    'systemUsagePeakDaysChart'
+                ];
+                
+                chartIds.forEach(function(chartId) {
+                    const canvas = document.getElementById(chartId);
+                    if (canvas) {
+                        try {
+                            // Try to get chart instance first
+                            const chart = window.schoolAnalyticsCharts && window.schoolAnalyticsCharts[chartId];
+                            if (chart && typeof chart.toBase64Image === 'function') {
+                                chartImages[chartId] = chart.toBase64Image();
+                            } else if (canvas.toDataURL) {
+                                // Fallback: capture canvas directly
+                                chartImages[chartId] = canvas.toDataURL('image/png');
+                            }
+                        } catch (e) {
+                            console.warn('Failed to capture chart:', chartId, e);
+                        }
+                    }
+                });
+                
+                // Use fetch API to download PDF
+                downloadBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating PDF...';
+                
+                const pdfUrl = '{{pdf_url}}' || window.location.pathname.replace('admin_analytics.php', 'admin_analytics_pdf.php');
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('school', school);
+                formData.append('academicview', academicview);
+                formData.append('academicyear', academicyear);
+                formData.append('chart_images', JSON.stringify(chartImages));
+                
+                // Fetch PDF as blob
+                fetch(pdfUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('PDF generation failed: ' + response.status);
+                    }
+                    
+                    // Get filename from Content-Disposition header if available
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    let filename = 'school-analytics-report.pdf';
+                    if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+                        filename = contentDisposition.split('filename=')[1].split(';')[0].replace(/"/g, '');
+                    }
+                    
+                    return response.blob().then(function(blob) {
+                        return { blob: blob, filename: filename };
+                    });
+                })
+                .then(function(result) {
+                    // Create download link
+                    const url = window.URL.createObjectURL(result.blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = result.filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalHtml;
+                })
+                .catch(function(error) {
+                    console.error('PDF download error:', error);
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalHtml;
+                    alert('Error generating PDF. Please try again. Error: ' + error.message);
+                });
+            }, 500);
+        });
+    } else {
+        console.log('Download PDF button not found');
+    }
+});
+</script>

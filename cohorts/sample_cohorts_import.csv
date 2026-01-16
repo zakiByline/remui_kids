@@ -1,0 +1,27 @@
+name,idnumber,description,visible
+"Grade 1 Students","grade1","All students enrolled in Grade 1",1
+"Grade 2 Students","grade2","All students enrolled in Grade 2",1
+"Grade 3 Students","grade3","All students enrolled in Grade 3",1
+"Grade 4 Students","grade4","All students enrolled in Grade 4",1
+"Grade 5 Students","grade5","All students enrolled in Grade 5",1
+"Grade 6 Students","grade6","All students enrolled in Grade 6",1
+"Grade 7 Students","grade7","All students enrolled in Grade 7",1
+"Grade 8 Students","grade8","All students enrolled in Grade 8",1
+"Grade 9 Students","grade9","All students enrolled in Grade 9",1
+"Grade 10 Students","grade10","All students enrolled in Grade 10",1
+"Grade 11 Students","grade11","All students enrolled in Grade 11",1
+"Grade 12 Students","grade12","All students enrolled in Grade 12",1
+"Math Club","mathclub","Students interested in mathematics activities",1
+"Science Club","sciclub","Students enrolled in science club",1
+"Arts & Drama","artsclub","Students participating in arts and drama",1
+"Sports Team","sportsteam","Students in school sports programs",1
+"Debate Society","debateclub","Students in debate and public speaking",1
+"Robotics Club","roboticsclub","Students in robotics and coding club",1
+"Music Band","musicband","Students in school music band",1
+"Chess Club","chessclub","Students participating in chess club",0
+"Advanced Placement","advancedplacement","Students in AP program",1
+"Special Education","specialed","Students requiring additional support",0
+"Gifted Program","giftedprog","Students in gifted and talented program",1
+"ESL Support","eslsupport","English as Second Language students",1
+"Honor Roll","honorroll","Students with high academic achievement",1
+

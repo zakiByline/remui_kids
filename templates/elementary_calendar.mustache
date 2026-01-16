@@ -1,0 +1,1552 @@
+{{!
+  Elementary Calendar - Modern calendar with real Moodle data (Grades 1–3)
+}}
+
+<style>
+/* Remove default Moodle page margins and padding */
+#page, #page-wrapper, #region-main, .main-inner, .container, #topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
+/* Page wrapper with sidebar */
+.calendar-page-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow: visible;
+}
+
+/* Prevent body/html scrollbar if not needed */
+html, body {
+    overflow-x: hidden;
+}
+
+.calendar-main-content {
+    flex: 1;
+    margin: 0 0 0 300px !important;
+    padding: 0 !important;
+    width: calc(100% - 300px) !important;
+    max-width: none !important;
+    overflow: visible;
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .calendar-main-content {
+        margin: 0 0 0 50px !important;
+        width: calc(100% - 50px) !important;
+        padding: 0 !important;
+    }
+}
+
+/* Global Layout - Main Content Grid */
+.ecal-page {
+    
+    margin: 0;
+    min-height: calc(100vh - 60px);
+    background: linear-gradient(135deg,rgb(248, 247, 243) 0%,rgb(247, 247, 247) 100%);
+    width: 100%;
+    overflow: visible;
+    align-items: start;
+}
+
+/* Left column - main calendar content */
+.ecal-page > div:first-child {
+    overflow: visible;
+}
+
+/* Welcome Header with Bubble Animations */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Welcome Header with Bubble Animations */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Header Styles */
+.ecal-header {
+    background: white;
+    border-radius: 0;
+    padding: 1.5rem;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ecal-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ecal-title i {
+    color: #f59e0b;
+}
+
+.ecal-subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    margin: 0 0 1.5rem 0;
+}
+
+/* Statistics Cards */
+.ecal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.ecal-stat-card {
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.ecal-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon-wrapper.total {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-icon-wrapper.today {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon-wrapper.week {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-info h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.stat-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+/* Calendar Board */
+.ecal-board {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 0;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Calendar Header with View Tabs */
+.ecal-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: linear-gradient(135deg, #7b61ff, #57a0ff);
+    color: white;
+}
+
+.ecal-month-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.ecal-month-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.ecal-nav-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.ecal-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.ecal-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ecal-tab {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.ecal-tab:hover {
+    background: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    color: white;
+}
+
+.ecal-tab.active {
+    background: white;
+    color: #7b61ff;
+    border-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Monthly View - Calendar Grid */
+.ecal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    flex: 1;
+    overflow: hidden;
+}
+
+.ecal-dow {
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.75rem;
+    text-align: center;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 2px solid #e5e7eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ecal-cell {
+    height: calc((100vh - 300px) / 6);
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    position: relative;
+    transition: all 0.2s ease;
+    background: white;
+    overflow: hidden;
+}
+
+.ecal-cell:hover {
+    background: #f9fafb;
+}
+
+.ecal-cell.outmonth {
+    background: #f8fafc;
+    color: #9ca3af;
+}
+
+.ecal-date {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.ecal-date.today {
+    background: #3b82f6;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ecal-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    max-height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.ecal-event {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.2s ease;
+}
+
+.ecal-event:hover {
+    opacity: 0.9;
+    text-decoration: none;
+    color: white;
+}
+
+.ecal-event.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.ecal-event.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.ecal-event.yellow {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.ecal-event.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+/* Weekly View - Simple Layout */
+.weekly-view-simple {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1;
+    overflow: hidden;
+    background: white;
+}
+
+.weekday-column-simple {
+    border-right: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.weekday-header-simple {
+    height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f9fafb;
+    font-weight: 600;
+}
+
+.weekday-events {
+    padding: 1rem;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+}
+
+.weekday-event-simple {
+    display: block;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.weekday-event-simple:hover {
+    opacity: 0.9;
+    text-decoration: none;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Daily View Layout */
+.daily-view {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    background: white;
+}
+
+.time-column {
+    width: 80px;
+    border-right: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+}
+
+.time-slot {
+    height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0.5rem 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.weekdays-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow: hidden;
+}
+
+.weekday-column {
+    border-right: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.weekday-header {
+    height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f9fafb;
+    font-weight: 600;
+}
+
+.weekday-name {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.weekday-date {
+    font-size: 1.25rem;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.weekday-date.today {
+    background: #3b82f6;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-slots {
+    position: relative;
+    height: 600px;
+    overflow-y: auto;
+}
+
+.time-slot-row {
+    height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.day-event {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.day-event:hover {
+    opacity: 0.9;
+}
+
+.event-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-time {
+    font-size: 0.65rem;
+    opacity: 0.9;
+}
+
+.day-event.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.day-event.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.day-event.yellow {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-event.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.weekday-event-simple.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.weekday-event-simple.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.weekday-event-simple.yellow {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.weekday-event-simple.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.ecal-dow {
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 0.85rem;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 2px solid #e5e7eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ecal-cell {
+    height: calc((100vh - 300px) / 6);
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    position: relative;
+    transition: all 0.2s ease;
+    background: white;
+    overflow: hidden;
+}
+
+.ecal-cell:hover {
+    background: #f9fafb;
+}
+
+.ecal-cell.outmonth {
+    background: #fafafa;
+}
+
+.ecal-cell.outmonth .ecal-date {
+    opacity: 0.4;
+}
+
+.ecal-date {
+    font-weight: 700;
+    color: #1f2937;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.ecal-date.today {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ecal-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    max-height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.ecal-events::-webkit-scrollbar {
+    width: 3px;
+}
+
+.ecal-events::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ecal-events::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.ecal-event {
+    display: block;
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ecal-event:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+
+.ecal-event.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.ecal-event.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.ecal-event.yellow {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.ecal-event.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+/* Right Sidebar */
+.ecal-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible;
+    position: sticky;
+    top: 30px;
+    align-self: start;
+}
+
+/* Completely hide scrollbar for sidebar while keeping scroll functionality */
+.ecal-rail::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.ecal-rail {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.ecal-card {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+    margin: 0;
+}
+
+/* Mini Calendar */
+.ecal-mini {
+    background: linear-gradient(180deg, #5b35e8, #7a40f7);
+    color: white;
+    padding: 1.25rem;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(91, 53, 232, 0.3);
+    margin: 0;
+}
+
+.ecal-mini-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.ecal-mini-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ecal-mini-nav i {
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.ecal-mini-nav i:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ecal-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.ecal-mini-day {
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    padding: 0.25rem;
+    font-weight: 600;
+}
+
+.ecal-mini-num {
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ecal-mini-num:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ecal-mini-num.active {
+    background: #22d3ee;
+    color: #083344;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+}
+
+/* Upcoming Events List */
+.ecal-upcoming-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ecal-upcoming-title i {
+    color: #f59e0b;
+}
+
+.ecal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ecal-list-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.ecal-list-item:hover {
+    background: #f3f4f6;
+    transform: translateX(4px);
+    text-decoration: none;
+}
+
+.ecal-list-tag {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.ecal-list-tag.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.ecal-list-tag.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.ecal-list-tag.yellow {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.ecal-list-tag.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.ecal-list-content {
+    flex: 1;
+}
+
+.ecal-list-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.ecal-list-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.ecal-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #9ca3af;
+}
+
+.ecal-empty i {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+/* Quick Actions */
+.ecal-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.ecal-action-btn {
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.ecal-action-btn:hover {
+    border-color: #7b61ff;
+    color: #7b61ff;
+    background: #f5f3ff;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .calendar-main-content {
+        margin: 0 0 0 75px !important;
+        width: calc(100% - 280px - 75px) !important;
+        padding: 0 !important;
+    }
+    
+    .ecal-page {
+        grid-template-columns: 1fr;
+        padding: 0;
+        gap: 0;
+    }
+    
+    .ecal-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .ecal-cal-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .ecal-cell {
+        min-height: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+    
+    .welcome-header {
+        padding: 30px 20px;
+        min-height: 150px;
+    }
+    
+    .ecal-page {
+        padding: 0;
+        gap: 0;
+    }
+    
+    .ecal-header {
+        padding: 1rem;
+        margin: 0;
+    }
+    
+    .ecal-dow {
+        font-size: 0.7rem;
+        padding: 0.5rem;
+    }
+    
+    .ecal-cell {
+        min-height: 60px;
+        padding: 0.5rem;
+    }
+    
+    .ecal-event {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.4rem;
+    }
+}
+</style>
+
+<div class="calendar-page-wrapper">
+    {{> theme_remui_kids/dashboard/elementary_sidebar}}
+    
+    <div class="calendar-main-content">
+        <div class="ecal-page">
+            <!-- Main Content Column -->
+            <div>
+        <!-- Welcome Header with Bubble Animations -->
+        <div class="welcome-header" style="margin-bottom: 30px;">
+            <!-- Left Side Bubbles -->
+            <div class="welcome-bubbles welcome-bubbles-left">
+                <div class="welcome-bubble welcome-bubble-1"></div>
+                <div class="welcome-bubble welcome-bubble-2"></div>
+                <div class="welcome-bubble welcome-bubble-3"></div>
+                <div class="welcome-bubble welcome-bubble-4"></div>
+            </div>
+            
+            <!-- Center Content -->
+            <div class="welcome-header-content">
+                {{#student_picture_url_only}}
+                <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+                {{/student_picture_url_only}}
+                <h1 class="welcome-title">
+                    <i class="fa fa-calendar-alt"></i>
+                    My Calendar
+                </h1>
+                <p class="welcome-subtitle">
+                    View and manage all your upcoming events and activities
+                </p>
+            </div>
+            
+            <!-- Right Side Bubbles -->
+            <div class="welcome-bubbles welcome-bubbles-right">
+                <div class="welcome-bubble welcome-bubble-5"></div>
+                <div class="welcome-bubble welcome-bubble-6"></div>
+                <div class="welcome-bubble welcome-bubble-7"></div>
+                <div class="welcome-bubble welcome-bubble-8"></div>
+            </div>
+        </div>
+        
+        <!-- Header with Statistics -->
+        <div class="ecal-header">
+            
+            <div class="ecal-stats">
+                <div class="ecal-stat-card">
+                    <div class="stat-icon-wrapper total">
+                        <i class="fa fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{total_events}}</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+                
+                <div class="ecal-stat-card">
+                    <div class="stat-icon-wrapper today">
+                        <i class="fa fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{today_events}}</h3>
+                        <p>Today</p>
+  </div>
+</div>
+
+                <div class="ecal-stat-card">
+                    <div class="stat-icon-wrapper week">
+                        <i class="fa fa-calendar-week"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{week_events}}</h3>
+                        <p>This Week</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Board -->
+  <div class="ecal-board">
+            <!-- Calendar Header -->
+            <div class="ecal-cal-header">
+                <div class="ecal-month-nav">
+                    <a href="{{{prev_month_url}}}" class="ecal-nav-btn">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                    <h2 class="ecal-month-title">{{month_name}}</h2>
+                    <a href="{{{next_month_url}}}" class="ecal-nav-btn">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+    <div class="ecal-tabs">
+      <a class="ecal-tab {{#is_month}}active{{/is_month}}" href="{{{view_month_url}}}">Monthly</a>
+      <a class="ecal-tab {{#is_week}}active{{/is_week}}" href="{{{view_week_url}}}">Weekly</a>
+      <a class="ecal-tab {{#is_day}}active{{/is_day}}" href="{{{view_day_url}}}">Daily</a>
+                </div>
+    </div>
+
+             {{#is_month}}
+             <!-- Monthly View - Calendar Grid -->
+    <div class="ecal-grid">
+                 <!-- Days of Week -->
+                 <div class="ecal-dow">Mon</div>
+                 <div class="ecal-dow">Tue</div>
+                 <div class="ecal-dow">Wed</div>
+                 <div class="ecal-dow">Thu</div>
+                 <div class="ecal-dow">Fri</div>
+                 <div class="ecal-dow">Sat</div>
+                 <div class="ecal-dow">Sun</div>
+                 
+                 <!-- Calendar Cells -->
+      {{#rows}}
+      {{#cols}}
+                 <div class="ecal-cell {{^inmonth}}outmonth{{/inmonth}}">
+                     <div class="ecal-date {{#is_today}}today{{/is_today}}">{{date}}</div>
+                     <div class="ecal-events">
+        {{#events}}
+                         <a href="{{url}}" class="ecal-event {{tone}}" title="{{title}}">{{title}}</a>
+        {{/events}}
+                     </div>
+      </div>
+      {{/cols}}
+      {{/rows}}
+             </div>
+             {{/is_month}}
+
+             {{#is_week}}
+             <!-- Weekly View - Weekdays Only -->
+             <div class="weekly-view-simple">
+                 {{#weekdays}}
+                 <div class="weekday-column-simple">
+                     <div class="weekday-header-simple">
+                         <div class="weekday-name">{{name}}</div>
+                         <div class="weekday-date {{#is_today}}today{{/is_today}}">{{date}}</div>
+                     </div>
+                     <div class="weekday-events">
+                         {{#events}}
+                         <a href="{{url}}" class="weekday-event-simple {{tone}}" title="{{title}}">
+                             <div class="event-title">{{title}}</div>
+                             <div class="event-time">{{time_range}}</div>
+                         </a>
+                         {{/events}}
+                     </div>
+                 </div>
+                 {{/weekdays}}
+             </div>
+             {{/is_week}}
+
+             {{#is_day}}
+             <!-- Daily View - With Time Slots -->
+             <div class="daily-view">
+                 <!-- Time Column -->
+                 <div class="time-column">
+                     <div class="time-slot" style="height: 40px;"></div>
+                     <div class="time-slot">8:00 AM</div>
+                     <div class="time-slot">9:00 AM</div>
+                     <div class="time-slot">10:00 AM</div>
+                     <div class="time-slot">11:00 AM</div>
+                     <div class="time-slot">12:00 PM</div>
+                     <div class="time-slot">1:00 PM</div>
+                     <div class="time-slot">2:00 PM</div>
+                     <div class="time-slot">3:00 PM</div>
+                     <div class="time-slot">4:00 PM</div>
+                     <div class="time-slot">5:00 PM</div>
+                 </div>
+
+                 <!-- Day Column with Time Slots -->
+                 <div class="day-column">
+                     <div class="day-header">
+                         <div class="day-name">{{selected_day_name}}</div>
+                         <div class="day-date {{#is_today}}today{{/is_today}}">{{selected_day_date}}</div>
+                     </div>
+                     <div class="day-slots">
+                         <!-- Time slots for this day -->
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         <div class="time-slot-row"></div>
+                         
+                         <!-- Events for this day -->
+                         {{#selected_day_events}}
+                         <div class="day-event {{tone}}" style="top: {{time_position}}px; height: {{duration}}px;">
+                             <div class="event-title">{{title}}</div>
+                             <div class="event-time">{{time_range}}</div>
+                         </div>
+                         {{/selected_day_events}}
+                     </div>
+                 </div>
+             </div>
+             {{/is_day}}
+    </div>
+  </div>
+            </div>
+
+            <br>
+
+            <!-- Right Sidebar -->
+            <div class="ecal-rail">
+        <!-- Mini Calendar -->
+   
+
+        <!-- Quick Actions -->
+    
+
+        <!-- Upcoming Events -->
+        <div class="ecal-card">
+            <h3 class="ecal-upcoming-title">
+                <i class="fa fa-clock"></i>
+                Upcoming Events
+            </h3>
+            {{#has_upcoming}}
+            <div class="ecal-list">
+                {{#upcoming_events}}
+                <a href="{{url}}" class="ecal-list-item">
+                    <div class="ecal-list-tag {{tone}}">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <div class="ecal-list-content">
+                        <p class="ecal-list-name">{{title}}</p>
+                        <p class="ecal-list-time">{{date}} · {{time}}</p>
+                    </div>
+                </a>
+                {{/upcoming_events}}
+            </div>
+            {{/has_upcoming}}
+            {{^has_upcoming}}
+            <div class="ecal-empty">
+                <i class="fa fa-calendar-check"></i>
+                <p>No upcoming events</p>
+            </div>
+            {{/has_upcoming}}
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+    // Mark today's date in the calendar grid
+    const today = '{{today_iso}}';
+    document.querySelectorAll('.ecal-cell').forEach(cell => {
+        const dateStr = cell.querySelector('.ecal-date');
+        if (dateStr && cell.querySelector('[data-date="' + today + '"]')) {
+            dateStr.classList.add('today');
+        }
+    });
+})();
+</script>

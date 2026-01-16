@@ -1,0 +1,1583 @@
+{{!
+    Elementary Activities Page - Professional UI
+    Shows all real activities from Moodle
+}}
+
+{{! Include Sidebar }}
+{{> theme_remui_kids/dashboard/elementary_sidebar }}
+
+<style>
+/* Force body scroll lock */
+html, body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide default containers */
+.page-header,
+.context-header {
+    display: none !important;
+}
+
+.container,
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Main Container */
+.activities-main-container {
+    position: fixed;
+    top: 80px;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    padding: 30px 30px 30px 30px;
+    background: #f5f7fa;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Welcome Header with Bubble Animations */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    width: 100%;
+}
+
+.welcome-header-right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-left: 20px;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    background: #f8f9fa;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.filter-tab {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #5a6c7d;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-tab:hover {
+    background: #e8ecef;
+    color: #2c3e50;
+}
+
+.filter-tab.active {
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.filter-tab i {
+    font-size: 0.9rem;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8ecef;
+    transition: all 0.2s ease;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 140px;
+}
+
+.stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2rem;
+}
+
+.stat-card.total .stat-icon {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.stat-card.progress .stat-icon {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.stat-card.completed .stat-icon {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.stat-card.pending .stat-icon {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+/* Responsive Stats Grid */
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        min-height: 120px;
+        padding: 20px 15px;
+        height: 120px;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        margin-bottom: 12px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+    }
+}
+
+/* Activities Grid */
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.activity-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+}
+
+.activity-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.activity-card.completed {
+    border-color: #4caf50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.activity-card.overdue {
+    border-color: #f44336;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.2);
+}
+
+/* Colorful borders for different activity types */
+.activity-card[data-type="quiz"] {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.activity-card[data-type="assign"] {
+    border-color: #E91E63;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.2);
+}
+
+.activity-card[data-type="lesson"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="forum"] {
+    border-color: #9C27B0;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.2);
+}
+
+.activity-card[data-type="resource"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="file"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="url"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="page"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="book"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="folder"] {
+    border-color: #00BCD4;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.activity-card[data-type="glossary"] {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+.activity-card[data-type="hvp"] {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+.activity-card[data-type="lti"] {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+.activity-card[data-type="text"] {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+.activity-card[data-type="choice"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="feedback"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="imscp"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="scorm"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="certificate"] {
+    border-color: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.activity-card[data-type="database"] {
+    border-color: #9C27B0;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.2);
+}
+
+.activity-card[data-type="wiki"] {
+    border-color: #9C27B0;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.2);
+}
+
+.activity-card[data-type="workshop"] {
+    border-color: #E91E63;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.2);
+}
+
+.activity-card[data-type="trainingevent"] {
+    border-color: #E91E63;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.2);
+}
+
+.activity-card[data-type="edwiser_video"] {
+    border-color: #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+/* Wrap-Up and Module activities - Light, pleasant styling */
+.activity-card[data-type="wrapup"] {
+    border-color: #FFB74D;
+    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.15);
+}
+
+.activity-card[data-type="module"] {
+    border-color: #FFB74D;
+    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.15);
+}
+
+.activity-card[data-type="summary"] {
+    border-color: #FFB74D;
+    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.15);
+}
+
+.activity-card[data-type="review"] {
+    border-color: #FFB74D;
+    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.15);
+}
+
+/* Default border for unknown types */
+.activity-card:not([data-type]) {
+    border-color: #6c757d;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+.activity-header {
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8ecef;
+}
+
+/* Activity Type Header Backgrounds */
+.activity-card[data-type="quiz"] .activity-header {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+}
+
+.activity-card[data-type="assign"] .activity-header {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="lesson"] .activity-header {
+    background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+}
+
+.activity-card[data-type="forum"] .activity-header {
+    background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+}
+
+.activity-card[data-type="resource"] .activity-header {
+    background: linear-gradient(135deg, #e0f2f1 0%, #e8f5e8 100%);
+}
+
+.activity-card[data-type="file"] .activity-header {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1f5fe 100%);
+}
+
+.activity-card[data-type="url"] .activity-header {
+    background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="page"] .activity-header {
+    background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="book"] .activity-header {
+    background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="glossary"] .activity-header {
+    background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e8 100%);
+}
+
+.activity-card[data-type="wiki"] .activity-header {
+    background: linear-gradient(135deg, #f1f8e9 0%, #e0f2f1 100%);
+}
+
+.activity-card[data-type="choice"] .activity-header {
+    background: linear-gradient(135deg, #fff3e0 0%, #f1f8e9 100%);
+}
+
+.activity-card[data-type="feedback"] .activity-header {
+    background: linear-gradient(135deg, #e3f2fd 0%, #e0f7fa 100%);
+}
+
+/* Wrap-Up and Module activities - Light, pleasant header backgrounds */
+.activity-card[data-type="wrapup"] .activity-header {
+    background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="module"] .activity-header {
+    background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="summary"] .activity-header {
+    background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+}
+
+.activity-card[data-type="review"] .activity-header {
+    background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+}
+
+/* Default fallback for unknown types */
+.activity-card:not([data-type]) .activity-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.activity-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.activity-card .activity-icon-wrapper {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+/* Moodle Standard Colors for Activity Icons - Exact Same as Moodle */
+.activity-card[data-type="assign"] .activity-icon-wrapper {
+    background: #e91e63; /* Pink - Assignment */
+    color: white;
+}
+
+.activity-card[data-type="book"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - Book */
+    color: white;
+}
+
+.activity-card[data-type="choice"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - Choice */
+    color: white;
+}
+
+.activity-card[data-type="database"] .activity-icon-wrapper {
+    background: #9c27b0; /* Purple - Database */
+    color: white;
+}
+
+.activity-card[data-type="edwiser_video"] .activity-icon-wrapper {
+    background: #2196f3; /* Blue - Edwiser Video */
+    color: white;
+}
+
+.activity-card[data-type="feedback"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - Feedback */
+    color: white;
+}
+
+.activity-card[data-type="file"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - File */
+    color: white;
+}
+
+.activity-card[data-type="folder"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - Folder */
+    color: white;
+}
+
+.activity-card[data-type="forum"] .activity-icon-wrapper {
+    background: #9c27b0; /* Purple - Forum */
+    color: white;
+}
+
+.activity-card[data-type="glossary"] .activity-icon-wrapper {
+    background: #2196f3; /* Blue - Glossary */
+    color: white;
+}
+
+.activity-card[data-type="hvp"] .activity-icon-wrapper {
+    background: #2196f3; /* Blue - H5P */
+    color: white;
+}
+
+.activity-card[data-type="imscp"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - IMS content package */
+    color: white;
+}
+
+.activity-card[data-type="lesson"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - Lesson */
+    color: white;
+}
+
+.activity-card[data-type="page"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - Page */
+    color: white;
+}
+
+.activity-card[data-type="quiz"] .activity-icon-wrapper {
+    background: #e91e63; /* Pink - Quiz */
+    color: white;
+}
+
+.activity-card[data-type="scorm"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - SCORM package */
+    color: white;
+}
+
+.activity-card[data-type="url"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - URL */
+    color: white;
+}
+
+.activity-card[data-type="wiki"] .activity-icon-wrapper {
+    background: #9c27b0; /* Purple - Wiki */
+    color: white;
+}
+
+.activity-card[data-type="workshop"] .activity-icon-wrapper {
+    background: #e91e63; /* Pink - Workshop */
+    color: white;
+}
+
+.activity-card[data-type="lti"] .activity-icon-wrapper {
+    background: #2196f3; /* Blue - LTI */
+    color: white;
+}
+
+.activity-card[data-type="resource"] .activity-icon-wrapper {
+    background: #00bcd4; /* Teal - Resource */
+    color: white;
+}
+
+.activity-card[data-type="text"] .activity-icon-wrapper {
+    background: #2196f3; /* Blue - Text and media area */
+    color: white;
+}
+
+.activity-card[data-type="certificate"] .activity-icon-wrapper {
+    background: #ff9800; /* Orange - Certificate */
+    color: white;
+}
+
+.activity-card[data-type="trainingevent"] .activity-icon-wrapper {
+    background: #e91e63; /* Pink - Training event */
+    color: white;
+}
+
+/* Wrap-Up and Module activities - Light, pleasant icon colors */
+.activity-card[data-type="wrapup"] .activity-icon-wrapper {
+    background: #FFB74D; /* Light Orange - Wrap-Up */
+    color: white;
+}
+
+.activity-card[data-type="module"] .activity-icon-wrapper {
+    background: #FFB74D; /* Light Orange - Module */
+    color: white;
+}
+
+.activity-card[data-type="summary"] .activity-icon-wrapper {
+    background: #FFB74D; /* Light Orange - Summary */
+    color: white;
+}
+
+.activity-card[data-type="review"] .activity-icon-wrapper {
+    background: #FFB74D; /* Light Orange - Review */
+    color: white;
+}
+
+/* Completed activities get a special gold color */
+.activity-card.completed .activity-icon-wrapper {
+    background: linear-gradient(135deg, #FFD700, #FFC107);
+    color: #B8860B;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.activity-header-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.activity-course-name {
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    margin: 0;
+    font-weight: 500;
+}
+
+.activity-body {
+    padding: 20px;
+}
+
+.activity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.activity-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #5a6c7d;
+    font-weight: 500;
+}
+
+.activity-meta-item i {
+    color: #7f8c8d;
+}
+
+.activity-meta-item.overdue {
+    color: #f44336;
+    font-weight: 700;
+}
+
+.activity-meta-item.overdue i {
+    color: #f44336;
+}
+
+.activity-progress {
+    margin-bottom: 15px;
+}
+
+.activity-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    color: #5a6c7d;
+    font-weight: 600;
+}
+
+.progress-bar-wrapper {
+    height: 8px;
+    background: #e8ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar-inner.completed {
+    background: #4caf50;
+}
+
+.progress-bar-inner.in-progress {
+    background: #ff9800;
+}
+
+.progress-bar-inner.not-started {
+    background: #9e9e9e;
+}
+
+.activity-footer {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e8ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-section {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.activity-action-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.activity-action-btn.start-btn {
+    background: #4A90E2;
+    color: white;
+}
+
+.activity-action-btn.start-btn:hover {
+    background: #357abd;
+    color: white;
+    text-decoration: none;
+}
+
+.activity-action-btn.continue-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.activity-action-btn.continue-btn:hover {
+    background: #f57c00;
+    color: white;
+    text-decoration: none;
+}
+
+.activity-action-btn.review-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.activity-action-btn.review-btn:hover {
+    background: #388e3c;
+    color: white;
+    text-decoration: none;
+}
+
+/* Empty State */
+.empty-state {
+    background: white;
+    border-radius: 12px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    font-size: 5rem;
+    color: #cfd8dc;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.empty-message {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 25px;
+}
+
+.empty-btn {
+    background: #4A90E2;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s ease;
+}
+
+.empty-btn:hover {
+    background: #357abd;
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .activities-main-container {
+        left: 0;
+        top: 80px;
+        padding: 25px 20px 25px 20px;
+    }
+    
+    .activities-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+    
+    .welcome-header {
+        padding: 30px 20px;
+        min-height: 150px;
+        flex-direction: column;
+    }
+    
+    .welcome-header-right {
+        padding-left: 0;
+        padding-top: 20px;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .filter-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .activities-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-tabs {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cascading Filter Styles */
+.cascading-filter-container {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+}
+
+.filter-section {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 220px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.filter-label i {
+    color: #667eea;
+    font-size: 1.1rem;
+}
+
+.filter-dropdown {
+    width: 100%;
+    padding: 12px 18px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2c3e50;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 45px;
+}
+
+.filter-dropdown:hover:not(:disabled) {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-dropdown:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.filter-results {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.filter-count-badge {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.filter-count-badge span {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.reset-filter-btn {
+    padding: 10px 18px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reset-filter-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Hide filtered activities */
+.activity-card.filter-hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        min-width: 100%;
+    }
+    
+    .filter-results {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .reset-filter-btn {
+        justify-content: center;
+    }
+}
+</style>
+
+<!-- Main Container -->
+<div class="activities-main-container">
+    
+    <!-- Welcome Header with Bubble Animations -->
+    <div class="welcome-header">
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-tasks"></i>
+                My Activities
+            </h1>
+            <p class="welcome-subtitle">
+                Complete activities and track your learning progress
+            </p>
+        </div>
+        
+        <!-- Right Side - Filter Tabs -->
+        <div class="welcome-header-right">
+            <div class="filter-tabs">
+                <a href="{{{activitiesurl}}}" class="filter-tab {{#filter_all}}active{{/filter_all}}">
+                    <i class="fa fa-th"></i> All
+                </a>
+                <a href="{{{activitiesurl}}}?filter=pending" class="filter-tab {{#filter_pending}}active{{/filter_pending}}">
+                    <i class="fa fa-clock"></i> Pending
+                </a>
+                <a href="{{{activitiesurl}}}?filter=completed" class="filter-tab {{#filter_completed}}active{{/filter_completed}}">
+                    <i class="fa fa-check"></i> Completed
+                </a>
+            </div>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-icon">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="stat-number">{{total_activities}}</div>
+            <div class="stat-label">Total Activities</div>
+        </div>
+
+        <div class="stat-card progress">
+            <div class="stat-icon">
+                <i class="fa fa-clock"></i>
+            </div>
+            <div class="stat-number">{{in_progress_activities}}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+
+        <div class="stat-card completed">
+            <div class="stat-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+            <div class="stat-number">{{completed_activities}}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+
+        <div class="stat-card pending">
+            <div class="stat-icon">
+                <i class="fa fa-chart-line"></i>
+            </div>
+            <div class="stat-number">{{overall_progress}}%</div>
+            <div class="stat-label">Progress</div>
+        </div>
+    </div>
+
+    <!-- Cascading Filter Section -->
+    {{#has_filter_courses}}
+    <div class="cascading-filter-container">
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="courseFilterActivities" class="filter-label">
+                    <i class="fa fa-book"></i>
+                    <span>Select Course:</span>
+                </label>
+                <select id="courseFilterActivities" class="filter-dropdown">
+                    <option value="all">All Courses</option>
+                    {{#filter_courses}}
+                    <option value="{{courseid}}">{{coursename}}</option>
+                    {{/filter_courses}}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="lessonFilterActivities" class="filter-label">
+                    <i class="fa fa-list"></i>
+                    <span>Select Lesson:</span>
+                </label>
+                <select id="lessonFilterActivities" class="filter-dropdown" disabled>
+                    <option value="all">All Lessons</option>
+                </select>
+            </div>
+            
+            <div class="filter-results">
+                <div class="filter-count-badge">
+                    <span id="activityCount">{{total_activities}}</span> activities
+                </div>
+                <button id="resetFilters" class="reset-filter-btn" style="display: none;">
+                    <i class="fa fa-times"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+    {{/has_filter_courses}}
+
+    <!-- Activities Grid -->
+    {{#has_activities}}
+    <div class="activities-grid" id="activitiesGrid">
+        {{#activities}}
+        <div class="activity-card {{#completed}}completed{{/completed}} {{#is_overdue}}overdue{{/is_overdue}}" 
+             data-type="{{type}}" 
+             data-courseid="{{courseid}}" 
+             data-sectionid="{{section_id}}">
+            <!-- Activity Header -->
+            <div class="activity-header">
+                <div class="activity-icon-wrapper">
+                    <i class="fa {{icon}}"></i>
+                </div>
+                <div class="activity-header-content">
+                    <h3 class="activity-name">{{name}}</h3>
+                    <p class="activity-course-name">
+                        <i class="fa fa-book"></i> {{coursename}}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Activity Body -->
+            <div class="activity-body">
+                <!-- Meta Information -->
+                <div class="activity-meta">
+                    <span class="activity-meta-item">
+                        <i class="fa fa-tag"></i> {{type_display}}
+                    </span>
+                    <span class="activity-meta-item">
+                        <i class="fa fa-clock"></i> {{estimated_time}}
+                    </span>
+                    {{#has_duedate}}
+                    <span class="activity-meta-item {{#is_overdue}}overdue{{/is_overdue}}">
+                        <i class="fa fa-calendar"></i> Due: {{duedate}}
+                    </span>
+                    {{/has_duedate}}
+                    <span class="activity-meta-item">
+                        <i class="fa fa-folder"></i> {{categoryname}}
+                    </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="activity-progress">
+                    <div class="activity-progress-label">
+                        <span>Progress</span>
+                        <span><strong>{{progress}}%</strong></span>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar-inner {{#completed}}completed{{/completed}}{{#in_progress}}in-progress{{/in_progress}}{{#not_started}}not-started{{/not_started}}" style="width: {{progress}}%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Footer -->
+            <div class="activity-footer">
+                <span class="activity-section">
+                    <i class="fa fa-bookmark"></i> {{section_name}}
+                </span>
+                
+                {{#not_started}}
+                <a href="{{url}}" class="activity-action-btn start-btn">
+                    <i class="fa fa-play"></i> Start
+                </a>
+                {{/not_started}}
+                
+                {{#in_progress}}
+                <a href="{{url}}" class="activity-action-btn continue-btn">
+                    <i class="fa fa-arrow-right"></i> Continue
+                </a>
+                {{/in_progress}}
+                
+                {{#completed}}
+                <a href="{{url}}" class="activity-action-btn review-btn">
+                    <i class="fa fa-check"></i> Review
+                </a>
+                {{/completed}}
+            </div>
+        </div>
+        {{/activities}}
+    </div>
+    {{/has_activities}}
+
+    <!-- Empty State -->
+    {{#no_activities}}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fa fa-tasks"></i>
+        </div>
+        <h3 class="empty-title">No Activities Found</h3>
+        <p class="empty-message">You don't have any activities assigned yet. Check back later or browse your courses.</p>
+        <a href="{{{mycoursesurl}}}" class="empty-btn">
+            <i class="fa fa-book"></i> View My Courses
+        </a>
+    </div>
+    {{/no_activities}}
+
+</div>
+
+<script>
+// Cascading Filter Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const courseFilter = document.getElementById('courseFilterActivities');
+    const lessonFilter = document.getElementById('lessonFilterActivities');
+    const activityCards = document.querySelectorAll('.activity-card');
+    const activityCount = document.getElementById('activityCount');
+    const resetButton = document.getElementById('resetFilters');
+    
+    // Lessons data by course (from PHP)
+    const lessonsByCourse = {{{lessons_by_course_json}}};
+    
+    console.log('Cascading Filters Initialized');
+    console.log('Lessons by course:', lessonsByCourse);
+    
+    // Course filter change event
+    if (courseFilter) {
+        courseFilter.addEventListener('change', function() {
+            const selectedCourse = this.value;
+            console.log('Course selected:', selectedCourse);
+            
+            // Update lesson filter based on selected course
+            updateLessonFilter(selectedCourse);
+            
+            // Filter activities
+            filterActivities();
+            
+            // Show/hide reset button
+            updateResetButton();
+        });
+    }
+    
+    // Lesson filter change event
+    if (lessonFilter) {
+        lessonFilter.addEventListener('change', function() {
+            console.log('Lesson selected:', this.value);
+            filterActivities();
+            updateResetButton();
+        });
+    }
+    
+    // Reset filters button
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            courseFilter.value = 'all';
+            lessonFilter.value = 'all';
+            lessonFilter.disabled = true;
+            lessonFilter.innerHTML = '<option value="all">All Lessons</option>';
+            filterActivities();
+            this.style.display = 'none';
+        });
+    }
+    
+    // Update lesson filter dropdown based on selected course
+    function updateLessonFilter(courseId) {
+        lessonFilter.innerHTML = '<option value="all">All Lessons</option>';
+        
+        if (courseId === 'all') {
+            lessonFilter.disabled = true;
+        } else {
+            lessonFilter.disabled = false;
+            
+            // Add lessons for the selected course
+            if (lessonsByCourse[courseId]) {
+                lessonsByCourse[courseId].forEach(function(lesson) {
+                    const option = document.createElement('option');
+                    option.value = lesson.section_id;
+                    option.textContent = lesson.section_name;
+                    lessonFilter.appendChild(option);
+                });
+            }
+        }
+        
+        lessonFilter.value = 'all';
+    }
+    
+    // Filter activities based on selected course and lesson
+    function filterActivities() {
+        const selectedCourse = courseFilter.value;
+        const selectedLesson = lessonFilter.value;
+        let visibleCount = 0;
+        
+        activityCards.forEach(function(card) {
+            const cardCourseId = card.getAttribute('data-courseid');
+            const cardSectionId = card.getAttribute('data-sectionid');
+            
+            let showCard = true;
+            
+            // Apply course filter
+            if (selectedCourse !== 'all' && cardCourseId !== selectedCourse) {
+                showCard = false;
+            }
+            
+            // Apply lesson filter (only if course is selected)
+            if (selectedLesson !== 'all' && cardSectionId !== selectedLesson) {
+                showCard = false;
+            }
+            
+            if (showCard) {
+                card.classList.remove('filter-hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('filter-hidden');
+            }
+        });
+        
+        // Update count
+        if (activityCount) {
+            activityCount.textContent = visibleCount;
+        }
+        
+        // Smooth animation
+        const activitiesGrid = document.getElementById('activitiesGrid');
+        if (activitiesGrid) {
+            activitiesGrid.style.opacity = '0';
+            setTimeout(function() {
+                activitiesGrid.style.transition = 'opacity 0.3s ease';
+                activitiesGrid.style.opacity = '1';
+            }, 50);
+        }
+    }
+    
+    // Show/hide reset button
+    function updateResetButton() {
+        if (resetButton) {
+            if (courseFilter.value !== 'all' || lessonFilter.value !== 'all') {
+                resetButton.style.display = 'flex';
+            } else {
+                resetButton.style.display = 'none';
+            }
+        }
+    }
+});
+</script>

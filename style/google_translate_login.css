@@ -1,0 +1,86 @@
+/* 
+ * Aggressive hiding of Google Translate elements on login page
+ * This CSS specifically targets the login page layout to hide all Google Translate UI
+ */
+
+/* Hide Google Translate banner/bar at the top of the page - most aggressive rules */
+.pagelayout-login .goog-te-banner-frame,
+.pagelayout-login .goog-te-banner-frame.skiptranslate,
+.pagelayout-login iframe[title*="Google Translate"],
+.pagelayout-login iframe[name*="google_translate"],
+.pagelayout-login iframe[src*="translate.google.com"],
+.pagelayout-login iframe[src*="translate.googleapis.com"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+}
+
+/* Hide Google Translate widget container */
+.pagelayout-login #google_translate_element,
+.pagelayout-login div[id*="google_translate"],
+.pagelayout-login [id*="google_translate_element"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+}
+
+/* Hide all Google Translate UI elements */
+.pagelayout-login .goog-te-menu-frame,
+.pagelayout-login .goog-te-menu-value,
+.pagelayout-login .goog-te-gadget,
+.pagelayout-login .goog-te-gadget-icon,
+.pagelayout-login .VIpgJd-ZVi9od-ORHb-OEVmcd,
+.pagelayout-login [class*="goog-te"],
+.pagelayout-login [class*="VIpgJd"],
+.pagelayout-login [id*="goog-gt"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+}
+
+/* Reset body top position that Google Translate might change */
+.pagelayout-login body {
+    top: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Hide any overlay or modal from Google Translate */
+.pagelayout-login .goog-te-spinner-pos,
+.pagelayout-login .goog-te-balloon-frame,
+.pagelayout-login div[aria-label*="Google Translate"],
+.pagelayout-login div[role="dialog"][aria-label*="Google Translate"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide Google Translate elements when page layout is login (alternative selector) */
+body.pagelayout-login .goog-te-banner-frame,
+body.pagelayout-login #google_translate_element,
+body.pagelayout-login iframe[src*="translate.google.com"],
+body.pagelayout-login iframe[src*="translate.googleapis.com"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+

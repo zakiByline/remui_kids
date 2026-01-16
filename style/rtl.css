@@ -1,0 +1,138 @@
+/**
+ * RTL (Right-to-Left) CSS Support for Arabic and other RTL languages
+ * 
+ * This file provides RTL layout adjustments for the remui_kids theme
+ * when the site language is set to Arabic or other RTL languages.
+ * 
+ * @package theme_remui_kids
+ * @copyright 2025 Kodeit
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* Apply RTL layout when body has dir="rtl" attribute */
+body[dir="rtl"],
+html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+
+/* RTL adjustments for common elements */
+body[dir="rtl"] .navbar,
+body[dir="rtl"] .header-actions-container,
+body[dir="rtl"] .usernavigation {
+    direction: rtl;
+}
+
+/* RTL adjustments for flex containers */
+body[dir="rtl"] .d-flex {
+    flex-direction: row-reverse;
+}
+
+/* RTL adjustments for margins and padding */
+body[dir="rtl"] .ml-auto {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+body[dir="rtl"] .mr-auto {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+}
+
+/* RTL adjustments for text alignment */
+body[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+body[dir="rtl"] .text-right {
+    text-align: left !important;
+}
+
+/* RTL adjustments for Google Translate widget */
+body[dir="rtl"] .local-translator-switcher {
+    direction: rtl;
+}
+
+body[dir="rtl"] .goog-te-menu-frame {
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* RTL adjustments for dropdowns */
+body[dir="rtl"] .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    text-align: right;
+}
+
+/* RTL adjustments for icons */
+body[dir="rtl"] .fa-chevron-left::before {
+    content: "\f054";
+    /* fa-chevron-right */
+}
+
+body[dir="rtl"] .fa-chevron-right::before {
+    content: "\f053";
+    /* fa-chevron-left */
+}
+
+/* RTL adjustments for sidebars */
+body[dir="rtl"] .sidebar {
+    right: 0;
+    left: auto;
+}
+
+/* RTL adjustments for cards and containers */
+body[dir="rtl"] .card,
+body[dir="rtl"] .container,
+body[dir="rtl"] .row {
+    direction: rtl;
+}
+
+/* RTL adjustments for forms */
+body[dir="rtl"] input[type="text"],
+body[dir="rtl"] input[type="email"],
+body[dir="rtl"] input[type="password"],
+body[dir="rtl"] textarea,
+body[dir="rtl"] select {
+    text-align: right;
+    direction: rtl;
+}
+
+/* RTL adjustments for buttons */
+body[dir="rtl"] .btn {
+    direction: rtl;
+}
+
+/* RTL adjustments for navigation */
+body[dir="rtl"] nav {
+    direction: rtl;
+}
+
+/* RTL adjustments for lists */
+body[dir="rtl"] ul,
+body[dir="rtl"] ol {
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+/* RTL adjustments for tables */
+body[dir="rtl"] table {
+    direction: rtl;
+}
+
+body[dir="rtl"] th,
+body[dir="rtl"] td {
+    text-align: right;
+}
+
+
+
+
+
+
+
+
+
+
+

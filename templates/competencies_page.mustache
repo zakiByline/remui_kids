@@ -1,0 +1,1299 @@
+{{#custom_competencies}}
+
+{{#is_elementary_grade}}
+{{> theme_remui_kids/dashboard/elementary_sidebar}}
+{{> theme_remui_kids/elementary_sidebar_styles}}
+{{/is_elementary_grade}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+{{#is_highschool_grade}}
+{{> theme_remui_kids/highschool_sidebar}}
+{{/is_highschool_grade}}
+
+<style>
+.competencies-page {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 40px 48px 60px 48px;
+}
+.footer-copyright-wrapper ,.footer-mainsection-wrapper{
+    display: none !important;
+}
+.container,
+.container-fluid,
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+.container {
+    max-width: calc(100vw - 260px) !important;
+    width: calc(100vw - 260px) !important;
+    margin-left: 260px !important;
+}
+
+/* Welcome Header with Bubble Animations - for Elementary Students */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Regular Header for Non-Elementary Students */
+.competencies-page-header {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 30px rgba(17, 24, 39, 0.1);
+    margin-bottom: 32px;
+}
+
+.competencies-page-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.competencies-page-title i {
+    color: #2563eb;
+    font-size: 2.2rem;
+}
+
+.competencies-page-subtitle {
+    margin: 0;
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .welcome-header {
+        padding: 30px 20px;
+        min-height: 150px;
+        flex-direction: column;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+}
+
+.analytics-summary {
+    margin-bottom: 32px;
+}
+
+.analytics-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.summary-card {
+    background: linear-gradient(145deg, #fff, #f1f5f9);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary-card::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    opacity: 0.12;
+    background: currentColor;
+}
+
+.summary-card h4 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+    color: rgba(17, 24, 39, 0.72);
+}
+
+.summary-card .summary-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.summary-card .summary-percentage {
+    font-size: 0.85rem;
+    color: rgba(15, 23, 42, 0.65);
+    font-weight: 600;
+}
+
+.summary-card .summary-description {
+    font-size: 0.8rem;
+    color: rgba(15, 23, 42, 0.55);
+}
+
+.summary-card.competent {
+    color: #16a34a;
+}
+
+.summary-card.inprogress {
+    color: #2563eb;
+}
+
+.summary-card.notcompetent {
+    color: #f97316;
+}
+
+.summary-card.summary-total {
+    color: #0ea5e9;
+}
+
+.framework-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.framework-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.09);
+    overflow: hidden;
+}
+
+.framework-header {
+    width: 100%;
+    border: none;
+    background: #ffffff;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    cursor: pointer;
+}
+
+.framework-header-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.framework-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+.framework-icon.blue { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+.framework-icon.green { background: linear-gradient(135deg, #34d399, #059669); }
+.framework-icon.purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+.framework-icon.orange { background: linear-gradient(135deg, #fb923c, #f97316); }
+
+.framework-header-text h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.framework-header-text p {
+    margin: 4px 0 0 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.framework-header-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.framework-progress-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.framework-header i.fa-chevron-down {
+    color: #9ca3af;
+    transition: transform 0.3s ease;
+}
+
+.framework-body {
+    display: none;
+    border-top: 1px solid #e5e7eb;
+    padding: 0 28px 28px 28px;
+}
+
+.framework-body.open {
+    display: block;
+}
+
+.framework-body.open ~ .framework-header i.fa-chevron-down,
+.framework-card.open .framework-header i.fa-chevron-down {
+    transform: rotate(-180deg);
+}
+
+.framework-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    padding: 28px 0;
+}
+
+.overview-card {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.overview-card h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #1f2937;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.framework-status-bar {
+    display: flex;
+    height: 12px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.framework-status-segment {
+    height: 100%;
+}
+
+.framework-status-segment.competent { background: #22c55e; }
+.framework-status-segment.inprogress { background: #3b82f6; }
+.framework-status-segment.notcompetent { background: #f97316; }
+
+.status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+.status-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.status-legend-dot.competent { background: #22c55e; }
+.status-legend-dot.inprogress { background: #3b82f6; }
+.status-legend-dot.notcompetent { background: #f97316; }
+
+.course-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #1d4ed8;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin: 4px 6px 0 0;
+}
+
+.rating-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #1f2937;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 4px 6px 0 0;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
+.rating-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5f5;
+}
+
+.rating-dot.competent { background: #22c55e; }
+.rating-dot.inprogress { background: #3b82f6; }
+.rating-dot.notcompetent { background: #f97316; }
+.rating-dot.rating-mastery { background: linear-gradient(135deg, #7c3aed, #9333ea); }
+.rating-dot.rating-proficient { background: #16a34a; }
+.rating-dot.rating-developing { background: #f97316; }
+.rating-dot.rating-emerging { background: #2563eb; }
+.rating-dot.rating-warning { background: #f97316; }
+.rating-dot.rating-progress { background: #38bdf8; }
+.rating-dot.rating-default { background: #94a3b8; }
+
+.rating-chip.rating-mastery { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(147,51,234,0.18)); color: #5b21b6; }
+.rating-chip.rating-proficient { background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(16,185,129,0.18)); color: #065f46; }
+.rating-chip.rating-developing { background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(251,146,60,0.18)); color: #9a3412; }
+.rating-chip.rating-emerging { background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(96,165,250,0.18)); color: #1d4ed8; }
+.rating-chip.rating-warning { background: linear-gradient(135deg, rgba(248,113,113,0.12), rgba(248,113,113,0.2)); color: #b91c1c; }
+.rating-chip.rating-progress { background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(59,130,246,0.18)); color: #0369a1; }
+.rating-chip.rating-default { background: #f1f5f9; color: #1f2937; }
+
+.rating-chip .count {
+    color: #1d4ed8;
+}
+
+.action-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.85rem;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-chip strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.action-chip small {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.action-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+.action-chip.inprogress { background: #eef2ff; color: #4338ca; border-color: rgba(67,56,202,0.2); }
+.action-chip.notcompetent { background: #fff7ed; color: #ea580c; border-color: rgba(234,88,12,0.2); }
+.action-chip.competent { background: #ecfdf5; color: #047857; border-color: rgba(4,120,87,0.2); }
+
+.framework-competency-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.competency-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 20px 22px;
+    background: #f8fafc;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.08);
+}
+
+.competency-item-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.competency-item-header h4 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.competency-item-header p {
+    margin: 0;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.competency-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.competency-progress {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.competency-toggle {
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.competency-toggle:hover {
+    background: #1d4ed8;
+    box-shadow: 0 10px 24px rgba(29, 78, 216, 0.3);
+}
+
+.competency-toggle[aria-expanded="true"] {
+    background: #1e40af;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.status-badge.competent { background: #dcfce7; color: #047857; }
+.status-badge.inprogress { background: #dbeafe; color: #1d4ed8; }
+.status-badge.notcompetent { background: #ffedd5; color: #c2410c; }
+.status-badge.notstarted { background: #e5e7eb; color: #4b5563; }
+
+.competency-snapshot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 0 0;
+}
+
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.meta-chip i {
+    color: #2563eb;
+}
+
+.meta-chip.meta-muted {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.competency-panel {
+    margin-top: 18px;
+    display: none;
+    border-top: 1px dashed #cbd5f5;
+    padding-top: 18px;
+}
+
+.competency-panel.open {
+    display: block;
+}
+
+.competency-panel-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, 320px) minmax(320px, 1fr);
+    gap: 24px;
+}
+
+.feedback-column,
+.activity-column {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.feedback-column h5,
+.activity-column h5 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.feedback-card,
+.activity-card {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+}
+
+.feedback-highlight {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #1f2937;
+}
+
+.feedback-highlight strong {
+    font-weight: 700;
+}
+
+.feedback-note {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #e0e7ff;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.empty-state {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.activity-card header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.activity-card .course-name {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.activity-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.activity-progress .progress-track {
+    flex: 1;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.activity-progress .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+}
+
+.course-activity {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+.course-activity:first-of-type {
+    border-top: none;
+}
+
+.course-activity-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.course-activity-title span {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.course-activity-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.course-activity-action a {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.child-competency-group {
+    margin-top: 12px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.child-competency-group h6 {
+    margin: 0 0 6px 0;
+    font-size: 0.8rem;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.course-activity-group {
+    gap: 16px;
+}
+
+.child-competency {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+}
+
+.child-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: #0f172a;
+}
+
+.child-progress {
+    font-weight: 700;
+    color: #1d4ed8;
+}
+
+.child-activity-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.child-activity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+.child-activity .status-badge {
+    transform: scale(0.9);
+    transform-origin: left;
+}
+
+.child-activity.course-linked {
+    gap: 10px;
+}
+
+.child-activity.course-linked .activity-link {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.course-footer {
+    margin-top: 10px;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+@media (max-width: 1024px) {
+    .competency-panel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .framework-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .framework-header-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+</style>
+
+<div class="competencies-page">
+    {{#is_elementary_grade}}
+    <!-- Welcome Header with Bubble Animations -->
+    <div class="welcome-header">
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-certificate"></i>
+                Learning Competencies
+            </h1>
+            <p class="welcome-subtitle">
+                Your Skills, Progress & Achievements
+            </p>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+    </div>
+    {{/is_elementary_grade}}
+    {{^is_elementary_grade}}
+    <header class="competencies-page-header">
+        <div class="competencies-page-title">
+                <i class="fa fa-bullseye"></i>
+            <span>My Competencies</span>
+        </div>
+        <p class="competencies-page-subtitle">Track your progress, review feedback, and launch the next learning steps.</p>
+    </header>
+    {{/is_elementary_grade}}
+
+    {{#has_analytics_summary}}
+    <section class="analytics-summary">
+        <div class="analytics-summary-grid">
+            {{#analytics_summary}}
+            <article class="summary-card {{badge_class}}">
+                <h4>{{label}}</h4>
+                <div class="summary-value">{{value_display}}</div>
+                {{#percentage}}
+                <div class="summary-percentage">{{percentage}}%</div>
+                {{/percentage}}
+                {{#description}}
+                <div class="summary-description">{{description}}</div>
+                {{/description}}
+            </article>
+            {{/analytics_summary}}
+            </div>
+    </section>
+    {{/has_analytics_summary}}
+
+    {{#has_competency_groups}}
+    <section class="framework-accordion">
+        {{#competencies}}
+        <article class="framework-card" data-framework="{{slug}}">
+            <button class="framework-header" type="button" data-framework-toggle aria-expanded="false">
+                <div class="framework-header-main">
+                    <div class="framework-icon {{color}}">
+                        <i class="fa {{icon}}"></i>
+                </div>
+                    <div class="framework-header-text">
+                        <h3>{{name}}</h3>
+                        <p>{{competency_count}} {{competency_count_label}}</p>
+            </div>
+                </div>
+                <div class="framework-header-stats">
+                    <span class="status-badge competent">{{stats.competent_count}} Competent</span>
+                    <span class="status-badge inprogress">{{stats.inprogress_count}} In Progress</span>
+                    <span class="status-badge notcompetent">{{stats.notcompetent_count}} Not Yet</span>
+                    <span class="framework-progress-badge">
+                        <i class="fa fa-chart-line"></i>
+                        {{stats.avg_progress}}%
+                    </span>
+                    <i class="fa fa-chevron-down"></i>
+            </div>
+            </button>
+            <div class="framework-body">
+                <div class="framework-overview">
+                    <div class="overview-card">
+                        <h4>Status Mix</h4>
+                        <div class="framework-status-bar">
+                            {{#stats.status_distribution}}
+                            <span class="framework-status-segment {{class}}" style="width: {{percent}}%;"></span>
+                            {{/stats.status_distribution}}
+                </div>
+                        <div class="status-legend">
+                            {{#stats.status_distribution}}
+                            <span class="status-legend-item">
+                                <span class="status-legend-dot {{class}}"></span>
+                                {{label}} ({{count}})
+                            </span>
+                            {{/stats.status_distribution}}
+            </div>
+                </div>
+                    <div class="overview-card">
+                        <h4>Rating Mix</h4>
+                        {{#stats.has_ratings}}
+                        {{#stats.rating_distribution}}
+                            <span class="rating-chip {{chip_class}}">
+                                <span class="rating-dot {{dot_class}}"></span>
+                                {{label}}
+                                <span class="count">{{count}}</span>
+                            </span>
+                        {{/stats.rating_distribution}}
+                        {{/stats.has_ratings}}
+                        {{^stats.has_ratings}}
+                            <p class="empty-state">No ratings recorded yet.</p>
+                        {{/stats.has_ratings}}
+            </div>
+                    <div class="overview-card">
+                        <h4>Top Courses</h4>
+                        {{#stats.has_top_courses}}
+                            {{#stats.top_courses}}
+                            <span class="course-chip"><i class="fa fa-school"></i>{{name}} • {{count}}</span>
+                            {{/stats.top_courses}}
+                        {{/stats.has_top_courses}}
+                        {{^stats.has_top_courses}}
+                            <p class="empty-state">No course activity yet.</p>
+                        {{/stats.has_top_courses}}
+        </div>
+                    <div class="overview-card">
+                        <h4>Next Actions</h4>
+                        {{#stats.has_top_actions}}
+                            {{#stats.top_actions}}
+                            <a class="action-chip {{status_class}}" href="{{url}}" target="_blank">
+                                <span>{{action_label}}</span>
+                                <strong>{{label}}</strong>
+                                {{#course_name}}<small>{{course_name}}</small>{{/course_name}}
+                                <small>{{competency_name}}</small>
+                            </a>
+                            {{/stats.top_actions}}
+                        {{/stats.has_top_actions}}
+                        {{^stats.has_top_actions}}
+                            <p class="empty-state">You're all caught up!</p>
+                        {{/stats.has_top_actions}}
+    </div>
+</div>
+
+                <div class="framework-competency-list">
+                    {{#cards}}
+                    <article class="competency-item">
+                        <div class="competency-item-header">
+                            <div>
+                                <h4>{{name}}</h4>
+                        {{#description}}
+                                <p>{{description}}</p>
+                        {{/description}}
+                            </div>
+                            <div class="competency-item-meta">
+                                <span class="status-badge {{badge_class}}">{{status_label}}</span>
+                                <span class="competency-progress">{{progress}}%</span>
+                                <button type="button" class="competency-toggle" data-target="{{card_id}}-panel" aria-expanded="false">View details</button>
+                        </div>
+                        </div>
+                        <div class="competency-snapshot">
+                            {{#primary_course_name}}
+                            <span class="meta-chip"><i class="fa fa-school"></i>{{primary_course_name}}</span>
+                            {{/primary_course_name}}
+                        {{#has_feedback_preview}}
+                                {{#feedback_preview_rating}}
+                                <span class="meta-chip"><i class="fa fa-star"></i>{{feedback_preview_rating}}</span>
+                                {{/feedback_preview_rating}}
+                                {{#feedback_preview_teacher}}
+                                <span class="meta-chip meta-muted"><i class="fa fa-user"></i>{{feedback_preview_teacher}}</span>
+                                {{/feedback_preview_teacher}}
+                                {{#feedback_preview_time}}
+                                <span class="meta-chip meta-muted"><i class="fa fa-clock"></i>{{feedback_preview_time}}</span>
+                                {{/feedback_preview_time}}
+                        {{/has_feedback_preview}}
+                                </div>
+
+                        <div class="competency-panel" id="{{card_id}}-panel">
+                            <div class="competency-panel-grid">
+                                <div class="feedback-column">
+                                    <h5>Feedback</h5>
+                                {{#has_feedback_preview}}
+                                    <div class="feedback-card">
+                                        <div class="feedback-highlight">
+                                            {{#feedback_preview_rating}}<strong>Rating:</strong> {{feedback_preview_rating}}{{/feedback_preview_rating}}
+                                            {{#feedback_preview_teacher}}<span><strong>Teacher:</strong> {{feedback_preview_teacher}}</span>{{/feedback_preview_teacher}}
+                                            {{#feedback_preview_time}}<span><strong>Updated:</strong> {{feedback_preview_time}}</span>{{/feedback_preview_time}}
+                                {{#feedback_preview_comment}}
+                                            <div class="feedback-note">{{{feedback_preview_comment}}}</div>
+                                {{/feedback_preview_comment}}
+                                </div>
+                            </div>
+                                    {{/has_feedback_preview}}
+                                    {{^has_feedback_preview}}
+                                    <p class="empty-state">No feedback recorded yet.</p>
+                                    {{/has_feedback_preview}}
+
+                            {{#courses}}
+                                {{#teacher_comment}}
+                                        <div class="feedback-note"><strong>{{coursename}}:</strong> {{{teacher_comment}}}</div>
+                                {{/teacher_comment}}
+                                    {{/courses}}
+                                </div>
+
+                                <div class="activity-column">
+                                    <h5>Linked Courses & Activities</h5>
+                                    {{#has_course_content}}
+                                        <div class="child-competency-group course-activity-group">
+                                            <h6>Linked Courses & Activities</h6>
+                                            {{#courses}}
+                                            <div class="child-competency">
+                                {{#has_activities}}
+                                                <div class="child-activity-list">
+                                    {{#activities}}
+                                                    <div class="child-activity course-linked">
+                                                        <span>{{name}}</span>
+                                            <span class="status-badge {{status_class}}">{{status_label}}</span>
+                                                        {{#grade_text}}<span class="meta-chip meta-muted">{{grade_text}}</span>{{/grade_text}}
+                                            <a class="activity-link" href="{{url}}" target="_blank">
+                                                {{#grade_text}}Review{{/grade_text}}
+                                                {{^grade_text}}Open{{/grade_text}}
+                                            </a>
+                                    </div>
+                                    {{/activities}}
+                                </div>
+                                {{/has_activities}}
+                                                {{^has_activities}}
+                                                <p class="empty-state">No linked activities.</p>
+                                                {{/has_activities}}
+                                                <div class="child-header course-footer">
+                                                    <span>{{coursename}}</span>
+                                            <span class="status-badge {{status_class}}">{{status_label}}</span>
+                                        </div>
+                                    </div>
+                                    {{/courses}}
+                        </div>
+                        {{/has_course_content}}
+                        {{^has_course_content}}
+                                    <p class="empty-state">No linked courses yet.</p>
+                        {{/has_course_content}}
+
+                                    {{#has_children}}
+                                    <div class="child-competency-group">
+                                        <h6>Related Competencies</h6>
+                                        {{#children}}
+                                        <div class="activity-card related-competency-card">
+                                            <header>
+                                                <span class="course-name">{{name}}</span>
+                        <span class="status-badge {{badge_class}}">{{status_label}}</span>
+                                            </header>
+                                            {{#feedback_preview_time}}
+                                            <div class="competency-card-feedback-time">{{feedback_preview_time}}</div>
+                                            {{/feedback_preview_time}}
+                                            {{#has_feedback_preview}}
+                                            <div class="feedback-note">
+                                                {{#feedback_preview_teacher}}<strong>{{feedback_preview_teacher}}:</strong> {{/feedback_preview_teacher}}
+                                                {{#feedback_preview_comment}}{{{feedback_preview_comment}}}{{/feedback_preview_comment}}
+                                                {{^feedback_preview_comment}}
+                                                    {{#feedback_preview_rating}}Rating: {{feedback_preview_rating}}{{/feedback_preview_rating}}
+                                                {{/feedback_preview_comment}}
+                    </div>
+                                            {{/has_feedback_preview}}
+                    {{#has_activities}}
+                    <div class="course-activities">
+                        {{#activities}}
+                        <div class="course-activity">
+                                                    <div class="course-activity-title">
+                                                        <strong>{{name}}</strong>
+                                                        {{#course_name}}<span>{{course_name}}</span>{{/course_name}}
+                            </div>
+                                                    <div class="course-activity-action">
+                                <span class="status-badge {{status_class}}">{{status_label}}</span>
+                                                        {{#grade_text}}<span class="meta-chip meta-muted">{{grade_text}}</span>{{/grade_text}}
+                                                        <a href="{{url}}" target="_blank">
+                                    {{#grade_text}}Review{{/grade_text}}
+                                    {{^grade_text}}Open{{/grade_text}}
+                                </a>
+                            </div>
+                        </div>
+                        {{/activities}}
+                    </div>
+                    {{/has_activities}}
+                                            {{^has_activities}}
+                                            <p class="empty-state">No linked activities.</p>
+                                            {{/has_activities}}
+                </div>
+                                        {{/children}}
+                </div>
+                                    {{/has_children}}
+            </div>
+        </div>
+    </div>
+                    </article>
+                    {{/cards}}
+</div>
+                    </div>
+        </article>
+                {{/competencies}}
+    </section>
+    {{/has_competency_groups}}
+                </div>
+
+<script>
+(function() {
+    const frameworkToggles = document.querySelectorAll('[data-framework-toggle]');
+    frameworkToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const card = toggle.closest('.framework-card');
+            const body = card.querySelector('.framework-body');
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            body.classList.toggle('open', !expanded);
+            card.classList.toggle('open', !expanded);
+        });
+    });
+
+    const competencyToggles = document.querySelectorAll('.competency-toggle');
+    competencyToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const targetId = toggle.getAttribute('data-target');
+            const panel = document.getElementById(targetId);
+            if (!panel) {
+        return;
+    }
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            panel.classList.toggle('open', !expanded);
+        });
+    });
+})();
+</script>
+
+{{/custom_competencies}}

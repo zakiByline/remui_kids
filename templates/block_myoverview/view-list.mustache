@@ -1,0 +1,125 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    Edwiser RemUI
+    @package theme_remui
+    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template block_myoverview/view-list
+
+    This template renders the list view for the myoverview block.
+
+    Example context (json):
+    {
+        "courses": [{
+            "name": "Assignment due 1",
+            "viewurl": "https://moodlesite/course/view.php?id=2",
+            "courseimage": "https://moodlesite/pluginfile/123/course/overviewfiles/123.jpg",
+            "fullname": "course 3",
+            "hasprogress": true,
+            "progress": 10,
+            "coursecategory": "Category 1",
+            "visible": true
+        }]
+    }
+}}
+
+<ul class="list-group edw-course-list-container m-0">
+    {{#courses}}
+    <li class="list-group-item course-listitem  d-flex edw-course-list edwanimate-{{cardanimation}}" data-region="course-content" data-course-id="{{{id}}}">
+        <div class="edw-course-img-wrapper">
+            <div class="card-img dashboard-list-img p-p-4"
+                style='background-image: url("{{{courseimage}}}");'>
+                <a href="{{ viewurl }} " class="view-course-url"></a>
+                <div class="card-img-icons-wrapper d-flex align-items-center flex-gap-2 ml-auto">
+                    {{> core_course/favouriteicon }}
+                    {{^visible}}
+                    <div class="visibilityicon">
+                        <span class="hidden-icon edw-icon edw-icon-Hide visible" aria-hidden="true"
+                            title="{{#str}} hiddencourse, theme_remui {{/str}}"></span>
+                    </div>
+                    {{/visible}}
+                    {{> block_myoverview/course-action-menu }}
+                    <span class="sr-only">{{#str}}aria:courseimage, theme_remui{{/str}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="edw-list-body w-100 d-flex flex-column justify-content-between flex-gap-5">
+            <div class="edw-card-design-hd d-flex flex-column flex-gap-3">
+                <div class="d-flex flex-column flex-gap-0d5">
+                    {{#showcoursecategory}}
+                    <div class="text-muted muted d-flex flex-wrap" title=" {{{coursecategory}}}">
+                        <span class="sr-only">
+                            {{#str}}aria:coursecategory, core_course{{/str}}
+                        </span>
+                        <span class="categoryname small-info-semibold">
+                            {{{coursecategory}}}
+                        </span>
+                    </div>
+                    {{/showcoursecategory}}
+                    {{#showshortname}}
+                    <div class="text-muted muted d-flex flex-wrap" title="{{{shortname}}}">
+                        {{#showcoursecategory}}
+                        <div class="pl-1 pr-1">|</div>
+                        {{/showcoursecategory}}
+                        <span class="sr-only">
+                            {{#str}}aria:courseshortname, core_course{{/str}}
+                        </span>
+                        <div>{{{shortname}}}</div>
+                    </div>
+                    {{/showshortname}}
+                    <a href="{{viewurl}}" class="aalink coursename text-decoration-none ellipsis ellipsis-2 h-semibold-6" title="{{{fullname}}}">
+                        <span class="sr-only">
+                            {{#str}}aria:coursename, core_course{{/str}}
+                        </span>
+                        {{{fullname}}}
+                    </a>
+                </div>
+                {{#instructor}}
+                <div class="d-flex flex-row flex-gap-0d5">
+                    <div class="d-flex flex-row instructor-info-wrapper">
+                        <a href="{{ url }}" class="d-flex align-items-center flex-gap-d5 instructor-img {{ imgStyle }}"
+                            aria-label="Instructor for {{coursename}} is - {{name}}" title="{{{name}}}">
+                            <img src="{{ picture }}" class="rounded-circle" alt="{{ name }}" loading="lazy"/>
+                            <h6 class="h-regular-6 course-instructors m-0" title="{{{name}}}">{{{name}}}</h6>
+                        </a>
+                    </div>
+                    {{#instructorcount}}<span class="small-info-semibold instructorscount d-flex align-items-center justify-content-center">+{{instructorcount}}</span>{{/instructorcount}}
+                </div>
+                {{/instructor}}
+            </div>
+            <div class="edw-card-design-ft d-flex justify-content-between flex-wrap align-items-end flex-gap-5">
+                <div class="d-flex flex-column flex-gap-0d5 progress-data-wrapper">
+                    {{#hasprogress}}
+                    <span class="small-info-regular m-0" title="{{activitydata}}">{{activitydata}}</span>
+                    <div class="progress" title="{{#str}}completepercent, theme_remui,{{progress}}{{/str}}">
+                        <div class="progress-bar" role="progressbar" style="width: {{progress}}%;"
+                            aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text h-semibold-6" title="{{#str}}completepercent, theme_remui,{{progress}}{{/str}}">
+                        <span class="sr-only">{{#str}}aria:courseprogress, block_myoverview{{/str}}</span>
+                        {{#str}}completepercent, theme_remui, <span class="h-semibold-6 m-0" >{{progress}}</span>{{/str}}
+                    </div>
+                    {{/hasprogress}}
+                </div>
+                <a class="btn btn-secondary btn-sm ml-auto view-course-btn" href="{{viewurl}}" title="{{#str}}viewcoursetitle,theme_remui{{/str}}">{{#str}}viewcourse,theme_remui{{/str}}</a>
+            </div>
+        </div>
+    </li>
+    {{/courses}}
+</ul>

@@ -1,0 +1,33 @@
+{{! Minimal Student Overview Template }}
+
+<div class="student-overview-wrapper" style="padding: 20px; background: #f8fafc; min-height: 100vh;">
+    <h1 style="color: #2d3748; margin-bottom: 20px;">Student Overview</h1>
+    
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2>Student Information</h2>
+        <p><strong>Name:</strong> {{student.fullname}}</p>
+        <p><strong>Email:</strong> {{student.email}}</p>
+        <p><strong>ID:</strong> {{student.id}}</p>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 8px;">
+        <h2>Statistics</h2>
+        <p><strong>Total Courses:</strong> {{overview_counts.total_courses}}</p>
+        <p><strong>Completed Courses:</strong> {{overview_counts.completed_courses}}</p>
+        <p><strong>Hours Spent:</strong> {{overview_counts.hours_spent}}</p>
+        <p><strong>Overall Performance:</strong> {{overall.percent}}%</p>
+    </div>
+    
+    {{#debug}}
+    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px;">
+        <h3>Debug Information</h3>
+        <p>Template loaded successfully!</p>
+    </div>
+    {{/debug}}
+</div>
+
+
+
+
+
+

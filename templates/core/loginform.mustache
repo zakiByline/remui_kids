@@ -1,0 +1,389 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    Edwiser RemUI Kids - Minimal Login Form
+    @package theme_remui_kids
+    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template core/loginform
+
+    Moodle template for the login page - Minimal and Clean Design
+}}
+
+<div class="loginform d-flex flex-column flex-gap-8">
+    <div class="login-welcome-wrapper d-flex flex-column flex-gap-1 text-center">
+        <h2 class="h-bold-3 m-0">
+            {{#str}}welcometobrand, theme_remui, {{sitename}}{{/str}}
+        </h2>
+    </div>
+    {{#maintenance}}
+        <div class="alert alert-danger login-maintenance">
+            {{{maintenance}}}
+        </div>
+    {{/maintenance}}
+    {{#error}}
+        <a href="#" id="loginerrormessage" class="sr-only">{{error}}</a>
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+    {{/error}}
+    {{#cansignup}}
+        <a href="{{signupurl}}" class="sr-only">{{#str}} tocreatenewaccount {{/str}}</a>
+    {{/cansignup}}
+    
+    <div class="login-content-wrapper d-flex flex-wrap">
+        <!-- Left side: Traditional login form -->
+        <div class="login-form-section {{#hasidentityproviders}}col-md-6 pr-md-4{{/hasidentityproviders}} {{^hasidentityproviders}}w-100{{/hasidentityproviders}}">
+            <form class="login-form" action="{{loginurl}}" method="post" id="login">
+                <input type="hidden" name="logintoken" value="{{logintoken}}">
+                <div class="login-form-username form-group">
+                    <label for="username" class="sr-only">
+                        {{^canloginbyemail}}
+                            {{#str}} username {{/str}}
+                        {{/canloginbyemail}}
+                        {{#canloginbyemail}}
+                            {{#str}} usernameemail {{/str}}
+                        {{/canloginbyemail}}
+                    </label>
+                    <label class="text-link-semibold form-label-color" tabindex="-1">
+                        {{^canloginbyemail}}
+                            {{#str}} username {{/str}}
+                        {{/canloginbyemail}}
+                        {{#canloginbyemail}}
+                            {{#str}} usernameemail {{/str}}
+                        {{/canloginbyemail}}
+                    </label>
+                    <input type="text" name="username" id="username" {{!
+                        !}}class="form-control form-control-lg" {{!
+                        !}}value="{{username}}" {{!
+                        !}}placeholder="{{^canloginbyemail}}{{#cleanstr}}username{{/cleanstr}}{{/canloginbyemail}}{{!
+                        !}}{{#canloginbyemail}}{{#cleanstr}}usernameemail{{/cleanstr}}{{/canloginbyemail}}" {{!
+                        !}}autocomplete="username">
+                </div>
+                <div class="login-form-password form-group">
+                    <label for="password" class="sr-only">{{#str}} password {{/str}}</label>
+                    <label class="text-link-semibold form-label-color" tabindex="-1">
+                        {{#str}} password {{/str}}
+                    </label>
+                    <div class="position-relative password-field-eye">
+                        <input type="password" name="password" id="password" value="" {{!
+                            !}}class="form-control form-control-lg" {{!
+                            !}}placeholder="{{#cleanstr}}password{{/cleanstr}}" {{!
+                            !}}autocomplete="current-password">
+                        <span class="edw-icon edw-icon-Show show-password-icon"></span>
+                    </div>
+                </div>
+                {{#recaptcha}}
+                    <div class="login-form-recaptcha mb-3">
+                        {{{recaptcha}}}
+                    </div>
+                {{/recaptcha}}
+                <div class="login-form-forgotpassword form-group text-right small-info-semibold">
+                    <a href="{{forgotpasswordurl}}">{{#str}}forgotaccount, theme_remui{{/str}}</a>
+                </div>
+                <div class="login-form-submit form-group">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right side: Social login providers -->
+        {{#hasidentityproviders}}
+        <div class="login-identityproviders-section col-md-6 pl-md-4 d-flex flex-column">
+            <div class="login-identityproviders d-flex flex-column h-100">
+                <h2 class="login-heading text-align-middle h-semibold-6 m-0 mb-3">{{#str}} potentialidps, theme_remui {{/str}}</h2>
+
+                <div class="login-identityprovider-btn-wrapper d-flex flex-column w-100">
+                {{#identityproviders}}
+                    <a class="login-identityprovider-btn btn btn-lg d-flex align-items-center justify-content-start w-100 mb-3" href="{{url}}" title="{{name}}" data-provider="{{name}}">
+                        <span class="login-idp-icon d-inline-flex align-items-center justify-content-center rounded-circle mr-3">
+                            {{#iconurl}}
+                                <img src="{{iconurl}}" alt="{{name}}" width="24" height="24"/>
+                            {{/iconurl}}
+                            {{^iconurl}}
+                                {{#extraimageforloginbtn}}
+                                    <img src="{{extraimageforloginbtn}}" alt="{{name}}" width="24" height="24"/>
+                                {{/extraimageforloginbtn}}
+                                {{^extraimageforloginbtn}}
+                                    <span class="text-uppercase font-weight-bold" style="font-size: 14px;">{{name}}</span>
+                                {{/extraimageforloginbtn}}
+                            {{/iconurl}}
+                        </span>
+                        <span class="login-idp-text font-weight-bold">Continue with {{name}}</span>
+                    </a>
+                {{/identityproviders}}
+                </div>
+            </div>
+        </div>
+        {{/hasidentityproviders}}
+    </div>
+    <div>
+        {{#hasinstructions}}
+        <div class="login-instructions">
+            <h2 class="login-heading text-link-semibold form-label-color">{{#str}}firsttime, theme_remui{{/str}}</h2>
+            {{{instructions}}}
+        </div>
+        {{/hasinstructions}}
+        {{#cansignup}}
+        <div class="login-signup">
+            <a class="btn btn-secondary btn-block" href="{{signupurl}}">{{#str}}startsignup{{/str}}</a>
+        </div>
+        {{/cansignup}}
+    </div>
+    {{! REMOVED: Guest login section - keeping login page minimal }}
+    {{! REMOVED: Cookies notice - keeping login page clean }}
+    {{#languagemenu}}
+    <div class="d-flex justify-content-center">
+        <div class="login-languagemenu text-link-semibold">
+            {{>core/action_menu}}
+        </div>
+    </div>
+    {{/languagemenu}}
+</div>
+
+<style>
+/* Increase login container size */
+.login-wrapper .login-container {
+    max-width: 800px !important;
+    width: 100% !important;
+}
+
+/* Two-column login layout */
+.login-content-wrapper {
+    width: 100%;
+    gap: 2rem;
+}
+
+.login-form-section,
+.login-identityproviders-section {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Add vertical divider on desktop */
+@media (min-width: 768px) {
+    .login-identityproviders-section {
+        border-left: 1px solid #e0e0e0;
+        padding-left: 2rem !important;
+    }
+    
+    .login-form-section {
+        padding-right: 2rem !important;
+    }
+}
+
+/* Stack on mobile */
+@media (max-width: 767px) {
+    .login-content-wrapper {
+        flex-direction: column;
+    }
+    
+    .login-form-section {
+        width: 100% !important;
+        margin-bottom: 2rem;
+    }
+    
+    .login-identityproviders-section {
+        width: 100% !important;
+        padding-top: 2rem;
+        border-top: 1px solid #e0e0e0;
+    }
+}
+
+/* Social login button styling - Default Dark Blue */
+.login-identityprovider-btn {
+    border-radius: 6px;
+    background: #1E3A8A !important;
+    border: 1px solid #1E3A8A !important;
+    padding: 12px 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    transition: all 0.2s ease;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn:hover {
+    background: #1E40AF !important;
+    border-color: #1E40AF !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.login-identityprovider-btn .login-idp-text {
+    font-size: 15px;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn .login-idp-icon {
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+/* Facebook - Official Blue */
+.login-identityprovider-btn[data-provider*="Facebook"],
+.login-identityprovider-btn[data-provider*="facebook"] {
+    background: #1877F2 !important;
+    border-color: #1877F2 !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Facebook"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="facebook"] .login-idp-text {
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Facebook"]:hover,
+.login-identityprovider-btn[data-provider*="facebook"]:hover {
+    background: #166FE5 !important;
+    border-color: #166FE5 !important;
+}
+
+/* Google - Light Cream */
+.login-identityprovider-btn[data-provider*="Google"],
+.login-identityprovider-btn[data-provider*="google"] {
+    background: #FFF8E7 !important;
+    border: 1px solid #E8DCC4 !important;
+    color: #3c4043 !important;
+}
+
+.login-identityprovider-btn[data-provider*="Google"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="google"] .login-idp-text {
+    color: #3c4043 !important;
+}
+
+.login-identityprovider-btn[data-provider*="Google"]:hover,
+.login-identityprovider-btn[data-provider*="google"]:hover {
+    background: #FFF3D6 !important;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.3) !important;
+}
+
+.login-identityprovider-btn[data-provider*="Google"] .login-idp-icon,
+.login-identityprovider-btn[data-provider*="google"] .login-idp-icon {
+    border-color: transparent !important;
+}
+
+/* Microsoft - Official Light Blue */
+.login-identityprovider-btn[data-provider*="Microsoft"],
+.login-identityprovider-btn[data-provider*="microsoft"] {
+    background: #00A4EF !important;
+    border-color: #00A4EF !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Microsoft"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="microsoft"] .login-idp-text {
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Microsoft"]:hover,
+.login-identityprovider-btn[data-provider*="microsoft"]:hover {
+    background: #0078D4 !important;
+    border-color: #0078D4 !important;
+}
+
+/* Apple - Black (official style) */
+.login-identityprovider-btn[data-provider*="Apple"],
+.login-identityprovider-btn[data-provider*="apple"] {
+    background: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Apple"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="apple"] .login-idp-text {
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Apple"]:hover,
+.login-identityprovider-btn[data-provider*="apple"]:hover {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+}
+
+/* Twitter/X - Black (new branding) */
+.login-identityprovider-btn[data-provider*="Twitter"],
+.login-identityprovider-btn[data-provider*="twitter"],
+.login-identityprovider-btn[data-provider*="X"] {
+    background: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="Twitter"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="twitter"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="X"] .login-idp-text {
+    color: #fff !important;
+}
+
+/* LinkedIn - Official Blue */
+.login-identityprovider-btn[data-provider*="LinkedIn"],
+.login-identityprovider-btn[data-provider*="linkedin"] {
+    background: #0A66C2 !important;
+    border-color: #0A66C2 !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="LinkedIn"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="linkedin"] .login-idp-text {
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="LinkedIn"]:hover,
+.login-identityprovider-btn[data-provider*="linkedin"]:hover {
+    background: #004182 !important;
+    border-color: #004182 !important;
+}
+
+/* GitHub - Dark Gray */
+.login-identityprovider-btn[data-provider*="GitHub"],
+.login-identityprovider-btn[data-provider*="github"] {
+    background: #24292e !important;
+    border-color: #24292e !important;
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="GitHub"] .login-idp-text,
+.login-identityprovider-btn[data-provider*="github"] .login-idp-text {
+    color: #fff !important;
+}
+
+.login-identityprovider-btn[data-provider*="GitHub"]:hover,
+.login-identityprovider-btn[data-provider*="github"]:hover {
+    background: #1a1e22 !important;
+    border-color: #1a1e22 !important;
+}
+</style>
+
+{{#js}}
+    {{^error}}
+        {{#autofocusform}}
+            var userNameField = document.getElementById('username');
+            if (userNameField.value.length == 0) {
+                userNameField.focus();
+            } else {
+                document.getElementById('password').focus();
+            }
+        {{/autofocusform}}
+    {{/error}}
+    {{#error}}
+        document.getElementById('loginerrormessage').focus();
+    {{/error}}
+    require(['core_form/submit'], function(Submit) {
+        Submit.init("loginbtn");
+    });
+{{/js}}

@@ -1,0 +1,836 @@
+{{!
+    Elementary Sidebar - Kid-friendly navigation for dashboard
+}}
+
+<!-- Sidebar Toggle Button for Mobile -->
+<button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle Sidebar" aria-expanded="false">
+    <span class="toggle-icon" aria-hidden="true">☰</span>
+    <span class="sr-only">Toggle sidebar navigation</span>
+</button>
+
+<!-- Elementary Student Sidebar -->
+<div class="elementary-student-sidebar" id="elementarySidebar">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Menu</h3>
+        <div class="sidebar-header-actions">
+            <button class="sidebar-collapse-trigger" id="sidebarCollapse" type="button" aria-controls="elementarySidebar" aria-expanded="true" aria-label="Collapse sidebar">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            <button class="sidebar-close-btn" id="sidebarClose" aria-label="Close Sidebar">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav class="elementary-sidebar-nav">
+
+    
+
+        <!-- DASHBOARD Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title">
+                <span class="elementary-section-bullet blue"></span>
+
+            </div>
+            <ul class="elementary-nav-list">
+                <li class="elementary-nav-item">
+                    <a href="{{{dashboardurl}}}" class="elementary-nav-link {{#is_dashboard_page}}active{{/is_dashboard_page}}">
+                        <i class="fa fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{elementary_mycoursesurl}}}" class="elementary-nav-link {{#is_mycourses_page}}active{{/is_mycourses_page}}">
+                        <i class="fa fa-graduation-cap"></i>
+                        <span>My Courses</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{lessonsurl}}}" class="elementary-nav-link {{#is_lessons_page}}active{{/is_lessons_page}}">
+                        <i class="fa fa-book"></i>
+                        <span>Lessons</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{activitiesurl}}}" class="elementary-nav-link {{#is_activities_page}}active{{/is_activities_page}}">
+                        <i class="fa fa-tasks"></i>
+                        <span>Activities</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{achievementsurl}}}" class="elementary-nav-link {{#is_achievements_page}}active{{/is_achievements_page}}">
+                        <i class="fa fa-award"></i>
+                        <span>Achievements</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{competenciesurl}}}" class="elementary-nav-link {{#is_competencies_page}}active{{/is_competencies_page}}">
+                        <i class="fa fa-target"></i>
+                        <span>Competencies</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{scheduleurl}}}" class="elementary-nav-link {{#is_schedule_page}}active{{/is_schedule_page}}">
+                        <i class="fa fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{myreportsurl}}}" class="elementary-nav-link {{#is_myreports_page}}active{{/is_myreports_page}}">
+                        <i class="fa fa-chart-bar"></i>
+                        <span>My Reports</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{communityurl}}}" class="elementary-nav-link {{#is_community_page}}active{{/is_community_page}}">
+                        <i class="fa fa-users"></i>
+                        <span>Communities</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{#currentactivityurl}}{{{currentactivityurl}}}{{/currentactivityurl}}{{^currentactivityurl}}/theme/remui_kids/elementary_current_activity.php{{/currentactivityurl}}" class="elementary-nav-link {{#is_currentactivity_page}}active{{/is_currentactivity_page}}">
+                        <i class="fa fa-list-check"></i>
+                        <span>My Actions</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{#needhelpurl}}{{{needhelpurl}}}{{/needhelpurl}}{{^needhelpurl}}/theme/remui_kids/need_help.php{{/needhelpurl}}" class="elementary-nav-link {{#is_needhelp_page}}active{{/is_needhelp_page}}" data-nav-link="needhelp" onclick="handleNeedHelpClick(event, this);">
+                        <i class="fa fa-life-ring"></i>
+                        <span>Need Help</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- SETTINGS & PROFILE Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title">
+                <span class="elementary-section-bullet orange"></span>
+                SETTINGS & PROFILE
+            </div>
+            <ul class="elementary-nav-list">
+                <li class="elementary-nav-item">
+                    <a href="{{{settingsurl}}}" class="elementary-nav-link">
+                        <i class="fa fa-cogs"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{profileurl}}}" class="elementary-nav-link {{#is_profile_page}}active{{/is_profile_page}}">
+                        <i class="fa fa-user-circle"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{logouturl}}}" class="elementary-nav-link">
+                        <i class="fa fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- QUICK ACTIONS Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title quick-actions-toggle" id="quick-actions-toggle" onclick="toggleQuickActionsMenu()" style="cursor: pointer; user-select: none;" role="button" tabindex="0" aria-expanded="false" aria-controls="quick-actions-container">
+                <span class="elementary-section-bullet purple"></span>
+                QUICK ACTIONS
+                <i class="fa fa-chevron-down quick-actions-arrow" id="quick-actions-arrow" style="float: right; transition: transform 0.3s;"></i>
+            </div>
+            <div class="elementary-quick-actions-container" id="quick-actions-container" style="overflow: visible; transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;">
+                <div class="elementary-quick-action-card ebooks-card" onclick="navigateToPage('ebooks')" style="cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-book-open"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4>E-books</h4>
+                        <p>Access digital learning materials</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <div class="elementary-quick-action-card ask-teacher-card" onclick="navigateToPage('ask-teacher')" style="cursor: pointer; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4>Ask Teacher</h4>
+                        <p>Get help from your instructor</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <div class="elementary-quick-action-card share-class-card" onclick="navigateToPage('messages')" style="cursor: pointer; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-share-square"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4>Share with Class</h4>
+                        <p>Collaborate with classmates</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <a href="{{{studypartnerurl}}}" class="elementary-quick-action-card studypartner-card" style="text-decoration: none; color: white; background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-brain"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4>Study Partner</h4>
+                        <p>AI-powered study buddy</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a href="{{{emulatorsurl}}}" class="elementary-quick-action-card" style="text-decoration: none; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-gamepad"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4>Emulators Hub</h4>
+                        <p>Access all your emulators</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </nav>
+</div>
+
+<!-- Elementary Sidebar CSS -->
+<style>
+/* Sidebar Toggle Button */
+.sidebar-toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid #5b6bc0;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.sidebar-toggle-btn .toggle-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    display: inline-block;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5b6bc0 0%, #6b5b95 100%);
+}
+
+/* Elementary Student Sidebar */
+.elementary-student-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background: white;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: transform 0.3s ease;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 182, 193, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.sidebar-title {
+    margin: 0;
+    color: #374151;
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar-close-btn {
+    background: none;
+    border: none;
+    color: #374151;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.sidebar-close-btn:hover {
+    background: rgba(255, 182, 193, 0.2);
+    color: #dc2626;
+}
+
+/* Desktop collapse toggle (inline in header) */
+.sidebar-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-collapse-trigger {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    background: #ffffff;
+    color: #1f2937;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.sidebar-collapse-trigger:hover {
+    transform: translateX(2px);
+    background: #f3f4f6;
+}
+
+/* Navigation Styles */
+.elementary-sidebar-nav {
+    padding: 20px;
+}
+
+.elementary-nav-section {
+    margin-bottom: 30px;
+}
+
+.elementary-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.elementary-section-bullet {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.elementary-section-bullet.blue {
+    background: #ffb6c1;
+}
+
+.elementary-section-bullet.orange {
+    background: #ffb6c1;
+}
+
+.elementary-section-bullet.purple {
+    background: #ffb6c1;
+}
+
+.elementary-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.elementary-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 182, 193, 0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 8px rgba(255, 182, 193, 0.1);
+}
+
+.elementary-nav-link:hover {
+    background: rgba(255, 182, 193, 0.1);
+    transform: translateX(5px);
+    border-color: rgba(255, 182, 193, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 182, 193, 0.15);
+}
+
+.elementary-nav-link.active {
+    background: rgba(255, 182, 193, 0.15);
+    border-color: #ffb6c1;
+    box-shadow: 0 4px 12px rgba(255, 182, 193, 0.2);
+    color: #be185d;
+}
+
+.elementary-nav-link i {
+    width: 18px;
+    text-align: center;
+    font-size: 1rem;
+    color: #374151;
+    opacity: 0.8;
+}
+
+.elementary-nav-link.active i {
+    opacity: 1;
+    color: #be185d;
+}
+
+/* Quick Actions Styles */
+.elementary-quick-actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* E-books Card - Purple gradient matching Courses */
+.elementary-quick-action-card.ebooks-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.elementary-quick-action-card.ebooks-card:hover {
+    background: linear-gradient(135deg, #5b6bc0 0%, #6b5b95 100%);
+}
+
+/* Ask Teacher Card - Pink gradient matching Activities */
+.elementary-quick-action-card.ask-teacher-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.elementary-quick-action-card.ask-teacher-card:hover {
+    background: linear-gradient(135deg, #e879f9 0%, #ec4899 100%);
+}
+
+/* Share with Class Card - Blue gradient matching Lessons */
+.elementary-quick-action-card.share-class-card {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.elementary-quick-action-card.share-class-card:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+}
+
+/* Study Partner Card - Purple gradient */
+.elementary-quick-action-card.studypartner-card {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    color: white;
+}
+
+.elementary-quick-action-card.studypartner-card:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+}
+
+/* Emulators Hub Card - Purple gradient */
+.elementary-quick-action-card[href*="emulators"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.elementary-quick-action-card[href*="emulators"]:hover {
+    background: linear-gradient(135deg, #5b6bc0 0%, #6b5b95 100%);
+}
+
+.elementary-quick-action-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.elementary-quick-action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.2);
+}
+
+.elementary-quick-action-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.elementary-quick-action-icon i {
+    font-size: 1rem;
+    color: white;
+}
+
+.elementary-quick-action-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.elementary-quick-action-content h4 {
+    margin: 0 0 2px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.elementary-quick-action-content p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.2;
+}
+
+.elementary-quick-action-arrow {
+    flex-shrink: 0;
+}
+
+.elementary-quick-action-arrow i {
+    font-size: 0.8rem;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .elementary-student-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .elementary-student-sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle-btn {
+        display: block !important;
+    }
+
+    .sidebar-collapse-trigger {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .elementary-student-sidebar {
+        width: 280px;
+    }
+
+    .sidebar-header {
+        padding: 15px;
+    }
+
+    .sidebar-title {
+        font-size: 1.3rem;
+    }
+
+    .elementary-sidebar-nav {
+        padding: 15px;
+    }
+
+    .elementary-nav-link {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .elementary-quick-action-card {
+        padding: 10px 12px;
+    }
+
+    .sidebar-toggle-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .elementary-student-sidebar {
+        width: 260px;
+    }
+
+    .sidebar-toggle-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .sidebar-collapse-trigger {
+        display: none;
+    }
+}
+
+/* Desktop collapse helpers */
+body.sidebar-collapsed .elementary-student-sidebar {
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+body.sidebar-collapsed .sidebar-overlay {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+body.sidebar-collapsed .sidebar-collapse-trigger {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hide scrollbar */
+.elementary-student-sidebar::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Overlay for mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 182, 193, 0.3);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+</style>
+
+<script>
+// Responsive Sidebar Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('elementarySidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const toggleIcon = toggleBtn ? toggleBtn.querySelector('.toggle-icon') : null;
+    const closeBtn = document.getElementById('sidebarClose');
+    const collapseBtn = document.getElementById('sidebarCollapse');
+    const collapseDefaultLeft = 286;
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    document.body.appendChild(overlay);
+
+    function updateCollapseState(isCollapsed) {
+        document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+
+        if (collapseBtn) {
+            const icon = collapseBtn.querySelector('i');
+            collapseBtn.setAttribute('aria-expanded', String(!isCollapsed));
+            collapseBtn.setAttribute('aria-label', isCollapsed ? 'Show sidebar navigation' : 'Hide sidebar navigation');
+            if (icon) {
+                icon.className = isCollapsed ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
+            }
+        }
+
+        if (isCollapsed) {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('active');
+        }
+        if (isCollapsed) {
+            updateToggleButtonState(false);
+        }
+    }
+
+    // Toggle sidebar
+    function toggleSidebar() {
+        const isOpen = sidebar.classList.toggle('sidebar-open');
+        overlay.classList.toggle('active', isOpen);
+        updateToggleButtonState(isOpen);
+
+        if (isOpen) {
+            updateCollapseState(false);
+        }
+    }
+
+    // Close sidebar
+    function closeSidebar() {
+        sidebar.classList.remove('sidebar-open');
+        overlay.classList.remove('active');
+        updateToggleButtonState(false);
+        updateCollapseState(false);
+    }
+
+    function updateToggleButtonState(isOpen) {
+        if (!toggleBtn) {
+            return;
+        }
+        toggleBtn.setAttribute('aria-expanded', String(!!isOpen));
+        toggleBtn.style.color = isOpen ? '#dc2626' : 'white';
+        if (toggleIcon) {
+            toggleIcon.textContent = isOpen ? '✕' : '☰';
+        }
+    }
+
+    function positionCollapseButton() {
+        if (!collapseBtn) return;
+        if (window.innerWidth <= 1024) {
+            collapseBtn.style.left = '16px';
+        } else {
+            collapseBtn.style.left = document.body.classList.contains('sidebar-collapsed') ? '16px' : `${collapseDefaultLeft}px`;
+        }
+    }
+
+    // Event listeners
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleSidebar);
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        if (toggleIcon) {
+            toggleIcon.textContent = '☰';
+        }
+    }
+
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', function() {
+            const currentlyCollapsed = document.body.classList.contains('sidebar-collapsed');
+            updateCollapseState(!currentlyCollapsed);
+            positionCollapseButton();
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSidebar);
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar on window resize to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 1024) {
+            closeSidebar();
+        }
+        positionCollapseButton();
+    });
+
+    updateCollapseState(false);
+    positionCollapseButton();
+
+    // Quick Actions functionality
+    const quickActionsToggle = document.getElementById('quick-actions-toggle');
+    const quickActionsContainer = document.getElementById('quick-actions-container');
+
+    if (quickActionsToggle && quickActionsContainer) {
+        quickActionsToggle.addEventListener('click', function() {
+            const isExpanded = quickActionsContainer.style.display !== 'none';
+
+            if (isExpanded) {
+                quickActionsContainer.style.display = 'none';
+                quickActionsToggle.setAttribute('aria-expanded', 'false');
+            } else {
+                quickActionsContainer.style.display = 'flex';
+                quickActionsToggle.setAttribute('aria-expanded', 'true');
+            }
+        });
+
+        // Initially hide quick actions
+        quickActionsContainer.style.display = 'none';
+        quickActionsToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    // Quick action navigation
+    function navigateToPage(page) {
+        switch(page) {
+            case 'ebooks':
+                window.location.href = '/theme/remui_kids/ebooks.php';
+                break;
+            case 'ask-teacher':
+                window.location.href = '/theme/remui_kids/ask_teacher.php';
+                break;
+            case 'messages':
+                window.location.href = '/mod/forum/index.php';
+                break;
+            default:
+                console.log('Navigation to:', page);
+        }
+    }
+
+    // Attach click handlers to quick action cards
+    const quickActionCards = document.querySelectorAll('.elementary-quick-action-card');
+    quickActionCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            if (href) {
+                window.location.href = href;
+            } else {
+                // Handle onclick navigation
+                const onclick = this.getAttribute('onclick');
+                if (onclick) {
+                    // Extract page name from onclick
+                    const match = onclick.match(/navigateToPage\('([^']+)'\)/);
+                    if (match) {
+                        navigateToPage(match[1]);
+                    }
+                }
+            }
+        });
+    });
+
+    console.log('✅ Elementary sidebar initialized with responsive functionality');
+});
+</script>

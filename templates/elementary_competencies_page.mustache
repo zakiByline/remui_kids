@@ -1,0 +1,1100 @@
+{{> theme_remui_kids/dashboard/elementary_sidebar }}
+
+<style>
+/* Main Container */
+.elementary-competencies-page {
+    position: fixed;
+    top: 80px;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    background: #F8FAFC;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+/* Hide main scrollbar */
+.elementary-competencies-page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.elementary-competencies-page::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+
+.elementary-competencies-page::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+.elementary-competencies-page::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Welcome Header with Bubble Animations */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 25%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 10%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 40%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Summary Dashboard - All Cards Exactly Same Size */
+.summary-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    align-items: stretch;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    border-bottom: 5px solid;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.summary-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    opacity: 0.6;
+}
+
+.summary-card.total { border-bottom-color: #667eea; }
+.summary-card.total::before { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
+
+.summary-card.completed { border-bottom-color: #10B981; }
+.summary-card.completed::before { background: linear-gradient(90deg, #10B981 0%, #059669 100%); }
+
+.summary-card.progress { border-bottom-color: #F59E0B; }
+.summary-card.progress::before { background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%); }
+
+.summary-card.notstarted { border-bottom-color: #94A3B8; }
+.summary-card.notstarted::before { background: linear-gradient(90deg, #94A3B8 0%, #64748B 100%); }
+
+.summary-icon {
+    font-size: 2.2rem !important;
+    opacity: 0.25;
+    margin: 0 0 12px 0 !important;
+    line-height: 1 !important;
+}
+
+.summary-card.total .summary-icon { color: #667eea; }
+.summary-card.completed .summary-icon { color: #10B981; }
+.summary-card.progress .summary-icon { color: #F59E0B; }
+.summary-card.notstarted .summary-icon { color: #94A3B8; }
+
+.summary-number {
+    font-size: 3.8rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    margin: 0 0 15px 0 !important;
+}
+
+.summary-card.total .summary-number { color: #667eea; }
+.summary-card.completed .summary-number { color: #10B981; }
+.summary-card.progress .summary-number { color: #F59E0B; }
+.summary-card.notstarted .summary-number { color: #94A3B8; }
+
+.summary-label {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+}
+
+/* Course/Framework Cards - Scrollable Sections */
+.framework-wrapper {
+    background: white;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 2px solid #E5E7EB;
+}
+
+.framework-header-bar {
+    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    padding: 25px 30px;
+    border-bottom: 2px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.framework-header-bar:hover {
+    background: linear-gradient(135deg, #F1F5F9 0%, #E5E7EB 100%);
+}
+
+.framework-name-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.framework-icon-badge {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.framework-info h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1F2937;
+    margin: 0 0 5px 0;
+}
+
+.framework-info p {
+    font-size: 0.9rem;
+    color: #64748B;
+    margin: 0;
+}
+
+.framework-stats-badge {
+    text-align: right;
+}
+
+.framework-completion {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.framework-completion-label {
+    font-size: 0.85rem;
+    color: #64748B;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.framework-progress-visual {
+    width: 150px;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.framework-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+
+/* Scrollable Competency List */
+.competency-list-container {
+    max-height: 450px;
+    overflow-y: auto;
+    padding: 20px 30px;
+    background: #FAFBFC;
+}
+
+/* Custom scrollbar for competency lists */
+.competency-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.competency-list-container::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 4px;
+}
+
+.competency-list-container::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+.competency-list-container::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Individual Competency Row - Card Style */
+.competency-row {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 5px solid;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+}
+
+.competency-row:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.competency-row.completed { border-left-color: #10B981; }
+.competency-row.in_progress { border-left-color: #F59E0B; }
+.competency-row.not_started { border-left-color: #CBD5E1; }
+
+.competency-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.competency-name-display {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1F2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.competency-name-display i {
+    color: #667eea;
+    font-size: 1.3rem;
+}
+
+.competency-description {
+    font-size: 0.9rem;
+    color: #64748B;
+    line-height: 1.4;
+}
+
+.competency-metrics {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.metric-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.metric-status.completed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.metric-status.in_progress {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.metric-status.not_started {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+.metric-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 150px;
+}
+
+.progress-bar-wrapper {
+    height: 12px;
+    background: #E5E7EB;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-bar-inner.completed { background: linear-gradient(90deg, #10B981 0%, #059669 100%); }
+.progress-bar-inner.in_progress { background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%); }
+.progress-bar-inner.not_started { background: linear-gradient(90deg, #CBD5E1 0%, #94A3B8 100%); }
+
+.progress-percentage {
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.metric-proficiency {
+    text-align: center;
+}
+
+.proficiency-number {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #667eea;
+    line-height: 1;
+}
+
+.proficiency-label {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 3px;
+}
+
+/* Charts Section - Professional */
+.analytics-section {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    margin-top: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.analytics-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1F2937;
+    margin: 0 0 30px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.analytics-title i {
+    color: #667eea;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+}
+
+.chart-card {
+    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    border-radius: 15px;
+    padding: 25px;
+    border: 2px solid #E5E7EB;
+}
+
+.chart-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #374151;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-canvas {
+    height: 350px;
+    position: relative;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    max-width: 700px;
+    margin: 50px auto;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #CBD5E1;
+    margin-bottom: 25px;
+}
+
+.empty-state h3 {
+    font-size: 2rem;
+    color: #1F2937;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: #64748B;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.setup-guide {
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border: 2px solid #3B82F6;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+.setup-guide h4 {
+    color: #1E40AF;
+    font-size: 1.3rem;
+    margin: 0 0 20px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setup-step {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border-left: 4px solid #3B82F6;
+}
+
+.setup-step strong {
+    color: #1F2937;
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.setup-step span {
+    color: #64748B;
+    font-size: 0.95rem;
+}
+
+/* Data Badge */
+.data-badge {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 15px 25px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data-badge.real {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+}
+
+.data-badge.no-data {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .summary-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .elementary-competencies-page {
+        left: 0;
+        padding: 20px 15px;
+    }
+    
+    .summary-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .summary-number {
+        font-size: 3rem;
+    }
+    
+    .competency-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .competency-metrics {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+</style>
+
+<div class="elementary-competencies-page">
+    
+    <!-- Welcome Header with Bubble Animations -->
+    <div class="welcome-header">
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-certificate"></i>
+                Learning Competencies
+            </h1>
+            <p class="welcome-subtitle">
+                Your Skills, Progress & Achievements
+            </p>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+    </div>
+    
+    <!-- Summary Dashboard -->
+    <div class="summary-dashboard">
+        <div class="summary-card total">
+            <div class="summary-icon"><i class="fa fa-certificate"></i></div>
+            <div class="summary-number">{{total_competencies}}</div>
+            <div class="summary-label">Total Skills</div>
+        </div>
+        
+        <div class="summary-card completed">
+            <div class="summary-icon"><i class="fa fa-check-circle"></i></div>
+            <div class="summary-number">{{completed_competencies}}</div>
+            <div class="summary-label">Mastered</div>
+        </div>
+        
+        <div class="summary-card progress">
+            <div class="summary-icon"><i class="fa fa-spinner"></i></div>
+            <div class="summary-number">{{in_progress_competencies}}</div>
+            <div class="summary-label">In Progress</div>
+        </div>
+        
+        <div class="summary-card notstarted">
+            <div class="summary-icon"><i class="fa fa-circle"></i></div>
+            <div class="summary-number">{{not_started_competencies}}</div>
+            <div class="summary-label">Not Started</div>
+        </div>
+        </div>
+        
+    {{#has_competencies}}
+    
+    <!-- Course/Framework Sections with Scrollable Lists -->
+{{#competencies_data}}
+    <div class="framework-wrapper">
+        <!-- Framework Header -->
+        <div class="framework-header-bar">
+            <div class="framework-name-section">
+                <div class="framework-icon-badge">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+                <div class="framework-info">
+                    <h3>{{name}}</h3>
+                    <p>{{description}}</p>
+                </div>
+            </div>
+            
+            <div class="framework-stats-badge">
+                <div class="framework-completion">{{framework_progress}}%</div>
+                <div class="framework-completion-label">Complete</div>
+                <div class="framework-progress-visual">
+                    <div class="framework-progress-fill" style="width: {{framework_progress}}%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scrollable Competency List -->
+        <div class="competency-list-container">
+                {{#competencies}}
+            <div class="competency-row {{status}}">
+                <div class="competency-main-info">
+                    <div class="competency-name-display">
+                        <i class="fa fa-certificate"></i>
+                        {{name}}
+                    </div>
+                    {{#description}}
+                    <div class="competency-description">{{description}}</div>
+                    {{/description}}
+                </div>
+                
+                <div class="competency-metrics">
+                    <span class="metric-status {{status}}">
+                        {{status_label}}
+                    </span>
+                    
+                    <div class="metric-progress">
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-inner {{status}}" style="width: {{progress}}%"></div>
+                        </div>
+                        <div class="progress-percentage">{{progress}}%</div>
+                    </div>
+                    
+                    <div class="metric-proficiency">
+                        <div class="proficiency-number">{{proficiency_level}}<span style="font-size: 1.2rem;">%</span></div>
+                        <div class="proficiency-label">Score</div>
+                    </div>
+                </div>
+            </div>
+                {{/competencies}}
+        </div>
+    </div>
+{{/competencies_data}}
+    
+    <!-- Analytics Charts -->
+    <div class="analytics-section">
+        <h2 class="analytics-title">
+            <i class="fa fa-chart-line"></i>
+            Visual Analytics
+        </h2>
+        
+        <div class="charts-container">
+            <!-- Chart 1: Overall Status -->
+            <div class="chart-card">
+                <h3><i class="fa fa-pie-chart" style="color: #667eea;"></i> Completion Status</h3>
+                <div class="chart-canvas">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 2: Framework Progress -->
+            <div class="chart-card">
+                <h3><i class="fa fa-chart-bar" style="color: #F59E0B;"></i> Progress by Framework</h3>
+                <div class="chart-canvas">
+                    <canvas id="frameworkChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{/has_competencies}}
+
+    {{^has_competencies}}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <i class="fa fa-certificate"></i>
+        <h3>No Competency Data Available</h3>
+        <p>No competencies have been configured in this Moodle installation yet.</p>
+        
+        <div class="setup-guide">
+            <h4><i class="fa fa-cog"></i> Setup Instructions</h4>
+            
+            <div class="setup-step">
+                <strong>1. Enable Competencies</strong>
+                <span>Site Admin → Advanced Features → Check "Enable competencies"</span>
+            </div>
+            
+            <div class="setup-step">
+                <strong>2. Create Framework</strong>
+                <span>Site Admin → Competencies → Competency frameworks → Add new framework</span>
+            </div>
+            
+            <div class="setup-step">
+                <strong>3. Add Competencies</strong>
+                <span>Add skills like "Reading Comprehension", "Math Problem Solving", etc.</span>
+            </div>
+            
+            <div class="setup-step">
+                <strong>4. Link to Courses</strong>
+                <span>Course Settings → Competencies → Add competencies to course</span>
+            </div>
+            
+            <div class="setup-step">
+                <strong>5. Rate Students</strong>
+                <span>Gradebook → Competencies → Assess student proficiency levels</span>
+            </div>
+        </div>
+    </div>
+    {{/has_competencies}}
+
+    <!-- Data Source Badge -->
+{{#data_source_info}}
+    {{#is_real_data}}
+    <div class="data-badge real">
+        <i class="fa fa-database"></i>
+        <span>Real Moodle Data • {{total_frameworks}} Frameworks</span>
+    </div>
+    {{/is_real_data}}
+    {{^is_real_data}}
+    <div class="data-badge no-data">
+        <i class="fa fa-exclamation-circle"></i>
+        <span>No Data in Database</span>
+</div>
+    {{/is_real_data}}
+{{/data_source_info}}
+    
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📊 Competencies page loaded');
+    
+    // Animate progress bars
+    setTimeout(function() {
+        const bars = document.querySelectorAll('.progress-bar-inner, .framework-progress-fill');
+        bars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => { bar.style.width = width; }, 100);
+        });
+    }, 300);
+    
+    {{#has_competencies}}
+    // Initialize charts
+    setTimeout(function() {
+        if (typeof Chart === 'undefined') {
+            console.error('❌ Chart.js not loaded');
+            return;
+        }
+        
+        console.log('✅ Initializing charts...');
+        
+        try {
+            // Chart 1: Status Doughnut
+            const statusCtx = document.getElementById('statusChart');
+            if (statusCtx) {
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['✓ Mastered', '⏳ In Progress', '○ Not Started'],
+                        datasets: [{
+                            data: [{{completed_competencies}}, {{in_progress_competencies}}, {{not_started_competencies}}],
+                            backgroundColor: ['#10B981', '#F59E0B', '#CBD5E1'],
+                            borderWidth: 6,
+                            borderColor: '#ffffff',
+                            hoverOffset: 20
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    font: { size: 14, weight: '700' },
+                                    color: '#374151',
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#1F2937',
+                                padding: 15,
+                                titleFont: { size: 16, weight: 'bold' },
+                                bodyFont: { size: 14 },
+                                cornerRadius: 10,
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = {{total_competencies}};
+                                        const pct = ((context.parsed / total) * 100).toFixed(1);
+                                        return context.label + ': ' + context.parsed + ' (' + pct + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                console.log('✅ Status chart created');
+            }
+            
+            // Chart 2: Framework Progress
+            const frameworkCtx = document.getElementById('frameworkChart');
+            if (frameworkCtx) {
+                const names = [];
+                const progressData = [];
+                const colors = [];
+                
+                {{#competencies_data}}
+                names.push('{{name}}'.substring(0, 20));
+                progressData.push({{framework_progress}});
+                colors.push({{framework_progress}} >= 80 ? '#10B981' : {{framework_progress}} >= 50 ? '#F59E0B' : '#CBD5E1');
+                {{/competencies_data}}
+                
+                new Chart(frameworkCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: names,
+                        datasets: [{
+                            label: 'Progress %',
+                            data: progressData,
+                            backgroundColor: colors,
+                            borderRadius: 8,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1F2937',
+                                padding: 15,
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 10,
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Completion: ' + context.parsed.y.toFixed(0) + '%';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: '#F1F5F9' },
+                                ticks: {
+                                    callback: function(value) { return value + '%'; },
+                                    font: { size: 12, weight: '600' },
+                                    color: '#64748B'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11, weight: '700' },
+                                    color: '#374151',
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        }
+                    }
+                });
+                console.log('✅ Framework chart created');
+            }
+            
+            console.log('🎉 All charts initialized successfully');
+            
+        } catch (error) {
+            console.error('❌ Chart error:', error);
+        }
+    }, 1000);
+    {{/has_competencies}}
+});
+</script>

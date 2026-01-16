@@ -1,0 +1,466 @@
+{{#custom_ebooks}}
+
+{{#elementary}}
+{{> theme_remui_kids/dashboard/elementary_sidebar}}
+{{/elementary}}
+
+{{#middle}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/middle}}
+
+{{^middle}}
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+{{/middle}}
+
+{{#highschool}}
+{{> theme_remui_kids/highschool_sidebar}}
+{{/highschool}}
+
+<style>
+/* Layout styles - same as other pages */
+.container, .container-fluid, #page, #page-content, .main-inner, #topofscroll {
+    margin: 0 !important; padding: 0 !important; max-width: none !important; width: 100% !important;
+}
+.container { max-width: calc(100vw - 280px) !important; width: calc(100vw - 280px) !important; margin-left: 280px !important; }
+#page, #page-content, .main-inner, #topofscroll { margin-top: 0 !important; padding-top: 0 !important; }
+.container, .container-fluid, body, html { margin-top: 0 !important; padding-top: 0 !important; }
+.g4g7-sidebar { background: #ffffff !important; border-right: 1px solid #e5e7eb !important; }
+.g4g7-nav-content { background: #ffffff !important; }
+
+/* Welcome Header with Bubble Animations - for Elementary Students */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 { width: 80px; height: 80px; top: 10%; left: 20%; animation-delay: 0s; }
+.welcome-bubble-2 { width: 60px; height: 60px; top: 50%; left: 10%; animation-delay: 1.5s; }
+.welcome-bubble-3 { width: 100px; height: 100px; top: 70%; left: 30%; animation-delay: 3s; }
+.welcome-bubble-4 { width: 50px; height: 50px; top: 30%; left: 50%; animation-delay: 0.5s; }
+.welcome-bubble-5 { width: 90px; height: 90px; top: 15%; right: 15%; animation-delay: 2s; }
+.welcome-bubble-6 { width: 70px; height: 70px; top: 45%; right: 25%; animation-delay: 0.8s; }
+.welcome-bubble-7 { width: 55px; height: 55px; top: 65%; right: 10%; animation-delay: 2.5s; }
+.welcome-bubble-8 { width: 85px; height: 85px; top: 25%; right: 40%; animation-delay: 1.2s; }
+
+@keyframes floatBubble {
+    0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.6; }
+    25% { transform: translateY(-8px) translateX(4px) scale(1.03); opacity: 0.7; }
+    50% { transform: translateY(-4px) translateX(-2px) scale(0.98); opacity: 0.65; }
+    75% { transform: translateY(-10px) translateX(6px) scale(1.02); opacity: 0.72; }
+}
+
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+/* Regular Page Header - for Non-Elementary Students */
+.ebooks-page-header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center; }
+.ebooks-page-title { font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin: 0 0 15px 0; display: flex; align-items: center; justify-content: center; gap: 15px; }
+.ebooks-page-title i { color: #3498db; font-size: 2.2rem; }
+.ebooks-page-subtitle { font-size: 1.2rem; color: #6c757d; margin: 0; line-height: 1.5; }
+
+{{#is_middle_grade}}
+.ebooks-page-header { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; }
+.ebooks-page-title { color: white; }
+.ebooks-page-title i { color: white; opacity: 0.9; }
+.ebooks-page-subtitle { color: white; opacity: 0.9; }
+{{/is_middle_grade}}
+
+@media (max-width: 768px) {
+    .welcome-header {
+        padding: 30px 20px;
+        min-height: 150px;
+        flex-direction: column;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+}
+
+/* Stats */
+.ebooks-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.stat-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+.stat-card:hover { transform: translateY(-5px); }
+.stat-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.5rem; color: white; }
+.stat-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.stat-icon.green { background: linear-gradient(135deg, #27ae60, #229954); }
+.stat-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.stat-number { font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
+.stat-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
+
+/* E-book Cards Grid */
+.ebooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
+
+/* E-book Card with Cover Image */
+.ebook-card { 
+    position: relative; 
+    border-radius: 15px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    min-height: 400px;
+    cursor: pointer;
+}
+.ebook-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+/* Cover Image Background */
+.ebook-cover-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Overlay Gradient for Better Text Readability */
+.ebook-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%);
+    z-index: 2;
+}
+
+/* Details Container - Positioned at Bottom */
+.ebook-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    z-index: 3;
+    color: white;
+}
+
+.ebook-title { 
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    color: #ffffff; 
+    margin: 0 0 10px 0; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.3;
+}
+
+.ebook-course { 
+    font-size: 0.85rem; 
+    color: rgba(255,255,255,0.95); 
+    background: rgba(255,255,255,0.2); 
+    backdrop-filter: blur(10px);
+    padding: 6px 14px; 
+    border-radius: 20px; 
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.ebook-author {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9);
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ebook-author i {
+    font-size: 0.8rem;
+}
+
+.ebook-description { 
+    color: rgba(255,255,255,0.9); 
+    line-height: 1.5; 
+    margin: 12px 0 15px 0;
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.ebook-view-btn {
+    background: rgba(255,255,255,0.95);
+    color: #2c3e50;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.ebook-view-btn:hover {
+    background: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+/* Fallback for books without cover images */
+.ebook-card.no-cover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.ebook-card.no-cover .ebook-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ebooks-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .ebook-card {
+        min-height: 350px;
+    }
+    
+    .ebook-title {
+        font-size: 1.2rem;
+    }
+}
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        {{#elementary}}
+        <!-- Welcome Header with Bubble Animations -->
+        <div class="welcome-header">
+            <!-- Left Side Bubbles -->
+            <div class="welcome-bubbles welcome-bubbles-left">
+                <div class="welcome-bubble welcome-bubble-1"></div>
+                <div class="welcome-bubble welcome-bubble-2"></div>
+                <div class="welcome-bubble welcome-bubble-3"></div>
+                <div class="welcome-bubble welcome-bubble-4"></div>
+            </div>
+            
+            <!-- Center Content -->
+            <div class="welcome-header-content">
+                
+                <h1 class="welcome-title">
+                    <i class="fa fa-book"></i>
+                    E-books
+                </h1>
+                <p class="welcome-subtitle">
+                    Access your digital learning materials
+                </p>
+            </div>
+            
+            <!-- Right Side Bubbles -->
+            <div class="welcome-bubbles welcome-bubbles-right">
+                <div class="welcome-bubble welcome-bubble-5"></div>
+                <div class="welcome-bubble welcome-bubble-6"></div>
+                <div class="welcome-bubble welcome-bubble-7"></div>
+                <div class="welcome-bubble welcome-bubble-8"></div>
+            </div>
+        </div>
+        {{/elementary}}
+        {{^elementary}}
+        <div class="ebooks-page-header">
+            <h2 class="ebooks-page-title">
+                <i class="fa fa-book"></i>
+                E-books
+            </h2>
+            <p class="ebooks-page-subtitle">
+                {{#usercohortname}}
+                    Access digital learning materials for {{usercohortname}}
+                {{/usercohortname}}
+                {{^usercohortname}}
+                    Explore your digital learning resources!
+                {{/usercohortname}}
+            </p>
+        </div>
+        {{/elementary}}
+    </div>
+</div>
+
+<!-- E-books Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ebooks-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa fa-book"></i>
+                </div>
+                <div class="stat-number">{{total_ebooks}}</div>
+                <div class="stat-label">Total E-books</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa fa-check-circle"></i>
+                </div>
+                <div class="stat-number">{{total_ebooks}}</div>
+                <div class="stat-label">Available</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fa fa-eye"></i>
+                </div>
+                <div class="stat-number">{{total_ebooks}}</div>
+                <div class="stat-label">Ready to View</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- E-books Content -->
+<div class="row">
+    <div class="col-12">
+        {{#has_ebooks}}
+        <div class="ebooks-grid">
+            {{#ebooks_data}}
+            <a href="{{url}}" {{#is_local_ebook}}target="_blank"{{/is_local_ebook}} style="text-decoration: none; display: block;">
+                <div class="ebook-card {{^has_cover_image}}no-cover{{/has_cover_image}}">
+                    {{#has_cover_image}}
+                    <img src="{{cover_image}}" alt="{{name}}" class="ebook-cover-image" onerror="this.parentElement.classList.add('no-cover'); this.style.display='none';" />
+                    {{/has_cover_image}}
+                    {{^has_cover_image}}
+                    <div class="ebook-cover-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    {{/has_cover_image}}
+                    
+                    <!-- Overlay Gradient -->
+                    <div class="ebook-overlay"></div>
+                    
+                    <!-- Details Overlay -->
+                    <div class="ebook-details">
+                        <span class="ebook-course">{{course_name}}</span>
+                        <h3 class="ebook-title">{{name}}</h3>
+                        {{#author}}
+                        <div class="ebook-author">
+                            <i class="fa fa-user"></i>
+                            <span>{{author}}</span>
+                        </div>
+                        {{/author}}
+                        {{#description}}
+                        <p class="ebook-description">{{description}}</p>
+                        {{/description}}
+                        <span class="ebook-view-btn">
+                            <i class="fa fa-eye"></i> View E-book
+                        </span>
+                    </div>
+                </div>
+            </a>
+            {{/ebooks_data}}
+        </div>
+        {{/has_ebooks}}
+        
+        {{^has_ebooks}}
+        <div class="ebook-card no-cover" style="text-align: center; padding: 50px; min-height: 300px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="font-size: 4rem; color: rgba(255,255,255,0.9); margin-bottom: 20px;">
+                <i class="fa fa-book"></i>
+            </div>
+            <h3 style="color: white; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">No E-books Available</h3>
+            <p style="color: rgba(255,255,255,0.9); margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Check back later for new digital learning materials!</p>
+        </div>
+        {{/has_ebooks}}
+    </div>
+</div>
+
+{{/custom_ebooks}}

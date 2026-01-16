@@ -1,0 +1,143 @@
+{{!
+    High School Assignments View Template (Grade 9-12)
+    Displays assignments for high school students in a professional format
+}}
+
+<div class="highschool-assignments-page">
+    <div class="assignments-main-content">
+        <!-- Page Header -->
+        <div class="assignments-page-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="page-title">
+                            <i class="fa fa-clipboard-list me-3"></i>
+                            My Assignments
+                        </h1>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{{{dashboard_url}}}" class="btn btn-outline-light">
+                            <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment Statistics -->
+        <div class="container-fluid">
+            <div class="row g-2 mb-2">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon total"><i class="fa fa-clipboard-list"></i></div>
+                        <div>
+                            <div class="stat-value">{{total_assignments}}</div>
+                            <div>Total Assignments</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon progress"><i class="fa fa-spinner"></i></div>
+                        <div>
+                            <div class="stat-value">{{in_progress_assignments}}</div>
+                            <div>In Progress</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon completed"><i class="fa fa-check-circle"></i></div>
+                        <div>
+                            <div class="stat-value">{{submitted_assignments}}</div>
+                            <div>Submitted</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon overdue"><i class="fa fa-exclamation-triangle"></i></div>
+                        <div>
+                            <div class="stat-value">{{overdue_assignments}}</div>
+                            <div>Overdue</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments List -->
+            {{#has_assignments}}
+                <div class="assignments-grid">
+                    {{#assignments}}
+                        <div class="assignment-card">
+                            <div class="assignment-header">
+                                <div class="assignment-status-badge {{status}}">
+                                    {{#is_submitted}}
+                                        <i class="fa fa-check-circle"></i> Submitted
+                                    {{/is_submitted}}
+                                    {{#is_in_progress}}
+                                        <i class="fa fa-spinner"></i> In Progress
+                                    {{/is_in_progress}}
+                                    {{#is_overdue}}
+                                        <i class="fa fa-exclamation-triangle"></i> Overdue
+                                    {{/is_overdue}}
+                                    {{#is_not_started}}
+                                        <i class="fa fa-play-circle"></i> Not Started
+                                    {{/is_not_started}}
+                                </div>
+                                <h3 class="assignment-title">
+                                    <a href="{{{assignment_url}}}" style="color: #1a202c; text-decoration: none;">
+                                        {{name}}
+                                    </a>
+                                </h3>
+                                <div class="assignment-course">{{course_name}}</div>
+                                <div class="assignment-due-date">
+                                    <i class="fa fa-calendar"></i> Due: {{duedate_formatted}}
+                                </div>
+                            </div>
+
+                            <div class="assignment-content">
+                                <div class="assignment-description">
+                                    {{{description}}}
+                                </div>
+
+                                <div class="assignment-progress">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span>Progress</span>
+                                        <span style="font-weight: 600;">{{progress}}%</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill" style="width: {{progress}}%"></div>
+                                    </div>
+                                </div>
+
+                                <a href="{{{assignment_url}}}" class="btn-primary">
+                                    {{#is_submitted}}
+                                        <i class="fa fa-eye"></i> View Submission
+                                    {{/is_submitted}}
+                                    {{#is_in_progress}}
+                                        <i class="fa fa-edit"></i> Continue Working
+                                    {{/is_in_progress}}
+                                    {{#is_overdue}}
+                                        <i class="fa fa-exclamation-triangle"></i> Submit Now
+                                    {{/is_overdue}}
+                                    {{#is_not_started}}
+                                        <i class="fa fa-play"></i> Start Assignment
+                                    {{/is_not_started}}
+                                </a>
+                            </div>
+                        </div>
+                    {{/assignments}}
+                </div>
+            {{/has_assignments}}
+            {{^has_assignments}}
+                <div class="text-center" style="padding: 4rem 0;">
+                    <i class="fa fa-clipboard-list" style="font-size: 4rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.75rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">No Assignments Found</h3>
+                    <p style="font-size: 1.1rem; color: #718096;">You don't have any assignments yet. Check back later or contact your teacher.</p>
+                </div>
+            {{/has_assignments}}
+        </div>
+    </div>
+</div>
+

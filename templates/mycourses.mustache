@@ -1,0 +1,385 @@
+{{!
+    Custom My Courses Template for remui_kids theme
+    
+    This template provides the My Courses page with the enhanced elementary sidebar
+    for Grade 1-3 students, matching the design from the dashboard.
+}}
+
+{{> theme_remui_kids/common_start}}
+
+{{#custom_dashboard}}
+
+<div class="custom_mycourses">
+    <!-- Custom My Courses Header -->
+    <div class="custom-mycourses-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mycourses-greeting mb-2">
+                        My Courses
+                    </h1>
+                    <p class="mycourses-subtitle mb-0">
+                        {{#user_cohort_name}}
+                            Your {{user_cohort_name}} learning journey continues here!
+                        {{/user_cohort_name}}
+                        {{^user_cohort_name}}
+                            Explore your courses and continue learning!
+                        {{/user_cohort_name}}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mycourses-badge">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cohort-specific content -->
+    {{#dashboard_type}}
+        {{#elementary}}
+            <!-- Enhanced Student Sidebar -->
+            <div class="student-sidebar enhanced-elementary-sidebar">
+                <nav class="sidebar-nav">
+                    
+                    <!-- DASHBOARD Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet blue"></span>
+                            DASHBOARD
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{dashboardurl}}}" class="nav-link">
+                                    <i class="fa fa-th-large"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{mycoursesurl}}}" class="nav-link active mycourses-link">
+                                    <i class="fa fa-book-open"></i>
+                                    <span>My Courses</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{lessonsurl}}}" class="nav-link">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Lessons</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{activitiesurl}}}" class="nav-link">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>Activities</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{achievementsurl}}}" class="nav-link">
+                                    <i class="fa fa-trophy"></i>
+                                    <span>Achievements</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{competenciesurl}}}" class="nav-link">
+                                    <i class="fa fa-bullseye"></i>
+                                    <span>Competencies</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{scheduleurl}}}" class="nav-link">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Schedule</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- TOOLS & RESOURCES Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet green"></span>
+                            TOOLS & RESOURCES
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{treeviewurl}}}" class="nav-link">
+                                    <i class="fa fa-sitemap"></i>
+                                    <span>Tree View</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- SETTINGS & PROFILE Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet orange"></span>
+                            SETTINGS & PROFILE
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{settingsurl}}}" class="nav-link">
+                                    <i class="fa fa-cog"></i>
+                                    <span>Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- QUICK ACTIONS Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet purple"></span>
+                            QUICK ACTIONS
+                        </div>
+                        <div class="quick-actions-container">
+                            <div class="quick-action-card ebooks-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>E-books</h4>
+                                    <p>Access digital learning materials</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card ask-teacher-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Ask Teacher</h4>
+                                    <p>Get help from your instructor</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card code-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-desktop"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Code Editor</h4>
+                                    <p>Write and run JavaScript code</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card share-class-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-share-alt"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Share with Class</h4>
+                                    <p>Collaborate with classmates</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card scratch-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Scratch Editor</h4>
+                                    <p>Create interactive projects</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- My Courses Content -->
+            <div class="mycourses-content">
+                <div class="container-fluid">
+                    <!-- Page Header -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="courses-page-header">
+                                <h2 class="courses-page-title">
+                                    <i class="fa fa-graduation-cap"></i>
+                                    My Learning Journey
+                                </h2>
+                                <p class="courses-page-subtitle">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courses Grid -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="courses-grid">
+                                <!-- Moodle's main content will be rendered here -->
+                                <div class="moodle-main-content">
+                                    <div class="course-overview-placeholder">
+                                        <div class="placeholder-content">
+                                            <i class="fa fa-book-open placeholder-icon"></i>
+                                            <h3>Your Courses</h3>
+                                            <p>Your enrolled courses will appear here. Start your learning journey!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Overview -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="progress-overview-card">
+                                <div class="progress-header">
+                                    <h3 class="progress-title">
+                                        <i class="fa fa-chart-line"></i>
+                                        Your Learning Progress
+                                    </h3>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="progress-stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">Courses Completed</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fa fa-play-circle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">Courses In Progress</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fa fa-trophy"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">Achievements Earned</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/elementary}}
+    {{/dashboard_type}}
+</div>
+
+<script>
+$(document).ready(function() {
+    // Add body class for content shifting
+    $('body').addClass('has-student-sidebar');
+    
+    // Handle sidebar navigation clicks
+    $('.student-sidebar .nav-link[href="#"]').on('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        $('.student-sidebar .nav-link').removeClass('active');
+        
+        // Add active class to clicked link
+        $(this).addClass('active');
+        
+        // Get the link text to determine action
+        var linkText = $(this).find('span').text().trim();
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different navigation items
+        switch(linkText) {
+            case 'Dashboard':
+                window.location.href = baseUrl + '/my/';
+                break;
+            case 'My Courses':
+                // Already on mycourses page
+                break;
+            case 'Lessons':
+                window.location.href = baseUrl + '/mod/lesson/index.php';
+                break;
+            case 'Activities':
+                window.location.href = baseUrl + '/mod/quiz/index.php';
+                break;
+            case 'Achievements':
+                window.location.href = baseUrl + '/badges/mybadges.php';
+                break;
+            case 'Competencies':
+                window.location.href = baseUrl + '/theme/remui_kids/elementary_competencies.php';
+                break;
+            case 'Schedule':
+                window.location.href = baseUrl + '/calendar/view.php';
+                break;
+            case 'Tree View':
+                window.location.href = baseUrl + '/course/view.php';
+                break;
+            case 'Settings':
+                window.location.href = baseUrl + '/user/preferences.php';
+                break;
+            default:
+                console.log('Navigation to:', linkText);
+        }
+    });
+    
+    // Handle Quick Action Cards
+    $('.quick-action-card').on('click', function(e) {
+        e.preventDefault();
+        
+        var cardType = $(this).attr('class').split(' ')[1]; // Get the card type class
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different quick action cards
+        switch(cardType) {
+            case 'ebooks-card':
+                window.location.href = baseUrl + '/mod/book/index.php';
+                break;
+            case 'ask-teacher-card':
+                window.location.href = baseUrl + '/message/index.php';
+                break;
+            case 'code-editor-card':
+                window.open(baseUrl + '/mod/codeeditor/view.php', '_blank');
+                break;
+            case 'share-class-card':
+                window.location.href = baseUrl + '/mod/forum/index.php';
+                break;
+            case 'scratch-editor-card':
+                window.open(baseUrl + '/mod/scratch/view.php', '_blank');
+                break;
+            default:
+                console.log('Quick action clicked:', cardType);
+        }
+    });
+});
+</script>
+
+{{/custom_dashboard}}
+
+{{> theme_remui/common_end}}

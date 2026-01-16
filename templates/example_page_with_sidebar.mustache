@@ -1,0 +1,32 @@
+{{!
+    Example Page Template with Elementary Sidebar
+    
+    This template demonstrates how to use the elementary sidebar in any page.
+}}
+
+<!-- Include Elementary Sidebar -->
+{{> theme_remui_kids/elementary_sidebar}}
+
+<div class="page-content">
+    <div class="container">
+        <h1>{{example_data.title}}</h1>
+        <p>{{example_data.description}}</p>
+        <p>{{page_content}}</p>
+        
+        <!-- Your page content goes here -->
+        <div class="content-section">
+            <h2>How to Use the Sidebar</h2>
+            <ol>
+                <li>Include the sidebar helper: <code>require_once($CFG->dirroot . '/theme/remui_kids/lib/sidebar_helper.php');</code></li>
+                <li>Get sidebar context: <code>$sidebar_context = theme_remui_kids_get_elementary_sidebar_context('your_page_name', $USER);</code></li>
+                <li>Include sidebar styles: <code>echo theme_remui_kids_get_elementary_sidebar_styles();</code></li>
+                <li>Use main-content-with-sidebar class for your content wrapper</li>
+                <li>Include the sidebar template: <code>{{> theme_remui_kids/elementary_sidebar}}</code></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+
+
+

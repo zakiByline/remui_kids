@@ -1,0 +1,572 @@
+{{#custom_achievements}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+{{#is_highschool_grade}}
+{{> theme_remui_kids/highschool_sidebar}}
+{{/is_highschool_grade}}
+
+<style>
+/* Full width container minus sidebar */
+.container,
+.container-fluid,
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+.footer-copyright-wrapper ,.footer-mainsection-wrapper{
+        display: none !important;
+     } 
+/* Specific container overrides - push content away from sidebar */
+.container {
+    max-width: calc(100vw - 280px) !important;
+    width: calc(100vw - 280px) !important;
+    margin-left: 280px !important;
+}
+
+{{#is_highschool_grade}}
+.container {
+    max-width: calc(100vw - 320px) !important;
+    width: calc(100vw - 320px) !important;
+    margin-left: 320px !important;
+}
+{{/is_highschool_grade}}
+
+/* Add top spacing for fixed navbar */
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.container,
+.container-fluid,
+body,
+html {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* G4G7 Sidebar Override - Ensure proper colors */
+.g4g7-sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+}
+
+.g4g7-nav-content {
+    background: #ffffff !important;
+}
+
+/* Page Header Styles - Same as My Courses */
+.achievements-page-header {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.achievements-page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.achievements-page-title i {
+    color: #3498db;
+    font-size: 2.2rem;
+}
+
+.achievements-page-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* G4G7 Header Style for Grade 5 */
+{{#is_middle_grade}}
+.achievements-page-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    color: white;
+}
+
+.achievements-page-title {
+    color: white;
+}
+
+.achievements-page-title i {
+    color: white;
+    opacity: 0.9;
+}
+
+.achievements-page-subtitle {
+    color: white;
+    opacity: 0.9;
+}
+{{/is_middle_grade}}
+
+/* Achievements Stats */
+.achievements-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.blue {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.stat-icon.gold {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.stat-icon.green {
+    background: linear-gradient(135deg, #27ae60, #229954);
+}
+
+.stat-icon.purple {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Section Headers */
+.achievements-section-header {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.achievements-section-header:first-of-type {
+    margin-top: 0;
+}
+
+.achievements-section-header i {
+    font-size: 1.6rem;
+}
+
+/* Achievements Grid */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.achievement-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border-left: 5px solid #3498db;
+}
+
+.achievement-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.achievement-card.blue {
+    border-left-color: #3498db;
+}
+
+.achievement-card.gold {
+    border-left-color: #f39c12;
+}
+
+.achievement-card.green {
+    border-left-color: #27ae60;
+}
+
+.achievement-card.purple {
+    border-left-color: #9b59b6;
+}
+
+.achievement-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.achievement-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.achievement-icon.blue {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.achievement-icon.gold {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.achievement-icon.green {
+    background: linear-gradient(135deg, #27ae60, #229954);
+}
+
+.achievement-icon.purple {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.achievement-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+}
+
+.achievement-course {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.achievement-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.achievement-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.achievement-date {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    font-weight: 500;
+}
+
+.achievement-score {
+    background: #ecf0f1;
+    color: #2c3e50;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Certificate download form button styling */
+.achievement-download-btn {
+    transition: background-color 0.3s ease;
+}
+
+.achievement-download-btn:hover {
+    background: #2c6bb8 !important;
+}
+
+/* Empty State */
+.empty-achievements {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.empty-achievements i {
+    font-size: 4rem;
+    color: #bdc3c7;
+    margin-bottom: 20px;
+}
+
+.empty-achievements h3 {
+    color: #6c757d;
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+}
+
+.empty-achievements p {
+    color: #95a5a6;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .achievements-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .achievement-card {
+        padding: 20px;
+    }
+    
+    .achievements-page-title {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="achievements-page-header">
+            <h2 class="achievements-page-title">
+                <i class="fa fa-trophy"></i>
+                My Achievements
+            </h2>
+            <p class="achievements-page-subtitle">
+                {{#usercohortname}}
+                    Celebrate your learning milestones in {{usercohortname}}
+                {{/usercohortname}}
+                {{^usercohortname}}
+                    Track your progress and celebrate your learning achievements!
+                {{/usercohortname}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Achievements Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="achievements-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa fa-trophy"></i>
+                </div>
+                <div class="stat-number">{{total_achievements}}</div>
+                <div class="stat-label">Total Achievements</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa fa-certificate"></i>
+                </div>
+                <div class="stat-number">{{certificates_count}}</div>
+                <div class="stat-label">Certificates</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fa fa-trophy"></i>
+                </div>
+                <div class="stat-number">{{badges_count}}</div>
+                <div class="stat-label">Badges</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Certificates Section -->
+{{#has_certificates}}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="achievements-section-header">
+            <i class="fa fa-certificate" style="color: #3498db;"></i>
+            Certificates
+        </h2>
+        <div class="achievements-grid">
+            {{#certificates}}
+            <div class="achievement-card {{color}}">
+                <div class="achievement-header">
+                    <div class="achievement-icon {{color}}">
+                        <i class="fa {{icon}}"></i>
+                    </div>
+                    <div>
+                        <h3 class="achievement-title">{{title}}</h3>
+                        {{#course_name}}
+                        <p class="achievement-course">{{course_name}}</p>
+                        {{/course_name}}
+                    </div>
+                </div>
+                
+                <p class="achievement-description">{{description}}</p>
+                
+                <div class="achievement-footer">
+                    <span class="achievement-date">
+                        <i class="fa fa-calendar"></i>
+                        {{date_formatted}}
+                    </span>
+                    {{#download_action}}
+                    <form method="get" action="{{download_action}}" style="display: inline-block;">
+                        <input type="hidden" name="id" value="{{cmid}}">
+                        <input type="hidden" name="downloadown" value="1">
+                        <button type="submit" class="achievement-download-btn" style="padding: 4px 12px; background: #3b82f6; color: white; border: none; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            <i class="fa fa-download"></i> Download
+                        </button>
+                    </form>
+                    {{/download_action}}
+                </div>
+            </div>
+            {{/certificates}}
+        </div>
+    </div>
+</div>
+{{/has_certificates}}
+
+{{^has_certificates}}
+{{#has_badges}}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="achievements-section-header">
+            <i class="fa fa-certificate" style="color: #3498db;"></i>
+            Certificates
+        </h2>
+        <div class="empty-achievements" style="padding: 40px 20px;">
+            <i class="fa fa-certificate"></i>
+            <h3>No Certificates Yet</h3>
+            <p>Complete courses to earn certificates!</p>
+        </div>
+    </div>
+</div>
+{{/has_badges}}
+{{/has_certificates}}
+
+<!-- Badges Section -->
+{{#has_badges}}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="achievements-section-header">
+            <i class="fa fa-trophy" style="color: #f39c12;"></i>
+            Badges
+        </h2>
+        <div class="achievements-grid">
+            {{#badges}}
+            <div class="achievement-card {{color}}">
+                <div class="achievement-header">
+                    <div class="achievement-icon {{color}}">
+                        {{#badge_image_url}}
+                        <img src="{{badge_image_url}}" alt="{{title}}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+                        {{/badge_image_url}}
+                        {{^badge_image_url}}
+                        <i class="fa {{icon}}"></i>
+                        {{/badge_image_url}}
+                    </div>
+                    <div>
+                        <h3 class="achievement-title">{{title}}</h3>
+                        {{#course_name}}
+                        <p class="achievement-course">{{course_name}}</p>
+                        {{/course_name}}
+                    </div>
+                </div>
+                
+                <p class="achievement-description">{{description}}</p>
+                
+                <div class="achievement-footer">
+                    <span class="achievement-date">
+                        <i class="fa fa-calendar"></i>
+                        {{date_formatted}}
+                    </span>
+                </div>
+            </div>
+            {{/badges}}
+        </div>
+    </div>
+</div>
+{{/has_badges}}
+
+{{^has_badges}}
+{{#has_certificates}}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="achievements-section-header">
+            <i class="fa fa-trophy" style="color: #f39c12;"></i>
+            Badges
+        </h2>
+        <div class="empty-achievements" style="padding: 40px 20px;">
+            <i class="fa fa-trophy"></i>
+            <h3>No Badges Yet</h3>
+            <p>Complete activities to earn badges!</p>
+        </div>
+    </div>
+</div>
+{{/has_certificates}}
+{{/has_badges}}
+
+{{^has_achievements}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="empty-achievements">
+            <i class="fa fa-trophy"></i>
+            <h3>No Achievements Yet</h3>
+            <p>Complete courses to earn certificates and badges!</p>
+        </div>
+    </div>
+</div>
+{{/has_achievements}}
+
+{{/custom_achievements}}

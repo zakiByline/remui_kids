@@ -1,0 +1,966 @@
+{{!
+    Elementary Tree View Page - Learning Path Explorer for Elementary Students (Grades 1-3)
+    Professional dashboard with sidebar support - ELEMENTARY ONLY
+}}
+
+{{! Include Elementary Sidebar Component }}
+{{> theme_remui_kids/dashboard/elementary_sidebar }}
+
+<style>
+/* Force body and html to not scroll - IMPORTANT for fixed sidebar */
+html,
+body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove default Moodle containers */
+.page-header,
+.context-header {
+    display: none !important;
+}
+
+.container,
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Main Container - FIXED positioning with independent scroll */
+.elementary-treeview-container {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    padding: 100px 30px 30px 30px;
+    background: #f5f7fa;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+/* Kid-Friendly Header with Fun Colors */
+.treeview-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 35px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    color: white;
+}
+
+.treeview-header h1 {
+    font-size: 2.2rem;
+    color: white;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.treeview-header h1 i {
+    font-size: 2.2rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.treeview-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Stats Cards - More Colorful */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+    font-size: 2rem;
+}
+
+.stat-card.courses-stat {
+    border-color: #667eea;
+}
+
+.stat-card.courses-stat .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stat-card.lessons-stat {
+    border-color: #f093fb;
+}
+
+.stat-card.lessons-stat .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.stat-card.activities-stat {
+    border-color: #4facfe;
+}
+
+.stat-card.activities-stat .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.stat-card.progress-stat {
+    border-color: #43e97b;
+}
+
+.stat-card.progress-stat .stat-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 10px 0 5px 0;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tree Container - Elementary Style */
+.tree-container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tree-container-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f0f0f0;
+}
+
+.tree-container-header h2 {
+    font-size: 1.7rem;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 700;
+}
+
+.tree-container-header i {
+    font-size: 1.7rem;
+    color: #667eea;
+}
+
+/* Course Cards - More Fun */
+.course-tree-item {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 5px solid #667eea;
+}
+
+.course-tree-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.course-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.course-title-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.course-icon {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    color: white;
+    box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+}
+
+.course-title {
+    color: #2c3e50;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.course-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.course-toggle {
+    background: #667eea;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.course-toggle:hover {
+    background: #5568d3;
+}
+
+.course-toggle.expanded {
+    transform: rotate(180deg);
+}
+
+/* Progress Bar in Course Header */
+.course-progress-section {
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.course-progress-label {
+    color: #5a6c7d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-bar-container {
+    height: 10px;
+    background: #e8ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Lessons Container */
+.lessons-container {
+    margin-top: 20px;
+    padding-left: 20px;
+    display: none;
+}
+
+.lessons-container.show {
+    display: block;
+}
+
+/* Lesson Cards - Colorful */
+.lesson-tree-item {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #f093fb;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lesson-tree-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+}
+
+.lesson-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.lesson-title-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.lesson-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.lesson-title {
+    color: #2c3e50;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.lesson-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #7f8c8d;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.lesson-toggle {
+    background: #f093fb;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.lesson-toggle:hover {
+    background: #e07de8;
+}
+
+.lesson-toggle.expanded {
+    transform: rotate(180deg);
+}
+
+.lesson-progress {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lesson-progress-bar-container {
+    flex: 1;
+    height: 8px;
+    background: #e8ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.lesson-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.lesson-progress-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #f093fb;
+}
+
+/* Activities Container */
+.activities-container {
+    margin-top: 15px;
+    padding-left: 15px;
+    display: none;
+}
+
+.activities-container.show {
+    display: block;
+}
+
+/* Activity Items - Fun and Engaging */
+.activity-tree-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    border: 2px solid #e8ecef;
+    cursor: pointer;
+}
+
+.activity-tree-item:hover {
+    border-color: #4facfe;
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(79, 172, 254, 0.2);
+}
+
+.activity-tree-item.completed {
+    background: #e8f5e9;
+    border-color: #43e97b;
+}
+
+.activity-icon-wrapper {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.activity-tree-item.completed .activity-icon-wrapper {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.activity-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 5px;
+}
+
+.activity-title {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.activity-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.activity-type {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activity-duration {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activity-points {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #f57c00;
+    font-weight: 600;
+}
+
+.activity-status {
+    margin-left: auto;
+}
+
+.completed-badge {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 7px 18px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    text-decoration: none;
+    color: white;
+}
+
+/* Empty State - Kid Friendly */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.empty-message {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 25px;
+}
+
+.empty-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 35px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease;
+}
+
+.empty-btn:hover {
+    transform: scale(1.05);
+    text-decoration: none;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .elementary-treeview-container {
+        left: 0;
+        padding: 90px 20px 25px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .treeview-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .course-title {
+        font-size: 1.2rem;
+    }
+    
+    .lesson-title {
+        font-size: 1.05rem;
+    }
+    
+    .course-meta,
+    .lesson-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .elementary-treeview-container {
+        padding: 80px 15px 20px 15px;
+    }
+    
+    .treeview-header {
+        padding: 25px;
+    }
+    
+    .treeview-header h1 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .lessons-container {
+        padding-left: 10px;
+    }
+    
+    .activities-container {
+        padding-left: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    html,
+    body {
+        overflow: visible !important;
+        height: auto !important;
+    }
+    
+    .elementary-treeview-container {
+        position: static !important;
+        left: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .elementary-student-sidebar {
+        display: none !important;
+    }
+    
+    .course-toggle,
+    .lesson-toggle {
+        display: none;
+    }
+    
+    .lessons-container,
+    .activities-container {
+        display: block !important;
+    }
+}
+</style>
+
+<!-- Main Container -->
+<div class="elementary-treeview-container">
+    
+    <!-- Kid-Friendly Header -->
+    <div class="treeview-header">
+        <h1>
+            <i class="fa fa-sitemap"></i>
+            My Learning Adventure!
+        </h1>
+        <p class="treeview-subtitle">Explore all your courses, lessons, and fun activities in one place! 🚀</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card courses-stat">
+            <div class="stat-icon">
+                <i class="fa fa-book"></i>
+            </div>
+            <div class="stat-number">{{total_courses}}</div>
+            <div class="stat-label">Courses</div>
+        </div>
+
+        <div class="stat-card lessons-stat">
+            <div class="stat-icon">
+                <i class="fa fa-bookmark"></i>
+            </div>
+            <div class="stat-number">{{total_lessons}}</div>
+            <div class="stat-label">Lessons</div>
+        </div>
+        
+        <div class="stat-card activities-stat">
+            <div class="stat-icon">
+                <i class="fa fa-puzzle-piece"></i>
+            </div>
+            <div class="stat-number">{{total_activities}}</div>
+            <div class="stat-label">Activities</div>
+        </div>
+        
+        <div class="stat-card progress-stat">
+            <div class="stat-icon">
+                <i class="fa fa-chart-line"></i>
+            </div>
+            <div class="stat-number">{{overall_progress}}%</div>
+            <div class="stat-label">Progress</div>
+        </div>
+    </div>
+
+    <!-- Tree Container -->
+    <div class="tree-container">
+        <div class="tree-container-header">
+            <i class="fa fa-sitemap"></i>
+            <h2>Your Learning Path</h2>
+        </div>
+        
+        {{#has_courses}}
+        <!-- Course Tree -->
+        {{#courses}}
+        <div class="course-tree-item" data-course-id="{{id}}">
+            <div class="course-header" onclick="toggleCourse({{id}})">
+                <div class="course-title-section">
+                    <div class="course-icon">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3 class="course-title">{{fullname}}</h3>
+                        <div class="course-meta">
+                            <span><i class="fa fa-bookmark"></i> {{total_sections}} Lessons</span>
+                            <span><i class="fa fa-star"></i> Level {{id}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-toggle" id="course-toggle-{{id}}">
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <!-- Course Progress -->
+            <div class="course-progress-section">
+                <div class="course-progress-label">
+                    <span>Course Progress</span>
+                    <span><strong>{{progress_percentage}}%</strong></span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: {{progress_percentage}}%;"></div>
+                </div>
+            </div>
+
+            <!-- Lessons Container -->
+            {{#has_lessons}}
+            <div class="lessons-container" id="lessons-{{id}}">
+                {{#lessons}}
+                <div class="lesson-tree-item" data-lesson-id="{{id}}">
+                    <div class="lesson-header" onclick="toggleLesson({{id}})">
+                        <div class="lesson-title-section">
+                            <div class="lesson-icon">
+                                <i class="fa fa-book-open"></i>
+                            </div>
+                            <div>
+                                <h4 class="lesson-title">{{name}}</h4>
+                                <div class="lesson-meta">
+                                    <span><i class="fa fa-puzzle-piece"></i> {{activity_count}} Activities</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lesson-toggle" id="lesson-toggle-{{id}}">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Progress -->
+                    <div class="lesson-progress">
+                        <div class="lesson-progress-bar-container">
+                            <div class="lesson-progress-bar-fill" style="width: {{progress_percentage}}%;"></div>
+                        </div>
+                        <span class="lesson-progress-text">{{progress_percentage}}%</span>
+                    </div>
+
+                    <!-- Activities Container -->
+                    {{#has_activities}}
+                    <div class="activities-container" id="activities-{{id}}">
+                        {{#activities}}
+                        <div class="activity-tree-item {{#completed}}completed{{/completed}}" onclick="window.location.href='{{url}}'">
+                            <div class="activity-icon-wrapper">
+                                <i class="fa {{icon}}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title-row">
+                                    <span class="activity-number">#{{activity_number}}</span>
+                                    <h5 class="activity-title">{{name}}</h5>
+                                </div>
+                                <div class="activity-meta-row">
+                                    <span class="activity-type">
+                                        <i class="fa fa-tag"></i> {{type}}
+                                    </span>
+                                    <span class="activity-duration">
+                                        <i class="fa fa-clock"></i> {{duration}}
+                                    </span>
+                                    <span class="activity-points">
+                                        <i class="fa fa-star"></i> {{points}} pts
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="activity-status">
+                                {{#completed}}
+                                <span class="completed-badge">
+                                    <i class="fa fa-check-circle"></i> Done!
+                                </span>
+                                {{/completed}}
+                                {{^completed}}
+                                <a href="{{url}}" class="start-btn" onclick="event.stopPropagation()">
+                                    <i class="fa fa-play"></i> Start
+                                </a>
+                                {{/completed}}
+                            </div>
+                        </div>
+                        {{/activities}}
+                    </div>
+                    {{/has_activities}}
+                </div>
+                {{/lessons}}
+            </div>
+            {{/has_lessons}}
+        </div>
+        {{/courses}}
+        {{/has_courses}}
+        
+        {{^has_courses}}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fa fa-rocket"></i>
+            </div>
+            <h3 class="empty-title">No Courses Yet! 🎈</h3>
+            <p class="empty-message">Let's start your learning adventure by picking a fun course!</p>
+            <a href="{{mycoursesurl}}" class="empty-btn">
+                <i class="fa fa-plus-circle"></i> Explore Courses
+            </a>
+        </div>
+        {{/has_courses}}
+    </div>
+
+</div>
+
+<script>
+// Toggle course lessons
+function toggleCourse(courseId) {
+    const lessonsContainer = document.getElementById('lessons-' + courseId);
+    const toggle = document.getElementById('course-toggle-' + courseId);
+    
+    if (lessonsContainer.classList.contains('show')) {
+        lessonsContainer.classList.remove('show');
+        toggle.classList.remove('expanded');
+    } else {
+        lessonsContainer.classList.add('show');
+        toggle.classList.add('expanded');
+    }
+}
+
+// Toggle lesson activities
+function toggleLesson(lessonId) {
+    const activitiesContainer = document.getElementById('activities-' + lessonId);
+    const toggle = document.getElementById('lesson-toggle-' + lessonId);
+    
+    if (activitiesContainer.classList.contains('show')) {
+        activitiesContainer.classList.remove('show');
+        toggle.classList.remove('expanded');
+    } else {
+        activitiesContainer.classList.add('show');
+        toggle.classList.add('expanded');
+    }
+}
+
+// Auto-expand first course and lesson on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 Elementary Treeview Page Loaded!');
+    
+    // Expand first course
+    const firstCourse = document.querySelector('.course-tree-item');
+    if (firstCourse) {
+        const courseId = firstCourse.getAttribute('data-course-id');
+        if (courseId) {
+            const lessonsContainer = document.getElementById('lessons-' + courseId);
+            const toggle = document.getElementById('course-toggle-' + courseId);
+            if (lessonsContainer && toggle) {
+                lessonsContainer.classList.add('show');
+                toggle.classList.add('expanded');
+            }
+            
+            // Expand first lesson in first course
+            const firstLesson = firstCourse.querySelector('.lesson-tree-item');
+            if (firstLesson) {
+                const lessonId = firstLesson.getAttribute('data-lesson-id');
+                if (lessonId) {
+                    const activitiesContainer = document.getElementById('activities-' + lessonId);
+                    const lessonToggle = document.getElementById('lesson-toggle-' + lessonId);
+                    if (activitiesContainer && lessonToggle) {
+                        activitiesContainer.classList.add('show');
+                        lessonToggle.classList.add('expanded');
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+

@@ -1,0 +1,96 @@
+{{!
+    Common High School Layout Template
+    Provides consistent layout structure for all high school student pages
+    Includes sidebar and main content area
+}}
+
+{{! Include High School Sidebar Component }}
+{{> theme_remui_kids/highschool_sidebar }}
+
+{{! Main Content Container }}
+<div class="highschool-page-container">
+    {{! Page Content }}
+    <div class="highschool-page-content">
+        {{{page_content}}}
+    </div>
+</div>
+
+<style>
+/* Common High School Page Layout Styles */
+.highschool-page-container {
+    position: fixed;
+    top: 0;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    background: #f5f7fa;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.highschool-page-content {
+    width: 100%;
+    min-height: 100%;
+    padding: 0;
+}
+
+/* Ensure body and html don't scroll when using fixed layout */
+html.highschool-layout-active,
+html.highschool-layout-active body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove default Moodle containers when using this layout */
+.highschool-layout-active #page.drawers .main-inner {
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+.highschool-layout-active .page-header,
+.highschool-layout-active .context-header {
+    display: none !important;
+}
+
+.highschool-layout-active .container,
+.highschool-layout-active .container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.highschool-layout-active #page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .highschool-page-container {
+        left: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .highschool-page-container {
+        left: 0;
+        width: 100%;
+    }
+    
+    .student-sidebar.enhanced-sidebar.show ~ .highschool-page-container {
+        left: 0;
+    }
+}
+</style>
+
+<script>
+// Add layout class to html element
+document.documentElement.classList.add('highschool-layout-active');
+</script>
+

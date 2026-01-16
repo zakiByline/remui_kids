@@ -1,0 +1,354 @@
+{{!
+    Custom Drawers Template for remui_kids theme
+    
+    This template extends the parent theme's drawers template but adds
+    the enhanced elementary sidebar for Grade 1-3 students on mycourses page.
+}}
+
+{{> theme_remui/common_start}}
+
+<style>
+    /* Hide default navbar when custom sidebar is shown */
+    {{#hide_default_navbar}}
+    .navbar {
+        display: none !important;
+    }
+    .navbar-expand-lg {
+        display: none !important;
+    }
+    .navbar-nav {
+        display: none !important;
+    }
+    #page {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    #page-wrapper {
+        padding-top: 0 !important;
+    }
+    .main-inner {
+        padding-top: 0 !important;
+    }
+    {{/hide_default_navbar}}
+</style>
+
+{{#show_elementary_sidebar}}
+    <!-- Enhanced Elementary Sidebar for Mycourses Page -->
+    <div class="student-sidebar enhanced-elementary-sidebar">
+        <nav class="sidebar-nav">
+            
+            <!-- DASHBOARD Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet blue"></span>
+                    DASHBOARD
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{dashboardurl}}}" class="nav-link">
+                            <i class="fa fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{mycoursesurl}}}" class="nav-link active mycourses-link">
+                            <i class="fa fa-book-open"></i>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{lessonsurl}}}" class="nav-link">
+                            <i class="fa fa-play-circle"></i>
+                            <span>Lessons</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{activitiesurl}}}" class="nav-link">
+                            <i class="fa fa-chart-line"></i>
+                            <span>Activities</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{achievementsurl}}}" class="nav-link">
+                            <i class="fa fa-trophy"></i>
+                            <span>Achievements</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{competenciesurl}}}" class="nav-link">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Competencies</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{scheduleurl}}}" class="nav-link">
+                            <i class="fa fa-calendar"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- TOOLS & RESOURCES Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet green"></span>
+                    TOOLS & RESOURCES
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{treeviewurl}}}" class="nav-link">
+                            <i class="fa fa-sitemap"></i>
+                            <span>Tree View</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- SETTINGS & PROFILE Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet orange"></span>
+                    SETTINGS & PROFILE
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{settingsurl}}}" class="nav-link">
+                            <i class="fa fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- QUICK ACTIONS Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet purple"></span>
+                    QUICK ACTIONS
+                </div>
+                <div class="quick-actions-container">
+                    <div class="quick-action-card ebooks-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>E-books</h4>
+                            <p>Access digital learning materials</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card ask-teacher-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Ask Teacher</h4>
+                            <p>Get help from your instructor</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card code-editor-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-desktop"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Code Editor</h4>
+                            <p>Write and run JavaScript code</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card share-class-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-share-alt"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Share with Class</h4>
+                            <p>Collaborate with classmates</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card scratch-editor-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-play"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Scratch Editor</h4>
+                            <p>Create interactive projects</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+        <script>
+        // Wait for jQuery to be available before using it
+        (function() {
+            function initSidebar() {
+                // Check if jQuery is available
+                if (typeof jQuery === 'undefined' && typeof $ === 'undefined') {
+                    // Try to load jQuery via require
+                    if (typeof require !== 'undefined') {
+                        require(['jquery'], function($) {
+                            initSidebarWithJQuery($);
+                        });
+                    } else {
+                        // Fallback: wait a bit and try again
+                        setTimeout(initSidebar, 100);
+                    }
+                    return;
+                }
+                
+                var $ = (typeof jQuery !== 'undefined') ? jQuery : window.$;
+                initSidebarWithJQuery($);
+            }
+            
+            function initSidebarWithJQuery($) {
+                $(document).ready(function() {
+                    // Add body class for content shifting
+                    $('body').addClass('has-student-sidebar');
+                    
+                    // Handle sidebar navigation clicks
+                    $('.student-sidebar .nav-link').on('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Remove active class from all links
+                        $('.student-sidebar .nav-link').removeClass('active');
+                        
+                        // Add active class to clicked link
+                        $(this).addClass('active');
+                        
+                        // Get the link text to determine action
+                        var linkText = $(this).find('span').text().trim();
+                        
+                        // Get the current base URL
+                        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+                        if (baseUrl.endsWith('/')) {
+                            baseUrl = baseUrl.slice(0, -1);
+                        }
+                        
+                        // Handle different navigation items
+                        switch(linkText) {
+                            case 'Dashboard':
+                                window.location.href = baseUrl + '/my/';
+                                break;
+                            case 'My Courses':
+                                window.location.href = baseUrl + '/theme/remui_kids/mycourses.php';
+                                break;
+                            case 'Lessons':
+                                window.location.href = baseUrl + '/mod/lesson/index.php';
+                                break;
+                            case 'Activities':
+                                window.location.href = baseUrl + '/mod/quiz/index.php';
+                                break;
+                            case 'Achievements':
+                                window.location.href = baseUrl + '/badges/mybadges.php';
+                                break;
+                            case 'Competencies':
+                                window.location.href = baseUrl + '/theme/remui_kids/elementary_competencies.php';
+                                break;
+                            case 'Schedule':
+                                window.location.href = baseUrl + '/calendar/view.php';
+                                break;
+                            case 'Tree View':
+                                window.location.href = baseUrl + '/course/view.php';
+                                break;
+                            case 'Settings':
+                                window.location.href = baseUrl + '/user/preferences.php';
+                                break;
+                            default:
+                                console.log('Navigation to:', linkText);
+                        }
+                    });
+                    
+                    // Handle Quick Action Cards
+                    $('.quick-action-card').on('click', function(e) {
+                        e.preventDefault();
+                        
+                        var cardType = $(this).attr('class').split(' ')[1]; // Get the card type class
+                        
+                        // Get the current base URL
+                        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+                        if (baseUrl.endsWith('/')) {
+                            baseUrl = baseUrl.slice(0, -1);
+                        }
+                        
+                        // Handle different quick action cards
+                        switch(cardType) {
+                            case 'ebooks-card':
+                                window.location.href = baseUrl + '/mod/book/index.php';
+                                break;
+                            case 'ask-teacher-card':
+                                window.location.href = baseUrl + '/message/index.php';
+                                break;
+                            case 'code-editor-card':
+                                window.open(baseUrl + '/mod/codeeditor/view.php', '_blank');
+                                break;
+                            case 'share-class-card':
+                                window.location.href = baseUrl + '/mod/forum/index.php';
+                                break;
+                            case 'scratch-editor-card':
+                                window.open(baseUrl + '/mod/scratch/view.php', '_blank');
+                                break;
+                            default:
+                                console.log('Quick action clicked:', cardType);
+                        }
+                    });
+                });
+            }
+            
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initSidebar);
+            } else {
+                initSidebar();
+            }
+        })();
+        </script>
+    {{/show_elementary_sidebar}}
+
+<div id="page-content" class="pb-4 d-print-block">
+    <div id="region-main-box">
+        {{#hasregionmainsettingsmenu}}
+        <div id="region-main-settings-menu" class="d-print-none">
+            <div> {{{ regionmainsettingsmenu }}} </div>
+        </div>
+        {{/hasregionmainsettingsmenu}}
+        <section id="region-main" aria-label="{{#str}}content{{/str}}">
+            {{#hasregionmainsettingsmenu}}
+                <div class="region_main_settings_menu_proxy"></div>
+            {{/hasregionmainsettingsmenu}}
+            {{{ output.course_content_header }}}
+            {{#headercontent}}
+                {{> core/activity_header }}
+            {{/headercontent}}
+            {{#overflow}}
+                <div class="container-fluid tertiary-navigation">
+                    <div class="navitem">
+                        {{> core/url_select}}
+                    </div>
+                </div>
+            {{/overflow}}
+            {{{ output.main_content }}}
+            {{{ output.activity_navigation }}}
+            {{{ output.course_content_footer }}}
+        </section>
+    </div>
+</div>
+{{> theme_remui/common_end}}

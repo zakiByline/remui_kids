@@ -1,0 +1,555 @@
+/**
+ * Elementary My Course Page Styles
+ * 
+ * Kid-friendly, colorful, and engaging styles for elementary students' course page
+ * Includes Moodle navigation bar integration
+ */
+
+/* ===================================
+   Page Container with Moodle Layout
+   =================================== */
+.elementary-my-course-content {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 30px;
+}
+
+
+/* ===================================
+   Main Content Area
+   =================================== */
+.elementary-my-course-content {
+    margin-left: 20px; /* Space for sidebar */
+    min-height: calc(100vh - 60px);
+}
+
+/* Page Header */
+.elementary-course-header {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.elementary-course-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+}
+
+.elementary-course-title {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.elementary-course-title i {
+    color: #667eea;
+    font-size: 2.8rem;
+}
+
+.elementary-course-subtitle {
+    color: #6c757d;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.elementary-course-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.elementary-course-stat {
+    text-align: center;
+}
+
+.elementary-course-stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+}
+
+.elementary-course-stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===================================
+   Course Grid
+   =================================== */
+.elementary-courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.elementary-course-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+}
+
+.elementary-course-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: #667eea;
+}
+
+/* Course Image */
+.elementary-course-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.elementary-course-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.elementary-course-card:hover .elementary-course-image {
+    transform: scale(1.1);
+}
+
+.elementary-course-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 4rem;
+}
+
+.elementary-course-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #667eea;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.elementary-course-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.elementary-course-status.completed {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.elementary-course-status.in-progress {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.elementary-course-status.not-started {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
+}
+
+/* Course Content */
+.elementary-course-content-inner {
+    padding: 25px;
+}
+
+.elementary-course-title-inner {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.elementary-course-grade {
+    background: linear-gradient(135deg, #ff6b35, #ff8e53);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3);
+}
+
+.elementary-course-summary {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Progress Section */
+.elementary-progress-section {
+    margin-bottom: 20px;
+}
+
+.elementary-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.elementary-progress-label {
+    font-size: 0.9rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.elementary-progress-percentage {
+    font-size: 0.9rem;
+    color: #10b981;
+    font-weight: 700;
+}
+
+.elementary-progress-bar {
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.elementary-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 15px;
+    transition: width 0.8s ease;
+    position: relative;
+}
+
+.elementary-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Course Statistics */
+.elementary-course-stats-inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.elementary-course-stat-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.elementary-course-stat-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.elementary-course-stat-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.elementary-course-stat-content {
+    flex: 1;
+}
+
+.elementary-course-stat-number-inner {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    display: block;
+}
+
+.elementary-course-stat-label-inner {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* Course Actions */
+.elementary-course-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.elementary-btn-primary {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.elementary-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.elementary-btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.elementary-btn-secondary:hover {
+    background: #495057;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   No Courses Message
+   =================================== */
+.elementary-no-courses {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 50px 0;
+}
+
+.elementary-no-courses i {
+    font-size: 5rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+    opacity: 0.5;
+}
+
+.elementary-no-courses h3 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.elementary-no-courses p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.elementary-back-to-dashboard {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 15px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.elementary-back-to-dashboard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* ===================================
+   View All Button
+   =================================== */
+.elementary-view-all-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.elementary-view-all-button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 18px 50px;
+    border-radius: 15px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.elementary-view-all-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+@media (max-width: 1024px) {
+    .elementary-my-course-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    .elementary-courses-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .elementary-course-stats {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .moodle-navbar {
+        padding: 10px 15px;
+    }
+    
+    .moodle-navbar-nav {
+        gap: 15px;
+    }
+    
+    .moodle-nav-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .elementary-course-title {
+        font-size: 2rem;
+    }
+    
+    .elementary-courses-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .elementary-course-stats-inner {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .elementary-course-actions {
+        flex-direction: column;
+    }
+    
+    .elementary-course-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .elementary-my-course-page {
+        padding-top: 70px;
+    }
+    
+    .moodle-navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+    
+    .moodle-navbar-nav {
+        margin-top: 10px;
+        justify-content: center;
+    }
+    
+    .elementary-my-course-content {
+        padding: 15px;
+    }
+    
+    .elementary-course-header {
+        padding: 20px;
+    }
+    
+    .elementary-course-title {
+        font-size: 1.8rem;
+    }
+}

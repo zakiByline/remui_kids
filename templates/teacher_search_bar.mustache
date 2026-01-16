@@ -1,0 +1,188 @@
+{{!
+    Teacher Global Search Bar Component
+    Searches students, courses, assignments, quizzes
+}}
+
+{{> theme_remui_kids/global_search_bar_styles}}
+
+<div class="global-search-container teacher-search">
+    <div class="global-search-wrapper">
+        <div class="search-icon">
+            <i class="fa fa-search"></i>
+        </div>
+        <input 
+            type="text" 
+            class="global-search-input" 
+            id="teacher-global-search"
+            placeholder="Search students, courses, assignments, quizzes..."
+            autocomplete="off">
+        <div class="search-clear" id="teacher-search-clear-btn" style="display: none;">
+            <i class="fa fa-times"></i>
+        </div>
+    </div>
+    
+    <div class="search-results-dropdown" id="teacher-search-results-dropdown" style="display: none;">
+        <div class="search-loading" id="teacher-search-loading">
+            <i class="fa fa-spinner fa-spin"></i>
+            <span>Searching...</span>
+        </div>
+        <div class="search-results-content" id="teacher-search-results-content"></div>
+        <div class="search-no-results" id="teacher-search-no-results" style="display: none;">
+            <i class="fa fa-search"></i>
+            <p>No results found</p>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+    
+    const searchInput = document.getElementById('teacher-global-search');
+    const clearBtn = document.getElementById('teacher-search-clear-btn');
+    const dropdown = document.getElementById('teacher-search-results-dropdown');
+    const loading = document.getElementById('teacher-search-loading');
+    const content = document.getElementById('teacher-search-results-content');
+    const noResults = document.getElementById('teacher-search-no-results');
+    const searchWrapper = searchInput ? searchInput.closest('.global-search-wrapper') : null;
+    const searchIcon = searchWrapper ? searchWrapper.querySelector('.search-icon') : null;
+    
+    let searchTimeout = null;
+    
+    if (!searchInput) return;
+    
+    // Always keep search bar expanded (toggle functionality removed)
+    if (searchWrapper) {
+        searchWrapper.classList.add('expanded');
+    }
+    
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        clearBtn.style.display = query ? 'block' : 'none';
+        
+        if (searchTimeout) clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+            dropdown.style.display = 'none';
+            return;
+        }
+        
+        dropdown.style.display = 'block';
+        loading.style.display = 'block';
+        content.style.display = 'none';
+        noResults.style.display = 'none';
+        
+        searchTimeout = setTimeout(() => performSearch(query), 300);
+    });
+    
+    clearBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        dropdown.style.display = 'none';
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.teacher-search')) {
+            dropdown.style.display = 'none';
+        }
+    });
+    
+    function performSearch(query) {
+        fetch(M.cfg.wwwroot + '/theme/remui_kids/ajax/teacher_search.php?query=' + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (!data.success) {
+                    noResults.style.display = 'block';
+                    return;
+                }
+                renderResults(data.results);
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                loading.style.display = 'none';
+                noResults.style.display = 'block';
+            });
+    }
+    
+    function renderResults(results) {
+        let html = '';
+        let totalResults = 0;
+        
+        if (results.students && results.students.length > 0) {
+            html += '<div class="search-category-section">';
+            html += '<div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase;">👨‍🎓 Students</div>';
+            results.students.forEach(item => {
+                html += `<a href="${item.url}" class="search-result-item">
+                    <div class="search-result-icon activity"><i class="fa ${item.icon}"></i></div>
+                    <div class="search-result-content">
+                        <div class="search-result-name">${item.name}</div>
+                        <div class="search-result-type">${item.email}</div>
+                    </div>
+                </a>`;
+                totalResults++;
+            });
+            html += '</div>';
+        }
+        
+        if (results.courses && results.courses.length > 0) {
+            html += '<div class="search-category-section">';
+            html += '<div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase;">📚 Courses</div>';
+            results.courses.forEach(item => {
+                html += `<a href="${item.url}" class="search-result-item">
+                    <div class="search-result-icon course"><i class="fa ${item.icon}"></i></div>
+                    <div class="search-result-content">
+                        <div class="search-result-name">${item.name}</div>
+                        <div class="search-result-type">${item.type}</div>
+                    </div>
+                </a>`;
+                totalResults++;
+            });
+            html += '</div>';
+        }
+        
+        if (results.sections && results.sections.length > 0) {
+            html += '<div class="search-category-section">';
+            html += '<div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase;">📖 Sections & Lessons</div>';
+            results.sections.forEach(item => {
+                html += `<a href="${item.url}" class="search-result-item">
+                    <div class="search-result-icon section"><i class="fa ${item.icon}"></i></div>
+                    <div class="search-result-content">
+                        <div class="search-result-name">${item.name}</div>
+                        <div class="search-result-type">in ${item.coursename}</div>
+                    </div>
+                </a>`;
+                totalResults++;
+            });
+            html += '</div>';
+        }
+        
+        if (results.activities && results.activities.length > 0) {
+            html += '<div class="search-category-section">';
+            html += '<div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase;">✏️ Activities & Resources</div>';
+            results.activities.forEach(item => {
+                html += `<a href="${item.url}" class="search-result-item">
+                    <div class="search-result-icon activity"><i class="fa ${item.icon}"></i></div>
+                    <div class="search-result-content">
+                        <div class="search-result-name">${item.name}</div>
+                        <div class="search-result-type">${item.type} • in ${item.coursename}</div>
+                    </div>
+                </a>`;
+                totalResults++;
+            });
+            html += '</div>';
+        }
+        
+        if (totalResults === 0) {
+            noResults.style.display = 'block';
+            content.style.display = 'none';
+        } else {
+            content.innerHTML = html;
+            content.style.display = 'block';
+            noResults.style.display = 'none';
+        }
+    }
+})();
+</script>
+

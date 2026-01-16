@@ -1,0 +1,237 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    Edwiser RemUI - Modified for remui_kids with Language Switcher
+    @package theme_remui_kids
+    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template theme_remui_kids/navbar
+
+    This template renders the top navbar with integrated language switcher.
+}}
+<nav class="navbar fixed-top navbar-expand {{navlayout}}  {{#homepagetransparentheader}}trasnparent-home-nav{{/homepagetransparentheader}}" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+
+    <a href="{{{ config.homeurl }}}" class="navbar-brand d-none d-md-flex align-items-center m-0 aabtn" aria-label="{{ sitename }} - {{#str}}brandname, theme_remui{{/str}}" title="{{ sitename }}">
+        {{#output.get_branding_context}}
+            {{#logourl}}
+                <img src="{{ logourl }}" class="navbar-brand-logo logo light-logo">
+            {{/logourl}}
+            
+            {{#darklogourl}}
+                <img src="{{ darklogourl }}" class="navbar-brand-logo logo dark-logo">
+            {{/darklogourl}}
+
+            {{#logominiurl}}
+                <img src="{{ logominiurl }}" class="navbar-brand-logo logomini light-logomini">
+            {{/logominiurl}}
+
+            {{#darklogominiurl}}
+                <img src="{{ darklogominiurl }}" class="navbar-brand-logo logomini dark-logomini">
+            {{/darklogominiurl}}
+
+            {{#icononly}}
+                <span class="navbar-brand-logo icononly" style="color: {{color}};">
+                    <i class="fa fa-{{siteicon}}"></i>
+                </span>
+            {{/icononly}}
+
+            {{#iconwithsitename}}
+                <span class="navbar-brand-logo iconsitename" style="color: {{color}};">
+                    <i class="fa fa-{{siteicon}}"></i>&nbsp;
+                    {{{ sitename }}}
+                </span>
+            {{/iconwithsitename}}
+        {{/output.get_branding_context}}
+    </a>
+
+    <div class="sub-nav">
+        <div class="navbar-toggler-wrapper">
+            <button class="navbar-toggler aabtn d-block d-lg-none border-0 h-100 p-0" data-toggler="drawers" data-action="toggle" data-target="theme_remui-drawers-primary">
+                <span class="edw-icon edw-icon-Mobile-menu"></span>
+                <span class="sr-only">{{#str}}sidepanel, core{{/str}}</span>
+            </button>
+        </div>
+
+        {{#primarymoremenu}}
+            <div class="primary-navigation">
+                {{> core/moremenu}}
+            </div>
+        {{/primarymoremenu}}
+
+        {{! Dashboard and My Courses Links - Show for logged-in users }}
+        {{#isloggedin}}
+            <div class="navbar-nav mx-2 d-flex align-items-center">
+                <a href="{{#dashboardurl}}{{{dashboardurl}}}{{/dashboardurl}}{{^dashboardurl}}{{#dashboard_url}}{{{dashboard_url}}}{{/dashboard_url}}{{^dashboard_url}}{{{config.wwwroot}}}/my/{{/dashboard_url}}{{/dashboardurl}}" 
+                   class="nav-link dashboard-nav-link d-flex align-items-center" 
+                   title="Dashboard">
+                    <i class="fa fa-home mr-1"></i>
+                    <span class="d-none d-lg-inline">Dashboard</span>
+                </a>
+                <a href="{{#mycoursesurl}}{{{mycoursesurl}}}{{/mycoursesurl}}{{^mycoursesurl}}{{#my_courses_url}}{{{my_courses_url}}}{{/my_courses_url}}{{^my_courses_url}}{{#dashboard_url}}{{{dashboard_url}}}{{/dashboard_url}}{{^dashboard_url}}{{{config.wwwroot}}}/my/courses.php{{/dashboard_url}}{{/my_courses_url}}{{/mycoursesurl}}" 
+                   class="nav-link mycourses-nav-link d-flex align-items-center ml-2" 
+                   title="My Courses">
+                    <i class="fa fa-book mr-1"></i>
+                    <span class="d-none d-lg-inline">My Courses</span>
+                </a>
+            </div>
+        {{/isloggedin}}
+
+        <div id="usernavigation" class="navbar-nav ml-auto">
+            {{#edwisermenu}}
+                <div class="edwiser-navigation">
+                    {{> core/moremenu}}
+                </div>
+            {{/edwisermenu}}
+            {{# output.edw_search_box }}
+                {{{ output.edw_search_box }}}
+            {{/output.edw_search_box}}
+            
+            {{! Translator plugin switcher - render directly in navbar header }}
+            {{#translator_enabled}}
+                <div class="nav-item translator-nav-item d-flex align-items-center mx-2">
+                    {{{translator_switcher_html}}}
+                </div>
+            {{/translator_enabled}}
+            
+            {{! Also check navbar_plugin_output for header actions (includes translator if added via hooks) }}
+            {{{ output.navbar_plugin_output }}}
+            
+            {{! Custom Language Switcher from local_langswitch plugin }}
+            {{^translator_enabled}}
+                {{#langswitcher.enabled}}
+                    <div class="nav-item langswitch-nav-item d-flex align-items-center mx-2">
+                        <form method="get" action="{{langswitcher.action}}" class="langswitch-form m-0">
+                            <input type="hidden" name="returnurl" value="{{langswitcher.returnurl}}">
+                            <div class="langswitch-dropdown-wrapper" style="position: relative;">
+                                <i class="fa fa-globe" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6366f1; font-size: 14px; pointer-events: none; z-index: 1;"></i>
+                                <select name="lang" class="langswitch-select form-control" onchange="this.form.submit()" 
+                                        style="padding: 6px 30px 6px 32px; border: 1px solid #e5e7eb; border-radius: 8px; background: white; font-size: 13px; font-weight: 500; cursor: pointer; min-width: 140px; appearance: none; -webkit-appearance: none; -moz-appearance: none; color: #374151;">
+                                    {{#langswitcher.languages}}
+                                        <option value="{{code}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                                    {{/langswitcher.languages}}
+                                </select>
+                                <i class="fa fa-caret-down" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 10px; pointer-events: none;"></i>
+                            </div>
+                        </form>
+                    </div>
+                {{/langswitcher.enabled}}
+            {{/translator_enabled}}
+            
+            {{! Always show language menu if available (for all users including logged-in) - fallback }}
+            {{^translator_enabled}}
+                {{^langswitcher.enabled}}
+                    {{#langmenu.hasitems}}
+                        <div class="nav-item langmenu-nav-item d-flex align-items-center mx-2">
+                            {{> theme_remui/language_menu }}
+                        </div>
+                    {{/langmenu.hasitems}}
+                {{/langswitcher.enabled}}
+            {{/translator_enabled}}
+
+            {{#usermenu}}
+            <div class="d-flex usermenu-wrapper">
+                <div class="divider  h-75 align-self-center"></div>
+                <div class="d-flex align-items-stretch usermenu-container" data-region="usermenu">
+                    {{> core/user_menu }}
+                </div>
+                {{#isloggedin}}
+                <div class="divider  h-75 align-self-center"></div>
+                {{/isloggedin}}
+            </div>
+            {{/usermenu}}
+
+            {{#canenabledm}}
+                <div class="nav-darkmode nav-item d-flex align-items-center" data-dm="disabled">
+                    <a class="dm-toggle text-decoration-none">
+                        {{^dmanimate}}
+                        <span class="edw-icon edw-icon-Dark-mode darkmodeicon"  title="{{#str}}darkmodetitilestring, theme_remui{{/str}}"></span>
+                        <span class="edw-icon edw-icon-Light-mode lightmodeicon"  title="{{#str}}lightmodetitlestring, theme_remui{{/str}}"></span>
+                        {{/dmanimate}}
+
+                        {{#dmanimate}}
+                        <img src="{{config.wwwroot}}/theme/remui/pix/darkmode.gif" style="width:50px;height:50px;"/>
+                        <span class="edw-icon edw-icon-Light-mode lightmodeicon"  title="{{#str}}lightmodetitlestring, theme_remui{{/str}}"></span>
+                        {{/dmanimate}}
+                    </a>
+                </div>
+            {{/canenabledm}}
+            {{{ output.edit_switch }}}
+        </div>
+    </div>
+
+</nav>
+{{#show_license_notice}}
+{{{show_license_notice}}}
+{{/show_license_notice}}
+
+{{> theme_remui/primary-drawer-mobile }}
+
+<style>
+/* Language Switcher Navbar Styles */
+.langswitch-nav-item .langswitch-select:hover {
+    border-color: #6366f1;
+}
+.langswitch-nav-item .langswitch-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+/* RTL Support */
+.langswitch-select option[value="ar"],
+.langswitch-select option[value="ur"],
+.langswitch-select option[value="he"],
+.langswitch-select option[value="fa"] {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Dashboard and My Courses Nav Link Styles */
+.dashboard-nav-link,
+.mycourses-nav-link {
+    color: #475569 !important;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.dashboard-nav-link:hover,
+.mycourses-nav-link:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: #6366f1 !important;
+}
+
+.dashboard-nav-link i,
+.mycourses-nav-link i {
+    font-size: 1rem;
+    margin-right: 0.35rem;
+}
+
+@media (max-width: 991px) {
+    .dashboard-nav-link span,
+    .mycourses-nav-link span {
+        display: none !important;
+    }
+    .dashboard-nav-link,
+    .mycourses-nav-link {
+        padding: 0.5rem !important;
+    }
+}
+</style>
+

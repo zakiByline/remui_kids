@@ -1,0 +1,1052 @@
+{{!
+    Schedule Page Template for remui_kids theme
+    Specifically designed for Grade 4-7 students (including Grade 5)
+}}
+
+{{#custom_schedule}}
+    {{#highschool}}
+{{> theme_remui_kids/highschool_sidebar}}
+{{/highschool}}
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+<style>
+/* Full width container minus sidebar */
+.container,
+.container-fluid,
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Specific container overrides - push content away from sidebar */
+.container {
+    max-width: calc(100vw - 280px) !important;
+    width: calc(100vw - 280px) !important;
+    margin-left: 280px !important;
+}
+
+/* Add top spacing for fixed navbar */
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.container,
+.container-fluid,
+body,
+html {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Page Header Styles - Same as My Courses */
+.schedule-page-header {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.schedule-page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.schedule-page-title i {
+    color: #3498db;
+    font-size: 2.2rem;
+}
+
+.schedule-page-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* G4G7 Header Style for Grade 5 */
+{{#is_middle_grade}}
+.schedule-page-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    color: white;
+}
+
+.schedule-page-title {
+    color: white;
+}
+
+.schedule-page-title i {
+    color: white;
+    opacity: 0.9;
+}
+
+.schedule-page-subtitle {
+    color: white;
+    opacity: 0.9;
+}
+{{/is_middle_grade}}
+
+
+/* Next 7 Days Calendar View */
+.next-7-days-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    padding: 30px;
+}
+
+.next-7-days-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.next-7-days-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.next-7-days-title i {
+    color: #3498db;
+    font-size: 1.6rem;
+}
+
+.view-full-calendar {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.view-full-calendar:hover {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+.next-7-days-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.days-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.day-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 80px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.day-card:hover {
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.day-card.today {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.day-card.today .day-name {
+    color: #d97706;
+}
+
+.day-card.today .day-number {
+    color: #d97706;
+    font-weight: 700;
+}
+
+.day-card.selected {
+    background: #3498db;
+    border-color: #2980b9;
+    color: white;
+}
+
+.day-card.selected .day-name {
+    color: white;
+}
+
+.day-card.selected .day-number {
+    color: white;
+    font-weight: 700;
+}
+
+.day-card.has-events::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: #e74c3c;
+    border-radius: 50%;
+}
+
+.day-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.day-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.events-container {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.events-container i {
+    font-size: 3rem;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.events-container h3 {
+    color: #6c757d;
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}
+
+.events-container p {
+    color: #9ca3af;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Schedule Page Styles */
+.schedule-page .schedule-content {
+    margin-left: 0 !important;
+    padding: 2rem !important;
+    min-height: 100vh !important;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+}
+
+.schedule-header {
+    background: white !important;
+    border-radius: 16px !important;
+    padding: 2rem !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.schedule-title {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin: 0 0 0.5rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.schedule-title i {
+    color: #f59e0b !important;
+}
+
+.schedule-subtitle {
+    color: #6b7280 !important;
+    font-size: 1rem !important;
+    margin: 0 !important;
+}
+
+.schedule-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem !important;
+    margin-top: 1.5rem !important;
+}
+
+.schedule-stat-card {
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6) !important;
+    padding: 1.25rem !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.schedule-stat-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-icon-wrapper {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+.stat-icon-wrapper.total {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+}
+
+.stat-icon-wrapper.today {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.stat-icon-wrapper.week {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.stat-info h3 {
+    margin: 0 !important;
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+}
+
+.stat-info p {
+    margin: 0 !important;
+    font-size: 0.9rem !important;
+    color: #6b7280 !important;
+}
+
+/* Timeline Container */
+.schedule-timeline {
+    position: relative !important;
+    padding-left: 2rem !important;
+}
+
+.schedule-timeline::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 11px !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 4px !important;
+    background: linear-gradient(180deg, #f59e0b, #d97706) !important;
+    border-radius: 2px !important;
+}
+
+.day-group {
+    margin-bottom: 2.5rem !important;
+    position: relative !important;
+}
+
+.day-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+}
+
+.day-marker {
+    position: absolute !important;
+    left: -2rem !important;
+    width: 24px !important;
+    height: 24px !important;
+    background: white !important;
+    border: 4px solid #f59e0b !important;
+    border-radius: 50% !important;
+    z-index: 1 !important;
+}
+
+.day-date-card {
+    background: white !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+    min-width: 120px !important;
+    text-align: center !important;
+}
+
+.day-date-card .day-name {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #f59e0b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin: 0 !important;
+}
+
+.day-date-card .day-number {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin: 0.25rem 0 !important;
+    line-height: 1 !important;
+}
+
+.day-date-card .month-name {
+    font-size: 0.9rem !important;
+    color: #6b7280 !important;
+    margin: 0 !important;
+}
+
+.activities-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+.activity-card {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    border-left: 4px solid transparent !important;
+}
+
+.activity-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+    transform: translateX(8px) !important;
+    text-decoration: none !important;
+}
+
+.activity-card.assignment {
+    border-left-color: #3b82f6 !important;
+}
+
+.activity-card.quiz {
+    border-left-color: #10b981 !important;
+}
+
+.activity-card.lesson {
+    border-left-color: #8b5cf6 !important;
+}
+
+.activity-icon {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.3rem !important;
+    color: white !important;
+    flex-shrink: 0 !important;
+}
+
+.activity-card.assignment .activity-icon {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+}
+
+.activity-card.quiz .activity-icon {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.activity-card.lesson .activity-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+.activity-details {
+    flex: 1 !important;
+}
+
+.activity-name {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 0 0.5rem 0 !important;
+}
+
+.activity-meta {
+    display: flex !important;
+    gap: 1.5rem !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+.activity-course {
+    font-size: 0.9rem !important;
+    color: #6b7280 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.activity-time {
+    font-size: 0.9rem !important;
+    color: #f59e0b !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.activity-type {
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+}
+
+.activity-type.assignment {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+.activity-type.quiz {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+.activity-type.lesson {
+    background: #e9d5ff !important;
+    color: #6b21a8 !important;
+}
+
+.activity-arrow {
+    color: #9ca3af !important;
+    font-size: 1.2rem !important;
+}
+
+/* Empty State */
+.empty-schedule {
+    text-align: center !important;
+    padding: 4rem 2rem !important;
+    background: white !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.empty-schedule i {
+    font-size: 4rem !important;
+    color: #d1d5db !important;
+    margin-bottom: 1rem !important;
+}
+
+.empty-schedule h3 {
+    color: #6b7280 !important;
+    margin: 1rem 0 0.5rem 0 !important;
+}
+
+.empty-schedule p {
+    color: #9ca3af !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .schedule-page .schedule-content {
+        padding: 1rem !important;
+    }
+    
+    .schedule-stats {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .schedule-timeline {
+        padding-left: 1.5rem !important;
+    }
+    
+    .day-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .day-date-card {
+        width: 100% !important;
+    }
+    
+    .activity-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .activity-meta {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+}
+
+/* Hide default navbar */
+{{#hide_default_navbar}}
+.navbar,
+.navbar-expand-lg,
+.navbar-nav {
+    display: none !important;
+}
+
+#page,
+#page-wrapper {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+{{/hide_default_navbar}}
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="schedule-page-header">
+            <h2 class="schedule-page-title">
+                            <i class="fa fa-calendar"></i>
+                My Schedule
+            </h2>
+            <p class="schedule-page-subtitle">
+                {{#usercohortname}}
+                    Upcoming activities and deadlines for your {{usercohortname}} courses
+                {{/usercohortname}}
+                {{^usercohortname}}
+                    Upcoming activities and deadlines for the next 30 days
+                {{/usercohortname}}
+            </p>
+            </div>
+                </div>
+            </div>
+
+<!-- Schedule Stats -->
+<div class="row mb-4">
+    <div class="col-12">
+            <div class="schedule-stats">
+                <div class="schedule-stat-card">
+                    <div class="stat-icon-wrapper total">
+                        <i class="fa fa-tasks"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{total_activities}}</h3>
+                        <p>Total Upcoming</p>
+                    </div>
+                </div>
+                
+                <div class="schedule-stat-card">
+                    <div class="stat-icon-wrapper today">
+                        <i class="fa fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{today_activities}}</h3>
+                        <p>Due Today</p>
+                    </div>
+                </div>
+                
+                <div class="schedule-stat-card">
+                    <div class="stat-icon-wrapper week">
+                        <i class="fa fa-calendar-week"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{thisweek_activities}}</h3>
+                        <p>This Week</p>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Next 7 Days Calendar View -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="next-7-days-container">
+            <div class="next-7-days-header">
+                <h3 class="next-7-days-title">
+                    <i class="fa fa-calendar"></i>
+                    My Schedule
+                </h3>
+                <a href="{{{calendarurl}}}" class="view-full-calendar">
+                    View Full Calendar >
+                </a>
+            </div>
+            
+            <div class="next-7-days-label">Next 7 Days</div>
+            
+            <div class="days-row" id="next-7-days">
+                <!-- Days will be populated by JavaScript -->
+            </div>
+            
+            <div class="events-container" id="events-container">
+                <i class="fa fa-calendar-check"></i>
+                <h3>No upcoming events in the next 7 days</h3>
+                <p>You're all caught up! Great job staying on top of your schedule.</p>
+            </div>
+            
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Timeline -->
+        {{#has_activities}}
+        <div class="schedule-timeline">
+            {{#schedule_data}}
+            <div class="day-group">
+                <div class="day-header">
+                    <div class="day-marker"></div>
+                    <div class="day-date-card">
+                        <p class="day-name">{{dayname}}</p>
+                        <h2 class="day-number">{{daynum}}</h2>
+                        <p class="month-name">{{monthname}}</p>
+                    </div>
+                </div>
+                
+                <div class="activities-list">
+                    {{#activities}}
+                    <a href="{{url}}" class="activity-card {{type}}">
+                        <div class="activity-icon">
+                            <i class="fa {{icon}}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h3 class="activity-name">{{name}}</h3>
+                            <div class="activity-meta">
+                                <span class="activity-course">
+                                    <i class="fa fa-book"></i>
+                                    {{coursename}}
+                                </span>
+                                <span class="activity-time">
+                                    <i class="fa fa-clock"></i>
+                                    {{timeformatted}}
+                                </span>
+                                <span class="activity-type {{type}}">{{type}}</span>
+                            </div>
+                        </div>
+                        <div class="activity-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </a>
+                    {{/activities}}
+                </div>
+            </div>
+            {{/schedule_data}}
+        </div>
+        {{/has_activities}}
+        
+        {{^has_activities}}
+        <div class="empty-schedule">
+            <i class="fa fa-calendar-check"></i>
+            <h3>No Upcoming Activities</h3>
+            <p>You have no scheduled activities for the next 30 days. Great job staying on top of your work!</p>
+        </div>
+        {{/has_activities}}
+
+{{/custom_schedule}}
+
+<script>
+// Next 7 Days functionality
+const scheduleData = {{{schedule_data_json}}};
+
+
+// Fallback sample data for testing if no real data
+const sampleData = [
+    {
+        date: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // Tomorrow
+        activities: [
+            {
+                type: 'assignment',
+                name: 'Math Homework',
+                coursename: 'Mathematics',
+                url: '#'
+            }
+        ]
+    },
+    {
+        date: Math.floor(Date.now() / 1000) + (2 * 24 * 60 * 60), // Day after tomorrow
+        activities: [
+            {
+                type: 'quiz',
+                name: 'Science Quiz',
+                coursename: 'Science',
+                url: '#'
+            }
+        ]
+    }
+];
+
+// Use sample data if no real data is available
+const dataToUse = (scheduleData && scheduleData.length > 0) ? scheduleData : sampleData;
+
+function generateNext7Days() {
+    const daysContainer = document.getElementById('next-7-days');
+    const eventsContainer = document.getElementById('events-container');
+    
+    if (!daysContainer) return;
+    
+    // Clear existing days
+    daysContainer.innerHTML = '';
+    
+    const today = new Date();
+    const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    let hasUpcomingEvents = false;
+    let upcomingEvents = [];
+    
+    // Generate next 7 days
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        
+        const dayElement = createDayCard(date, dayNames[date.getDay()], i === 0);
+        daysContainer.appendChild(dayElement);
+        
+        // Check if this day has events from the actual schedule data
+        const activities = getActivitiesForDate(date);
+        if (activities.length > 0) {
+            hasUpcomingEvents = true;
+            // Add activities to upcoming events list
+            activities.forEach(activity => {
+                upcomingEvents.push({
+                    ...activity,
+                    date: date,
+                    dateString: date.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    })
+                });
+            });
+        }
+    }
+    
+    // Update events container based on whether there are upcoming events
+    if (hasUpcomingEvents && upcomingEvents.length > 0) {
+        eventsContainer.innerHTML = `
+            <div style="text-align: left; width: 100%;">
+                <h4 style="color: #2c3e50; margin-bottom: 20px;">Upcoming Events</h4>
+                <div id="upcoming-events-list"></div>
+    </div>
+        `;
+        displayUpcomingEvents(upcomingEvents);
+    } else {
+        eventsContainer.innerHTML = `
+            <i class="fa fa-calendar-check"></i>
+            <h3>No upcoming events in the next 7 days</h3>
+            <p>You're all caught up! Great job staying on top of your schedule.</p>
+        `;
+    }
+}
+
+function createDayCard(date, dayName, isToday) {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'day-card';
+    
+    if (isToday) {
+        dayElement.classList.add('today');
+    }
+    
+    // Check if this day has events
+    const activities = getActivitiesForDate(date);
+    if (activities.length > 0) {
+        dayElement.classList.add('has-events');
+    }
+    
+    dayElement.innerHTML = `
+        <div class="day-name">${dayName}</div>
+        <div class="day-number">${date.getDate()}</div>
+    `;
+    
+    // Add click event to select this day
+    dayElement.addEventListener('click', function() {
+        selectDay(date, dayElement);
+    });
+    
+    return dayElement;
+}
+
+function displayUpcomingEvents(upcomingEvents) {
+    const eventsList = document.getElementById('upcoming-events-list');
+    if (!eventsList || !upcomingEvents || upcomingEvents.length === 0) return;
+    
+    // Sort events by date
+    upcomingEvents.sort((a, b) => a.date - b.date);
+    
+    // Display events
+    eventsList.innerHTML = upcomingEvents.map(event => `
+        <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 4px solid ${getActivityColor(event.type)}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h5 style="margin: 0 0 5px 0; color: #2c3e50;">${event.name}</h5>
+                    <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">${event.coursename}</p>
+</div>
+                <div style="text-align: right;">
+                    <span style="background: ${getActivityColor(event.type)}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; text-transform: uppercase;">${event.type}</span>
+                    <p style="margin: 5px 0 0 0; color: #6c757d; font-size: 0.8rem;">${event.dateString}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getActivityColor(type) {
+    switch(type) {
+        case 'assignment': return '#3b82f6';
+        case 'quiz': return '#10b981';
+        case 'lesson': return '#8b5cf6';
+        default: return '#6b7280';
+    }
+}
+
+function getActivitiesForDate(date) {
+    const activities = [];
+    
+    // Check schedule data for activities on this date
+    if (dataToUse && Array.isArray(dataToUse)) {
+        dataToUse.forEach((dayGroup) => {
+            // Handle different date formats
+            let dayDate;
+            if (dayGroup.date) {
+                // If date is a timestamp (seconds)
+                dayDate = new Date(dayGroup.date * 1000);
+            } else if (dayGroup.timestamp) {
+                // If date is a timestamp (milliseconds)
+                dayDate = new Date(dayGroup.timestamp);
+            } else if (dayGroup.date_string) {
+                // If date is a string
+                dayDate = new Date(dayGroup.date_string);
+            }
+            
+            if (dayDate && isSameDay(dayDate, date)) {
+                if (dayGroup.activities && Array.isArray(dayGroup.activities)) {
+                    activities.push(...dayGroup.activities);
+                }
+            }
+        });
+    }
+    
+    return activities;
+}
+
+function isSameDay(date1, date2) {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+}
+
+// Global variable to track selected day
+let selectedDay = null;
+
+function selectDay(date, dayElement) {
+    // Remove selected class from all day cards
+    document.querySelectorAll('.day-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked day
+    dayElement.classList.add('selected');
+    
+    // Update selected day
+    selectedDay = date;
+    
+    // Show activities for selected day
+    showDayActivities(date);
+}
+
+function showDayActivities(date) {
+    const eventsContainer = document.getElementById('events-container');
+    const activities = getActivitiesForDate(date);
+    
+    if (activities.length > 0) {
+        const dateString = date.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        eventsContainer.innerHTML = `
+            <div style="text-align: left; width: 100%;">
+                <h4 style="color: #2c3e50; margin-bottom: 20px;">
+                    <i class="fa fa-calendar-day"></i>
+                    Activities for ${dateString}
+                </h4>
+                <div id="selected-day-events-list"></div>
+            </div>
+        `;
+        
+        displaySelectedDayEvents(activities);
+    } else {
+        const dateString = date.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        eventsContainer.innerHTML = `
+            <i class="fa fa-calendar-check"></i>
+            <h3>No activities for ${dateString}</h3>
+            <p>You have no scheduled activities for this day.</p>
+        `;
+    }
+}
+
+function displaySelectedDayEvents(activities) {
+    const eventsList = document.getElementById('selected-day-events-list');
+    if (!eventsList || !activities || activities.length === 0) return;
+    
+    // Display events
+    eventsList.innerHTML = activities.map(event => `
+        <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 4px solid ${getActivityColor(event.type)}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h5 style="margin: 0 0 5px 0; color: #2c3e50;">${event.name}</h5>
+                    <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">${event.coursename}</p>
+                    ${event.description ? `<p style="margin: 5px 0 0 0; color: #6c757d; font-size: 0.8rem;">${event.description}</p>` : ''}
+                </div>
+                <div style="text-align: right;">
+                    <span style="background: ${getActivityColor(event.type)}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; text-transform: uppercase;">${event.type}</span>
+                    <p style="margin: 5px 0 0 0; color: #6c757d; font-size: 0.8rem;">${event.timeformatted}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Initialize next 7 days view when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    generateNext7Days();
+});
+</script>

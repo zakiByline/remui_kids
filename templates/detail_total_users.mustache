@@ -1,0 +1,855 @@
+<div class="detail-page">
+    <!-- Header Section -->
+    <div class="detail-header">
+        <div class="header-content">
+            <div class="back-button">
+                <a href="javascript:history.back()" class="btn-back">
+                    <i class="fa fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+            <div class="header-info">
+                <h1 class="detail-title">
+                    <i class="fa fa-users"></i>
+                    Total Users Details
+                </h1>
+                <p class="detail-subtitle">Complete list of all registered users in the system</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-overview">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="total-users">-</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-bolt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="active-users">-</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-ban"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="suspended-users">-</div>
+                    <div class="stat-label">Suspended</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-calendar-plus"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="new-this-month">-</div>
+                    <div class="stat-label">New This Month</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="filters-section">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search users by name, username, or email..." class="search-input">
+                <button id="searchBtn" class="search-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div class="filter-controls">
+                <select id="sortSelect" class="filter-select">
+                    <option value="firstname">Sort by First Name</option>
+                    <option value="lastname">Sort by Last Name</option>
+                    <option value="username">Sort by Username</option>
+                    <option value="email">Sort by Email</option>
+                    <option value="timecreated">Sort by Registration Date</option>
+                    <option value="lastaccess">Sort by Last Access</option>
+                </select>
+                <select id="orderSelect" class="filter-select">
+                    <option value="ASC">Ascending</option>
+                    <option value="DESC">Descending</option>
+                </select>
+                <select id="perPageSelect" class="filter-select">
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h3>Users List</h3>
+            <div class="table-actions">
+                <button id="refreshBtn" class="btn-refresh">
+                    <i class="fa fa-refresh"></i>
+                    Refresh
+                </button>
+                <button id="exportBtn" class="btn-export" onclick="window.location='{{config.wwwroot}}/theme/remui_kids/admin/bulk_download.php'">
+                    <i class="fa fa-download"></i>
+                    Export
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Registration Date</th>
+                        <th>Last Access</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr>
+                        <td colspan="8" class="loading-cell">
+                            <div class="loading-spinner">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Loading users...
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="paginationInfo">Loading...</span>
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="btn-pagination" disabled>
+                    <i class="fa fa-chevron-left"></i>
+                    Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button id="nextPage" class="btn-pagination">
+                    Next
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.detail-page {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.detail-header {
+    background: linear-gradient(135deg,rgb(168, 227, 255) 0%,rgb(120, 163, 255) 100%);
+    color: #8b4513;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(255, 165, 79, 0.2);
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.back-button {
+    align-self: flex-start;
+}
+
+.header-info {
+    text-align: center;
+}
+
+.back-button .btn-back {
+    background: rgba(139, 69, 19, 0.15);
+    color: #8b4513;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.back-button .btn-back:hover {
+    background: rgba(139, 69, 19, 0.25);
+    transform: translateX(-5px);
+}
+
+.detail-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.detail-subtitle {
+    font-size: 0.9rem;
+    margin: 5px 0 0 0;
+    opacity: 0.9;
+}
+
+.stats-overview {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+}
+
+.stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #6f42c1, #8e44ad); }
+.stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #fd7e14, #e67e22); }
+.stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #dc3545, #c0392b); }
+.stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, #28a745, #27ae60); }
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filters-section {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.filters-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    display: flex;
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: #5a6fd8;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.filter-select {
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 25px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.table-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-refresh, .btn-export {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-refresh:hover {
+    background: #138496;
+}
+
+.btn-export {
+    background: #28a745;
+    color: white;
+}
+
+.btn-export:hover {
+    background: #218838;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.users-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.users-table tr:hover {
+    background: #f8f9fa;
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.user-username {
+    color: #6c757d;
+    font-family: monospace;
+}
+
+.user-email {
+    color: #495057;
+}
+
+.user-role {
+    color: #667eea;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.user-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-suspended {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-inactive {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #138496;
+}
+
+.btn-view {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #5a6268;
+}
+
+.pagination-container {
+    padding: 25px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-pagination {
+    padding: 8px 16px;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #495057;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-pagination:hover:not(:disabled) {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.btn-pagination:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.page-number {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #495057;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-number:hover {
+    background: #e9ecef;
+}
+
+.page-number.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        min-width: auto;
+    }
+    
+    .filter-controls {
+        flex-wrap: wrap;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .pagination-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+}
+</style>
+
+<script>
+let currentPage = 1;
+let currentPerPage = 20;
+let currentSearch = '';
+let currentSort = 'firstname';
+let currentOrder = 'ASC';
+let totalPages = 1;
+let searchTimeout = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadUsers();
+    initializeEventListeners();
+});
+
+function initializeEventListeners() {
+    document.getElementById('searchBtn').addEventListener('click', handleSearch);
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+    
+    // Real-time search as user types with debouncing
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        // Clear previous timeout
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        
+        // Set new timeout for search
+        searchTimeout = setTimeout(function() {
+            currentSearch = e.target.value.trim();
+            currentPage = 1;
+            loadUsers();
+        }, 300); // 300ms delay
+    });
+    
+    document.getElementById('sortSelect').addEventListener('change', function() {
+        currentSort = this.value;
+        loadUsers();
+    });
+    
+    document.getElementById('orderSelect').addEventListener('change', function() {
+        currentOrder = this.value;
+        loadUsers();
+    });
+    
+    document.getElementById('perPageSelect').addEventListener('change', function() {
+        currentPerPage = parseInt(this.value);
+        currentPage = 1;
+        loadUsers();
+    });
+    
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        loadStats();
+        loadUsers();
+    });
+    
+    document.getElementById('exportBtn').addEventListener('click', exportUsers);
+    
+    document.getElementById('prevPage').addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            loadUsers();
+        }
+    });
+    
+    document.getElementById('nextPage').addEventListener('click', function() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            loadUsers();
+        }
+    });
+}
+
+function handleSearch() {
+    currentSearch = document.getElementById('searchInput').value.trim();
+    currentPage = 1;
+    loadUsers();
+}
+
+function loadStats() {
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/detail_total_users.php?action=get_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('total-users').textContent = data.stats.total_users;
+                document.getElementById('active-users').textContent = data.stats.active_users;
+                document.getElementById('suspended-users').textContent = data.stats.suspended_users;
+                document.getElementById('new-this-month').textContent = data.stats.new_this_month;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading stats:', error);
+        });
+}
+
+function loadUsers() {
+    const params = new URLSearchParams({
+        action: 'get_users',
+        page: currentPage,
+        per_page: currentPerPage,
+        search: currentSearch,
+        sort: currentSort,
+        order: currentOrder
+    });
+    
+    fetch(`{{config.wwwroot}}/theme/remui_kids/admin/detail_total_users.php?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                displayUsers(data.users);
+                updatePagination(data);
+            } else {
+                console.error('Error loading users:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading users:', error);
+        });
+}
+
+function displayUsers(users) {
+    const tbody = document.getElementById('usersTableBody');
+    
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">No users found</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = users.map(user => `
+        <tr>
+            <td>
+                <div class="user-name">${user.firstname} ${user.lastname}</div>
+            </td>
+            <td>
+                <div class="user-username">${user.username}</div>
+            </td>
+            <td>
+                <div class="user-email">${user.email}</div>
+            </td>
+            <td>
+                <div class="user-role">${user.roles || '-'}</div>
+            </td>
+            <td>
+                <div class="user-date">${formatDate(user.timecreated)}</div>
+            </td>
+            <td>
+                <div class="user-date">${user.lastaccess ? formatDate(user.lastaccess) : 'Never'}</div>
+            </td>
+            <td>
+                <span class="status-badge ${getStatusClass(user)}">${getStatusText(user)}</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-action btn-view" onclick="viewUser(${user.id})">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn-action btn-edit" onclick="editUser(${user.id})">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getStatusClass(user) {
+    // Check if user is actually suspended (suspended = 1)
+    if (user.suspended == 1) return 'status-suspended';
+    // Check if user has recent access (within 30 days)
+    if (user.lastaccess && user.lastaccess > (Date.now() / 1000 - 30 * 24 * 60 * 60)) return 'status-active';
+    // Default to active if not suspended and no recent access data
+    if (user.suspended == 0) return 'status-active';
+    return 'status-inactive';
+}
+
+function getStatusText(user) {
+    // Check if user is actually suspended (suspended = 1)
+    if (user.suspended == 1) return 'Suspended';
+    // Check if user has recent access (within 30 days)
+    if (user.lastaccess && user.lastaccess > (Date.now() / 1000 - 30 * 24 * 60 * 60)) return 'Active';
+    // Default to active if not suspended
+    if (user.suspended == 0) return 'Active';
+    return 'Inactive';
+}
+
+function formatDate(timestamp) {
+    return new Date(timestamp * 1000).toLocaleDateString();
+}
+
+function updatePagination(data) {
+    totalPages = data.total_pages;
+    
+    document.getElementById('paginationInfo').textContent = 
+        `Showing ${((data.page - 1) * data.per_page) + 1} to ${Math.min(data.page * data.per_page, data.total_count)} of ${data.total_count} users`;
+    
+    document.getElementById('prevPage').disabled = currentPage <= 1;
+    document.getElementById('nextPage').disabled = currentPage >= totalPages;
+    
+    // Update page numbers
+    const pageNumbers = document.getElementById('pageNumbers');
+    pageNumbers.innerHTML = '';
+    
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', function() {
+            currentPage = i;
+            loadUsers();
+        });
+        pageNumbers.appendChild(pageBtn);
+    }
+}
+
+function viewUser(userId) {
+    // Open user profile or details
+    window.location.href = `{{config.wwwroot}}/user/profile.php?id=${userId}`;
+}
+
+function editUser(userId) {
+    // Open user edit page
+    window.location.href = `{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?user_id=${userId}`;
+}
+
+function exportUsers() {
+    // Implement export functionality
+    
+}
+</script>

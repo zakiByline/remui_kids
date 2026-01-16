@@ -1,0 +1,574 @@
+{{#elementary}}
+{{> theme_remui_kids/dashboard/elementary_sidebar}}
+{{/elementary}}
+
+{{#middle}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/middle}}
+
+{{^middle}}
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+{{/middle}}
+
+{{#highschool}}
+{{> theme_remui_kids/highschool_sidebar}}
+{{/highschool}}
+
+<div class="student-doubts-wrapper">
+    <style>
+    .student-doubts-wrapper { display:flex; flex-direction:column; gap:1.5rem; }
+    
+    /* Welcome Header with Bubble Animations - for Elementary Students */
+    .welcome-header {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 50px 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        min-height: 180px;
+        border: 1px solid rgba(129, 140, 248, 0.1);
+    }
+
+    .welcome-header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        flex: 1;
+    }
+
+    /* Animated Bubbles */
+    .welcome-bubbles {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 200px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .welcome-bubbles-left {
+        left: -50px;
+    }
+
+    .welcome-bubbles-right {
+        right: -50px;
+    }
+
+    .welcome-bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(129, 140, 248, 0.15);
+        backdrop-filter: blur(10px);
+        animation: floatBubble 15s ease-in-out infinite;
+    }
+
+    .welcome-bubble-1 { width: 80px; height: 80px; top: 10%; left: 20%; animation-delay: 0s; }
+    .welcome-bubble-2 { width: 60px; height: 60px; top: 50%; left: 10%; animation-delay: 1.5s; }
+    .welcome-bubble-3 { width: 100px; height: 100px; top: 70%; left: 30%; animation-delay: 3s; }
+    .welcome-bubble-4 { width: 50px; height: 50px; top: 30%; left: 50%; animation-delay: 0.5s; }
+    .welcome-bubble-5 { width: 90px; height: 90px; top: 15%; right: 15%; animation-delay: 2s; }
+    .welcome-bubble-6 { width: 70px; height: 70px; top: 45%; right: 25%; animation-delay: 0.8s; }
+    .welcome-bubble-7 { width: 55px; height: 55px; top: 65%; right: 10%; animation-delay: 2.5s; }
+    .welcome-bubble-8 { width: 85px; height: 85px; top: 25%; right: 40%; animation-delay: 1.2s; }
+
+    @keyframes floatBubble {
+        0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.6; }
+        25% { transform: translateY(-8px) translateX(4px) scale(1.03); opacity: 0.7; }
+        50% { transform: translateY(-4px) translateX(-2px) scale(0.98); opacity: 0.65; }
+        75% { transform: translateY(-10px) translateX(6px) scale(1.02); opacity: 0.72; }
+    }
+
+    .welcome-student-picture {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid rgba(129, 140, 248, 0.2);
+        object-fit: cover;
+        box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+        background: white;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        color: #6366f1;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        position: relative;
+        z-index: 1;
+        text-shadow: none;
+        font-weight: 700;
+    }
+
+    .welcome-title i {
+        color: #818cf8;
+        filter: none;
+    }
+
+    .welcome-subtitle {
+        color: #6b7280;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: none;
+    }
+
+    /* Regular Hero Header - for Non-Elementary Students */
+    .student-doubts-hero { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1.5rem; background:linear-gradient(135deg,#38bdf8,#6366f1); color:#fff; padding:2rem; border-radius:18px; box-shadow:0 20px 45px rgba(99,102,241,.25); }
+    .student-doubts-hero h1 { margin:0 0 .5rem; font-weight:800; font-size:2.3rem; }
+    .student-doubts-hero p { margin:0; font-size:1.05rem; opacity:.92; font-weight:500; }
+    .student-doubts-hero-content { flex:1 1 320px; max-width:640px; }
+    .student-doubts-hero-actions { display:flex; align-items:center; gap:1rem; flex:0 0 auto; }
+    .student-doubts-hero-actions button { display:inline-flex; align-items:center; gap:.55rem; background:rgba(255,255,255,.18); color:#fff; border:none; padding:.85rem 1.8rem; border-radius:14px; font-weight:700; cursor:pointer; box-shadow:0 16px 35px rgba(15,23,42,.18); backdrop-filter:blur(6px); transition:transform .2s, box-shadow .2s, background .2s; }
+    .student-doubts-hero-actions button:hover { transform:translateY(-2px); background:rgba(255,255,255,.28); box-shadow:0 20px 40px rgba(15,23,42,.28); }
+    .student-doubts-hero-note { font-weight:600; font-size:.95rem; opacity:.9; }
+
+    @media (max-width: 768px) {
+        .welcome-header {
+            padding: 30px 20px;
+            min-height: 150px;
+            flex-direction: column;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+        }
+        
+        .welcome-student-picture {
+            width: 60px;
+            height: 60px;
+            border-width: 3px;
+        }
+    }
+
+    .student-doubts-layout { display:grid; grid-template-columns:minmax(260px, 320px) 1fr; gap:1.5rem; align-items:stretch; }
+    .student-doubts-layout.no-detail { grid-template-columns:minmax(260px, 1fr); }
+    .student-doubts-sidebar { background:#fff; border-radius:16px; padding:1.5rem; box-shadow:0 16px 35px rgba(15,23,42,.08); border:1px solid rgba(148,163,184,.18); display:flex; flex-direction:column; gap:1.5rem; }
+    .student-doubts-list header { display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:1rem; }
+    .student-doubts-list h2 { margin:0; font-size:1.2rem; font-weight:800; color:#0f172a; }
+    .student-doubts-list select { padding:.6rem .9rem; border-radius:10px; border:2px solid #e2e8f0; font-weight:600; background:#fff; color:#0f172a; }
+
+    .student-doubt-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.75rem; }
+    .student-doubt-list-item a { display:flex; flex-direction:column; gap:.55rem; background:#f8fafc; border-radius:14px; padding:1rem 1.1rem; border:1px solid rgba(148,163,184,.22); text-decoration:none; color:#0f172a; transition:transform .2s ease, box-shadow .2s ease, border .2s ease; }
+    .student-doubt-list-item a:hover { transform:translateY(-3px); box-shadow:0 16px 26px rgba(15,23,42,.12); border-color:rgba(99,102,241,.35); }
+    .student-doubt-list-item.is-active a { background:linear-gradient(135deg,#eef2ff,#e0e7ff); border-color:rgba(99,102,241,.45); box-shadow:0 18px 32px rgba(79,70,229,.18); }
+    .student-doubt-list-item-main { display:flex; justify-content:space-between; align-items:center; gap:.75rem; }
+    .student-doubt-list-item-subject { font-weight:700; font-size:.98rem; color:#0f172a; flex:1; }
+    .student-doubt-list-item-meta { display:flex; justify-content:space-between; align-items:center; gap:.75rem; font-size:.82rem; color:#64748b; flex-wrap:wrap; }
+    .student-doubt-list-item-course { flex:1; font-weight:600; color:#475569; }
+    .student-doubt-list-item-time { font-size:.78rem; font-weight:600; color:#94a3b8; }
+    .student-doubt-list .status-chip,
+    .student-doubt-list .priority-chip { transform:scale(.9); transform-origin:left center; }
+
+    .status-chip { display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .75rem; border-radius:999px; font-size:.78rem; text-transform:uppercase; letter-spacing:.05rem; color:#fff; font-weight:700; }
+    .status-chip.open { background:linear-gradient(135deg,#6366f1,#8b5cf6); }
+    .status-chip.inprogress { background:linear-gradient(135deg,#f97316,#ef4444); }
+    .status-chip.waiting_student { background:linear-gradient(135deg,#0ea5e9,#2563eb); }
+    .status-chip.resolved { background:linear-gradient(135deg,#10b981,#14b8a6); }
+    .status-chip.archived { background:linear-gradient(135deg,#64748b,#475569); }
+
+    .priority-chip { display:inline-flex; align-items:center; gap:.35rem; padding:.3rem .7rem; border-radius:10px; font-size:.75rem; font-weight:700; color:#334155; background:#e2e8f0; }
+    .priority-chip.urgent { background:#fee2e2; color:#b91c1c; }
+    .priority-chip.high { background:#fed7aa; color:#c2410c; }
+
+    .student-doubts-empty { text-align:center; padding:2.5rem 1rem; color:#94a3b8; font-weight:600; }
+    .student-doubts-empty i { display:block; font-size:2rem; margin-bottom:1rem; }
+    .form-help { font-size:.8rem; color:#94a3b8; display:block; margin-top:.3rem; }
+
+    .student-doubt-chat { background:#fff; border-radius:20px; padding:1.75rem; box-shadow:0 18px 38px rgba(15,23,42,.1); border:1px solid rgba(148,163,184,.16); display:flex; flex-direction:column; gap:1.5rem; min-height:480px; }
+    .student-doubt-chat-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; }
+    .student-doubt-chat-title { display:flex; flex-direction:column; gap:.6rem; }
+    .student-doubt-chat-title h3 { margin:0; font-size:1.35rem; font-weight:800; color:#0f172a; }
+    .student-doubt-chat-updated { display:flex; flex-direction:column; gap:.25rem; }
+    .student-doubt-chat-status { display:flex; align-items:flex-start; gap:1.1rem; flex-wrap:wrap; }
+    .student-doubt-chat-course { padding:.35rem .85rem; border-radius:999px; background:#e0f2fe; color:#0369a1; font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.04rem; }
+    .student-doubt-chat-summary { background:#f8fafc; border-radius:14px; padding:1rem 1.2rem; display:flex; flex-direction:column; gap:.6rem; }
+    .student-doubt-chat-summary-body { color:#1f2937; font-size:.95rem; line-height:1.6; }
+    .student-doubt-chat-history { display:flex; flex-direction:column; gap:1rem; }
+    .student-doubt-chat-history-header { display:flex; justify-content:space-between; align-items:center; }
+    .student-doubt-chat-history-title { margin:0; font-size:1.05rem; font-weight:800; color:#0f172a; }
+    .student-doubt-chat-label { font-size:.7rem; letter-spacing:.08rem; text-transform:uppercase; font-weight:800; color:#94a3b8; }
+    .student-doubt-chat-value { font-size:.92rem; font-weight:700; color:#0f172a; }
+    .student-doubt-chat-meta-group { display:flex; flex-direction:column; gap:.35rem; }
+
+    .student-doubt-chat-messages { background:#f1f5f9; border-radius:18px; padding:1.25rem; display:flex; flex-direction:column; gap:1.25rem; max-height:520px; overflow:auto; }
+    .student-doubt-chat-message { display:flex; gap:1rem; }
+    .student-doubt-chat-message.inbound { justify-content:flex-start; }
+    .student-doubt-chat-message.outbound { justify-content:flex-end; }
+    .student-doubt-chat-message .message-wrapper { background:#fff; border-radius:18px; padding:1.05rem 1.2rem; border:1px solid rgba(148,163,184,.18); box-shadow:0 12px 24px rgba(15,23,42,.12); max-width:70%; display:flex; flex-direction:column; gap:.75rem; }
+    .student-doubt-chat-message.outbound .message-wrapper { background:linear-gradient(135deg,#6366f1,#8b5cf6); border-color:rgba(99,102,241,.45); color:#fff; box-shadow:0 16px 32px rgba(79,70,229,.24); }
+    .student-doubt-chat-message.outbound .message-wrapper a { color:#fff; }
+    .message-meta { display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:.9rem; color:inherit; opacity:.95; }
+    .message-time { font-size:.78rem; font-weight:600; opacity:.7; }
+    .message-body { color:inherit; line-height:1.6; font-size:.95rem; }
+    .message-attachments { background:rgba(15,23,42,.04); border-radius:12px; padding:.75rem .9rem; display:flex; flex-direction:column; gap:.45rem; font-size:.85rem; }
+    .student-doubt-chat-message.outbound .message-attachments { background:rgba(255,255,255,.16); }
+    .message-attachments-title { font-weight:700; color:inherit; opacity:.85; }
+    .message-attachment-list { display:flex; flex-direction:column; gap:.35rem; }
+    .message-attachment { display:inline-flex; align-items:center; gap:.5rem; font-weight:600; text-decoration:none; color:inherit; }
+    .message-attachment:hover { text-decoration:underline; }
+
+    .student-doubt-chat-reply form { display:flex; flex-direction:column; gap:1rem; }
+    .student-doubt-chat-reply textarea { width:100%; padding:1rem 1.1rem; border-radius:14px; border:2px solid #e2e8f0; min-height:120px; resize:vertical; font-size:.95rem; transition:border .2s, box-shadow .2s; }
+    .student-doubt-chat-reply textarea:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.15); outline:none; }
+    .student-doubt-chat-reply-actions { display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:1rem; }
+    .student-doubt-chat-reply .attachment-input { position:relative; display:inline-flex; align-items:center; gap:.45rem; font-weight:600; color:#475569; cursor:pointer; }
+    .student-doubt-chat-reply .attachment-input input { display:none; }
+    .student-doubt-chat-reply button { background:#6366f1; color:#fff; border:none; padding:.85rem 1.8rem; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 16px 30px rgba(99,102,241,.25); transition:transform .2s, box-shadow .2s; }
+    .student-doubt-chat-reply button:hover { transform:translateY(-2px); box-shadow:0 20px 35px rgba(79,70,229,.3); }
+
+    .student-doubt-modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:1000; visibility:hidden; opacity:0; transition:opacity .25s ease, visibility .25s ease; }
+    .student-doubt-modal.is-open { visibility:visible; opacity:1; }
+    .student-doubt-modal-backdrop { position:absolute; inset:0; background:rgba(15,23,42,.45); }
+    .student-doubt-modal-dialog { position:relative; background:#fff; border-radius:18px; padding:2rem; max-width:580px; width:92%; max-height:85vh; overflow:auto; box-shadow:0 30px 70px rgba(15,23,42,.35); display:flex; flex-direction:column; gap:1.25rem; }
+    .student-doubt-modal-close { position:absolute; top:1rem; right:1rem; background:rgba(226,232,240,.65); border:none; width:38px; height:38px; border-radius:50%; font-size:1.2rem; font-weight:700; color:#1f2937; cursor:pointer; transition:background .2s ease; display:flex; align-items:center; justify-content:center; }
+    .student-doubt-modal-close:hover { background:rgba(148,163,184,.75); color:#0f172a; }
+    .student-doubt-modal h3 { margin:0; font-size:1.5rem; font-weight:800; color:#1f2937; }
+    .student-doubt-modal form { display:flex; flex-direction:column; gap:1rem; }
+    .student-doubt-modal label { font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.06rem; color:#475569; }
+    .student-doubt-modal input[type="text"],
+    .student-doubt-modal select,
+    .student-doubt-modal textarea { width:100%; padding:.8rem 1rem; border-radius:12px; border:2px solid #e2e8f0; font-size:.95rem; transition:border .2s, box-shadow .2s; }
+    .student-doubt-modal textarea { min-height:160px; resize:vertical; }
+    .student-doubt-modal input[type="file"] { padding:.4rem 0; }
+    .student-doubt-modal input:focus,
+    .student-doubt-modal select:focus,
+    .student-doubt-modal textarea:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.15); outline:none; }
+    .student-doubt-modal button[type="submit"] { align-self:flex-end; background:#6366f1; color:#fff; border:none; padding:.85rem 1.6rem; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 16px 30px rgba(99,102,241,.25); transition:transform .2s, box-shadow .2s; }
+    .student-doubt-modal button[type="submit"]:hover { transform:translateY(-2px); box-shadow:0 20px 35px rgba(79,70,229,.25); }
+    body.student-doubt-modal-open { overflow:hidden; }
+
+    @media (max-width: 1200px) {
+        .student-doubt-chat-message .message-wrapper { max-width:78%; }
+    }
+
+    @media (max-width: 960px) {
+        .student-doubts-layout { grid-template-columns:1fr; }
+        .student-doubt-chat { padding:1.35rem; }
+        .student-doubt-chat-messages { max-height:none; }
+        .student-doubt-chat-message .message-wrapper { max-width:100%; }
+    }
+    </style>
+
+    {{#elementary}}
+    <!-- Welcome Header with Bubble Animations -->
+    <div class="welcome-header">
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-question-circle"></i>
+                {{heading}}
+            </h1>
+            <p class="welcome-subtitle">
+                {{subheading}}
+            </p>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+        
+        <!-- Actions (Create Button) -->
+        {{#cancreate}}
+        <div style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); z-index: 3;">
+            <button type="button" class="student-doubt-trigger" data-action="open-student-doubt-modal" style="display: inline-flex; align-items: center; gap: 0.55rem; background: rgba(255,255,255,0.18); color: #6366f1; border: none; padding: 0.85rem 1.8rem; border-radius: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 16px 35px rgba(15,23,42,0.18); backdrop-filter: blur(6px); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                {{student_doubts_create}}
+            </button>
+        </div>
+        {{/cancreate}}
+        {{^cancreate}}
+        <div style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); z-index: 3;">
+            <span class="student-doubts-hero-note" style="color: #6b7280; font-weight: 600; font-size: 0.95rem; opacity: 0.9;">{{student_doubts_no_courses}}</span>
+        </div>
+        {{/cancreate}}
+    </div>
+    {{/elementary}}
+    {{^elementary}}
+    <section class="student-doubts-hero">
+        <div class="student-doubts-hero-content">
+            <h1>{{heading}}</h1>
+            <p>{{subheading}}</p>
+        </div>
+        <div class="student-doubts-hero-actions">
+            {{#cancreate}}
+                <button type="button" class="student-doubt-trigger" data-action="open-student-doubt-modal">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    {{student_doubts_create}}
+                </button>
+            {{/cancreate}}
+            {{^cancreate}}
+                <span class="student-doubts-hero-note">{{student_doubts_no_courses}}</span>
+            {{/cancreate}}
+        </div>
+    </section>
+    {{/elementary}}
+
+    <div class="student-doubts-layout{{#detail}} has-detail{{/detail}}{{^detail}} no-detail{{/detail}}">
+        <aside class="student-doubts-sidebar">
+            <section class="student-doubts-list">
+                <header>
+                    <h2>{{listheading}}</h2>
+                    <form method="get">
+                        <label for="student-doubt-course-filter" class="sr-only">{{student_doubts_course}}</label>
+                        <select id="student-doubt-course-filter" name="course" onchange="this.form.submit()">
+                            {{#courseoptions}}
+                                <option value="{{id}}" {{#selectedfilter}}selected{{/selectedfilter}}>{{name}}</option>
+                            {{/courseoptions}}
+                        </select>
+                    </form>
+                </header>
+
+                {{#hasdoubts}}
+                    <ul class="student-doubt-list">
+                        {{#doubts}}
+                            <li class="student-doubt-list-item {{#iscurrent}}is-active{{/iscurrent}}">
+                                <a href="{{url}}">
+                                    <div class="student-doubt-list-item-main">
+                                        <span class="student-doubt-list-item-subject">{{subject}}</span>
+                                        <span class="status-chip {{status}}">{{statuslabel}}</span>
+                                    </div>
+                                    <div class="student-doubt-list-item-meta">
+                                        <span class="student-doubt-list-item-course">{{course}}</span>
+                                        <span class="priority-chip {{priority}}">{{prioritylabel}}</span>
+                                    </div>
+                                    <span class="student-doubt-list-item-time">{{timemodifiedhuman}}</span>
+                                </a>
+                            </li>
+                        {{/doubts}}
+                    </ul>
+                {{/hasdoubts}}
+
+                {{^hasdoubts}}
+                    <div class="student-doubts-empty">
+                        <i class="fa fa-lightbulb"></i>
+                        <p>{{student_doubts_none}}</p>
+                    </div>
+                {{/hasdoubts}}
+            </section>
+        </aside>
+
+        {{#detail}}
+        <section class="student-doubt-chat">
+            <header class="student-doubt-chat-header">
+                <div class="student-doubt-chat-title">
+                    <h3>{{doubt.subject}}</h3>
+                    <div class="student-doubt-chat-updated">
+                        <span class="student-doubt-chat-label">{{detailupdatedlabel}}</span>
+                        <span class="student-doubt-chat-value">{{doubt.timemodifiedhuman}}</span>
+                    </div>
+                </div>
+                <div class="student-doubt-chat-status">
+                    <div class="student-doubt-chat-meta-group">
+                        <span class="student-doubt-chat-label">{{detailstatuslabel}}</span>
+                        <span class="status-chip {{doubt.status}}">{{doubt.statuslabel}}</span>
+                    </div>
+                    <div class="student-doubt-chat-meta-group">
+                        <span class="student-doubt-chat-label">{{detailprioritylabel}}</span>
+                        <span class="priority-chip {{doubt.priority}}">{{doubt.prioritylabel}}</span>
+                    </div>
+                    {{#doubt.course}}
+                        <div class="student-doubt-chat-meta-group">
+                            <span class="student-doubt-chat-label">{{detailcourselabel}}</span>
+                            <span class="student-doubt-chat-course">{{doubt.course}}</span>
+                        </div>
+                    {{/doubt.course}}
+                </div>
+            </header>
+
+            {{#doubt.summary}}
+                <div class="student-doubt-chat-summary">
+                    <span class="student-doubt-chat-label">{{detaildescriptionlabel}}</span>
+                    <div class="student-doubt-chat-summary-body">{{{doubt.summary}}}</div>
+                </div>
+            {{/doubt.summary}}
+
+            <div class="student-doubt-chat-history">
+                <div class="student-doubt-chat-history-header">
+                    <h4 class="student-doubt-chat-history-title">{{student_doubts_conversation}}</h4>
+                </div>
+                <div class="student-doubt-chat-messages">
+                    {{#messages}}
+                        <div class="student-doubt-chat-message {{#isstudent}}outbound{{/isstudent}}{{^isstudent}}inbound{{/isstudent}}">
+                            <div class="message-wrapper">
+                                <div class="message-meta">
+                                    <span class="message-author">{{fullname}}</span>
+                                    <span class="message-time">{{timehuman}}</span>
+                                </div>
+                                <div class="message-body">{{{message}}}</div>
+                                {{#hasattachments}}
+                                    <div class="message-attachments">
+                                        <span class="message-attachments-title">{{attachmentslabel}}</span>
+                                        <div class="message-attachment-list">
+                                            {{#attachments}}
+                                                <a class="message-attachment" href="{{url}}" target="_blank" rel="noopener">
+                                                    <span class="message-attachment-name">{{filename}}</span>
+                                                </a>
+                                            {{/attachments}}
+                                        </div>
+                                    </div>
+                                {{/hasattachments}}
+                            </div>
+                        </div>
+                    {{/messages}}
+                    {{^messages}}
+                        <div class="student-doubts-empty">
+                            <i class="fa fa-comments"></i>
+                            <p>{{student_doubts_no_messages}}</p>
+                        </div>
+                    {{/messages}}
+                </div>
+            </div>
+
+            <div class="student-doubt-chat-reply">
+                <h5>{{student_doubts_reply_heading}}</h5>
+                <form method="post" action="{{formaction}}" enctype="multipart/form-data">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="doubtid" value="{{doubt.id}}">
+                    <textarea name="message" placeholder="{{student_doubts_reply_placeholder}}"></textarea>
+                    <div class="student-doubt-chat-reply-actions">
+                        <label class="attachment-input">
+                            <i class="fa fa-paperclip"></i>
+                            <span>{{student_doubts_reply_attachments}}</span>
+                            <input type="file" name="replyattachments[]" multiple>
+                        </label>
+                        <button type="submit">{{student_doubts_reply_submit}}</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        {{/detail}}
+    </div>
+</div>
+
+{{#cancreate}}
+<div class="student-doubt-modal" id="student-doubt-modal" aria-hidden="true">
+    <div class="student-doubt-modal-backdrop" data-action="close-student-doubt-modal"></div>
+    <div class="student-doubt-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="student-doubt-modal-title">
+        <button type="button" class="student-doubt-modal-close" data-action="close-student-doubt-modal" aria-label="{{#str}}closebuttontitle, core{{/str}}">&times;</button>
+        <h3 id="student-doubt-modal-title">{{student_doubts_create}}</h3>
+        <form method="post" action="{{formaction}}" enctype="multipart/form-data">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="create">
+
+            <div>
+                <label for="modal-student-doubt-subject">{{student_doubts_subject}}</label>
+                <input id="modal-student-doubt-subject" name="subject" type="text" maxlength="255" required>
+            </div>
+
+            <div>
+                <label for="modal-student-doubt-course">{{student_doubts_course}}</label>
+                <select id="modal-student-doubt-course" name="courseid" required>
+                    {{#courseoptions}}
+                        {{#id}}
+                            <option value="{{id}}" {{#selectedcreate}}selected{{/selectedcreate}}>{{name}}</option>
+                        {{/id}}
+                    {{/courseoptions}}
+                </select>
+            </div>
+
+            <div>
+                <label for="modal-student-doubt-priority">{{student_doubts_priority}}</label>
+                <select id="modal-student-doubt-priority" name="priority">
+                    {{#priorityoptions}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/priorityoptions}}
+                </select>
+            </div>
+
+            <div>
+                <label for="modal-student-doubt-details">{{student_doubts_details}}</label>
+                <textarea id="modal-student-doubt-details" name="details" required></textarea>
+            </div>
+
+            <div>
+                <label for="modal-student-doubt-attachments">{{student_doubts_attachments}}</label>
+                <input id="modal-student-doubt-attachments" type="file" name="attachments[]" multiple>
+                <span class="form-help">{{student_doubts_attachments_help}}</span>
+            </div>
+
+            <button type="submit">{{student_doubts_submit}}</button>
+        </form>
+    </div>
+</div>
+{{/cancreate}}
+
+{{#cancreate}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('student-doubt-modal');
+    if (!modal) {
+        return;
+    }
+
+    const openButtons = document.querySelectorAll('[data-action="open-student-doubt-modal"]');
+    const closeButtons = modal.querySelectorAll('[data-action="close-student-doubt-modal"]');
+    const focusField = modal.querySelector('#modal-student-doubt-subject');
+
+    const openModal = function() {
+        modal.classList.add('is-open');
+        document.body.classList.add('student-doubt-modal-open');
+        if (focusField) {
+            window.setTimeout(function() {
+                focusField.focus();
+            }, 150);
+        }
+    };
+
+    const closeModal = function() {
+        modal.classList.remove('is-open');
+        document.body.classList.remove('student-doubt-modal-open');
+    };
+
+    openButtons.forEach(function(button) {
+        button.addEventListener('click', openModal);
+    });
+
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', closeModal);
+    });
+
+    modal.addEventListener('click', function(event) {
+        if (event.target.classList.contains('student-doubt-modal-backdrop')) {
+            closeModal();
+        }
+    });
+
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+            closeModal();
+        }
+    });
+});
+</script>
+{{/cancreate}}

@@ -1,0 +1,726 @@
+{{> theme_remui_kids/admin_shared_styles }}
+
+<div class="detail-page">
+    <!-- Header Section -->
+    <div class="detail-header">
+        <div class="header-content">
+            <div class="back-button">
+                <a href="javascript:history.back()" class="btn-back">
+                    <i class="fa fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+            <div class="header-info">
+                <h1 class="detail-title">
+                    <i class="fa fa-folder"></i>
+                    Recent Uploads Details
+                </h1>
+                <p class="detail-subtitle">Users uploaded this month via CSV files</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-overview">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-calendar"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="uploads-this-month">-</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-calendar-week"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="uploads-this-week">-</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-calendar-day"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="uploads-today">-</div>
+                    <div class="stat-label">Today</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="total-users">-</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="filters-section">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search recent uploads..." class="search-input">
+                <button id="searchBtn" class="search-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div class="filter-controls">
+                <select id="sortSelect" class="filter-select">
+                    <option value="timecreated">Sort by Upload Date</option>
+                    <option value="firstname">Sort by First Name</option>
+                    <option value="lastname">Sort by Last Name</option>
+                    <option value="username">Sort by Username</option>
+                    <option value="email">Sort by Email</option>
+                </select>
+                <select id="orderSelect" class="filter-select">
+                    <option value="DESC">Most Recent First</option>
+                    <option value="ASC">Oldest First</option>
+                </select>
+                <select id="perPageSelect" class="filter-select">
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Uploads Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h3>Recent Upload History</h3>
+            <div class="table-actions">
+                <button id="refreshBtn" class="btn-refresh">
+                    <i class="fa fa-refresh"></i>
+                    Refresh
+                </button>
+                <button id="uploadNewBtn" class="btn-upload">
+                    <i class="fa fa-upload"></i>
+                    Upload New
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table class="uploads-table">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Upload Date</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="uploadsTableBody">
+                    <tr>
+                        <td colspan="7" class="loading-cell">
+                            <div class="loading-spinner">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Loading uploads...
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.detail-page {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.detail-header {
+    background: linear-gradient(135deg, #a8d8ea 0%, #c2e9fb 100%);
+    color: #2c3e50;
+    padding: 20px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px rgba(168, 216, 234, 0.3);
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.back-button {
+    align-self: flex-start;
+    margin-bottom: 8px;
+}
+
+.back-button .btn-back {
+    background: rgba(44, 62, 80, 0.15);
+    color: #2c3e50;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.back-button .btn-back:hover {
+    background: rgba(44, 62, 80, 0.25);
+    transform: translateX(-5px);
+}
+
+.header-info {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #2c3e50;
+}
+
+.detail-subtitle {
+    font-size: 1rem;
+    margin: 8px 0 0 0;
+    opacity: 0.9;
+    color: #2c3e50;
+}
+
+/* Statistics Overview */
+.stats-overview {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(108, 117, 125, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+
+.stat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Filters Section */
+.filters-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(108, 117, 125, 0.1);
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.search-btn:hover {
+    color: #495057;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 25px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.table-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-refresh, .btn-upload {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-refresh:hover {
+    background: #138496;
+}
+
+.btn-upload {
+    background: #28a745;
+    color: white;
+}
+
+.btn-upload:hover {
+    background: #218838;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.uploads-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.uploads-table th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.uploads-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.uploads-table tr:hover {
+    background: #f8f9fa;
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.upload-filename {
+    font-weight: 600;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-filename i {
+    color: #fd7e14;
+}
+
+.upload-user {
+    color: #6c757d;
+}
+
+.upload-date {
+    color: #495057;
+    font-weight: 500;
+}
+
+.upload-count {
+    color: #495057;
+    font-weight: 500;
+}
+
+.upload-size {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-processing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-failed {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.btn-download {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-download:hover {
+    background: #138496;
+}
+
+.btn-view {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #5a6268;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+</style>
+
+<script>
+let currentPage = 1;
+let currentPerPage = 20;
+let currentSearch = '';
+let currentSort = 'timecreated';
+let currentOrder = 'DESC';
+let totalPages = 1;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadUploads();
+    initializeEventListeners();
+});
+
+function initializeEventListeners() {
+    document.getElementById('searchBtn').addEventListener('click', handleSearch);
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+    
+    document.getElementById('sortSelect').addEventListener('change', function() {
+        currentSort = this.value;
+        loadUploads();
+    });
+    
+    document.getElementById('orderSelect').addEventListener('change', function() {
+        currentOrder = this.value;
+        loadUploads();
+    });
+    
+    document.getElementById('perPageSelect').addEventListener('change', function() {
+        currentPerPage = parseInt(this.value);
+        currentPage = 1;
+        loadUploads();
+    });
+    
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        loadStats();
+        loadUploads();
+    });
+    
+    document.getElementById('uploadNewBtn').addEventListener('click', function() {
+        window.location.href = '{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php';
+    });
+}
+
+function handleSearch() {
+    currentSearch = document.getElementById('searchInput').value.trim();
+    currentPage = 1;
+    loadUploads();
+}
+
+function loadStats() {
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/detail_recent_uploads.php?action=get_upload_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('uploads-this-month').textContent = data.stats.uploads_this_month;
+                document.getElementById('uploads-this-week').textContent = data.stats.uploads_this_week;
+                document.getElementById('uploads-today').textContent = data.stats.uploads_today;
+                document.getElementById('total-users').textContent = data.stats.total_users;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading stats:', error);
+        });
+}
+
+function loadUploads() {
+    const params = new URLSearchParams({
+        action: 'get_uploads',
+        page: currentPage,
+        per_page: currentPerPage,
+        search: currentSearch,
+        sort: currentSort,
+        order: currentOrder
+    });
+    
+    fetch(`{{config.wwwroot}}/theme/remui_kids/admin/detail_recent_uploads.php?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                displayUploads(data.uploads);
+                updatePagination(data);
+            } else {
+                console.error('Error loading uploads:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading uploads:', error);
+        });
+}
+
+function displayUploads(uploads) {
+    const tbody = document.getElementById('uploadsTableBody');
+    
+    if (uploads.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No uploads found</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = uploads.map(upload => `
+        <tr>
+            <td>
+                <div class="upload-filename">
+                    <i class="fa fa-user"></i>
+                    ${upload.firstname} ${upload.lastname}
+                </div>
+            </td>
+            <td>
+                <div class="upload-user">${upload.username}</div>
+            </td>
+            <td>
+                <div class="upload-email">${upload.email}</div>
+            </td>
+            <td>
+                <div class="upload-date">${formatDate(upload.upload_date)}</div>
+            </td>
+            <td>
+                <div class="upload-method">${upload.upload_method}</div>
+            </td>
+            <td>
+                <span class="status-badge status-${upload.status.toLowerCase()}">${upload.status}</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-action btn-view" onclick="viewUpload(${upload.id})">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn-action btn-edit" onclick="editUpload(${upload.id})">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function formatDate(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+}
+
+function viewUpload(uploadId) {
+    window.location.href = `{{config.wwwroot}}/user/profile.php?id=${uploadId}`;
+}
+
+function editUpload(uploadId) {
+    window.location.href = `{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?user_id=${uploadId}`;
+}
+
+function updatePagination(data) {
+    totalPages = data.total_pages;
+    
+    // Update pagination info if element exists
+    const paginationInfo = document.getElementById('paginationInfo');
+    if (paginationInfo) {
+        paginationInfo.textContent = 
+            `Showing ${((data.page - 1) * data.per_page) + 1} to ${Math.min(data.page * data.per_page, data.total_count)} of ${data.total_count} uploads`;
+    }
+}
+</script>

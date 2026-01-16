@@ -1,0 +1,749 @@
+/**
+ * Company Manager Dashboard Styles
+ * Dedicated CSS for company manager dashboard and sidebar
+ * This file contains all styles for the company manager interface
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f8f9fa;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Company Manager Layout Adjustments */
+body.company-manager-layout {
+    padding-top: 0; /* Remove any default padding */
+}
+
+body.company-manager-layout #page-wrapper {
+    margin-left: 0; /* Reset any default margin */
+}
+
+body.company-manager-layout .main-content {
+    margin-left: 280px; /* Make room for sidebar */
+    padding-top: 20px;
+}
+
+/* Company Manager Sidebar Styles */
+.company-manager-sidebar {
+    position: fixed;
+    top: 81px;
+    left: 0;
+    width: 280px;
+    height: calc(100vh - 81px);
+    background: white;
+    z-index: 9999;
+    overflow: hidden;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Company Header Section */
+.company-manager-sidebar .sidebar-header {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    color: white;
+}
+
+.company-manager-sidebar .company-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.company-manager-sidebar .company-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-manager-sidebar .company-logo .logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.company-manager-sidebar .company-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.company-manager-sidebar .company-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    line-height: 1.3;
+}
+
+.company-manager-sidebar .manager-name {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.company-manager-sidebar .role-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.75rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 0.25rem;
+}
+
+.company-manager-sidebar .badge-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+}
+
+/* Navigation Section */
+.company-manager-sidebar .sidebar-navigation {
+    padding: 1.5rem 0;
+    background: white;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+}
+
+.company-manager-sidebar .sidebar-menu {
+    width: 100%;
+    height: 100%;
+}
+
+.company-manager-sidebar .nav-section {
+    margin-bottom: 2rem;
+}
+
+.company-manager-sidebar .section-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1rem 0;
+    padding: 0 1.5rem;
+}
+
+.company-manager-sidebar .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.company-manager-sidebar .nav-item {
+    margin: 0;
+}
+
+.company-manager-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1.5rem;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.company-manager-sidebar .nav-link:hover {
+    background: #f8f9fa;
+    color: #007cba;
+    text-decoration: none;
+    border-left-color: #007cba;
+}
+
+.company-manager-sidebar .nav-item.active .nav-link {
+    background: #e3f2fd;
+    color: #007cba;
+    border-left-color: #007cba;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.company-manager-sidebar .nav-item.active .nav-link.dashboard-link {
+    background: #e3f2fd;
+    color: #007cba;
+    border-left-color: #007cba;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.company-manager-sidebar .nav-item.active .nav-link:not(.dashboard-link) {
+    background: #f0f8ff;
+    color: #17a2b8;
+    border-left-color: #17a2b8;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.company-manager-sidebar .nav-icon {
+    width: 20px;
+    margin-right: 0.875rem;
+    font-size: 1rem;
+    text-align: center;
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+.company-manager-sidebar .nav-text {
+    flex: 1;
+    font-size: 0.95rem;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Hover animation effect */
+.company-manager-sidebar .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.company-manager-sidebar .nav-link:hover::before {
+    left: 100%;
+}
+
+/* Scrollbar Styling */
+.company-manager-sidebar .sidebar-navigation::-webkit-scrollbar {
+    width: 4px;
+}
+
+.company-manager-sidebar .sidebar-navigation::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.company-manager-sidebar .sidebar-navigation::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+.company-manager-sidebar .sidebar-navigation::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Company Manager Main Content */
+.company-manager-main-content {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100vw - 280px);
+    height: 100vh;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    z-index: 99;
+    will-change: transform;
+    backface-visibility: hidden;
+    padding-top: 80px;
+    margin-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Company Dashboard Container */
+.company-dashboard-container {
+    padding: 1.5rem;
+    max-width: none;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Welcome Banner */
+.company-dashboard-container .welcome-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.company-dashboard-container .welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+.company-dashboard-container .banner-content {
+    flex: 1;
+    z-index: 2;
+}
+
+.company-dashboard-container .dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.company-dashboard-container .dashboard-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+.company-dashboard-container .banner-date {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.company-dashboard-container .banner-icon {
+    font-size: 4rem;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* Statistics Grid */
+.company-dashboard-container .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.company-dashboard-container .stat-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    border-top: 4px solid transparent;
+}
+
+.company-dashboard-container .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.company-dashboard-container .stat-card.teachers-card {
+    border-top-color: #667eea;
+}
+
+.company-dashboard-container .stat-card.students-card {
+    border-top-color: #f093fb;
+}
+
+.company-dashboard-container .stat-card.schools-card {
+    border-top-color: #4facfe;
+}
+
+.company-dashboard-container .stat-card.enrollments-card {
+    border-top-color: #43e97b;
+}
+
+.company-dashboard-container .stat-card.courses-card {
+    border-top-color: #ff9a9e;
+}
+
+.company-dashboard-container .stat-card.departments-card {
+    border-top-color: #a8edea;
+}
+
+.company-dashboard-container .stat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.company-dashboard-container .stat-content h3.stat-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.company-dashboard-container .stat-content .stat-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.company-dashboard-container .stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.company-dashboard-container .stat-trend .trend-arrow {
+    color: #28a745;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.company-dashboard-container .stat-trend .trend-text {
+    font-size: 0.75rem;
+    color: #28a745;
+    font-weight: 500;
+}
+
+.company-dashboard-container .stat-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.company-dashboard-container .teachers-card .stat-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.company-dashboard-container .students-card .stat-icon {
+    background: linear-gradient(135deg, #f093fb, #fecfef);
+}
+
+.company-dashboard-container .schools-card .stat-icon {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.company-dashboard-container .enrollments-card .stat-icon {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.company-dashboard-container .courses-card .stat-icon {
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+}
+
+.company-dashboard-container .departments-card .stat-icon {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+}
+
+.company-dashboard-container .stat-action {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.company-dashboard-container .stat-action .stat-link {
+    color: #6c757d;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.company-dashboard-container .stat-action .stat-link:hover {
+    color: #667eea;
+}
+
+/* Quick Actions Section */
+.company-dashboard-container .quick-actions-section,
+.company-dashboard-container .recent-activity-section {
+    margin-bottom: 2rem;
+}
+
+.company-dashboard-container .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.company-dashboard-container .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.company-dashboard-container .action-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.company-dashboard-container .action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.company-dashboard-container .action-card .action-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.company-dashboard-container .action-card h3.action-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.company-dashboard-container .action-card .action-description {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-size: 0.9rem;
+}
+
+.company-dashboard-container .action-btn {
+    display: inline-block;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-top: auto;
+}
+
+.company-dashboard-container .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* Activity List */
+.company-dashboard-container .activity-list {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+    width: 100%;
+}
+
+.company-dashboard-container .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.company-dashboard-container .activity-item:last-child {
+    border-bottom: none;
+}
+
+.company-dashboard-container .activity-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.company-dashboard-container .activity-content h4.activity-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.company-dashboard-container .activity-content .activity-description {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.company-dashboard-container .activity-time {
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .company-manager-sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .company-manager-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .company-manager-main-content {
+        position: relative;
+        left: 0;
+        width: 100vw;
+        height: auto;
+        min-height: 100vh;
+        padding-top: 20px;
+    }
+
+    .company-dashboard-container {
+        padding: 1rem;
+    }
+
+    .company-dashboard-container .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .company-dashboard-container .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .company-dashboard-container .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .company-dashboard-container .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .company-manager-sidebar .sidebar-header {
+        padding: 1rem 0.75rem;
+    }
+
+    .company-manager-sidebar .company-logo,
+    .company-manager-sidebar .company-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .company-manager-sidebar .company-icon {
+        font-size: 1rem;
+    }
+
+    .company-manager-sidebar .company-name {
+        font-size: 1rem;
+    }
+
+    .company-manager-sidebar .manager-name {
+        font-size: 0.85rem;
+    }
+
+    .company-manager-sidebar .badge-text {
+        font-size: 0.7rem;
+    }
+
+    .company-manager-sidebar .nav-link {
+        padding: 1rem 1.5rem;
+    }
+}
+
+/* Utility Classes */
+.text-success { color: #28a745 !important; }
+.text-info { color: #17a2b8 !important; }
+.text-warning { color: #ffc107 !important; }
+.text-primary { color: #007bff !important; }
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+/* Print Styles */
+@media print {
+    .company-manager-sidebar {
+        display: none !important;
+    }
+    
+    .company-manager-main-content {
+        position: relative !important;
+        left: 0 !important;
+        width: 100% !important;
+        padding-top: 0 !important;
+    }
+}

@@ -1,0 +1,524 @@
+{{!
+    Company Manager Sidebar Template for remui_kids theme
+    
+    This template provides the sidebar navigation for company managers
+    with the green header section and white navigation menu as shown in the design.
+    This is separate from the school manager sidebar for role-based access.
+}}
+
+<!-- Company Manager Sidebar -->
+<div class="company-manager-sidebar">
+    <!-- Company Header Section (Green Background) -->
+    <div class="sidebar-header">
+        <div class="company-info">
+            {{#has_logo}}
+            <div class="company-logo">
+                <img src="{{company_logo_url}}" alt="{{company_name}} Logo" class="logo-image">
+            </div>
+            {{/has_logo}}
+            {{^has_logo}}
+            <div class="company-icon">
+                <i class="fa fa-building"></i>
+            </div>
+            {{/has_logo}}
+            <h2 class="company-name">{{company_name}}</h2>
+            <p class="manager-name">{{user_info.fullname}}</p>
+            <div class="role-badge">
+                <span class="badge-text">Company Manager</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu Section (White Background) -->
+    <div class="sidebar-navigation">
+        <nav class="sidebar-menu">
+            <!-- Main Navigation -->
+            <ul class="nav-list">
+                <li class="nav-item {{#dashboard_active}}active{{/dashboard_active}}">
+                    <a href="{{{config.wwwroot}}}/theme/remui_kids/company_manager_dashboard.php" class="nav-link dashboard-link">
+                        <i class="fa fa-building nav-icon"></i>
+                        <span class="nav-text">Company Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item {{#schools_active}}active{{/schools_active}}">
+                    <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/schools_management.php" class="nav-link">
+                        <i class="fa fa-school nav-icon"></i>
+                        <span class="nav-text">School Management</span>
+                    </a>
+                </li>
+                <li class="nav-item {{#users_active}}active{{/users_active}}">
+                    <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/user_management.php" class="nav-link">
+                        <i class="fa fa-users nav-icon"></i>
+                        <span class="nav-text">User Management</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Company Management Section -->
+            <div class="nav-section">
+                <h3 class="section-title">COMPANY MANAGEMENT</h3>
+                <ul class="nav-list">
+                    <li class="nav-item {{#departments_active}}active{{/departments_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/departments.php" class="nav-link">
+                            <i class="fa fa-sitemap nav-icon"></i>
+                            <span class="nav-text">Departments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#courses_active}}active{{/courses_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/courses.php" class="nav-link">
+                            <i class="fa fa-book nav-icon"></i>
+                            <span class="nav-text">Course Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#enrollments_active}}active{{/enrollments_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/enrollments.php" class="nav-link">
+                            <i class="fa fa-user-plus nav-icon"></i>
+                            <span class="nav-text">Enrollments</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Reports & Analytics Section -->
+            <div class="nav-section">
+                <h3 class="section-title">REPORTS & ANALYTICS</h3>
+                <ul class="nav-list">
+                    <li class="nav-item {{#analytics_active}}active{{/analytics_active}}">
+                        <a href="{{{config.wwwroot}}}/local/edwiserreports/index.php" class="nav-link">
+                            <i class="fa fa-chart-bar nav-icon"></i>
+                            <span class="nav-text">Analytics Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#reports_active}}active{{/reports_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/company_reports.php" class="nav-link">
+                            <i class="fa fa-file-alt nav-icon"></i>
+                            <span class="nav-text">Company Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#school_reports_active}}active{{/school_reports_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/school_reports.php" class="nav-link">
+                            <i class="fa fa-school nav-icon"></i>
+                            <span class="nav-text">School Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- System Administration Section -->
+            <div class="nav-section">
+                <h3 class="section-title">SYSTEM ADMIN</h3>
+                <ul class="nav-list">
+                    <li class="nav-item {{#company_settings_active}}active{{/company_settings_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/company_settings.php" class="nav-link">
+                            <i class="fa fa-cog nav-icon"></i>
+                            <span class="nav-text">Company Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#user_roles_active}}active{{/user_roles_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/user_roles.php" class="nav-link">
+                            <i class="fa fa-user-tag nav-icon"></i>
+                            <span class="nav-text">User Roles</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#permissions_active}}active{{/permissions_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/permissions.php" class="nav-link">
+                            <i class="fa fa-shield-alt nav-icon"></i>
+                            <span class="nav-text">Permissions</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Support Section -->
+            <div class="nav-section">
+                <h3 class="section-title">SUPPORT</h3>
+                <ul class="nav-list">
+                    <li class="nav-item {{#help_active}}active{{/help_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/help.php" class="nav-link">
+                            <i class="fa fa-question-circle nav-icon"></i>
+                            <span class="nav-text">Help & Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#documentation_active}}active{{/documentation_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/documentation.php" class="nav-link">
+                            <i class="fa fa-book-open nav-icon"></i>
+                            <span class="nav-text">Documentation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{#contact_active}}active{{/contact_active}}">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/contact.php" class="nav-link">
+                            <i class="fa fa-envelope nav-icon"></i>
+                            <span class="nav-text">Contact Support</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- Company Manager Sidebar Styles -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    /* Ensure sidebar is always visible and properly positioned */
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Force sidebar to display properly */
+    .company-manager-sidebar {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: flex !important;
+        position: fixed !important;
+    }
+
+    .company-manager-sidebar {
+        position: fixed;
+        top: 81px;
+        left: 0;
+        width: 280px;
+        height: calc(100vh - 81px);
+        background: white;
+        z-index: 9999;
+        overflow: hidden;
+        font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+    }
+
+    /* Company Header Section */
+    .sidebar-header {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        padding: 1.25rem 1rem;
+        text-align: center;
+        color: white;
+    }
+
+    .company-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .company-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .company-logo .logo-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .company-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .company-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        line-height: 1.3;
+    }
+
+    .manager-name {
+        font-size: 0.9rem;
+        margin: 0;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    .role-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.3rem 0.75rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin-top: 0.25rem;
+    }
+
+    .badge-text {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    /* Navigation Section */
+    .sidebar-navigation {
+        padding: 1.5rem 0;
+        background: white;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0; /* Allow flex shrinking */
+    }
+    
+    .sidebar-menu {
+        width: 100%;
+        height: 100%;
+    }
+
+    .nav-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 1rem 0;
+        padding: 0 1.5rem;
+    }
+
+    .nav-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-item {
+        margin: 0;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.875rem 1.5rem;
+        color: #495057;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .nav-link:hover {
+        background: #f8f9fa;
+        color: #007cba;
+        text-decoration: none;
+        border-left-color: #007cba;
+    }
+
+    /* Default active state for regular menu items */
+    .nav-item.active .nav-link {
+        background: #e3f2fd;
+        color: #007cba;
+        border-left-color: #007cba;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+    
+    /* Special styling for active Company Dashboard */
+    .nav-item.active .nav-link.dashboard-link {
+        background: #e3f2fd;
+        color: #007cba;
+        border-left-color: #007cba;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+    
+    /* Styling for active management menu items */
+    .nav-item.active .nav-link:not(.dashboard-link) {
+        background: #f0f8ff;
+        color: #17a2b8;
+        border-left-color: #17a2b8;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .nav-icon {
+        width: 20px;
+        margin-right: 0.875rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .nav-text {
+        flex: 1;
+        font-size: 0.95rem;
+    }
+
+    /* Scrollbar Styling */
+    .sidebar-navigation::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar-navigation::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .sidebar-navigation::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 2px;
+    }
+
+    .sidebar-navigation::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .company-manager-sidebar {
+            width: 100%;
+            top: 81px;
+            height: calc(100vh - 81px);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .company-manager-sidebar.mobile-open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1rem 0.75rem;
+        }
+
+        .company-logo, .company-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .company-icon {
+            font-size: 1rem;
+        }
+
+        .company-name {
+            font-size: 1rem;
+        }
+
+        .manager-name {
+            font-size: 0.85rem;
+        }
+
+        .badge-text {
+            font-size: 0.7rem;
+        }
+
+        .nav-link {
+            padding: 1rem 1.5rem;
+        }
+    }
+
+    /* Animation for active states */
+    .nav-link {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .nav-link:hover::before {
+        left: 100%;
+    }
+    
+    /* Debug and ensure proper display */
+    .company-manager-sidebar * {
+        box-sizing: border-box;
+    }
+    
+    /* Ensure all text is visible */
+    .company-manager-sidebar {
+        color: #333;
+    }
+    
+    /* Make sure icons are visible */
+    .nav-icon {
+        display: inline-block !important;
+        visibility: visible !important;
+    }
+    
+    /* Ensure proper text rendering */
+    .nav-text, .company-name, .manager-name, .badge-text, .section-title {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+</style>
+
+<!-- Mobile Menu Toggle Script -->
+<script>
+    // Ensure sidebar is properly displayed on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (sidebar) {
+            // Force display properties
+            sidebar.style.display = 'flex';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+            sidebar.style.position = 'fixed';
+            sidebar.style.top = '81px';
+            sidebar.style.height = 'calc(100vh - 81px)';
+            sidebar.style.zIndex = '9999';
+            
+            console.log('Company Manager Sidebar initialized successfully with 81px top spacing');
+        } else {
+            console.error('Company Manager Sidebar not found!');
+        }
+    });
+    
+    // Mobile menu toggle functionality
+    function toggleMobileSidebar() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('mobile-open');
+        }
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        
+        if (window.innerWidth <= 768 && sidebar && !sidebar.contains(event.target) && !mobileMenuBtn?.contains(event.target)) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (window.innerWidth > 768 && sidebar) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+</script>
+

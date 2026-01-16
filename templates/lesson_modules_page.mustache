@@ -1,0 +1,1067 @@
+{{!
+    Lesson Modules Page Template for remui_kids theme
+    Shows modules within a specific lesson
+    Updated: 2025-01-27
+}}
+
+{{#custom_lesson_modules}}
+
+{{> theme_remui_kids/dashboard/elementary_sidebar}}
+
+<!-- Template loaded: {{cache_bust}} -->
+<div class="lesson-modules-page mt-5">
+    <!-- Lesson Header - Welcome Header for Elementary Students -->
+    {{#is_elementary_grade}}
+    <div class="welcome-header">
+        <!-- Back Button -->
+        <div class="back-button-in-header">
+            <a href="{{{lessonsurl}}}" class="back-btn">
+                <i class="fa fa-arrow-left"></i>
+                Back to Lessons
+            </a>
+        </div>
+        
+        <!-- Left Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-left">
+            <div class="welcome-bubble welcome-bubble-1"></div>
+            <div class="welcome-bubble welcome-bubble-2"></div>
+            <div class="welcome-bubble welcome-bubble-3"></div>
+            <div class="welcome-bubble welcome-bubble-4"></div>
+        </div>
+        
+        <!-- Center Content -->
+        <div class="welcome-header-content">
+            {{#student_picture_url_only}}
+            <img src="{{student_picture_url_only}}" alt="{{student_name}}" class="welcome-student-picture">
+            {{/student_picture_url_only}}
+            <h1 class="welcome-title">
+                <i class="fa fa-cube"></i>
+                {{lesson_name}}
+            </h1>
+            <p class="welcome-subtitle">
+                {{course_name}} • {{grade_level}}
+            </p>
+        </div>
+        
+        <!-- Right Side Bubbles -->
+        <div class="welcome-bubbles welcome-bubbles-right">
+            <div class="welcome-bubble welcome-bubble-5"></div>
+            <div class="welcome-bubble welcome-bubble-6"></div>
+            <div class="welcome-bubble welcome-bubble-7"></div>
+            <div class="welcome-bubble welcome-bubble-8"></div>
+        </div>
+    </div>
+    {{/is_elementary_grade}}
+    {{^is_elementary_grade}}
+    <!-- Original Lesson Header for Non-Elementary Students -->
+    <div class="lesson-header">
+        <!-- Back Button -->
+        <div class="back-button-in-header">
+            <a href="{{{lessonsurl}}}" class="back-btn">
+                <i class="fa fa-arrow-left"></i>
+                Back to Lessons
+            </a>
+        </div>
+        
+        <div class="lesson-header-content">
+            <h1 class="lesson-title">{{lesson_name}}</h1>
+            <p class="lesson-subtitle">{{course_name}} • {{grade_level}}</p>
+            <p class="lesson-description">{{lesson_summary}}</p>
+        </div>
+        <div class="lesson-progress-section">
+            <div class="progress-header">
+                <span class="progress-label">Overall Progress</span>
+                <span class="progress-percentage">{{overall_progress}}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{overall_progress}}%"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <i class="fas fa-cubes"></i>
+                    <span>{{total_modules}} Total Modules</span>
+                </div>
+                <div class="progress-stat">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{completed_modules}} Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/is_elementary_grade}}
+
+    <!-- Modules Section -->
+    <div class="modules-section">
+        <h2 class="modules-title">
+            <i class="fas fa-cubes"></i>
+            Lesson Modules
+        </h2>
+        
+        {{#has_modules}}
+        <div class="modules-grid">
+            {{#modules}}
+            <div class="module-card" data-item-type="{{item_type}}" data-activity-type="{{activity_type}}">
+                <div class="module-header">
+                    <div class="module-icon">
+                        {{#is_module}}
+                        <i class="fas fa-cube"></i>
+                        {{/is_module}}
+                        {{^is_module}}
+                        <i class="fas fa-tasks"></i>
+                        {{/is_module}}
+                    </div>
+                    <div class="module-info">
+                        <h4>{{name}}</h4>
+                        <span class="module-type">
+                            {{#is_module}}Module{{/is_module}}
+                            {{^is_module}}{{activity_type}}{{/is_module}}
+                        </span>
+                    </div>
+                </div>
+                
+                <p class="module-description">{{summary}}</p>
+                
+                <div class="module-meta">
+                    {{#is_module}}
+                    <div class="module-meta-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>{{total_activities}} {{#total_activities}}{{#1}}activity{{/1}}{{^1}}activities{{/1}}{{/total_activities}}{{^total_activities}}activities{{/total_activities}}</span>
+                    </div>
+                    {{/is_module}}
+                    {{^is_module}}
+                    <div class="module-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>{{activity_type}}</span>
+                    </div>
+                    {{/is_module}}
+                    <div class="module-meta-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>{{progress_percentage}}% complete</span>
+                    </div>
+                </div>
+                
+                
+                <div class="module-status">
+                    {{#progress_percentage}}
+                    <div class="status-badge {{#100}}completed{{/100}}{{^100}}in-progress{{/100}}">
+                        {{#100}}<i class="fas fa-check"></i> Completed{{/100}}
+                        {{^100}}<i class="fas fa-clock"></i> In Progress{{/100}}
+                    </div>
+                    {{/progress_percentage}}
+                    {{#url}}
+                    <a href="{{url}}" class="module-btn {{#progress_percentage}}{{#100}}completed{{/100}}{{^100}}primary{{/100}}{{/progress_percentage}}{{^progress_percentage}}primary{{/progress_percentage}}">
+                        {{#progress_percentage}}
+                        {{#100}}<i class="fas fa-redo"></i> Review{{/100}}
+                        {{^100}}<i class="fas fa-play"></i> Continue{{/100}}
+                        {{/progress_percentage}}
+                        {{^progress_percentage}}<i class="fas fa-play"></i> Start{{/progress_percentage}}
+                    </a>
+                    {{/url}}
+                    {{^url}}
+                    <span class="module-btn disabled" style="cursor: not-allowed; opacity: 0.6;">
+                        <i class="fas fa-lock"></i> Not Available
+                    </span>
+                    {{/url}}
+                </div>
+            </div>
+            {{/modules}}
+        </div>
+        {{/has_modules}}
+        
+        {{^has_modules}}
+        <div class="no-modules">
+            <div class="no-modules-icon">
+                <i class="fas fa-cubes"></i>
+            </div>
+            <h3>No Modules Available</h3>
+            <p>This lesson doesn't have any modules yet. Check back later or contact your teacher.</p>
+            <div class="no-modules-actions">
+                <a href="{{{lessonsurl}}}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Lessons
+                </a>
+                <a href="{{{dashboardurl}}}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+        </div>
+        {{/has_modules}}
+    </div>
+</div>
+
+<style>
+/* Cache bust: 2025-01-27-lesson-modules-improved-ui */
+/* Global reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Force white background and hide page context header */
+body, html, #page, .main-inner, .container, .container-fluid {
+    background: white !important;
+}
+
+.page-header,
+.page-header *,
+.context-header,
+.context-header * {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove container margins and padding for full width */
+.container,
+.container-fluid,
+div.container,
+div.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Remove page container and drawers */
+#page,
+#page.drawers,
+#page.drag-container,
+div#page,
+div#page.drawers,
+div#page.drag-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    top: 0 !important;
+}
+
+/* Main page layout - removed container wrapper */
+.lesson-modules-page {
+    margin: 0;
+    padding: 50px 40px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    width: calc(100% - 280px);
+    overflow-y: auto;
+}
+
+/* Back Button Inside Header */
+.back-button-in-header {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    z-index: 10;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.back-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.back-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.back-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* Lesson Header */
+/* Welcome Header with Bubble Animations - for Elementary Students */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid rgba(129, 140, 248, 0.1);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Animated Bubbles */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.welcome-bubbles-left {
+    left: 0;
+}
+
+.welcome-bubbles-right {
+    right: 0;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.welcome-bubble-2 {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 5%;
+    animation-delay: 1.5s;
+}
+
+.welcome-bubble-3 {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 15%;
+    animation-delay: 3s;
+}
+
+.welcome-bubble-4 {
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    left: 25%;
+    animation-delay: 0.5s;
+}
+
+.welcome-bubble-5 {
+    width: 90px;
+    height: 90px;
+    top: 15%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.welcome-bubble-6 {
+    width: 70px;
+    height: 70px;
+    top: 45%;
+    right: 15%;
+    animation-delay: 0.8s;
+}
+
+.welcome-bubble-7 {
+    width: 55px;
+    height: 55px;
+    top: 65%;
+    right: 5%;
+    animation-delay: 2.5s;
+}
+
+.welcome-bubble-8 {
+    width: 85px;
+    height: 85px;
+    top: 25%;
+    right: 25%;
+    animation-delay: 1.2s;
+}
+
+@keyframes floatBubble {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-8px) translateX(4px) scale(1.03);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-4px) translateX(-2px) scale(0.98);
+        opacity: 0.65;
+    }
+    75% {
+        transform: translateY(-10px) translateX(6px) scale(1.02);
+        opacity: 0.72;
+    }
+}
+
+/* Student Profile Picture in Welcome Header */
+.welcome-student-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(129, 140, 248, 0.2);
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    background: white;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.welcome-title i {
+    color: #818cf8;
+    filter: none;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: none;
+}
+
+.lesson-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 50px;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: visible;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.lesson-header-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.lesson-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.lesson-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.lesson-description {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.lesson-progress-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+    min-width: 300px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-label {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.progress-percentage {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #43e97b, #38f9d7);
+    border-radius: 6px;
+    transition: width 0.8s ease;
+    box-shadow: 0 2px 8px rgba(67, 233, 123, 0.4);
+}
+
+.progress-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.progress-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.progress-stat i {
+    font-size: 1.1rem;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+}
+
+/* Modules Section */
+.modules-section {
+    margin-bottom: 40px;
+}
+
+.modules-title {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: 800;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modules-title i {
+    color: #667eea;
+    font-size: 2.2rem;
+    filter: drop-shadow(0 2px 5px rgba(102, 126, 234, 0.3));
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.module-card {
+    background: linear-gradient(135deg, rgb(252, 242, 255) 0%, rgb(255, 255, 255) 100%);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    padding: 2px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #43e97b, #fa709a);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25);
+}
+
+.module-card:hover::before {
+    opacity: 1;
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.module-info {
+    flex: 1;
+}
+
+.module-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.module-info h4 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+.module-type {
+    color: #667eea;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.module-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.module-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.module-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.module-meta-item i {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.module-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.module-status .module-btn {
+    margin-left: auto;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.completed {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.status-badge.in-progress {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: white;
+}
+
+
+.module-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.module-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.module-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.module-btn.primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.module-btn.primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.module-btn.completed {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.module-btn.completed:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.no-modules {
+    text-align: center;
+    padding: 80px 40px;
+    background: linear-gradient(135deg, rgb(252, 242, 255) 0%, rgb(255, 255, 255) 100%);
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.no-modules::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 25px;
+    padding: 2px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #43e97b, #fa709a);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.3;
+}
+
+.no-modules-icon {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+
+.no-modules-icon i {
+    font-size: 5rem;
+    color: #667eea;
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.no-modules h3 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+}
+
+.no-modules p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+.no-modules-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+.no-modules-actions .btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.no-modules-actions .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.no-modules-actions .btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.no-modules-actions .btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.no-modules-actions .btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.no-modules-actions .btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.no-modules-actions .btn-secondary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+@media (max-width: 1200px) {
+    .lesson-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .lesson-progress-section {
+        min-width: unset;
+        width: 100%;
+    }
+    
+    .modules-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    
+    .no-modules-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 1024px) {
+    .lesson-modules-page {
+        left: 0;
+        width: 100%;
+        padding: 30px 20px;
+    }
+    
+    .modules-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    .lesson-header {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .lesson-modules-page {
+        padding: 20px 15px;
+    }
+    
+    .back-button-in-header {
+        top: 15px;
+        left: 15px;
+    }
+    
+    .back-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .welcome-header {
+        padding: 50px 20px 30px 20px;
+        min-height: 150px;
+        flex-direction: column;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-student-picture {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+    
+    .lesson-header {
+        padding: 50px 20px 30px 20px;
+    }
+    
+    .modules-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .lesson-title {
+        font-size: 2rem;
+    }
+    
+    .lesson-header {
+        padding: 30px 20px;
+    }
+    
+    .modules-title {
+        font-size: 2rem;
+    }
+    
+    .module-status {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .no-modules {
+        padding: 60px 20px;
+    }
+    
+    .no-modules h3 {
+        font-size: 1.8rem;
+    }
+    
+    .no-modules-icon i {
+        font-size: 4rem;
+    }
+}
+</style>
+
+{{/custom_lesson_modules}}

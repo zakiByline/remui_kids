@@ -1,0 +1,321 @@
+{{!
+    Company Manager Dashboard Template
+    Main dashboard interface for company managers with enhanced features
+    This template works with the default Moodle navigation bar
+}}
+
+<!-- Include Company Manager CSS -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/company_manager.css">
+
+<!-- Company Manager Sidebar -->
+<div class="company-manager-sidebar">
+    <!-- Company Header Section (Green Background) -->
+    <div class="sidebar-header">
+        <div class="company-info">
+            {{#has_logo}}
+            <div class="company-logo">
+                <img src="{{company_logo_url}}" alt="{{company_name}} Logo" class="logo-image">
+            </div>
+            {{/has_logo}}
+            {{^has_logo}}
+            <div class="company-icon">
+                <i class="fa fa-building"></i>
+            </div>
+            {{/has_logo}}
+            <h2 class="company-name">{{company_name}}</h2>
+            <p class="manager-name">{{user_info.fullname}}</p>
+            <div class="role-badge">
+                <span class="badge-text">Company Manager</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu Section (White Background) -->
+    <div class="sidebar-navigation">
+        <nav class="sidebar-menu">
+            <!-- Main Navigation -->
+            <ul class="nav-list">
+                <li class="nav-item active">
+                    <a href="{{{config.wwwroot}}}/my/" class="nav-link dashboard-link">
+                        <i class="fa fa-building nav-icon"></i>
+                        <span class="nav-text">Company Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/schools_management.php" class="nav-link">
+                        <i class="fa fa-school nav-icon"></i>
+                        <span class="nav-text">School Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/user_management.php" class="nav-link">
+                        <i class="fa fa-users nav-icon"></i>
+                        <span class="nav-text">User Management</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Company Management Section -->
+            <div class="nav-section">
+                <h3 class="section-title">COMPANY MANAGEMENT</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/departments.php" class="nav-link">
+                            <i class="fa fa-sitemap nav-icon"></i>
+                            <span class="nav-text">Departments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/courses.php" class="nav-link">
+                            <i class="fa fa-book nav-icon"></i>
+                            <span class="nav-text">Course Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/enrollments.php" class="nav-link">
+                            <i class="fa fa-user-plus nav-icon"></i>
+                            <span class="nav-text">Enrollments</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Reports & Analytics Section -->
+            <div class="nav-section">
+                <h3 class="section-title">REPORTS & ANALYTICS</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/local/edwiserreports/index.php" class="nav-link">
+                            <i class="fa fa-chart-bar nav-icon"></i>
+                            <span class="nav-text">Analytics Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/company_reports.php" class="nav-link">
+                            <i class="fa fa-file-alt nav-icon"></i>
+                            <span class="nav-text">Company Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/school_reports.php" class="nav-link">
+                            <i class="fa fa-school nav-icon"></i>
+                            <span class="nav-text">School Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- System Administration Section -->
+            <div class="nav-section">
+                <h3 class="section-title">SYSTEM ADMIN</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/company_settings.php" class="nav-link">
+                            <i class="fa fa-cog nav-icon"></i>
+                            <span class="nav-text">Company Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/user_roles.php" class="nav-link">
+                            <i class="fa fa-user-tag nav-icon"></i>
+                            <span class="nav-text">User Roles</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/permissions.php" class="nav-link">
+                            <i class="fa fa-shield-alt nav-icon"></i>
+                            <span class="nav-text">Permissions</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Support Section -->
+            <div class="nav-section">
+                <h3 class="section-title">SUPPORT</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/help.php" class="nav-link">
+                            <i class="fa fa-question-circle nav-icon"></i>
+                            <span class="nav-text">Help & Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/documentation.php" class="nav-link">
+                            <i class="fa fa-book-open nav-icon"></i>
+                            <span class="nav-text">Documentation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{config.wwwroot}}}/theme/remui_kids/contact.php" class="nav-link">
+                            <i class="fa fa-envelope nav-icon"></i>
+                            <span class="nav-text">Contact Support</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="company-dashboard-main-content">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <div class="banner-content">
+            <div class="banner-text">
+                <h1 class="dashboard-title">Welcome to Company Dashboard</h1>
+                <p class="dashboard-subtitle">Company Manager Dashboard - {{company_name}}</p>
+            </div>
+            <div class="banner-date">
+                <span class="current-date">Today: {{current_date}}</span>
+            </div>
+        </div>
+        <div class="banner-icon">
+            <i class="fa fa-chart-bar"></i>
+        </div>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{total_teachers}}</div>
+            <div class="stat-label">TOTAL TEACHERS</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Active</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{total_students}}</div>
+            <div class="stat-label">TOTAL STUDENTS</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Active</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #e84393, #fd79a8);"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{total_schools}}</div>
+            <div class="stat-label">TOTAL SCHOOLS</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Active</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #0984e3, #74b9ff);"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{active_enrollments}}</div>
+            <div class="stat-label">ACTIVE ENROLLMENTS</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Current</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #00b894, #55efc4);"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{total_courses}}</div>
+            <div class="stat-label">AVAILABLE COURSES</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Active</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #d63031, #ff7675);"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{total_departments}}</div>
+            <div class="stat-label">DEPARTMENTS</div>
+            <div class="stat-status"><i class="fa fa-arrow-up"></i> Active</div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);"></div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="action-cards">
+            <div class="action-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">
+                    <i class="fa fa-school"></i>
+                </div>
+                <h3 class="card-title">Manage Schools</h3>
+                <p class="card-description">Add and manage schools in your company</p>
+                <a href="#" class="action-button">Manage Schools</a>
+            </div>
+            <div class="action-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #e84393, #fd79a8);">
+                    <i class="fa fa-user-plus"></i>
+                </div>
+                <h3 class="card-title">Add Users</h3>
+                <p class="card-description">Add new teachers and students to your company</p>
+                <a href="#" class="action-button">Add Users</a>
+            </div>
+            <div class="action-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">
+                    <i class="fa fa-book-open"></i>
+                </div>
+                <h3 class="card-title">Course Management</h3>
+                <p class="card-description">Manage courses across all schools</p>
+                <a href="#" class="action-button">Manage Courses</a>
+            </div>
+            <div class="action-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #00b894, #55efc4);">
+                    <i class="fa fa-chart-pie"></i>
+                </div>
+                <h3 class="card-title">Company Reports</h3>
+                <p class="card-description">View comprehensive company analytics</p>
+                <a href="{{{config.wwwroot}}}/theme/remui_kids/admin/superreports/index.php" class="action-button">View Reports</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity (Placeholder) -->
+    <div class="recent-activity">
+        <h2 class="section-title">Recent Activity</h2>
+        <div class="activity-feed">
+            <p>No recent activity to display.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Company Manager Sidebar JavaScript -->
+<script>
+    // Ensure sidebar is properly displayed on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (sidebar) {
+            // Force display properties
+            sidebar.style.display = 'flex';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+            sidebar.style.position = 'fixed';
+            sidebar.style.top = '81px';
+            sidebar.style.height = 'calc(100vh - 81px)';
+            sidebar.style.zIndex = '9999';
+            
+            console.log('Company Manager Sidebar initialized successfully with 81px top spacing');
+        } else {
+            console.error('Company Manager Sidebar not found!');
+        }
+        
+        // Adjust main content margin to account for sidebar
+        const mainContent = document.querySelector('.company-dashboard-main-content');
+        if (mainContent) {
+            mainContent.style.marginLeft = '280px';
+            mainContent.style.paddingTop = '20px';
+            console.log('Main content adjusted for sidebar.');
+        }
+    });
+    
+    // Mobile menu toggle functionality
+    function toggleMobileSidebar() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('mobile-open');
+        }
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        
+        if (window.innerWidth <= 768 && sidebar && !sidebar.contains(event.target) && !mobileMenuBtn?.contains(event.target)) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.querySelector('.company-manager-sidebar');
+        if (window.innerWidth > 768 && sidebar) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+</script>

@@ -1,0 +1,148 @@
+{{#custom_ask_teacher}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+<style>
+/* Layout styles - same as other pages */
+.container, .container-fluid, #page, #page-content, .main-inner, #topofscroll {
+    margin: 0 !important; padding: 0 !important; max-width: none !important; width: 100% !important;
+}
+.container { max-width: calc(100vw - 280px) !important; width: calc(100vw - 280px) !important; margin-left: 280px !important; }
+#page, #page-content, .main-inner, #topofscroll { margin-top: 0 !important; padding-top: 0 !important; }
+.container, .container-fluid, body, html { margin-top: 0 !important; padding-top: 0 !important; }
+.g4g7-sidebar { background: #ffffff !important; border-right: 1px solid #e5e7eb !important; }
+.g4g7-nav-content { background: #ffffff !important; }
+
+/* Page Header */
+.ask-teacher-page-header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center; }
+.ask-teacher-page-title { font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin: 0 0 15px 0; display: flex; align-items: center; justify-content: center; gap: 15px; }
+.ask-teacher-page-title i { color: #3498db; font-size: 2.2rem; }
+.ask-teacher-page-subtitle { font-size: 1.2rem; color: #6c757d; margin: 0; line-height: 1.5; }
+
+{{#is_middle_grade}}
+.ask-teacher-page-header { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; }
+.ask-teacher-page-title { color: white; }
+.ask-teacher-page-title i { color: white; opacity: 0.9; }
+.ask-teacher-page-subtitle { color: white; opacity: 0.9; }
+{{/is_middle_grade}}
+
+/* Stats */
+.ask-teacher-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.stat-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+.stat-card:hover { transform: translateY(-5px); }
+.stat-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.5rem; color: white; }
+.stat-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.stat-icon.green { background: linear-gradient(135deg, #27ae60, #229954); }
+.stat-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.stat-number { font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
+.stat-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
+
+/* Teacher Cards */
+.teacher-card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+.teacher-card:hover { transform: translateY(-5px); }
+.teacher-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.teacher-name { font-size: 1.3rem; font-weight: 600; color: #2c3e50; margin: 0; }
+.teacher-course { font-size: 0.9rem; color: #6c757d; background: #f8f9fa; padding: 5px 12px; border-radius: 20px; }
+.teacher-email { color: #6c757d; margin-bottom: 15px; }
+.teacher-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #3498db, #2980b9); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; margin-right: 20px; }
+.teacher-actions { display: flex; gap: 10px; }
+.btn-message { background: linear-gradient(135deg, #27ae60, #229954); border: none; border-radius: 25px; padding: 10px 20px; color: white; text-decoration: none; }
+.btn-profile { background: linear-gradient(135deg, #f39c12, #e67e22); border: none; border-radius: 25px; padding: 10px 20px; color: white; text-decoration: none; }
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ask-teacher-page-header">
+            <h2 class="ask-teacher-page-title">
+                <i class="fa fa-comments"></i>
+                Ask Teacher
+            </h2>
+            <p class="ask-teacher-page-subtitle">
+                {{#usercohortname}}
+                    Get help from your teachers in {{usercohortname}}
+                {{/usercohortname}}
+                {{^usercohortname}}
+                    Connect with your instructors for support!
+                {{/usercohortname}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Ask Teacher Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ask-teacher-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa fa-users"></i>
+                </div>
+                <div class="stat-number">{{total_teachers}}</div>
+                <div class="stat-label">Available Teachers</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa fa-comments"></i>
+                </div>
+                <div class="stat-number">{{total_teachers}}</div>
+                <div class="stat-label">Ready to Help</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fa fa-clock"></i>
+                </div>
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Teachers Content -->
+<div class="row">
+    <div class="col-12">
+        {{#has_teachers}}
+            {{#teachers_data}}
+            <div class="teacher-card">
+                <div class="teacher-header">
+                    <div style="display: flex; align-items: center;">
+                        <div class="teacher-avatar">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div>
+                            <h3 class="teacher-name">{{name}}</h3>
+                            <span class="teacher-course">{{course_name}}</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="teacher-email"><i class="fa fa-envelope"></i> {{email}}</p>
+                <div class="teacher-actions">
+                    <a href="{{message_url}}" class="btn-message">
+                        <i class="fa fa-comment"></i> Send Message
+                    </a>
+                    <a href="{{profile_url}}" class="btn-profile">
+                        <i class="fa fa-user"></i> View Profile
+                    </a>
+                </div>
+            </div>
+            {{/teachers_data}}
+        {{/has_teachers}}
+        
+        {{^has_teachers}}
+        <div class="teacher-card" style="text-align: center; padding: 50px;">
+            <div class="teacher-avatar" style="margin: 0 auto 20px;">
+                <i class="fa fa-user"></i>
+            </div>
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">No Teachers Available</h3>
+            <p style="color: #6c757d; margin: 0;">Check back later or contact your school administrator!</p>
+        </div>
+        {{/has_teachers}}
+    </div>
+</div>
+
+{{/custom_ask_teacher}}

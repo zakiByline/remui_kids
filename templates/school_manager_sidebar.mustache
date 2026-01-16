@@ -1,0 +1,1626 @@
+{{!
+    School Manager Sidebar Template for remui_kids theme
+    
+    This template provides a reusable hover-expandable sidebar navigation for all school manager pages.
+}}
+
+<!-- Mobile Toggle Button -->
+<button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar">
+    <i class="fa fa-bars"></i>
+</button>
+
+<!-- Tab Button to Show Hidden Sidebar -->
+<button class="sidebar-tab-btn" id="sidebarTabBtn" aria-label="Show sidebar">
+    <i class="fa fa-chevron-right"></i>
+</button>
+
+<!-- School Manager Sidebar Navigation -->
+<div class="school-manager-sidebar" id="schoolManagerSidebar">
+    <div class="sidebar-content">
+        <!-- Simplified Header Section - Manager Name Only -->
+        <div class="sidebar-header">
+            <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Toggle sidebar">
+                <i class="fa fa-angle-right" id="collapseIcon"></i>
+            </button>
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
+                <i class="fa fa-times"></i>
+            </button>
+            <div class="header-content-wrapper">
+                <div class="header-manager-name">{{{user_info.fullname}}}</div>
+                <div class="header-admin-badge">School Admin</div>
+            </div>
+        </div>
+
+        <!-- Navigation Menu Section (White Background) -->
+        <div class="sidebar-navigation">
+            <nav class="sidebar-menu">
+                <div class="nav-section">
+                    <h3 class="section-title">{{#str}}section_dashboard, theme_remui_kids{{/str}}</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item {{#dashboard_active}}active{{/dashboard_active}}">
+                            <a href="{{{config.wwwroot}}}/my/" class="nav-link dashboard-link" data-tooltip="{{#str}}admin_dashboard, theme_remui_kids{{/str}}">
+                                <i class="fa fa-globe nav-icon"></i>
+                                <span class="nav-text">{{#str}}admin_dashboard, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Management Section -->
+                <div class="nav-section">
+                    <h3 class="section-title">{{#str}}management, theme_remui_kids{{/str}}</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item {{#teachers_active}}active{{/teachers_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/teacher_management.php" class="nav-link" data-tooltip="{{#str}}teacher_management, theme_remui_kids{{/str}}">
+                                <i class="fa fa-chalkboard-teacher nav-icon"></i>
+                                <span class="nav-text">{{#str}}teacher_management, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#students_active}}active{{/students_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/student_management.php" class="nav-link" data-tooltip="{{#str}}student_management, theme_remui_kids{{/str}}">
+                                <i class="fa fa-user-graduate nav-icon"></i>
+                                <span class="nav-text">{{#str}}student_management, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#parent_management_active}}active{{/parent_management_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/parent_management.php" class="nav-link" data-tooltip="{{#str}}parent_management, theme_remui_kids{{/str}}">
+                                <i class="fa fa-users nav-icon"></i>
+                                <span class="nav-text">{{#str}}parent_management, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#courses_active}}active{{/courses_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/course_management.php" class="nav-link" data-tooltip="{{#str}}course_management, theme_remui_kids{{/str}}">
+                                <i class="fa fa-book nav-icon"></i>
+                                <span class="nav-text">{{#str}}course_management, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#enrollments_active}}active{{/enrollments_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/enrollments.php" class="nav-link" data-tooltip="{{#str}}nav_enrollments, theme_remui_kids{{/str}}">
+                                <i class="fa fa-user-plus nav-icon"></i>
+                                <span class="nav-text">{{#str}}nav_enrollments, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#emulator_access_active}}active{{/emulator_access_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/emulator_access.php" class="nav-link" data-tooltip="Emulator Access">
+                                <i class="fa fa-desktop nav-icon"></i>
+                                <span class="nav-text">Emulator Access</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#certificates_active}}active{{/certificates_active}}">
+                            <a href="{{{config.wwwroot}}}/local/certificate_approval/pages/school_dashboard.php" class="nav-link" data-tooltip="{{#str}}certificate_management, theme_remui_kids{{/str}}">
+                                <i class="fa fa-certificate nav-icon"></i>
+                                <span class="nav-text">{{#str}}certificate_management, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Action Section -->
+                <div class="nav-section">
+                    <h3 class="section-title">{{#str}}actions, theme_remui_kids{{/str}}</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item {{#bulk_download_active}}active{{/bulk_download_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/bulk_download.php" class="nav-link" data-tooltip="{{#str}}bulk_download, theme_remui_kids{{/str}}">
+                                <i class="fa fa-download nav-icon"></i>
+                                <span class="nav-text">{{#str}}bulk_download, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#bulk_profile_upload_active}}active{{/bulk_profile_upload_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/bulk_profile_upload.php" class="nav-link" data-tooltip="{{#str}}bulk_upload_images, theme_remui_kids{{/str}}">
+                                <i class="fa fa-camera nav-icon"></i>
+                                <span class="nav-text">{{#str}}bulk_upload_images, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Reports Section -->
+                <div class="nav-section">
+                    <h3 class="section-title">{{#str}}nav_reports, theme_remui_kids{{/str}}</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item {{#teacher_report_active}}active{{/teacher_report_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/teacher_report.php" class="nav-link teacher-report-link" data-tooltip="{{#str}}teacher_report, theme_remui_kids{{/str}}">
+                                <i class="fa fa-chalkboard nav-icon"></i>
+                                <span class="nav-text">{{#str}}teacher_report, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#student_report_active}}active{{/student_report_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/student_report.php" class="nav-link student-report-link" data-tooltip="{{#str}}student_reports, theme_remui_kids{{/str}}">
+                                <i class="fa fa-user-graduate nav-icon"></i>
+                                <span class="nav-text">{{#str}}student_reports, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#c_reports_active}}active{{/c_reports_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/c_reports.php" class="nav-link course-reports-link" data-tooltip="{{#str}}c_reports, theme_remui_kids{{/str}}">
+                                <i class="fa fa-file-alt nav-icon"></i>
+                                <span class="nav-text">{{#str}}course_reports, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- System Section -->
+                <div class="nav-section">
+                    <h3 class="section-title">{{#str}}system, theme_remui_kids{{/str}}</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item {{#activity_log_active}}active{{/activity_log_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager/activity_log.php" class="nav-link" data-tooltip="{{#str}}activity_log, theme_remui_kids{{/str}}">
+                                <i class="fa fa-history nav-icon"></i>
+                                <span class="nav-text">{{#str}}activity_log, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{#settings_active}}active{{/settings_active}}">
+                            <a href="{{{config.wwwroot}}}/theme/remui_kids/school_manager_settings.php" class="nav-link" data-tooltip="{{#str}}nav_settings, theme_remui_kids{{/str}}">
+                                <i class="fa fa-cog nav-icon"></i>
+                                <span class="nav-text">{{#str}}nav_settings, theme_remui_kids{{/str}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- School Manager Sidebar Styles - Hover Expandable -->
+<style>
+    
+    /* Hide "My courses" link from navigation bar - ULTRA AGGRESSIVE */
+    body .primary-navigation .nav-link[href*="/my/courses"],
+    body .primary-navigation a[href*="/my/courses"],
+    html body .navbar .nav-link[href*="/my/courses"],
+    html body .navbar a[href*="/my/courses"],
+    body .primary-navigation .nav-item:has(a[href*="/my/courses"]),
+    html body .navbar .nav-item:has(a[href*="/my/courses"]),
+    body #page-header .nav-link[data-key="mycourses"],
+    html body #page-header .nav-link[href*="/my/courses"],
+    body .primary-navigation .nav-link[data-key="mycourses"],
+    html body .moremenu .nav-link[data-key="mycourses"],
+    body .moremenu a[href*="/my/courses"],
+    html body li.nav-item:has(> a[href*="/my/courses"]),
+    body nav .nav-link[href*="/my/courses"],
+    html body nav a[href*="/my/courses"],
+    body li:has(> a[href*="/my/courses"]),
+    html body li:has(> .nav-link[href*="/my/courses"]) {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    
+    /* Mobile Toggle Button */
+    .sidebar-toggle-btn {
+        display: none;
+        position: fixed;
+        top: 65px;
+        left: 10px;
+        z-index: 1001;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        width: 45px;
+        height: 45px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+    
+    .sidebar-toggle-btn:hover {
+        background: #0056b3;
+        transform: scale(1.1);
+    }
+    
+    .sidebar-toggle-btn:active {
+        transform: scale(0.95);
+    }
+    
+    @media (max-width: 768px) {
+        .sidebar-toggle-btn {
+            display: flex;
+        }
+    }
+    
+    /* Hover-Expandable Sidebar - Base Styles */
+    .school-manager-sidebar {
+        position: fixed !important;
+        top: 55px !important;
+        left: 0 !important;
+        width: 280px !important; /* Default expanded width */
+        height: calc(100vh - 55px) !important;
+        background: #ffffff !important;
+        z-index: 1000 !important;
+        overflow: hidden !important;
+        font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2) !important;
+        flex-direction: column !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Expanded state class - default state */
+    .school-manager-sidebar.expanded {
+        width: 280px !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Collapsed state class - when user clicks collapse */
+    .school-manager-sidebar.collapsed {
+        width: 70px !important;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15) !important;
+        overflow: visible !important; /* Allow tooltips to overflow */
+    }
+    
+    /* Ensure collapsed sidebar navigation allows tooltip overflow */
+    .school-manager-sidebar.collapsed .sidebar-navigation {
+        overflow-x: visible !important;
+    }
+
+    .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        min-width: 70px;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0.755rem 0 0 0;
+    }
+    
+    /* Allow tooltip overflow when sidebar is collapsed */
+    .school-manager-sidebar.collapsed .sidebar-content {
+        overflow-x: visible !important;
+    }
+    
+    /* Ensure sidebar is always visible and properly positioned */
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Adjust main content when sidebar expands/collapses */
+    .school-manager-main-content,
+    body .school-manager-main-content,
+    #page-content,
+    .main-content,
+    #region-main {
+    }
+    
+    /* Default expanded state for desktop */
+    @media (min-width: 769px) {
+        .school-manager-main-content {
+            left: 280px !important;
+            width: calc(100vw - 280px) !important;
+        }
+        
+        /* Collapsed state - when sidebar is collapsed */
+        body:has(.school-manager-sidebar.collapsed) .school-manager-main-content,
+        .school-manager-sidebar.collapsed ~ * .school-manager-main-content {
+            left: 70px !important;
+            width: calc(100vw - 70px) !important;
+        }
+        
+        /* Hidden state - when sidebar is completely hidden */
+        body:has(.school-manager-sidebar.hidden) .school-manager-main-content,
+        .school-manager-sidebar.hidden ~ * .school-manager-main-content {
+            left: 0 !important;
+            width: 100vw !important;
+        }
+    }
+    
+    /* Mobile - full width */
+    @media (max-width: 768px) {
+        .school-manager-main-content {
+            left: 0 !important;
+            width: 100vw !important;
+        }
+    }
+
+    /* Modern Sidebar Header Section - No Background Color */
+    .sidebar-header {
+        background: transparent;
+        padding: 1rem 1rem;
+        text-align: center;
+        color: #1e293b;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60px;
+        flex-shrink: 0;
+        margin: 0.76rem 0 0 0;
+        box-sizing: border-box;
+    }
+    
+    /* Header content wrapper */
+    .header-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+        padding-right: 110px; /* Space for buttons (54px + 36px button + 20px spacing) */
+        padding-left: 0.5rem;
+        box-sizing: border-box;
+    }
+    
+    /* Ensure text doesn't overflow on smaller screens */
+    @media (max-width: 320px) {
+        .header-content-wrapper {
+            padding-right: 100px;
+        }
+    }
+    
+    /* Header adjustments for collapsed state - compact without manager name */
+    .school-manager-sidebar:not(.expanded) .sidebar-header {
+        padding: 0.5rem 0.5rem;
+        min-height: 45px;
+        border-bottom-width: 1px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Remove padding from header content when collapsed (no buttons visible) */
+    .school-manager-sidebar:not(.expanded) .header-content-wrapper {
+        padding-right: 0.5rem;
+    }
+    
+    /* Header adjustments for expanded state */
+    .school-manager-sidebar.expanded .sidebar-header {
+        padding: 1rem 1rem;
+        min-height: 60px;
+        border-bottom-width: 1px;
+    }
+    
+    /* Header hover effect */
+    .sidebar-header:hover {
+        background: transparent;
+    }
+    
+    /* Modern Sidebar Collapse/Expand Button (Arrow) - Right Position */
+    .sidebar-collapse-btn {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 11;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        color: #64748b;
+        font-size: 1.1rem;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .sidebar-collapse-btn:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-50%) scale(1.15);
+        color: #3b82f6;
+    }
+    
+    .sidebar-collapse-btn:active {
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-collapse-btn i {
+        font-weight: 600;
+    }
+    
+    /* Rotate icon when sidebar is expanded */
+    .school-manager-sidebar.expanded .sidebar-collapse-btn i {
+        transform: rotate(180deg);
+    }
+    
+    /* Button positioning in collapsed state */
+    .school-manager-sidebar:not(.expanded) .sidebar-collapse-btn {
+        right: 50%;
+        transform: translate(50%, -50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 1rem;
+    }
+    
+    /* Button positioning in expanded state */
+    .school-manager-sidebar.expanded .sidebar-collapse-btn {
+        right: 12px;
+        transform: translateY(-50%);
+    }
+    
+    /* Sidebar Close Button (X icon) - Left Position */
+    .sidebar-close-btn {
+        position: absolute;
+        top: 50%;
+        right: 54px;
+        transform: translateY(-50%);
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 12;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        color: #64748b;
+        font-size: 1.1rem;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .sidebar-close-btn:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-50%) scale(1.15);
+        color: #dc2626;
+    }
+    
+    .sidebar-close-btn:active {
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-close-btn i {
+        font-weight: 600;
+    }
+    
+    /* Hide close button when collapsed or hidden */
+    .school-manager-sidebar:not(.expanded) .sidebar-close-btn {
+        display: none;
+    }
+    
+    /* Hide close button on mobile */
+    @media (max-width: 768px) {
+        .sidebar-close-btn {
+            display: none !important;
+        }
+    }
+    
+    /* Sidebar Tab Button (to show hidden sidebar) */
+    .sidebar-tab-btn {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 1001;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 0 12px 12px 0;
+        width: 40px;
+        height: 80px;
+        cursor: pointer;
+        box-shadow: 2px 0 12px rgba(0, 123, 255, 0.3);
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        padding: 0;
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-tab-btn:hover {
+        background: #0056b3;
+        width: 45px;
+        box-shadow: 3px 0 16px rgba(0, 123, 255, 0.4);
+    }
+    
+    .sidebar-tab-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+    
+    .sidebar-tab-btn i {
+        font-weight: 600;
+    }
+    
+    /* Show tab button when sidebar is hidden */
+    body:has(.school-manager-sidebar.hidden) .sidebar-tab-btn,
+    .school-manager-sidebar.hidden ~ .sidebar-tab-btn {
+        display: flex;
+    }
+    
+    /* Hide sidebar completely */
+    .school-manager-sidebar.hidden {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        transform: translateX(-100%) !important;
+    }
+    
+    /* Modern Manager Name Styling - Dark Text */
+    .header-manager-name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1e293b;
+        text-align: center;
+        margin: 0 0 0.5rem 0;
+        opacity: 1;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        padding: 0 0.5rem;
+        line-height: 1.3;
+        display: block;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 2;
+        letter-spacing: 0.3px;
+    }
+    
+    /* Collapsed state - completely hide manager name */
+    .school-manager-sidebar:not(.expanded) .header-manager-name {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        font-size: 0 !important;
+    }
+    
+    /* Expanded state - show full name with better styling */
+    .school-manager-sidebar.expanded .header-manager-name {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        height: auto !important;
+        width: 100% !important;
+        font-size: 1rem;
+        padding: 0 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        margin: 0 0 0.5rem 0;
+    }
+    
+    /* Manager name hover effect */
+    .header-manager-name:hover {
+        color: #3b82f6;
+    }
+    
+    /* School Admin Badge Styling */
+    .header-admin-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #64748b;
+        padding: 0.35rem 0.9rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        border: 1px solid #e2e8f0;
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    /* Hide badge when collapsed */
+    .school-manager-sidebar:not(.expanded) .header-admin-badge {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        font-size: 0 !important;
+    }
+    
+    /* Show badge when expanded */
+    .school-manager-sidebar.expanded .header-admin-badge {
+        display: inline-block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        height: auto !important;
+        width: auto !important;
+    }
+    
+    /* Badge hover effect */
+    .header-admin-badge:hover {
+        background: #e2e8f0;
+        color: #475569;
+    }
+    
+    /* Mobile - always show full name and badge with adjusted styling */
+    @media (max-width: 768px) {
+        .header-manager-name {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            font-size: 0.95rem;
+            padding: 0 2.5rem;
+            font-weight: 700;
+            height: auto !important;
+            width: 100% !important;
+            margin: 0 0 0.4rem 0;
+        }
+        
+        .header-admin-badge {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            height: auto !important;
+            width: auto !important;
+        }
+    }
+
+
+
+    /* Navigation Section */
+    .sidebar-navigation {
+        padding: 0;
+        background: white;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0;
+        /* Show scrollbar with custom styling */
+        scrollbar-width: thin; /* Firefox - thin scrollbar */
+        scrollbar-color: #cbd5e1 #f1f5f9; /* Firefox - thumb and track colors */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    /* Navigation padding adjustments */
+    .school-manager-sidebar:not(.expanded) .sidebar-navigation {
+        padding: 0;
+    }
+    
+    .school-manager-sidebar.expanded .sidebar-navigation {
+        padding: 0.5rem 0;
+    }
+    
+    .sidebar-menu {
+        width: 100%;
+        height: 100%;
+    }
+
+    .section-title {
+        font-size: 0.6rem !important;
+        font-weight: 500 !important;
+        color: #9ca3af !important;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        line-height: 1.2 !important;
+        /* Hide completely when collapsed */
+        display: none;
+        height: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        opacity: 0;
+        overflow: hidden;
+    }
+    
+    /* Show section titles only when expanded */
+    .school-manager-sidebar.expanded .section-title {
+        display: block;
+        height: auto;
+        margin: 0 0 0.5rem 0 !important;
+        padding: 0 1.5rem !important;
+        opacity: 1;
+    }
+    
+    /* Hide section titles in collapsed state */
+    .school-manager-sidebar:not(.expanded) .section-title {
+        display: none;
+        height: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .nav-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+    }
+    
+    /* Nav section spacing */
+    .nav-section {
+        margin-bottom: 0.5rem;
+        overflow: visible;
+    }
+    
+    /* Ensure collapsed sidebar sections allow tooltip overflow */
+    .school-manager-sidebar.collapsed .nav-section,
+    .school-manager-sidebar.collapsed .nav-list {
+        overflow: visible !important;
+    }
+    
+    /* Reduce spacing between sections when collapsed (no titles) */
+    .school-manager-sidebar:not(.expanded) .nav-section {
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Normal spacing when expanded (with titles) */
+    .school-manager-sidebar.expanded .nav-section {
+        margin-bottom: 0.5rem;
+    }
+
+    .nav-item {
+        margin: 0;
+        position: relative;
+        overflow: visible;
+    }
+    
+    /* Ensure tooltips can overflow sidebar when collapsed */
+    .school-manager-sidebar:not(.expanded) .nav-item {
+        overflow: visible;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.875rem 1rem;
+        color: #495057;
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+        font-size: 0.85rem;
+        position: relative;
+        justify-content: center;
+        min-height: 48px;
+        overflow: visible;
+    }
+    
+    /* Ensure collapsed sidebar nav-links allow tooltip overflow */
+    .school-manager-sidebar.collapsed .nav-link {
+        overflow: visible !important;
+    }
+    
+    @media (min-width: 769px) {
+        .school-manager-sidebar:hover .nav-link {
+            padding: 0.875rem 1.5rem;
+            justify-content: flex-start;
+        }
+    }
+    
+    .school-manager-sidebar.expanded .nav-link {
+        padding: 0.875rem 1.5rem;
+        justify-content: flex-start;
+    }
+    
+    /* Tooltip Arrow - using ::before when collapsed (replaces shimmer effect) */
+    .school-manager-sidebar.collapsed .nav-link::before {
+        content: '';
+        position: fixed;
+        left: var(--arrow-left, calc(100% + 9px));
+        top: var(--tooltip-top, 50%);
+        transform: translateY(-50%);
+        border: 6px solid transparent;
+        border-right-color: #2c3e50;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10002 !important;
+        visibility: hidden;
+        display: block;
+        width: 0;
+        height: 0;
+        background: none !important;
+    }
+    
+    /* Tooltip Text - using ::after when collapsed */
+    .school-manager-sidebar.collapsed .nav-link::after {
+        content: attr(data-tooltip);
+        position: fixed;
+        left: var(--tooltip-left, calc(100% + 15px));
+        top: var(--tooltip-top, 50%);
+        transform: translateY(-50%);
+        background: #2c3e50 !important;
+        color: white !important;
+        padding: 8px 14px !important;
+        border-radius: 6px !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+        white-space: nowrap !important;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10001 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        visibility: hidden;
+        display: block !important;
+        min-width: max-content;
+        max-width: 200px;
+        margin: 0;
+        border: none;
+    }
+    
+    /* Hide tooltips when sidebar is expanded (text labels are visible) */
+    .school-manager-sidebar.expanded .nav-link::after {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        content: none !important;
+    }
+    
+    /* Show tooltips when sidebar is collapsed - desktop only */
+    @media (min-width: 769px) {
+        .school-manager-sidebar.collapsed .nav-link:hover::after {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        .school-manager-sidebar.collapsed .nav-link:hover::before {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+    }
+
+    .nav-link:hover {
+        background: #f8f9fa;
+        color: #007cba;
+        text-decoration: none;
+        border-left-color: #007cba;
+    }
+
+    /* Default active state for regular menu items */
+    .nav-item.active .nav-link {
+        background: #e3f2fd;
+        color: #007cba;
+        border-left-color: #007cba;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    /* Special styling for active School Admin Dashboard */
+    .nav-item.active .nav-link.dashboard-link {
+        background: #e3f2fd;
+        color: #007cba;
+        border-left-color: #007cba;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* Styling for active management menu items */
+    .nav-item.active .nav-link:not(.dashboard-link) {
+        background: #f0f8ff;
+        color: #17a2b8;
+        border-left-color: #17a2b8;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .nav-icon {
+        width: 20px;
+        margin-right: 0;
+        font-size: 1.2rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    
+    @media (min-width: 769px) {
+        .school-manager-sidebar:hover .nav-icon {
+            margin-right: 0.875rem;
+            font-size: 1rem;
+        }
+    }
+    
+    .school-manager-sidebar.expanded .nav-icon {
+        margin-right: 0.875rem;
+        font-size: 1rem;
+    }
+
+    .nav-text {
+        flex: 1;
+        font-size: 0.85rem;
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    /* Show nav text when expanded */
+    .school-manager-sidebar.expanded .nav-text {
+        opacity: 1;
+        max-width: 200px;
+    }
+    
+    /* Hide nav text when collapsed */
+    .school-manager-sidebar:not(.expanded) .nav-text {
+        opacity: 0;
+        max-width: 0;
+    }
+
+    /* Custom Scrollbar Styling for Chrome, Safari and Opera */
+    .sidebar-navigation::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .sidebar-navigation::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    
+    .sidebar-navigation::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+        border: 1px solid #f1f5f9;
+    }
+    
+    .sidebar-navigation::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* Responsive Design - Mobile */
+    @media (max-width: 768px) {
+        .school-manager-sidebar {
+            width: 280px !important;
+            top: 55px !important;
+            height: calc(100vh - 55px) !important;
+            transform: translateX(-100%);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .school-manager-sidebar.mobile-open {
+            transform: translateX(0);
+        }
+        
+        .school-manager-sidebar.expanded {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1rem 1rem;
+            min-height: 60px;
+            background: transparent;
+            border-bottom: 1px solid #e2e8f0;
+            margin: 0.76rem 0 0 0;
+        }
+
+        .header-manager-name {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            max-width: 300px !important;
+            padding: 0 0.5rem !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            height: auto !important;
+            width: 100% !important;
+            color: #1e293b !important;
+            margin: 0 0 0.5rem 0 !important;
+        }
+        
+        .header-content-wrapper {
+            padding-right: 110px !important;
+        }
+        
+        .header-admin-badge {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            height: auto !important;
+            width: auto !important;
+        }
+        
+        .nav-text {
+            opacity: 1 !important;
+            max-width: 300px !important;
+            padding: 0 10px !important;
+        }
+        
+        /* Mobile collapse button styling */
+        .sidebar-collapse-btn {
+            right: 12px !important;
+            transform: translateY(-50%) !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 8px !important;
+        }
+        
+        /* Show section titles on mobile when sidebar is open */
+        .section-title {
+            display: block !important;
+            height: auto !important;
+            opacity: 1 !important;
+            margin: 0 0 0.5rem 0 !important;
+            padding: 0 1.5rem !important;
+        }
+
+        .nav-link {
+            padding: 0.875rem 1.5rem;
+            justify-content: flex-start;
+        }
+        
+        .nav-icon {
+            margin-right: 0.875rem;
+            font-size: 1rem;
+        }
+        
+        /* Hide tooltips on mobile */
+        .nav-link::after,
+        .nav-link::before {
+            display: none;
+        }
+        
+        /* Adjust main content for mobile */
+        .school-manager-main-content {
+            left: 0 !important;
+            width: 100vw !important;
+        }
+        
+        /* Overlay when sidebar is open on mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 55px;
+            left: 0;
+            width: 100vw;
+            height: calc(100vh - 55px);
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    /* Animation for active states */
+    .nav-link {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    }
+
+    .nav-link:hover::before {
+        left: 100%;
+    }
+    
+    /* Debug and ensure proper display */
+    .school-manager-sidebar * {
+        box-sizing: border-box;
+    }
+    
+    /* Ensure all text is visible */
+    .school-manager-sidebar {
+        color: #333 !important;
+    }
+    
+    /* Force section titles to be small - only when expanded */
+    .school-manager-sidebar.expanded .section-title,
+    .school-manager-sidebar.expanded h3.section-title {
+        font-size: 0.6rem !important;
+        font-weight: 500 !important;
+        color: #9ca3af !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+        margin: 0 0 0.5rem 0 !important;
+        padding: 0 1.5rem !important;
+        line-height: 1.2 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Hide section titles when collapsed */
+    .school-manager-sidebar:not(.expanded) .section-title,
+    .school-manager-sidebar:not(.expanded) h3.section-title {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Make sure icons are visible */
+    .nav-icon {
+        display: inline-block !important;
+        visibility: visible !important;
+    }
+    
+    /* Ensure proper text rendering */
+    .nav-text {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Manager name - only visible when expanded */
+    .school-manager-sidebar.expanded .header-manager-name {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Hide manager name when collapsed */
+    .school-manager-sidebar:not(.expanded) .header-manager-name {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    /* Additional deployment fixes */
+    .school-manager-sidebar * {
+        box-sizing: border-box !important;
+    }
+
+    /* Prevent any parent elements from hiding the sidebar */
+    body, html, .page, .region-main, .main-content, .content {
+        overflow-x: visible !important;
+    }
+
+    /* Override any theme or framework styles that might hide the sidebar */
+    .theme-remui .school-manager-sidebar,
+    .theme-remui_kids .school-manager-sidebar,
+    .path-admin .school-manager-sidebar,
+    .path-my .school-manager-sidebar {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+</style>
+
+<!-- Hover-Expandable Sidebar JavaScript -->
+<script>
+(function() {
+    'use strict';
+    
+    let sidebar = null;
+    let toggleBtn = null;
+    let collapseBtn = null;
+    let closeBtn = null;
+    let tabBtn = null;
+    let overlay = null;
+    let isMobile = window.innerWidth <= 768;
+    let isExpanded = false;
+    
+    // Get sidebar state from localStorage or default to expanded
+    function getSidebarState() {
+        const savedState = localStorage.getItem('schoolManagerSidebarState');
+        // Default to 'expanded' if no saved state exists
+        // Valid states: 'expanded', 'collapsed', 'hidden'
+        return savedState || 'expanded';
+    }
+    
+    // Save sidebar state to localStorage
+    function saveSidebarState(state) {
+        localStorage.setItem('schoolManagerSidebarState', state);
+    }
+    
+    // Initialize sidebar
+    function initSidebar() {
+        sidebar = document.getElementById('schoolManagerSidebar');
+        toggleBtn = document.getElementById('sidebarToggleBtn');
+        collapseBtn = document.getElementById('sidebarCollapseBtn');
+        closeBtn = document.getElementById('sidebarCloseBtn');
+        tabBtn = document.getElementById('sidebarTabBtn');
+        
+        if (!sidebar) {
+            console.error('❌ School Manager Sidebar not found!');
+            return;
+        }
+        
+        // Create overlay for mobile
+        if (isMobile) {
+            createOverlay();
+        }
+        
+        // Get saved state or default to expanded
+        const savedState = getSidebarState();
+        
+        // Set initial state based on saved preference or default to expanded
+        sidebar.classList.remove('expanded', 'collapsed', 'hidden');
+        if (savedState === 'hidden') {
+            sidebar.classList.add('hidden');
+            isExpanded = false;
+        } else if (savedState === 'collapsed') {
+            sidebar.classList.add('collapsed');
+            sidebar.classList.remove('expanded');
+            isExpanded = false;
+        } else {
+            sidebar.classList.add('expanded');
+            sidebar.classList.remove('collapsed');
+            isExpanded = true;
+        }
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Setup tooltips
+        setupTooltips();
+        
+        // Adjust main content
+        adjustMainContent();
+        
+        console.log('✅ Button-controlled sidebar initialized - State: ' + savedState);
+    }
+    
+    // Create overlay for mobile
+    function createOverlay() {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        
+        overlay.addEventListener('click', function() {
+            closeMobileSidebar();
+        });
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+        // Mobile toggle button
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleMobileSidebar();
+            });
+        }
+        
+        // Window resize handler
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                const wasMobile = isMobile;
+                isMobile = window.innerWidth <= 768;
+                
+                if (wasMobile !== isMobile) {
+                    if (isMobile) {
+                        if (!overlay) createOverlay();
+                        sidebar.classList.remove('expanded');
+                        sidebar.classList.add('collapsed');
+                        closeMobileSidebar();
+                    } else {
+                        if (overlay) {
+                            overlay.remove();
+                            overlay = null;
+                        }
+                        sidebar.classList.remove('mobile-open');
+                        // Restore saved state when switching to desktop
+                        const savedState = getSidebarState();
+                        sidebar.classList.remove('expanded', 'collapsed', 'hidden');
+                        if (savedState === 'hidden') {
+                            sidebar.classList.add('hidden');
+                            isExpanded = false;
+                        } else if (savedState === 'collapsed') {
+                            sidebar.classList.add('collapsed');
+                            sidebar.classList.remove('expanded');
+                            isExpanded = false;
+                        } else {
+                            sidebar.classList.add('expanded');
+                            sidebar.classList.remove('collapsed');
+                            isExpanded = true;
+                        }
+                    }
+                    adjustMainContent();
+                }
+            }, 250);
+        });
+        
+        // Collapse/Expand button handler (desktop and mobile)
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+        }
+        
+        // Close button handler (X icon - completely hide sidebar)
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                hideSidebar();
+            });
+        }
+        
+        // Tab button handler (to show hidden sidebar)
+        if (tabBtn) {
+            tabBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showSidebar();
+            });
+        }
+        
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            // ESC to close on mobile
+            if (e.key === 'Escape' && isMobile && sidebar.classList.contains('mobile-open')) {
+                closeMobileSidebar();
+            }
+        });
+    }
+    
+    // Toggle mobile sidebar
+    function toggleMobileSidebar() {
+        if (!isMobile) return;
+        
+        if (sidebar.classList.contains('mobile-open')) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+    
+    // Open mobile sidebar
+    function openMobileSidebar() {
+        sidebar.classList.add('mobile-open', 'expanded');
+        sidebar.classList.remove('collapsed');
+        if (overlay) overlay.classList.add('active');
+        adjustMainContent();
+    }
+    
+    // Close mobile sidebar
+    function closeMobileSidebar() {
+        sidebar.classList.remove('mobile-open', 'expanded');
+        sidebar.classList.add('collapsed');
+        if (overlay) overlay.classList.remove('active');
+        adjustMainContent();
+    }
+    
+    // Toggle sidebar (button-controlled)
+    function toggleSidebar() {
+        if (isMobile) {
+            // On mobile, toggle mobile-open class
+            if (sidebar.classList.contains('mobile-open')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+        } else {
+            // On desktop, toggle expanded/collapsed
+            if (sidebar.classList.contains('expanded')) {
+                collapseSidebar();
+            } else {
+                expandSidebar();
+            }
+        }
+    }
+    
+    // Expand sidebar
+    function expandSidebar() {
+        sidebar.classList.add('expanded');
+        sidebar.classList.remove('collapsed');
+        isExpanded = true;
+        saveSidebarState('expanded');
+        adjustMainContent();
+        setupTooltips();
+    }
+    
+    // Collapse sidebar
+    function collapseSidebar() {
+        sidebar.classList.remove('expanded', 'hidden');
+        sidebar.classList.add('collapsed');
+        isExpanded = false;
+        saveSidebarState('collapsed');
+        adjustMainContent();
+        setupTooltips();
+    }
+    
+    // Hide sidebar completely (X button)
+    function hideSidebar() {
+        sidebar.classList.remove('expanded', 'collapsed');
+        sidebar.classList.add('hidden');
+        isExpanded = false;
+        saveSidebarState('hidden');
+        adjustMainContent();
+    }
+    
+    // Show sidebar (from hidden state via tab button)
+    function showSidebar() {
+        sidebar.classList.remove('hidden', 'collapsed');
+        sidebar.classList.add('expanded');
+        isExpanded = true;
+        saveSidebarState('expanded');
+        adjustMainContent();
+        setupTooltips();
+    }
+    
+    // Adjust main content based on sidebar state
+    function adjustMainContent() {
+        const mainContent = document.querySelector('.school-manager-main-content');
+        if (!mainContent) return;
+        
+        if (isMobile) {
+            if (sidebar.classList.contains('mobile-open')) {
+                mainContent.style.left = '0';
+                mainContent.style.width = '100vw';
+            } else {
+                mainContent.style.left = '0';
+                mainContent.style.width = '100vw';
+            }
+        } else {
+            if (sidebar.classList.contains('hidden')) {
+                mainContent.style.left = '0';
+                mainContent.style.width = '100vw';
+            } else if (sidebar.classList.contains('expanded')) {
+                mainContent.style.left = '280px';
+                mainContent.style.width = 'calc(100vw - 280px)';
+            } else {
+                mainContent.style.left = '70px';
+                mainContent.style.width = 'calc(100vw - 70px)';
+            }
+        }
+    }
+    
+    // Setup tooltip positioning for collapsed sidebar
+    function setupTooltips() {
+        if (!sidebar) return;
+        
+        const navLinks = sidebar.querySelectorAll('.nav-link');
+        navLinks.forEach(function(link) {
+            // Remove existing listeners to avoid duplicates
+            link.removeEventListener('mouseenter', handleTooltipShow);
+            link.removeEventListener('mouseleave', handleTooltipHide);
+            
+            // Add new listeners
+            link.addEventListener('mouseenter', handleTooltipShow);
+            link.addEventListener('mouseleave', handleTooltipHide);
+        });
+    }
+    
+    // Handle tooltip show
+    function handleTooltipShow(e) {
+        if (!sidebar || !sidebar.classList.contains('collapsed')) return;
+        if (window.innerWidth <= 768) return; // Don't show on mobile
+        
+        const link = this;
+        const rect = link.getBoundingClientRect();
+        const tooltipText = link.getAttribute('data-tooltip');
+        
+        if (!tooltipText) return;
+        
+        // Calculate position relative to viewport (for fixed positioning)
+        const tooltipTop = rect.top + (rect.height / 2);
+        const tooltipLeft = rect.right + 15;
+        const arrowLeft = rect.right + 9;
+        
+        // Set CSS custom properties on the link element for CSS to use
+        link.style.setProperty('--tooltip-top', tooltipTop + 'px');
+        link.style.setProperty('--tooltip-left', tooltipLeft + 'px');
+        link.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+    
+    // Handle tooltip hide
+    function handleTooltipHide(e) {
+        // Tooltip will hide via CSS :hover state
+    }
+    
+    // Handle modal visibility (preserve existing functionality)
+    function setupModalHandling() {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) {
+                        const isModal = node.classList && (
+                            node.classList.contains('modal') ||
+                            node.classList.contains('moodle-dialogue-base') ||
+                            node.id === 'enrollModal' ||
+                            node.id === 'profileModal'
+                        );
+                        
+                        const hasModal = node.querySelector && (
+                            node.querySelector('.modal') ||
+                            node.querySelector('.moodle-dialogue-base') ||
+                            node.querySelector('#enrollModal') ||
+                            node.querySelector('#profileModal')
+                        );
+                        
+                        if (isModal || hasModal) {
+                            window.isModalOpen = true;
+                            
+                            const isTeacherProfile = window.location.href.includes('teacher_profile.php');
+                            const isStudentProfile = window.location.href.includes('student_profile.php');
+                            const isCourseManagement = window.location.href.includes('course_management.php');
+                            
+                            const shouldHideSidebar = !window.forceSidebarAlways && 
+                                (isTeacherProfile || isStudentProfile || isCourseManagement);
+                            
+                            if (shouldHideSidebar && sidebar) {
+                                sidebar.style.setProperty('display', 'none', 'important');
+                            }
+                        }
+                    }
+                });
+                
+                mutation.removedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) {
+                        const wasModal = node.classList && (
+                            node.classList.contains('modal') ||
+                            node.classList.contains('moodle-dialogue-base') ||
+                            node.id === 'enrollModal' ||
+                            node.id === 'profileModal'
+                        );
+                        
+                        if (wasModal) {
+                            window.isModalOpen = false;
+                            if (sidebar) {
+                                sidebar.style.removeProperty('display');
+                                initSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar();
+            setupModalHandling();
+        });
+    } else {
+        initSidebar();
+        setupModalHandling();
+    }
+    
+    // Also initialize on window load
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            if (!sidebar) {
+                initSidebar();
+            }
+            adjustMainContent();
+        }, 100);
+    });
+    
+    // Periodically check and adjust main content
+    setInterval(function() {
+        if (sidebar) {
+            adjustMainContent();
+        }
+    }, 500);
+})();
+</script>

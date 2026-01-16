@@ -1,0 +1,116 @@
+<div class="lp-container" data-ajax="{{ajaxurl}}" data-sesskey="{{sesskey}}">
+    <header class="lp-hero">
+        <div class="lp-hero-content">
+            <div>
+                <p class="lp-hero-label">Teacher Toolkit</p>
+                <h1>AI Lesson Plan Generator</h1>
+                <p>Quickly craft structured lesson plans tailored to your course and topic using the built-in AI assistant.</p>
+            </div>
+            <div class="lp-hero-actions">
+                <button id="lp-hero-inspiration" class="lp-hero-button">
+                    <i class="fa fa-lightbulb-o"></i>
+                    Inspiration Hub
+                </button>
+                <a href="{{libraryurl}}" class="lp-hero-button secondary">
+                    <i class="fa fa-book"></i>
+                    View My Library
+                </a>
+            </div>
+        </div>
+        <div class="lp-hero-meta-grid">
+            <article>
+                <p class="lp-hero-meta-label">Instructional Focus</p>
+                <h4>Curriculum Aligned</h4>
+                <p>AI suggestions pull standards, competencies, and classroom context from your course.</p>
+            </article>
+            <article>
+                <p class="lp-hero-meta-label">Teacher Time Saved</p>
+                <h4>Plan in Minutes</h4>
+                <p>Pre-filled modules, activities, and SEL objectives reduce prep time dramatically.</p>
+            </article>
+            <article>
+                <p class="lp-hero-meta-label">Reusable Library</p>
+                <h4>Personal Archive</h4>
+                <p>Save and filter plans by grade level and lesson topic for easy reuse.</p>
+            </article>
+        </div>
+    </header>
+
+    <div id="lp-inputs-card" class="lp-card">
+        <div class="lp-header">
+            <h2 class="lp-section-title">Plan Inputs</h2>
+            <p class="lp-section-description">Choose a course and lesson to prefill the AI with accurate context.</p>
+        </div>
+
+        <div class="lp-form-grid">
+            <div class="lp-field">
+                <label for="lp-course">Select Course</label>
+                <select id="lp-course" class="lp-dropdown" disabled>
+                    <option value="">Loading courses...</option>
+                </select>
+            </div>
+            <div class="lp-field">
+                <label for="lp-lesson">Select Lesson or Topic</label>
+                <select id="lp-lesson" class="lp-dropdown" disabled>
+                    <option value="">Select a course first</option>
+                </select>
+            </div>
+        </div>
+
+        <section id="lp-lesson-context" class="lp-section" hidden>
+            <div class="lp-section-header">
+                <div>
+                    <p class="lp-section-label">Lesson Overview</p>
+                    <h3 class="lp-section-title" id="lp-context-title"></h3>
+                </div>
+                <div class="lp-section-actions">
+                    <span class="lp-pill">Existing Modules</span>
+                    <button id="lp-context-export" class="lp-button lp-button-light lp-button-compact" hidden>
+                        <i class="fa fa-download"></i> CSV
+                    </button>
+                </div>
+            </div>
+            <p class="lp-section-summary" id="lp-context-summary"></p>
+            <div id="lp-context-activities" class="lp-context-activities"></div>
+        </section>
+
+        <div class="lp-primary-actions">
+            <button id="lp-generate" class="lp-button lp-button-primary" disabled>
+                <i class="fa fa-magic"></i> Generate Lesson Plan
+            </button>
+            <button id="lp-generate-course" class="lp-button lp-button-primary" style="margin-left: 12px;" disabled>
+                <i class="fa fa-book"></i> Generate Course Planner
+            </button>
+            <div class="lp-secondary-actions">
+                <button id="lp-save" class="lp-button lp-button-light" disabled>
+                    <i class="fa fa-bookmark"></i> Save Lesson Plan
+                </button>
+                <button id="lp-print" class="lp-button lp-button-light" disabled>
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button id="lp-download" class="lp-button lp-button-light" disabled>
+                    <i class="fa fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+
+        <div id="lp-loader" class="lp-loader" hidden>
+            <div class="lp-spinner"></div>
+            <p id="lp-loader-message">Generating a tailored lesson plan...</p>
+        </div>
+
+        <div id="lp-message" class="lp-message" hidden></div>
+
+        <section class="lp-section lp-result">
+            <div class="lp-section-header">
+                <div>
+                    <p class="lp-section-label">Lesson Plan</p>
+                    <h3 class="lp-section-title" id="lp-plan-title"></h3>
+                </div>
+                <span class="lp-pill secondary">AI Generated</span>
+            </div>
+            <div id="lessonplan-result"></div>
+        </section>
+    </div>
+</div>
+

@@ -1,0 +1,39 @@
+// Default preset for remui_kids theme
+// This file contains the default color scheme and settings
+
+// Import the main variables
+@import "../pre";
+
+// Default color scheme for kids
+$primary: #FF6B35 !default;        // Bright Orange
+$secondary: #4ECDC4 !default;      // Teal
+$success: #96CEB4 !default;        // Soft Green
+$info: #45B7D1 !default;           // Sky Blue
+$warning: #FFEAA7 !default;        // Light Yellow
+$danger: #DDA0DD !default;         // Light Purple
+$light: #F8F9FA !default;          // Very Light Gray
+$dark: #2D3436 !default;           // Dark Gray
+
+// Additional kids-friendly colors
+$kids-pink: #FFB6C1 !default;
+$kids-purple: #DDA0DD !default;
+$kids-green: #98FB98 !default;
+$kids-blue: #87CEEB !default;
+$kids-yellow: #FFFF99 !default;
+$kids-orange: #FFA500 !default;
+
+// Background colors
+$body-bg: #FAFAFA !default;
+$card-bg: #FFFFFF !default;
+
+// Text colors
+$text-color: $dark !default;
+$text-muted: lighten($dark, 30%) !default;
+
+// Border colors
+$border-color: lighten($primary, 30%) !default;
+$border-radius: 1rem !default;
+
+// Shadow colors
+$box-shadow-color: rgba(0, 0, 0, 0.1) !default;
+

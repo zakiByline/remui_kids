@@ -1,0 +1,1124 @@
+{{> theme_remui_kids/admin_shared_styles }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .upload-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg,rgb(250, 201, 201),rgb(248, 216, 231));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+           
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            to { text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.3); }
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .company-section, .options-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e3f2fd;
+           
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-select {
+            padding: 12px 15px;
+            border: 2px solid #e3f2fd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-select:disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .accepted-files {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .accepted-files p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .upload-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e3f2fd;
+           
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .upload-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+           
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .template-section {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #ffeaa7;
+           
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .template-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-info {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .template-btn {
+            background: linear-gradient(135deg, #ffc107, #ff8c00);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        .validation-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f0f0f0;
+           
+            display: none;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .validation-section.show {
+            display: block;
+        }
+
+        .validation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .validation-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #dee2e6;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-card.success .stat-number {
+            color: #28a745;
+        }
+
+        .stat-card.error .stat-number {
+            color: #dc3545;
+        }
+
+        .stat-card.warning .stat-number {
+            color: #ffc107;
+        }
+
+        .validation-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .validation-row {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .validation-row:hover {
+            background: #f8f9fa;
+        }
+
+        .validation-row:last-child {
+            border-bottom: none;
+        }
+
+        .row-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .row-data {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .row-username {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .row-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .row-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .row-status.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .row-status.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .row-errors {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 5px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .error-item {
+            color: #721c24;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .error-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-section {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid #c3e6cb;
+           
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .validation-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <div class="header">
+            <h1><i class="fas fa-upload"></i> Upload Users</h1>
+            <p>Upload multiple users at once using a CSV file</p>
+        </div>
+
+        <div class="content">
+            <!-- Company Selection Section -->
+            <div class="company-section">
+                <h2><i class="fas fa-building"></i> Select Company & Department</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companySelect" class="form-label">Company:</label>
+                        <select id="companySelect" class="form-select">
+                            <option value="">Loading companies...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="departmentSelect" class="form-label">Department:</label>
+                        <select id="departmentSelect" class="form-select" disabled>
+                            <option value="">Select company first</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Options Section -->
+            <div class="options-section">
+                <h2><i class="fas fa-cog"></i> Upload Options</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="csvSeparator" class="form-label">CSV Separator:</label>
+                        <select id="csvSeparator" class="form-select">
+                            <option value=",">Comma (,)</option>
+                            <option value=";">Semicolon (;)</option>
+                            <option value="\t">Tab</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="encoding" class="form-label">Encoding:</label>
+                        <select id="encoding" class="form-select">
+                            <option value="UTF-8">UTF-8</option>
+                            <option value="ISO-8859-1">ISO-8859-1</option>
+                            <option value="Windows-1252">Windows-1252</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="previewRows" class="form-label">Preview Rows:</label>
+                        <select id="previewRows" class="form-select">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadType" class="form-label">Upload Type:</label>
+                        <select id="uploadType" class="form-select">
+                            <option value="addnew">Add new only, skip existing users</option>
+                            <option value="addinc">Add new and increment existing usernames</option>
+                            <option value="addupdate">Add new and update existing users</option>
+                            <option value="update">Update existing users only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <h2><i class="fas fa-file-csv"></i> Upload CSV File</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drag & drop your CSV file here</div>
+                    <div class="upload-subtext">or click to browse files</div>
+                    <input type="file" id="csvFile" class="file-input" accept=".csv">
+                </div>
+                <div class="accepted-files">
+                    <p><strong>Accepted file types:</strong> Comma-separated values (.csv)</p>
+                </div>
+            </div>
+
+            <div class="template-section">
+                <h3><i class="fas fa-download"></i> Download Template</h3>
+                <div class="template-info">
+                    Download our CSV template to ensure your file has the correct format. 
+                    The template includes sample data and all required columns.
+                </div>
+                <a href="{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php?action=download_template" class="template-btn">
+                    <i class="fas fa-download"></i> Download Template
+                </a>
+            </div>
+
+            <div class="validation-section" id="validationSection">
+                <div class="validation-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Validation Results</h3>
+                </div>
+                
+                <div class="validation-stats" id="validationStats">
+                    <!-- Stats will be populated by JavaScript -->
+                </div>
+                
+                <div class="validation-results" id="validationResults">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="action-section" id="actionSection" style="display: none;">
+                <h3><i class="fas fa-rocket"></i> Ready to Create Users</h3>
+                <div class="action-buttons">
+                    <button id="createUsersBtn" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Create Users
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <a href="{{config.wwwroot}}/theme/remui_kids/admin/users_management_dashboard.php" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let csvData = [];
+        let validationResults = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aggressive cache clearing
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    names.forEach(function(name) {
+                        caches.delete(name);
+                    });
+                });
+            }
+            
+            // Clear localStorage and sessionStorage
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+            } catch (e) {
+                console.log('Could not clear storage:', e);
+            }
+            
+            // Force reload if this is a cached version
+            if (performance.navigation.type === 1) {
+                console.log('Page was reloaded, clearing all caches');
+                location.reload(true);
+                return;
+            }
+            
+            // Add a small delay to ensure DOM is fully rendered
+            setTimeout(function() {
+                initializeEventListeners();
+                loadCompanies();
+            }, 100);
+        });
+
+        function initializeEventListeners() {
+            const uploadArea = document.getElementById('uploadArea');
+            const csvFile = document.getElementById('csvFile');
+            const createUsersBtn = document.getElementById('createUsersBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const companySelect = document.getElementById('companySelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+
+            // Add event listeners only if elements exist
+            if (uploadArea && csvFile) {
+                uploadArea.addEventListener('click', () => csvFile.click());
+                uploadArea.addEventListener('dragover', handleDragOver);
+                uploadArea.addEventListener('dragleave', handleDragLeave);
+                uploadArea.addEventListener('drop', handleDrop);
+            }
+            
+            if (csvFile) {
+                csvFile.addEventListener('change', handleFileSelect);
+            }
+            
+            if (createUsersBtn) {
+                createUsersBtn.addEventListener('click', createUsers);
+            }
+            
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetForm);
+            }
+            
+            if (companySelect) {
+                companySelect.addEventListener('change', onCompanyChange);
+            }
+        }
+
+        function loadCompanies() {
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php?action=get_companies&t=' + Date.now() + '&r=' + Math.random(), {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const companySelect = document.getElementById('companySelect');
+                        companySelect.innerHTML = '<option value="">Select a company...</option>';
+                        
+                        data.companies.forEach(company => {
+                            const option = document.createElement('option');
+                            option.value = company.id;
+                            option.textContent = company.name;
+                            companySelect.appendChild(option);
+                        });
+                    } else {
+                        showMessage('Error loading companies: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading companies:', error);
+                    showMessage('Error loading companies', 'error');
+                });
+        }
+
+        function onCompanyChange() {
+            const companySelect = document.getElementById('companySelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            const companyId = companySelect.value;
+            
+            if (!companyId) {
+                departmentSelect.innerHTML = '<option value="">Select company first</option>';
+                departmentSelect.disabled = true;
+                return;
+            }
+            
+            departmentSelect.innerHTML = '<option value="">Loading departments...</option>';
+            departmentSelect.disabled = true;
+            
+            fetch(`{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php?action=get_departments&company_id=${companyId}&t=${Date.now()}&r=${Math.random()}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        departmentSelect.innerHTML = '<option value="">Select a department...</option>';
+                        
+                        data.departments.forEach(department => {
+                            const option = document.createElement('option');
+                            option.value = department.id;
+                            option.textContent = department.name;
+                            departmentSelect.appendChild(option);
+                        });
+                        
+                        departmentSelect.disabled = false;
+                    } else {
+                        departmentSelect.innerHTML = '<option value="">Error loading departments</option>';
+                        showMessage('Error loading departments: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading departments:', error);
+                    departmentSelect.innerHTML = '<option value="">Error loading departments</option>';
+                    showMessage('Error loading departments', 'error');
+                });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            console.log('File selected:', file);
+            console.log('File type:', file.type);
+            console.log('File name:', file.name);
+            console.log('File size:', file.size);
+            
+            if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                showMessage('Please select a CSV file. File type: ' + file.type, 'error');
+                return;
+            }
+
+            if (file.size === 0) {
+                showMessage('The selected file is empty', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                showMessage('File size too large. Maximum size is 10MB', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('csv_file', file);
+
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.innerHTML = `
+                <div class="spinner"></div>
+                <div class="upload-text">Processing CSV file...</div>
+            `;
+
+            console.log('Sending request to upload CSV...');
+
+            // Generate unique request ID
+            const requestId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php?action=upload_csv&t=' + Date.now() + '&r=' + Math.random() + '&id=' + requestId, {
+                method: 'POST',
+                body: formData,
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return response.text().then(text => {
+                    console.log('Raw response:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('JSON parse error:', e);
+                        throw new Error('Invalid JSON response: ' + text.substring(0, 200));
+                    }
+                });
+            })
+            .then(data => {
+                console.log('Parsed response:', data);
+                
+                if (data.status === 'success') {
+                    csvData = data.data;
+                    validationResults = data.validation;
+                    displayValidationResults(data.validation);
+                    showMessage(`CSV file processed successfully. ${data.total_rows} rows found.`, 'success');
+                } else {
+                    showMessage('Error processing CSV: ' + data.message, 'error');
+                    resetUploadArea();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error processing CSV file: ' + error.message, 'error');
+                resetUploadArea();
+            });
+        }
+
+        function displayValidationResults(validation) {
+            const validationSection = document.getElementById('validationSection');
+            const validationStats = document.getElementById('validationStats');
+            const validationResults = document.getElementById('validationResults');
+            const actionSection = document.getElementById('actionSection');
+
+            // Display stats
+            validationStats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${validation.results.length}</div>
+                    <div class="stat-label">Total Rows</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-number">${validation.valid_rows}</div>
+                    <div class="stat-label">Valid Rows</div>
+                </div>
+                <div class="stat-card error">
+                    <div class="stat-number">${validation.total_errors}</div>
+                    <div class="stat-label">Errors</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-number">${validation.total_warnings}</div>
+                    <div class="stat-label">Warnings</div>
+                </div>
+            `;
+
+            // Display results
+            validationResults.innerHTML = validation.results.map(result => `
+                <div class="validation-row">
+                    <div class="row-number">${result.row}</div>
+                    <div class="row-data">
+                        <div class="row-username">${result.data.username}</div>
+                        <div class="row-email">${result.data.email}</div>
+                    </div>
+                    <div class="row-status ${result.valid ? 'valid' : 'invalid'}">
+                        ${result.valid ? 'Valid' : 'Invalid'}
+                    </div>
+                </div>
+                ${result.errors.length > 0 ? `
+                    <div class="row-errors">
+                        ${result.errors.map(error => `<div class="error-item">• ${error}</div>`).join('')}
+                    </div>
+                ` : ''}
+            `).join('');
+
+            validationSection.classList.add('show');
+            
+            if (validation.valid_rows > 0) {
+                actionSection.style.display = 'block';
+            }
+        }
+
+        function createUsers() {
+            if (!validationResults || validationResults.valid_rows === 0) {
+                showMessage('No valid users to create', 'error');
+                return;
+            }
+
+            const companySelect = document.getElementById('companySelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            
+            if (!companySelect.value) {
+                showMessage('Please select a company first', 'error');
+                return;
+            }
+
+            const validUsers = csvData.filter((_, index) => validationResults.results[index].valid);
+            
+            const createUsersBtn = document.getElementById('createUsersBtn');
+            const originalText = createUsersBtn.innerHTML;
+            createUsersBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Users...';
+            createUsersBtn.disabled = true;
+
+            const requestData = {
+                users: validUsers,
+                company_id: companySelect.value,
+                department_id: departmentSelect.value || null
+            };
+
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/upload_users.php?action=create_users&t=' + Date.now() + '&r=' + Math.random(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                },
+                body: JSON.stringify(requestData),
+                cache: 'no-cache'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(`Successfully created ${data.success_count} users. ${data.error_count} errors occurred.`, 'success');
+                    resetForm();
+                } else {
+                    showMessage('Error creating users: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error creating users', 'error');
+            })
+            .finally(() => {
+                createUsersBtn.innerHTML = originalText;
+                createUsersBtn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            csvData = [];
+            validationResults = null;
+            
+            // Safely reset form elements with null checks
+            const validationSection = document.getElementById('validationSection');
+            if (validationSection) {
+                validationSection.classList.remove('show');
+            }
+            
+            const actionSection = document.getElementById('actionSection');
+            if (actionSection) {
+                actionSection.style.display = 'none';
+            }
+            
+            const csvFile = document.getElementById('csvFile');
+            if (csvFile) {
+                csvFile.value = '';
+            }
+            
+            const companySelect = document.getElementById('companySelect');
+            if (companySelect) {
+                companySelect.value = '';
+            }
+            
+            const departmentSelect = document.getElementById('departmentSelect');
+            if (departmentSelect) {
+                departmentSelect.innerHTML = '<option value="">Select company first</option>';
+                departmentSelect.disabled = true;
+            }
+            
+            resetUploadArea();
+        }
+
+        function resetUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            if (uploadArea) {
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drag & drop your CSV file here</div>
+                    <div class="upload-subtext">or click to browse files</div>
+                    <input type="file" id="csvFile" class="file-input" accept=".csv">
+                `;
+                
+                // Re-attach event listeners to the new file input
+                const csvFile = document.getElementById('csvFile');
+                if (csvFile) {
+                    csvFile.addEventListener('change', handleFileSelect);
+                }
+            }
+        }
+
+        function showMessage(text, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.animation = 'slideInRight 0.3s ease-out reverse';
+                setTimeout(() => message.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

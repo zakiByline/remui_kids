@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Code Submission</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .test-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .status { padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        #log { max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Code Submission Test</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Check if Bridge Script Loaded</h2>
+        <button onclick="checkBridgeLoaded()">Test Bridge</button>
+        <div id="bridge-status"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 2: Test Code Extraction</h2>
+        <p>Open the Code Editor IDE in another tab, write some code, then click this button:</p>
+        <button onclick="testCodeExtraction()">Extract Code from IDE</button>
+        <div id="code-status"></div>
+        <pre id="extracted-code"></pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 3: Test postMessage Communication</h2>
+        <button onclick="testPostMessage()">Test Communication</button>
+        <div id="postmessage-status"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console Log</h2>
+        <button onclick="document.getElementById('log').innerHTML = ''">Clear Log</button>
+        <div id="log"></div>
+    </div>
+    
+    <script>
+        function log(message) {
+            var logDiv = document.getElementById('log');
+            var time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += '<div>[' + time + '] ' + message + '</div>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function checkBridgeLoaded() {
+            var statusDiv = document.getElementById('bridge-status');
+            statusDiv.innerHTML = '';
+            
+            log('Checking bridge script...');
+            
+            // Open IDE window
+            var ideUrl = window.location.origin + '/mod/codeeditor/ide/complete-ide.html';
+            var ideWindow = window.open(ideUrl, 'ideWindow', 'width=1000,height=800');
+            
+            setTimeout(function() {
+                try {
+                    if (ideWindow.getEditorCode) {
+                        statusDiv.innerHTML = '<div class="status success">✅ Bridge script loaded! Functions available.</div>';
+                        log('✅ Bridge script loaded successfully');
+                    } else {
+                        statusDiv.innerHTML = '<div class="status error">❌ Bridge script NOT loaded. Functions not available.</div>';
+                        log('❌ Bridge script not loaded');
+                    }
+                } catch (e) {
+                    statusDiv.innerHTML = '<div class="status error">❌ Cannot access IDE window: ' + e.message + '</div>';
+                    log('❌ Error: ' + e.message);
+                }
+            }, 3000); // Wait 3 seconds for IDE to load
+        }
+        
+        function testCodeExtraction() {
+            var statusDiv = document.getElementById('code-status');
+            var codeDiv = document.getElementById('extracted-code');
+            
+            log('Testing code extraction...');
+            
+            // This would normally get code from iframe
+            // For now, just show what would be extracted
+            statusDiv.innerHTML = '<div class="status info">ℹ️ In real implementation, this would extract code from Monaco Editor in the iframe.</div>';
+            
+            codeDiv.textContent = 'Example extracted code:\nconsole.log("Hello World");';
+            log('Code extraction test complete');
+        }
+        
+        function testPostMessage() {
+            var statusDiv = document.getElementById('postmessage-status');
+            
+            log('Testing postMessage...');
+            
+            window.addEventListener('message', function(event) {
+                log('Received message: ' + JSON.stringify(event.data));
+                statusDiv.innerHTML = '<div class="status success">✅ Received message from IDE: ' + JSON.stringify(event.data) + '</div>';
+            });
+            
+            // Send test message
+            var iframe = document.querySelector('iframe');
+            if (iframe) {
+                iframe.contentWindow.postMessage({ type: 'test' }, '*');
+                statusDiv.innerHTML = '<div class="status info">ℹ️ Sent test message. Waiting for response...</div>';
+                log('Sent test message to iframe');
+            } else {
+                statusDiv.innerHTML = '<div class="status error">❌ No iframe found on this page</div>';
+                log('❌ No iframe found');
+            }
+        }
+        
+        log('Test page loaded. Click buttons to test functionality.');
+    </script>
+</body>
+</html>
+
+
+
+

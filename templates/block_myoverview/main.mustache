@@ -1,0 +1,71 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    Edwiser RemUI
+    @package theme_remui
+    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template block_myoverview/main
+
+    This template renders the main content area for the myoverview block.
+
+    Example context (json):
+    {}
+}}
+
+<div id="block-myoverview-{{uniqid}}" class="block-myoverview block-cards" data-region="myoverview" role="navigation">
+
+    <div data-region="filter" class="d-flex flex-column p-mb-6"
+        aria-label="{{#str}} aria:controls, block_myoverview {{/str}}">
+        <div class="nav-grouping-selector">
+            {{> block_myoverview/nav-grouping-selector }}
+        </div>
+        <div class="d-flex justify-content-between align-items-center all-filter-wrapper">
+            <div class="d-flex nav-search-sort-selector align-self-start">
+                    {{> block_myoverview/nav-sort-selector }}
+                    {{> block_myoverview/nav-search-widget }}
+            </div>
+            <div class="d-flex  justify-content-between align-items-center w-100 nav-display-selector-wrapper">
+                <div class="nav-display-selector">
+                    {{#displaydropdown}}
+                    {{> block_myoverview/nav-display-selector }}
+                    {{/displaydropdown}}
+                </div>
+                <a href="{{dirroot}}/my/courses.php" class="text-link-regular text-decoration-none d-flex align-items-center seeallmycourses">{{#str}}seeallmycourses, theme_remui {{/str}} <span class="edw-icon edw-icon-Right-Arrow"></span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0">
+        {{> block_myoverview/courses-view }}
+    </div>
+</div>
+{{#js}}
+require(
+[
+'jquery',
+'theme_remui/blockmyoverview',
+],
+function(
+$,
+Main
+) {
+var root = $('#block-myoverview-{{uniqid}}');
+Main.init(root,{{#cardanimationsetting}}"{{cardanimationsetting}}"{{/cardanimationsetting}}{{^cardanimationsetting}}"none"{{/cardanimationsetting}});
+});
+{{/js}}

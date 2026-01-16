@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script>
+        var require = {
+            paths: {
+                "vs": "./vendor/monaco-editor-0.44.0/min/vs"
+            }
+        };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/goldenlayout.min.js" integrity="sha256-NhJAZDfGgv4PiB+GVlSrPdh3uc75XXYSM4su8hgTchI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/css/goldenlayout-base.css" integrity="sha512-rGtzJyDE8egZ/OScuBNLW1EIhRydcfrZo14oTvZwRLzEZu+s8foCtwi0XhXsKnhuoQAwJ7POFARWdU4fBL7FbQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link id="judge0-golden-layout-dark-theme-stylesheet" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/css/goldenlayout-dark-theme.css" integrity="sha512-XfcBrEH69BhsZ0XpvPyzOLgikhAvIG6Znbi6yKi1Jh1iYaOXSXvljWFerhcUl5LYLCuV61KhfCydQ1+MNxnilg==" crossorigin="anonymous" referrerpolicy="no-referrer" disabled>
+    <link id="judge0-golden-layout-light-theme-stylesheet" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/css/goldenlayout-light-theme.css" integrity="sha512-/S3N+v8cRHW2GJvM3v9FGHAKOhNgws+V1dYZb1fBxRd9XIwpqZFZB0jug+2HHf64eURsJLqVzCVn92pQTFHHow==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <script src="./vendor/monaco-editor-0.44.0/min/vs/loader.js"></script>
+    <script src="./vendor/monaco-editor-0.44.0/min/vs/editor/editor.main.nls.js"></script>
+    <script src="./vendor/monaco-editor-0.44.0/min/vs/editor/editor.main.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="css/ide.css">
+    <link type="text/css" rel="stylesheet" href="css/site.css">
+
+    <title>Judge0 IDE - Embedded</title>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+        }
+        
+        #judge0-site-navigation {
+            display: none !important;
+        }
+        
+        #judge0-site-content {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        .lm_content {
+            background: white !important;
+        }
+        
+        /* Hide unwanted elements */
+        .judge0-showNavigation,
+        .judge0-showLogo,
+        .judge0-showFileMenu,
+        .judge0-showHelpMenu,
+        .judge0-showPuterSignInOutButton,
+        .judge0-showCopyright {
+            display: none !important;
+        }
+        
+        /* Show only essential elements */
+        .judge0-showSelectLanguage,
+        .judge0-showCompilerOptions,
+        .judge0-showCommandLineArguments,
+        .judge0-showRunButton,
+        .judge0-showThemeButton,
+        .judge0-showStatusLine {
+            display: block !important;
+        }
+        
+        /* Custom styling for embedded version */
+        .ui.menu {
+            background: #2c3e50 !important;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+        
+        .ui.menu .item {
+            color: white !important;
+        }
+        
+        .ui.menu .item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .ui.primary.button {
+            background: #667eea !important;
+            border-color: #5a6fd8 !important;
+        }
+        
+        .ui.primary.button:hover {
+            background: #5a6fd8 !important;
+        }
+        
+        .ui.dropdown {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .ui.input input {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+        
+        .ui.input input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Simplified Navigation -->
+    <div class="ui top fixed borderless menu" style="background: #2c3e50 !important; color: white !important;">
+        <div class="item" style="color: white !important;">
+            <i class="code icon"></i>
+            <span>Judge0 IDE</span>
+        </div>
+        <div class="item">
+            <select id="select-language" class="ui search selection dropdown" style="background: rgba(255, 255, 255, 0.1) !important; color: white !important;">
+                <option value="43">Text</option>
+                <option value="71">Python</option>
+                <option value="63">JavaScript</option>
+                <option value="54">C++</option>
+                <option value="50">C</option>
+                <option value="62">Java</option>
+                <option value="68">PHP</option>
+                <option value="72">Ruby</option>
+                <option value="70">Rust</option>
+                <option value="74">TypeScript</option>
+            </select>
+        </div>
+        <div class="item">
+            <div class="ui left icon transparent input">
+                <i class="flag icon"></i>
+                <input id="compiler-options" type="text" placeholder="Compiler options" style="background: rgba(255, 255, 255, 0.1) !important; color: white !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">
+            </div>
+        </div>
+        <div class="item">
+            <div class="ui left icon transparent input">
+                <i class="terminal icon"></i>
+                <input id="command-line-arguments" type="text" placeholder="Command line arguments" style="background: rgba(255, 255, 255, 0.1) !important; color: white !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">
+            </div>
+        </div>
+        <div class="item">
+            <button id="run-btn" class="ui primary labeled icon button">
+                <i class="play icon"></i>
+                Run Code
+            </button>
+        </div>
+        <div class="right menu">
+            <div id="judge0-theme-toggle-btn" class="icon link item">
+                <i id="judge0-theme-toggle-btn-icon" class="sun icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="judge0-site-content" style="margin-top: 60px;"></div>
+
+    <div id="judge0-site-modal" class="ui modal">
+        <div class="header">
+            <span id="title"></span>
+        </div>
+        <div class="scrolling content"></div>
+        <div class="actions">
+            <div class="ui labeled icon cancel secondary button">
+                <i class="close icon"></i>
+                Close (ESC)
+            </div>
+        </div>
+    </div>
+
+    <div id="judge0-status-line" class="ui bottom right attached mini label"></div>
+
+    <!-- Load the IDE modules -->
+    <script type="module" src="js/configuration.js"></script>
+    <script type="module" src="js/ide.js"></script>
+    <script type="module" src="js/local_storage.js"></script>
+    <script type="module" src="js/query.js"></script>
+    <script type="module" src="js/style.js"></script>
+    <script type="module" src="js/theme.js"></script>
+
+    <script>
+        // Initialize the IDE with embedded configuration
+        window.addEventListener('load', function() {
+            // Set initial configuration for embedded mode
+            if (window.judge0IDE) {
+                window.judge0IDE.setConfiguration({
+                    showNavigation: false,
+                    showLogo: false,
+                    showFileMenu: false,
+                    showHelpMenu: false,
+                    showPuterSignInOutButton: false,
+                    showCopyright: false,
+                    theme: 'light'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

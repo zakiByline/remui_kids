@@ -1,0 +1,1358 @@
+<div class="edit-users-page">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-actions">
+            <button class="btn-back" onclick="goBack()">
+                <i class="fa fa-arrow-left"></i>
+                Back to Dashboard
+            </button>
+        </div>
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fa fa-user-edit"></i>
+            </div>
+            <div class="header-text">
+                <h1 class="page-title">Edit Users</h1>
+                <p class="page-subtitle">Manage and edit user accounts with advanced search and bulk operations</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-filters-container">
+        <div class="search-section">
+            <div class="search-input-group">
+                <input type="text" id="searchInput" placeholder="Search by name, email, or username..." class="search-input">
+                <button class="search-btn" onclick="searchUsers()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="filters-section">
+            <div class="filter-group">
+                <label class="filter-label">Role:</label>
+                <select id="roleFilter" class="filter-select">
+                    <option value="">All Roles</option>
+                    {{#roles}}
+                    <option value="{{shortname}}">{{name}}</option>
+                    {{/roles}}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Status:</label>
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Users</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Sort by:</label>
+                <select id="sortBy" class="filter-select">
+                    <option value="firstname">First Name</option>
+                    <option value="lastname">Last Name</option>
+                    <option value="email">Email</option>
+                    <option value="timecreated">Created Date</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Order:</label>
+                <select id="sortOrder" class="filter-select">
+                    <option value="ASC">Ascending</option>
+                    <option value="DESC">Descending</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions-container" id="bulkActions" style="display: none;">
+        <div class="bulk-actions-content">
+            <span class="selected-count" id="selectedCount">0 users selected</span>
+            <div class="bulk-buttons">
+                <button class="btn-bulk btn-suspend" onclick="bulkAction('suspend')">
+                    <i class="fa fa-ban"></i>
+                    Suspend
+                </button>
+                <button class="btn-bulk btn-unsuspend" onclick="bulkAction('unsuspend')">
+                    <i class="fa fa-check"></i>
+                    Unsuspend
+                </button>
+                <button class="btn-bulk btn-delete" onclick="bulkAction('delete')">
+                    <i class="fa fa-trash"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-container">
+        <div class="table-header">
+            <div class="table-title">
+                <h3>Users List</h3>
+                <span class="user-count" id="userCount">Loading...</span>
+            </div>
+            <div class="table-actions">
+                <button class="btn-refresh" onclick="loadUsers()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table class="users-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th class="checkbox-column">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        </th>
+                        <th class="sortable" onclick="sortTable('firstname')">
+                            Name <i class="fa fa-sort"></i>
+                        </th>
+                        <th class="sortable" onclick="sortTable('email')">
+                            Email <i class="fa fa-sort"></i>
+                        </th>
+                        <th class="sortable" onclick="sortTable('role')">
+                            Role <i class="fa fa-sort"></i>
+                        </th>
+                        <th class="sortable" onclick="sortTable('suspended')">
+                            Status <i class="fa fa-sort"></i>
+                        </th>
+                        <th class="sortable" onclick="sortTable('lastaccess')">
+                            Last Access <i class="fa fa-sort"></i>
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr>
+                        <td colspan="7" class="loading-row">
+                            <div class="loading-spinner"></div>
+                            Loading users...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-container" id="paginationContainer">
+            <!-- Pagination will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit User</h3>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId" name="userid">
+                    
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" id="editFirstname" name="firstname" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" id="editLastname" name="lastname" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="editEmail" name="email" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <select id="editRole" name="role" class="form-input">
+                            <option value="">No Role</option>
+                            {{#roles}}
+                            <option value="{{shortname}}">{{name}}</option>
+                            {{/roles}}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="editSuspended" name="suspended" class="form-input">
+                            <option value="0">Active</option>
+                            <option value="1">Suspended</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUser()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal" id="userDetailsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 class="modal-title">User Details</h3>
+                <button class="modal-close" onclick="closeDetailsModal()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="userDetailsContent">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+.edit-users-page {
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    min-height: 100vh;
+}
+
+
+/* Header Styles */
+.page-header {
+    background: linear-gradient(135deg, #ffd8a8 0%, #ffc078 100%);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 25px;
+    color: #8b4513;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(255, 192, 120, 0.3);
+    text-align: center;
+}
+
+.page-header::before {
+    display: none;
+}
+
+.header-actions {
+    align-self: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.header-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.page-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 3px 0;
+    color: #8b4513;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0.85;
+    font-weight: 400;
+    color: #8b4513;
+}
+
+.btn-back {
+    background: rgba(139, 69, 19, 0.15);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: #8b4513;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-back:hover {
+    background: rgba(139, 69, 19, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Search and Filters */
+.search-filters-container {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-input-group {
+    position: relative;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 15px 50px 15px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #ffd8a8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffd8a8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: #8b4513;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: #ffd8a8;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.filters-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #ffd8a8;
+}
+
+/* Bulk Actions */
+.bulk-actions-container {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 20px;
+    color: #8b4513;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.bulk-actions-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selected-count {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.bulk-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-bulk {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    color: #8b4513;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-bulk:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Users Table */
+.users-table-container {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: slideInUp 0.8s ease-out 0.4s both;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.table-title h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.user-count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-left: 10px;
+}
+
+.btn-refresh {
+    background: #ffd8a8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    color: #8b4513;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh:hover {
+    background: #ffd8a8;
+    transform: rotate(180deg);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.users-table th {
+    background: linear-gradient(135deg, #ffd8a8,rgb(240, 238, 241));
+    color: #8b4513;
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.users-table th.sortable {
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.users-table th.sortable:hover {
+    background: linear-gradient(135deg, #ffd8a8,rgb(240, 236, 245));
+}
+
+.users-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.users-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.users-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.05);
+    transform: scale(1.01);
+}
+
+.checkbox-column {
+    width: 50px;
+    text-align: center;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-suspended {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #6c757d;
+}
+
+.btn-action:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #ffd8a8;
+    transform: scale(1.1);
+}
+
+.loading-row {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(102, 126, 234, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffd8a8;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.pagination-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #495057;
+    font-weight: 600;
+}
+
+.pagination-btn:hover {
+    border-color: #667eea;
+    color: #ffd8a8;
+    transform: translateY(-1px);
+}
+
+.pagination-btn.active {
+    background: #ffd8a8;
+    border-color: #667eea;
+    color: #8b4513;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideInUp 0.3s ease-out;
+}
+
+.modal-content.large {
+    max-width: 800px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #dc3545;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #ffd8a8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ffd8a8 0%, #764ba2 100%);
+    color: #8b4513;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: #8b4513;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        justify-content: space-between;
+    }
+    
+    .bulk-actions-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .table-wrapper {
+        font-size: 0.9rem;
+    }
+    
+    .users-table th,
+    .users-table td {
+        padding: 10px 8px;
+    }
+}
+</style>
+
+<script>
+let currentPage = 1;
+let currentFilters = {};
+let selectedUsers = new Set();
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializePage();
+    loadUsers();
+});
+
+function initializePage() {
+    // Add event listeners
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchUsers();
+        }
+    });
+    
+    ['roleFilter', 'statusFilter', 'sortBy', 'sortOrder'].forEach(id => {
+        document.getElementById(id).addEventListener('change', loadUsers);
+    });
+}
+
+function loadUsers() {
+    const search = document.getElementById('searchInput').value;
+    const role = document.getElementById('roleFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    const sort = document.getElementById('sortBy').value;
+    const order = document.getElementById('sortOrder').value;
+    
+    currentFilters = { search, role, status, sort, order };
+    
+    const params = new URLSearchParams({
+        action: 'get_users',
+        page: currentPage,
+        per_page: 20,
+        ...currentFilters
+    });
+    
+    showLoading();
+    
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?' + params)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                displayUsers(data.users);
+                updatePagination(data);
+                updateUserCount(data.total);
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Failed to load users', 'error');
+        });
+}
+
+function showLoading() {
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="7" class="loading-row">
+                <div class="loading-spinner"></div>
+                Loading users...
+            </td>
+        </tr>
+    `;
+}
+
+function displayUsers(users) {
+    const tbody = document.getElementById('usersTableBody');
+    
+    if (users.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="loading-row">
+                    No users found
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    // Debug: Log the first user's suspended value
+    if (users.length > 0) {
+        console.log('First user suspended value:', users[0].suspended, 'Type:', typeof users[0].suspended);
+    }
+    
+    tbody.innerHTML = users.map(user => `
+        <tr>
+            <td class="checkbox-column">
+                <input type="checkbox" class="user-checkbox" value="${user.id}" 
+                       onchange="toggleUserSelection(${user.id})">
+            </td>
+            <td>
+                <div class="user-name">
+                    <strong>${user.fullname}</strong>
+                    <div class="user-username">@${user.username}</div>
+                </div>
+            </td>
+            <td>${user.email}</td>
+            <td>
+                <span class="role-badge">${user.role}</span>
+            </td>
+            <td>
+                <span class="status-badge ${user.suspended == 1 ? 'status-suspended' : 'status-active'}">
+                    ${user.suspended == 1 ? 'Suspended' : 'Active'}
+                </span>
+            </td>
+            <td>${user.last_access}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-action" onclick="viewUserDetails(${user.id})" title="View Details">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn-action" onclick="editUser(${user.id})" title="Edit User">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updatePagination(data) {
+    const container = document.getElementById('paginationContainer');
+    const totalPages = data.total_pages;
+    
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '';
+    
+    // Previous button
+    paginationHTML += `
+        <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} 
+                onclick="changePage(${currentPage - 1})">
+            <i class="fa fa-chevron-left"></i>
+        </button>
+    `;
+    
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            paginationHTML += `
+                <button class="pagination-btn ${i === currentPage ? 'active' : ''}" 
+                        onclick="changePage(${i})">
+                    ${i}
+                </button>
+            `;
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+            paginationHTML += '<span class="pagination-ellipsis">...</span>';
+        }
+    }
+    
+    // Next button
+    paginationHTML += `
+        <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} 
+                onclick="changePage(${currentPage + 1})">
+            <i class="fa fa-chevron-right"></i>
+        </button>
+    `;
+    
+    container.innerHTML = paginationHTML;
+}
+
+function changePage(page) {
+    currentPage = page;
+    loadUsers();
+}
+
+function updateUserCount(total) {
+    document.getElementById('userCount').textContent = `${total} users found`;
+}
+
+function searchUsers() {
+    currentPage = 1;
+    loadUsers();
+}
+
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+        if (selectAll.checked) {
+            selectedUsers.add(parseInt(checkbox.value));
+        } else {
+            selectedUsers.delete(parseInt(checkbox.value));
+        }
+    });
+    
+    updateBulkActions();
+}
+
+function toggleUserSelection(userId) {
+    if (selectedUsers.has(userId)) {
+        selectedUsers.delete(userId);
+    } else {
+        selectedUsers.add(userId);
+    }
+    
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCount = document.getElementById('selectedCount');
+    const selectAll = document.getElementById('selectAll');
+    
+    if (selectedUsers.size > 0) {
+        bulkActions.style.display = 'block';
+        selectedCount.textContent = `${selectedUsers.size} user${selectedUsers.size > 1 ? 's' : ''} selected`;
+    } else {
+        bulkActions.style.display = 'none';
+    }
+    
+    // Update select all checkbox
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    const checkedCount = document.querySelectorAll('.user-checkbox:checked').length;
+    
+    if (checkedCount === 0) {
+        selectAll.indeterminate = false;
+        selectAll.checked = false;
+    } else if (checkedCount === checkboxes.length) {
+        selectAll.indeterminate = false;
+        selectAll.checked = true;
+    } else {
+        selectAll.indeterminate = true;
+    }
+}
+
+function bulkAction(action) {
+    if (selectedUsers.size === 0) {
+        showMessage('Please select users first', 'error');
+        return;
+    }
+    
+    const actionText = {
+        'suspend': 'suspend',
+        'unsuspend': 'unsuspend',
+        'delete': 'delete'
+    }[action];
+    
+    if (!confirm(`Are you sure you want to ${actionText} ${selectedUsers.size} user${selectedUsers.size > 1 ? 's' : ''}?`)) {
+        return;
+    }
+    
+    const data = {
+        user_ids: Array.from(selectedUsers),
+        action: action
+    };
+    
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?action=bulk_update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage(data.message, 'success');
+            selectedUsers.clear();
+            updateBulkActions();
+            loadUsers();
+        } else {
+            showMessage(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('Failed to perform bulk action', 'error');
+    });
+}
+
+function editUser(userId) {
+    // Load user data and show edit modal
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?action=get_user_details&userid=' + userId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const user = data.user;
+                document.getElementById('editUserId').value = user.id;
+                document.getElementById('editFirstname').value = user.firstname;
+                document.getElementById('editLastname').value = user.lastname;
+                document.getElementById('editEmail').value = user.email;
+                document.getElementById('editRole').value = user.role;
+                document.getElementById('editSuspended').value = user.suspended;
+                
+                document.getElementById('editUserModal').style.display = 'block';
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Failed to load user data', 'error');
+        });
+}
+
+function saveUser() {
+    const form = document.getElementById('editUserForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?action=update_user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage(data.message, 'success');
+            closeEditModal();
+            loadUsers();
+        } else {
+            showMessage(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('Failed to update user', 'error');
+    });
+}
+
+function viewUserDetails(userId) {
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?action=get_user_details&userid=' + userId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const user = data.user;
+                const content = document.getElementById('userDetailsContent');
+                
+                content.innerHTML = `
+                    <div class="user-details-grid">
+                        <div class="detail-section">
+                            <h4>Basic Information</h4>
+                            <div class="detail-item">
+                                <label>Username:</label>
+                                <span>${user.username}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Email:</label>
+                                <span>${user.email}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Full Name:</label>
+                                <span>${user.firstname} ${user.lastname}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Role:</label>
+                                <span>${user.role_name}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Status:</label>
+                                <span class="status-badge ${user.suspended == 1 ? 'status-suspended' : 'status-active'}">
+                                    ${user.suspended == 1 ? 'Suspended' : 'Active'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>Account Information</h4>
+                            <div class="detail-item">
+                                <label>Created:</label>
+                                <span>${new Date(user.timecreated * 1000).toLocaleDateString()}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Last Access:</label>
+                                <span>${user.lastaccess ? new Date(user.lastaccess * 1000).toLocaleDateString() : 'Never'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>Recent Enrollments</h4>
+                            ${user.enrollments.length > 0 ? 
+                                user.enrollments.map(enrollment => `
+                                    <div class="enrollment-item">
+                                        <strong>${enrollment.fullname}</strong>
+                                        <span class="enrollment-date">${new Date(enrollment.timecreated * 1000).toLocaleDateString()}</span>
+                                    </div>
+                                `).join('') :
+                                '<p>No enrollments found</p>'
+                            }
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('userDetailsModal').style.display = 'block';
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Failed to load user details', 'error');
+        });
+}
+
+function closeEditModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+}
+
+function closeDetailsModal() {
+    document.getElementById('userDetailsModal').style.display = 'none';
+}
+
+function goBack() {
+    window.location.href = '{{config.wwwroot}}/theme/remui_kids/admin/users_management_dashboard.php';
+}
+
+function showMessage(text, type) {
+    const message = document.createElement('div');
+    message.className = `message ${type}`;
+    message.textContent = text;
+    message.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        z-index: 1001;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    
+    if (type === 'success') {
+        message.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+    } else {
+        message.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
+    }
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+        message.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => message.remove(), 300);
+    }, 5000);
+}
+
+// Add CSS for message animations and user details
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    }
+    
+    .user-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    
+    .detail-section h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+    }
+    
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 8px 0;
+    }
+    
+    .detail-item label {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .enrollment-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .enrollment-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .user-name {
+        line-height: 1.4;
+    }
+    
+    .user-username {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+    
+    .role-badge {
+        background: #e9ecef;
+        color: #495057;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .user-details-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>

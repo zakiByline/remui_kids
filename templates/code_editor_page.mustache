@@ -1,0 +1,985 @@
+{{!
+    Code Editor Page Template for remui_kids theme
+    
+    This template embeds the Judge0 IDE from the local ide-master directory.
+}}
+
+<!-- Include Elementary Sidebar -->
+{{> theme_remui_kids/elementary_sidebar}}
+
+<div class="code-editor-page-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fa fa-code"></i>
+            {{page_title}}
+        </h1>
+        <p class="page-subtitle">{{page_subtitle}}</p>
+    </div>
+
+    <!-- Judge0 IDE Container -->
+    <div class="ide-container">
+        <div class="ide-wrapper">
+            <!-- IDE Navigation Bar -->
+            <div class="ide-navbar">
+                <div class="ide-nav-left">
+                    <div class="ide-logo">
+                        <i class="fa fa-code"></i>
+                        <span>Judge0 IDE</span>
+                    </div>
+                </div>
+                <div class="ide-nav-center">
+                    <div class="ide-controls">
+                        <button class="ide-btn" id="run-code-btn" title="Run Code (Ctrl+Enter)">
+                            <i class="fa fa-play"></i>
+                            <span>Run</span>
+                        </button>
+                        <button class="ide-btn" id="save-code-btn" title="Save Code">
+                            <i class="fa fa-save"></i>
+                            <span>Save</span>
+                        </button>
+                        <button class="ide-btn" id="theme-toggle-btn" title="Toggle Theme">
+                            <i class="fa fa-moon-o"></i>
+                            <span>Theme</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="ide-nav-right">
+                    <div class="ide-status">
+                        <i class="fa fa-circle status-indicator" id="status-indicator"></i>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IDE Content Area -->
+            <div class="ide-content">
+                <iframe 
+                    id="judge0-ide-frame" 
+                    src="{{ide_base_url}}/index.html" 
+                    frameborder="0"
+                    allowfullscreen
+                    title="Judge0 IDE">
+                </iframe>
+            </div>
+
+            <!-- Update Editor Title & Remove Dark Mode Button -->
+            <script>
+            (function() {
+                // Change "Online Code Editor" to "Code Editor" and remove emojis
+                function updateEditorTitle() {
+                    document.querySelectorAll('*').forEach(el => {
+                        if (el.childNodes.length > 0) {
+                            el.childNodes.forEach(node => {
+                                if (node.nodeType === 3) { // Text node
+                                    // Remove rocket emoji
+                                    node.textContent = node.textContent.replace(/🚀/g, '');
+                                    // Change "Online Code Editor" to "Code Editor"
+                                    node.textContent = node.textContent.replace(/Online Code Editor/g, 'Code Editor');
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Also check iframe content
+                    const iframe = document.getElementById('judge0-ide-frame');
+                    if (iframe) {
+                        try {
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            if (iframeDoc) {
+                                iframeDoc.querySelectorAll('*').forEach(el => {
+                                    if (el.childNodes.length > 0) {
+                                        el.childNodes.forEach(node => {
+                                            if (node.nodeType === 3) {
+                                                // Remove emoji
+                                                node.textContent = node.textContent.replace(/🚀/g, '');
+                                                // Change title
+                                                node.textContent = node.textContent.replace(/Online Code Editor/g, 'Code Editor');
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        } catch(e) {
+                            console.log('Cannot access iframe content');
+                        }
+                    }
+                    
+                    console.log('✅ Editor title updated to "Code Editor"');
+                }
+                
+                // Remove Dark/Light Mode button
+                function removeDarkModeButton() {
+                    // Find and hide theme toggle button
+                    const themeBtn = document.getElementById('theme-toggle-btn');
+                    if (themeBtn) {
+                        themeBtn.style.display = 'none';
+                        console.log('✅ Dark mode button removed');
+                    }
+                    
+                    // Also try to find by text content
+                    document.querySelectorAll('button').forEach(btn => {
+                        const text = btn.textContent.toLowerCase();
+                        if (text.includes('dark') || text.includes('theme') || text.includes('light')) {
+                            // Check if it has moon/sun icon
+                            if (btn.querySelector('.fa-moon') || btn.querySelector('.fa-sun') || 
+                                btn.querySelector('[class*="moon"]') || btn.querySelector('[class*="sun"]') ||
+                                text.trim() === 'dark' || text.trim() === 'light') {
+                                btn.style.display = 'none';
+                                console.log('✅ Theme button hidden:', text);
+                            }
+                        }
+                    });
+                    
+                    // Check iframe for theme button
+                    const iframe = document.getElementById('judge0-ide-frame');
+                    if (iframe) {
+                        try {
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            if (iframeDoc) {
+                                const iframeThemeBtn = iframeDoc.getElementById('judge0-theme-toggle-btn');
+                                if (iframeThemeBtn) {
+                                    iframeThemeBtn.style.display = 'none';
+                                    console.log('✅ Iframe theme button removed');
+                                }
+                                
+                                // Also search by text in iframe
+                                iframeDoc.querySelectorAll('button').forEach(btn => {
+                                    const text = btn.textContent.toLowerCase();
+                                    if (text.includes('dark') || text.includes('theme') || text.includes('light')) {
+                                        btn.style.display = 'none';
+                                    }
+                                });
+                            }
+                        } catch(e) {
+                            console.log('Cannot access iframe for theme button removal');
+                        }
+                    }
+                }
+                
+                // Run multiple times to catch dynamic content
+                setTimeout(updateEditorTitle, 500);
+                setTimeout(updateEditorTitle, 1000);
+                setTimeout(updateEditorTitle, 2000);
+                setTimeout(updateEditorTitle, 3000);
+                
+                setTimeout(removeDarkModeButton, 1000);
+                setTimeout(removeDarkModeButton, 2000);
+                setTimeout(removeDarkModeButton, 3000);
+                setTimeout(removeDarkModeButton, 4000);
+                
+                // Watch for changes and update
+                const observer = new MutationObserver(() => {
+                    updateEditorTitle();
+                    removeDarkModeButton();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            })();
+            </script>
+
+            <!-- AI Assistant Button Injector - JavaScript IDE Only -->
+            <script>
+            (function() {
+                console.log(' Loading AI Assistant (JavaScript IDE only)...');
+                
+                let aiBtn = null;
+                let panel = null;
+                let styleAdded = false;
+                
+                // Function to check if current language is JavaScript
+                function isJavaScriptLanguage() {
+                    try {
+                        const iframe = document.getElementById('judge0-ide-frame');
+                        if (!iframe || !iframe.contentWindow) {
+                            return false;
+                        }
+                        
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        if (!iframeDoc) {
+                            return false;
+                        }
+                        
+                        // Method 1: Check language selector dropdown value
+                        const langSelect = iframeDoc.querySelector('select[id*="language"], select[class*="language"], select.language-selector');
+                        if (langSelect) {
+                            const selectedValue = langSelect.value || langSelect.options[langSelect.selectedIndex]?.value;
+                            const selectedText = langSelect.options[langSelect.selectedIndex]?.text || '';
+                            
+                            if (selectedValue && (
+                                selectedValue.toLowerCase().includes('javascript') ||
+                                selectedValue.toLowerCase().includes('js') ||
+                                selectedValue.toLowerCase() === '63' || // JavaScript language ID
+                                selectedText.toLowerCase().includes('javascript')
+                            )) {
+                                return true;
+                            }
+                        }
+                        
+                        // Method 2: Check for JavaScript in window variables
+                        try {
+                            if (iframe.contentWindow.getSelectedLanguage) {
+                                const lang = iframe.contentWindow.getSelectedLanguage();
+                                if (lang && (lang.toLowerCase().includes('javascript') || lang.toLowerCase().includes('js'))) {
+                                    return true;
+                                }
+                            }
+                        } catch(e) {
+                            // Cross-origin or access denied
+                        }
+                        
+                        // Method 3: Check for JavaScript indicators in page
+                        const pageText = iframeDoc.body ? iframeDoc.body.innerText.toLowerCase() : '';
+                        if (pageText.includes('javascript') && !pageText.includes('typescript')) {
+                            // Additional check: look for JS-specific UI elements
+                            const jsIndicators = iframeDoc.querySelectorAll('[class*="javascript"], [id*="javascript"], [data-language*="javascript"]');
+                            if (jsIndicators.length > 0) {
+                                return true;
+                            }
+                        }
+                        
+                        // Method 4: Check URL parameters
+                        try {
+                            const iframeUrl = iframe.src || iframe.contentWindow.location.href;
+                            if (iframeUrl.includes('javascript') || iframeUrl.includes('language=63')) {
+                                return true;
+                            }
+                        } catch(e) {
+                            // Cross-origin access denied
+                        }
+                        
+                        return false;
+                    } catch(e) {
+                        console.log('Error checking language:', e);
+                        return false;
+                    }
+                }
+                
+                // Function to show/hide AI button based on language
+                function updateAIButtonVisibility() {
+                    const isJS = isJavaScriptLanguage();
+                    
+                    if (aiBtn) {
+                        if (isJS) {
+                            aiBtn.style.display = 'flex';
+                            console.log('✅ JavaScript detected - AI Assistant shown');
+                        } else {
+                            aiBtn.style.display = 'none';
+                            if (panel) {
+                                panel.classList.remove('active');
+                            }
+                            console.log('ℹ️ Non-JavaScript language - AI Assistant hidden');
+                        }
+                    }
+                }
+                
+                function injectAIButton() {
+                    // Find the IDE navbar controls
+                    const controls = document.querySelector('.ide-controls');
+                    if (!controls) {
+                        console.log('Controls not found, retrying...');
+                        setTimeout(injectAIButton, 1000);
+                        return;
+                    }
+
+                    // Check if already exists
+                    if (document.getElementById('ai-assistant-btn-main')) {
+                        aiBtn = document.getElementById('ai-assistant-btn-main');
+                        updateAIButtonVisibility();
+                        return;
+                    }
+
+                    // Check if JavaScript is selected before creating button
+                    if (!isJavaScriptLanguage()) {
+                        console.log('⚠️ Not JavaScript - AI Assistant will not be shown');
+                        // Still set up monitoring, but don't show button yet
+                    }
+
+                    // Create AI button
+                    aiBtn = document.createElement('button');
+                    aiBtn.id = 'ai-assistant-btn-main';
+                    aiBtn.className = 'ide-btn';
+                    aiBtn.title = 'AI Assistant (JavaScript Only)';
+                    aiBtn.innerHTML = '<i class="fa fa-lightbulb-o"></i><span>AI Assistant</span>';
+                    aiBtn.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: relative; display: none;';
+                    
+                    // Add pulse indicator
+                    const pulse = document.createElement('span');
+                    pulse.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse-ai 2s infinite;';
+                    aiBtn.appendChild(pulse);
+
+                    // Add CSS animation (only once)
+                    if (!styleAdded) {
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            @keyframes pulse-ai {
+                                0%, 100% { opacity: 1; transform: scale(1); }
+                                50% { opacity: 0.5; transform: scale(1.2); }
+                            }
+                            #ai-assistant-panel-main {
+                                position: fixed;
+                                left: 0;
+                                top: 0;
+                                width: 400px;
+                                height: 100vh;
+                                background: #1e1e1e;
+                                border-right: 1px solid #3e3e42;
+                                z-index: 99999;
+                                display: none;
+                                flex-direction: column;
+                                box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
+                            }
+                            #ai-assistant-panel-main.active { 
+                                display: flex; 
+                                animation: slideInFromLeft 0.3s ease; 
+                            }
+                            @keyframes slideInFromLeft { 
+                                from { 
+                                    opacity: 0; 
+                                    transform: translateX(-100%); 
+                                } 
+                                to { 
+                                    opacity: 1; 
+                                    transform: translateX(0); 
+                                } 
+                            }
+                            .ai-panel-header-main {
+                                background: #2d2d30;
+                                color: #cccccc;
+                                padding: 16px 20px;
+                                border-bottom: 1px solid #3e3e42;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+                            .ai-panel-body-main {
+                                padding: 20px;
+                                flex: 1;
+                                overflow-y: auto;
+                                background: #1e1e1e;
+                                color: #cccccc;
+                            }
+                            .ai-close-main {
+                                background: rgba(255,255,255,0.2);
+                                border: none;
+                                color: white;
+                                font-size: 24px;
+                                width: 32px;
+                                height: 32px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                            }
+                            .ai-action-grid {
+                                display: grid;
+                                grid-template-columns: repeat(2, 1fr);
+                                gap: 12px;
+                                margin-top: 20px;
+                            }
+                            .ai-action-btn-main {
+                                padding: 12px;
+                                background: #3c3c3c;
+                                border: 1px solid #555;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                color: #cccccc;
+                            }
+                            .ai-action-btn-main:hover {
+                                background: #667eea;
+                                color: white;
+                                border-color: #667eea;
+                                transform: translateY(-2px);
+                            }
+                        `;
+                        document.head.appendChild(style);
+                        styleAdded = true;
+                    }
+
+                    // Create panel
+                    panel = document.createElement('div');
+                    panel.id = 'ai-assistant-panel-main';
+                    panel.innerHTML = `
+                        <div class="ai-panel-header-main">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa fa-lightbulb-o"></i>
+                                <strong>AI Coding Assistant</strong>
+                            </div>
+                            <button class="ai-close-main" onclick="document.getElementById('ai-assistant-panel-main').classList.remove('active')">×</button>
+                        </div>
+                        <div class="ai-panel-body-main">
+                            <h3 style="color: #667eea; text-align: center;">🤖 AI Assistant Ready!</h3>
+                            <p style="text-align: center; color: #cccccc; margin: 15px 0;">
+                                I can help you with your JavaScript code!
+                            </p>
+                            <ul style="color: #cccccc; line-height: 1.8;">
+                                <li>📖 Explain code step by step</li>
+                                <li>🐛 Find and fix bugs</li>
+                                <li>⚡ Optimize performance</li>
+                                <li>📝 Add documentation</li>
+                                <li>🔄 Refactor code</li>
+                            </ul>
+                            <div class="ai-action-grid">
+                                <button class="ai-action-btn-main" onclick="alert('Explain Code: This feature analyzes your code and provides a detailed explanation.\\n\\nTo activate: Complete AI backend setup.')">
+                                    📖 Explain Code
+                                </button>
+                                <button class="ai-action-btn-main" onclick="alert('Find Bugs: AI will scan your code for potential errors and issues.\\n\\nTo activate: Complete AI backend setup.')">
+                                    🐛 Find Bugs
+                                </button>
+                                <button class="ai-action-btn-main" onclick="alert('Optimize: Get suggestions to improve code performance.\\n\\nTo activate: Complete AI backend setup.')">
+                                    ⚡ Optimize
+                                </button>
+                                <button class="ai-action-btn-main" onclick="alert('Add Docs: AI will add helpful comments and documentation.\\n\\nTo activate: Complete AI backend setup.')">
+                                    📝 Add Docs
+                                </button>
+                            </div>
+                            <p style="font-size: 11px; color: #999; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #3e3e42;">
+                                <strong>Note:</strong> AI Assistant is available for JavaScript only.<br>
+                                For full AI features, see <code style="background: #2d2d30; padding: 2px 6px; border-radius: 4px; color: #cccccc;">BUILD_AND_DEPLOY_INSTRUCTIONS.md</code>
+                            </p>
+                        </div>
+                    `;
+                    document.body.appendChild(panel);
+
+                    // Insert button BEFORE run button
+                    const runBtn = document.getElementById('run-code-btn');
+                    if (runBtn) {
+                        runBtn.parentNode.insertBefore(aiBtn, runBtn);
+                    } else {
+                        controls.insertBefore(aiBtn, controls.firstChild);
+                    }
+
+                    // Add click handler
+                    aiBtn.onclick = function() {
+                        // Double-check JavaScript before opening
+                        if (isJavaScriptLanguage()) {
+                            panel.classList.toggle('active');
+                        } else {
+                            alert('AI Assistant is only available for JavaScript. Please select JavaScript from the language dropdown.');
+                        }
+                    };
+
+                    // Check visibility on initial load
+                    updateAIButtonVisibility();
+                    
+                    console.log('✅ AI Assistant button added (JavaScript IDE only)!');
+                }
+
+                // Inject after page loads
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', injectAIButton);
+                } else {
+                    setTimeout(injectAIButton, 500);
+                }
+                
+                // Monitor language changes
+                function monitorLanguageChanges() {
+                    const iframe = document.getElementById('judge0-ide-frame');
+                    if (!iframe) {
+                        setTimeout(monitorLanguageChanges, 1000);
+                        return;
+                    }
+                    
+                    // Check periodically for language changes
+                    setInterval(function() {
+                        if (aiBtn) {
+                            updateAIButtonVisibility();
+                        }
+                    }, 2000);
+                    
+                    // Listen for messages from iframe about language changes
+                    window.addEventListener('message', function(event) {
+                        if (event.data && (event.data.language || event.data.event === 'language-changed')) {
+                            setTimeout(updateAIButtonVisibility, 500);
+                        }
+                    });
+                    
+                    // Also monitor iframe DOM changes
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        if (iframeDoc) {
+                            const observer = new MutationObserver(function() {
+                                updateAIButtonVisibility();
+                            });
+                            
+                            const langSelect = iframeDoc.querySelector('select[id*="language"], select[class*="language"], select.language-selector');
+                            if (langSelect) {
+                                langSelect.addEventListener('change', function() {
+                                    setTimeout(updateAIButtonVisibility, 300);
+                                });
+                            }
+                            
+                            observer.observe(iframeDoc.body || iframeDoc.documentElement, {
+                                childList: true,
+                                subtree: true,
+                                attributes: true,
+                                attributeFilter: ['value', 'selected']
+                            });
+                        }
+                    } catch(e) {
+                        console.log('Cannot observe iframe changes (cross-origin):', e);
+                    }
+                }
+                
+                // Start monitoring after a delay
+                setTimeout(monitorLanguageChanges, 2000);
+            })();
+            </script>
+
+            <!-- IDE Footer -->
+            <div class="ide-footer">
+                <div class="ide-info">
+                    <span class="ide-info-item">
+                        <i class="fa fa-language"></i>
+                        <span id="current-language">Select Language</span>
+                    </span>
+                    <span class="ide-info-item">
+                        <i class="fa fa-clock-o"></i>
+                        <span id="execution-time">--</span>
+                    </span>
+                    <span class="ide-info-item">
+                        <i class="fa fa-file-code-o"></i>
+                        <span id="code-lines">0 lines</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IDE Instructions -->
+    <div class="ide-instructions">
+        <div class="instruction-card">
+            <div class="instruction-icon">
+                <i class="fa fa-lightbulb-o"></i>
+            </div>
+            <div class="instruction-content">
+                <h3>Getting Started</h3>
+                <p>Select a programming language from the dropdown, write your code, and click "Run Code" to execute it. The IDE supports 60+ programming languages including Python, JavaScript, Java, C++, and more.</p>
+            </div>
+        </div>
+        
+        <div class="instruction-card">
+            <div class="instruction-icon">
+                <i class="fa fa-keyboard-o"></i>
+            </div>
+            <div class="instruction-content">
+                <h3>Keyboard Shortcuts</h3>
+                <ul>
+                    <li><strong>Ctrl+Enter</strong> - Run code</li>
+                    <li><strong>Ctrl+S</strong> - Save code</li>
+                    <li><strong>Ctrl+/</strong> - Toggle comment</li>
+                    <li><strong>Ctrl+Z</strong> - Undo</li>
+                    <li><strong>Ctrl+Y</strong> - Redo</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="instruction-card">
+            <div class="instruction-icon">
+                <i class="fa fa-rocket"></i>
+            </div>
+            <div class="instruction-content">
+                <h3>Features</h3>
+                <ul>
+                    <li>Syntax highlighting for all languages</li>
+                    <li>Code execution with real-time output</li>
+                    <li>Multiple themes (Light, Dark, Monokai)</li>
+                    <li>File management and saving</li>
+                    <li>Compiler options and command line arguments</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code Editor Styles -->
+<style>
+    .code-editor-page-content {
+        padding: 30px;
+        min-height: 100vh;
+        background: #f8f9fa;
+    }
+    
+    .page-header {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .page-title i {
+        color: #667eea;
+    }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        margin: 0;
+    }
+    
+    .ide-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+    
+    .ide-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 700px;
+    }
+    
+    .ide-navbar {
+        background: #2c3e50;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #34495e;
+    }
+    
+    .ide-nav-left {
+        display: flex;
+        align-items: center;
+    }
+    
+    .ide-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .ide-logo i {
+        color: #667eea;
+        font-size: 1.2rem;
+    }
+    
+    .ide-nav-center {
+        display: flex;
+        align-items: center;
+    }
+    
+    .ide-controls {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .ide-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    
+    .ide-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .ide-btn.primary {
+        background: #667eea;
+        border-color: #5a6fd8;
+    }
+    
+    .ide-btn.primary:hover {
+        background: #5a6fd8;
+    }
+    
+    .ide-nav-right {
+        display: flex;
+        align-items: center;
+    }
+    
+    .ide-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .status-indicator {
+        font-size: 0.7rem;
+        color: #27ae60;
+    }
+    
+    .status-indicator.running {
+        color: #f39c12;
+        animation: pulse 1s infinite;
+    }
+    
+    .status-indicator.error {
+        color: #e74c3c;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .ide-content {
+        flex: 1;
+        position: relative;
+    }
+    
+    #judge0-ide-frame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+    }
+    
+    .ide-footer {
+        background: #34495e;
+        color: white;
+        padding: 10px 20px;
+        border-top: 1px solid #2c3e50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .ide-info {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .ide-info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+    }
+    
+    .ide-info-item i {
+        color: #667eea;
+        width: 14px;
+        text-align: center;
+    }
+    
+    .ide-instructions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .instruction-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: flex;
+        gap: 20px;
+        transition: transform 0.3s ease;
+    }
+    
+    .instruction-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .instruction-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .instruction-content h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .instruction-content p {
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+    
+    .instruction-content ul {
+        color: #6c757d;
+        margin: 0;
+        padding-left: 20px;
+    }
+    
+    .instruction-content li {
+        margin-bottom: 5px;
+        line-height: 1.4;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .code-editor-page-content {
+            padding: 15px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .ide-wrapper {
+            height: 600px;
+        }
+        
+        .ide-navbar {
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .ide-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .ide-info {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .instruction-card {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<!-- Code Editor JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.getElementById('judge0-ide-frame');
+    const runBtn = document.getElementById('run-code-btn');
+    const saveBtn = document.getElementById('save-code-btn');
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const statusIndicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const currentLanguage = document.getElementById('current-language');
+    const executionTime = document.getElementById('execution-time');
+    const codeLines = document.getElementById('code-lines');
+    
+    let isDarkTheme = false;
+    
+    // Update status
+    function updateStatus(status, text) {
+        statusIndicator.className = `fa fa-circle status-indicator ${status}`;
+        statusText.textContent = text;
+    }
+    
+    // Theme toggle
+    themeBtn.addEventListener('click', function() {
+        isDarkTheme = !isDarkTheme;
+        const icon = themeBtn.querySelector('i');
+        const text = themeBtn.querySelector('span');
+        
+        if (isDarkTheme) {
+            icon.className = 'fa fa-sun-o';
+            text.textContent = 'Light';
+        } else {
+            icon.className = 'fa fa-moon-o';
+            text.textContent = 'Dark';
+        }
+        
+        // Send theme change to iframe
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({
+                action: 'theme',
+                theme: isDarkTheme ? 'dark' : 'light'
+            }, '*');
+        }
+    });
+    
+    // Run code button
+    runBtn.addEventListener('click', function() {
+        updateStatus('running', 'Running...');
+        
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({action: 'run'}, '*');
+        }
+        
+        // Reset status after 5 seconds
+        setTimeout(() => {
+            updateStatus('', 'Ready');
+        }, 5000);
+    });
+    
+    // Save code button
+    saveBtn.addEventListener('click', function() {
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({action: 'save'}, '*');
+        }
+        
+        // Show success message
+        const originalText = saveBtn.querySelector('span').textContent;
+        saveBtn.querySelector('span').textContent = 'Saved!';
+        setTimeout(() => {
+            saveBtn.querySelector('span').textContent = originalText;
+        }, 2000);
+    });
+    
+    // Listen for messages from iframe
+    window.addEventListener('message', function(event) {
+        if (event.data && typeof event.data === 'object') {
+            if (event.data.event === 'initialised') {
+                updateStatus('', 'Ready');
+                console.log('Judge0 IDE initialized');
+            } else if (event.data.event === 'running') {
+                updateStatus('running', 'Running...');
+            } else if (event.data.event === 'finished') {
+                updateStatus('', 'Completed');
+                if (event.data.time) {
+                    executionTime.textContent = `${event.data.time}ms`;
+                }
+            } else if (event.data.event === 'error') {
+                updateStatus('error', 'Error');
+            } else if (event.data.language) {
+                currentLanguage.textContent = event.data.language;
+            } else if (event.data.lines) {
+                codeLines.textContent = `${event.data.lines} lines`;
+            }
+        }
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            runBtn.click();
+        } else if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            saveBtn.click();
+        }
+    });
+    
+    // Initialize
+    updateStatus('', 'Loading...');
+});
+</script>

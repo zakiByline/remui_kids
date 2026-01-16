@@ -1,0 +1,317 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    RemUI Kids - Child theme of RemUI
+    @package theme_remui_kids
+    @copyright (c) 2025 Kodeit
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template theme_remui_kids/incourse
+
+    Template for module/activity pages with custom sidebar styling.
+
+    Context variables required for this template:
+    * sitename - The name of the site
+    * output - The core renderer for the page
+    * bodyattributes - attributes for the body tag as a string of html attributes
+    * sidepreblocks - HTML for the blocks
+    * hasblocks - true if there are blocks on this page
+    * courseindexopen - true if the nav drawer should be open on page load
+    * regionmainsettingsmenu - HTML for the region main settings menu
+    * hasregionmainsettingsmenu - There is a region main settings menu on this page.
+}}
+{{> theme_remui_kids/common_start}}
+
+<!-- Course Sidebar Styles for Activity Pages -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/course-sidebar.css">
+<!-- Sidebar Active Item Tracker -->
+<script src="{{{config.wwwroot}}}/theme/remui_kids/javascript/sidebar_active_tracker.js"></script>
+<!-- Course Sidebar Enhancements -->
+<script src="{{{config.wwwroot}}}/theme/remui_kids/javascript/course-sidebar-enhancements.js"></script>
+
+<div id="page-content" class="pb-4 d-print-block">
+    <div id="region-main-box">
+        {{#hasregionmainsettingsmenu}}
+        <div id="region-main-settings-menu" class="d-print-none">
+            <div> {{{ regionmainsettingsmenu }}} </div>
+        </div>
+        {{/hasregionmainsettingsmenu}}
+        <section id="region-main" aria-label="{{#str}}content{{/str}}">
+            {{#hasregionmainsettingsmenu}}
+                <div class="region_main_settings_menu_proxy"></div>
+            {{/hasregionmainsettingsmenu}}
+            {{{ output.course_content_header }}}
+            {{#headercontent}}
+                {{> core/activity_header }}
+            {{/headercontent}}
+            {{#overflow}}
+                <div class="container-fluid tertiary-navigation">
+                    <div class="navitem">
+                        {{> core/url_select}}
+                    </div>
+                </div>
+            {{/overflow}}
+
+            {{{ output.main_content }}}
+            {{{ output.activity_navigation }}}
+            {{{ output.course_content_footer }}}
+
+        </section>
+    </div>
+</div>
+{{> theme_remui/common_end}}
+{{#js}}
+{{#focusdata.enabled}}
+require(['theme_remui/focusmode'], function(focusmode){
+ focusmode.init({{focusdata.on}});
+});
+{{/focusdata.enabled}}
+
+require(['jquery', 'theme_remui/loader', 'theme_remui/TimeCircles'], function ($, loader, TimeCircles) {
+    // This code is to move Left QuizTimer To Right Sidebar.
+    $('#quiztimer').detach().appendTo('#mod_quiz_navblock .block-body-wrapper .card-text .othernav');
+    $('#quiztimer').css('display', 'block');
+    // quiz time circles for timed quizzes
+    if($("#quiztimer").length > 0) {
+        $("#quiztimer").TimeCircles({
+            time: {
+                Days: {
+                    show: false
+                },
+                Hours: {
+                    color: "#3c8dbc"
+                },
+                Minutes: {
+                    color: "#00a65a"
+                },
+                Seconds: {
+                    color: "#f56954"
+                }
+            },
+            bg_width: 0.9,
+            fg_width: 0.1,
+            circle_bg_color: "#EBF0F9",
+            number_size: 0.18,
+            text_size: 0.08,
+            refresh_interval: 1,
+            animation_interval: "ticks"
+        });
+    }
+});
+
+// Sidebar toggle behavior for activity pages
+document.addEventListener('DOMContentLoaded', function() {
+    // Force sidebar enhancement to run on activity pages
+    function triggerSidebarEnhancement() {
+        // Wait for sidebar to be available
+        const checkSidebar = setInterval(function() {
+            const sidebar = document.querySelector('.theme_remui-drawers-courseindex') || 
+                           document.querySelector('#theme_remui-drawers-courseindex');
+            if (sidebar) {
+                // Trigger enhancement multiple times to ensure it catches everything
+                if (window.refreshCourseSidebar) {
+                    window.refreshCourseSidebar();
+                }
+                if (window.enhanceSidebar) {
+                    window.enhanceSidebar();
+                }
+                // Also try direct call to the enhancement function
+                const enhanceScript = document.querySelector('script[src*="course-sidebar-enhancements.js"]');
+                if (enhanceScript && !enhanceScript.dataset.enhanced) {
+                    enhanceScript.dataset.enhanced = 'true';
+                    setTimeout(function() {
+                        if (window.refreshCourseSidebar) {
+                            window.refreshCourseSidebar();
+                        }
+                    }, 500);
+                    setTimeout(function() {
+                        if (window.refreshCourseSidebar) {
+                            window.refreshCourseSidebar();
+                        }
+                    }, 1500);
+                    setTimeout(function() {
+                        if (window.refreshCourseSidebar) {
+                            window.refreshCourseSidebar();
+                        }
+                    }, 3000);
+                }
+                clearInterval(checkSidebar);
+            }
+        }, 200);
+        
+        // Clear interval after 10 seconds
+        setTimeout(function() {
+            clearInterval(checkSidebar);
+        }, 10000);
+    }
+    
+    // Run immediately and after delays
+    triggerSidebarEnhancement();
+    setTimeout(triggerSidebarEnhancement, 1000);
+    setTimeout(triggerSidebarEnhancement, 3000);
+    
+    function handleSidebarToggle() {
+        const drawers = document.querySelector('.drawers');
+        const sidebar = document.querySelector('.theme_remui-drawers-courseindex');
+        
+        // Ensure sidebar exists and is properly styled
+        if (sidebar) {
+            sidebar.style.display = 'block';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+        }
+        
+        // Create backdrop for sidebar
+        let backdrop = document.querySelector('.drawer-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'drawer-backdrop';
+            backdrop.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(0, 0, 0, 0.5) !important;
+                z-index: 1039 !important;
+                display: none !important;
+            `;
+            document.body.appendChild(backdrop);
+        }
+        
+        // Handle backdrop clicks to close sidebar
+        backdrop.addEventListener('click', function() {
+            if (drawers && sidebar) {
+                drawers.classList.remove('show-drawer-left');
+                sidebar.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                backdrop.style.display = 'none';
+            }
+        });
+        
+        // Hide ALL existing toggle buttons
+        const allToggleButtons = document.querySelectorAll(`
+            [data-target="theme_remui-drawers-courseindex"],
+            .drawer-toggles,
+            .drawer-toggles button,
+            .drawer-toggles div,
+            button[data-original-title="Open course index"],
+            button[title="Open course index"],
+            .drawer-left-toggle,
+            .drawer-toggler
+        `);
+        
+        allToggleButtons.forEach(button => {
+            button.style.display = 'none';
+            button.style.visibility = 'hidden';
+            button.style.opacity = '0';
+        });
+        
+        // Remove any existing custom toggle
+        const existingCustomToggle = document.querySelector('.custom-sidebar-toggle');
+        if (existingCustomToggle) {
+            existingCustomToggle.remove();
+        }
+        
+        // Create a new custom toggle button
+        const customToggle = document.createElement('button');
+        customToggle.innerHTML = '<i class="fa fa-bars" aria-hidden="true"></i>';
+        customToggle.className = 'custom-sidebar-toggle';
+        customToggle.style.cssText = `
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 20px !important;
+            z-index: 1060 !important;
+            background: #3b82f6 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4) !important;
+            cursor: pointer !important;
+            font-size: 20px !important;
+            width: 60px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        `;
+        document.body.appendChild(customToggle);
+        
+        customToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (drawers && sidebar) {
+                // Toggle BOTH classes (RemUI standard pattern)
+                drawers.classList.toggle('show-drawer-left');
+                sidebar.classList.toggle('show');
+                
+                console.log('incourse.mustache toggle clicked, drawer state:', drawers.classList.contains('show-drawer-left'));
+                
+                // Handle body overflow
+                if (drawers.classList.contains('show-drawer-left')) {
+                    document.body.style.overflow = 'hidden';
+                    // Trigger sidebar enhancement when sidebar opens
+                    setTimeout(function() {
+                        if (window.refreshCourseSidebar) {
+                            window.refreshCourseSidebar();
+                        }
+                    }, 300);
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+                
+                // Update backdrop
+                if (backdrop) {
+                    backdrop.style.display = drawers.classList.contains('show-drawer-left') ? 'block' : 'none';
+                }
+            }
+        });
+        
+        // Handle close button in sidebar
+        const closeButton = document.querySelector('.theme_remui-drawers-courseindex .close') ||
+                           document.querySelector('.theme_remui-drawers-courseindex .drawertoggle') ||
+                           document.querySelector('.drawer-left .close') ||
+                           document.querySelector('#theme_remui-drawers-courseindex .close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                if (drawers && sidebar) {
+                    drawers.classList.remove('show-drawer-left');
+                    sidebar.classList.remove('show');
+                    document.body.style.overflow = 'auto';
+                    if (backdrop) {
+                        backdrop.style.display = 'none';
+                    }
+                }
+            });
+        }
+    }
+
+    // Initialize sidebar toggle behavior
+    handleSidebarToggle();
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const drawers = document.querySelector('.drawers');
+        if (window.innerWidth <= 768) {
+            // On mobile, always use full width
+            if (drawers) {
+                drawers.classList.remove('show-drawer-left');
+            }
+        }
+    });
+});
+{{/js}}
+

@@ -1,0 +1,278 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    Edwiser RemUI Kids
+    @package theme_remui_kids
+    @copyright (c) 2025 Kodeit
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+
+}}
+{{!
+    @template theme_remui_kids/common_start
+
+    Custom common_start template that removes old course headers and stats
+}}
+
+{{> theme_remui/head }}
+
+<body {{{ bodyattributes }}}>
+
+<!-- Navbar Fix CSS - Ensures navbar stays visible when scrolling -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/navbar_fix.css">
+
+<!-- RTL (Arabic) CSS Support - Applies RTL layout for Arabic language -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/rtl.css">
+
+<!-- Auto-Translate JS - Automatically translates ALL pages based on selected language -->
+<script src="{{{config.wwwroot}}}/theme/remui_kids/javascript/auto_translate.js"></script>
+
+<div id='page-loader-wrapper' style='background:#ffffff;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;z-index: 9999;overflow:hidden;'>
+    {{#loaderimage}}<img src='{{{loaderimage}}}' alt='loader image' style='width: 50px;height: 50px;'>{{/loaderimage}}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function() {
+            document.querySelector('#page-loader-wrapper').style.display = 'none';
+        }, 100);
+    });
+    if (localStorage.getItem("nighteyewState") == "1") {
+        document.querySelector("#page-loader-wrapper").style.background = "#090909";
+    }
+</script>
+
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper" class="d-print-block">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{#focusdata.enabled}} {{> theme_remui/navbar_fm }} {{/focusdata.enabled}}
+
+    {{> theme_remui/navbar }}
+    {{#courseindex}}
+        {{< theme_remui/drawer }}
+            {{$id}}theme_remui-drawers-courseindex{{/id}}
+            {{$drawerheadercontent}}
+                {{> theme_remui/courseindexdrawercontrols}}
+            {{/drawerheadercontent}}
+            {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                {{{courseindex}}}
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-index{{/drawerpreferencename}}
+            {{$drawerstate}}show-drawer-left{{/drawerstate}}
+            {{$tooltipplacement}}right{{/tooltipplacement}}
+            {{$closebuttontext}}{{#str}}closecourseindex, core{{/str}}{{/closebuttontext}}
+        {{/ theme_remui/drawer}}
+    {{/courseindex}}
+    {{#hasblocks}}
+        {{< theme_remui/drawer }}
+            {{$id}}theme_remui-drawers-blocks{{/id}}
+            {{$drawerclasses}}drawer drawer-right{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                <section class="d-print-none" aria-label="{{#str}}blocks{{/str}}">
+                    {{{ addblockbutton }}}
+                    {{{ sidepreblocks }}}
+                </section>
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+            {{$forceopen}}{{#forceblockdraweropen}}1{{/forceblockdraweropen}}{{/forceopen}}
+            {{$drawerstate}}show-drawer-right{{/drawerstate}}
+            {{$tooltipplacement}}left{{/tooltipplacement}}
+            {{$drawercloseonresize}}1{{/drawercloseonresize}}
+            {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
+        {{/ theme_remui/drawer}}
+    {{/hasblocks}}
+
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
+        {{#sitenotification}}{{{sitenotification}}}{{/sitenotification}}
+        {{#canaddfwtopblocks}}
+        <section id="region-fullwidthtop-blocks" class="has-blocks" aria-label="region top blocks">
+            <div role="region-main">
+                {{{addblockbuttonfwtop}}}
+                {{{ sidefwtopblocks }}}
+                {{#addblockbuttonfwtop}}
+                    <div id="region-fullwidthtop-blocks-indicator" class="container-fluid block-indicator">
+                        <font class="text-center p-px-2d5 m-0  bg-white block-indicator-text-wrapper ">
+                            {{#str}}full-width-top,theme_remui {{/str}}
+                        </font>
+                    </div>
+                {{/addblockbuttonfwtop}}
+            </div>
+        </section>
+        {{/canaddfwtopblocks}}
+        <div id="topofscroll" class="main-inner">
+            {{#notification}}{{> theme_remui/product_notification}}{{/notification}}
+            
+            {{#show_admin_sidebar}}
+            <!-- Mobile Sidebar Toggle Button -->
+            <button class="sidebar-toggle" onclick="toggleAdminSidebar()">
+                <i class="fa fa-bars"></i>
+            </button>
+            
+            <!-- Admin Sidebar for Admin Pages -->
+            <div class="admin-sidebar-wrapper" id="admin-sidebar-wrapper">
+                {{> theme_remui_kids/admin_sidebar}}
+            </div>
+            {{/show_admin_sidebar}}
+            
+            {{#customhomepage}}
+                {{{customhomepage}}}
+            {{/customhomepage}}
+
+            {{^customhomepage}}
+                {{> theme_remui/frontpagesections}}
+            {{/customhomepage}}
+
+            <div class="container">
+            <div class="drawer-toggles d-flex">
+                {{#courseindex}}
+                    <div class="drawer-toggler drawer-left-toggle open-nav d-print-none">
+                        <button
+                            class="btn btn-primary icon-no-margin p-0"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_remui-drawers-courseindex"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerindex, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerindex, core{{/str}}</span>
+                            {{#pix}} t/index_drawer, moodle {{/pix}}
+                        </button>
+                    </div>
+                {{/courseindex}}
+                {{#hasblocks}}
+                    <div class="drawer-toggler drawer-right-toggle ml-auto d-print-none">
+                        <button
+                            class="btn btn-primary icon-no-margin p-0"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_remui-drawers-blocks"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerblocks, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerblocks, core{{/str}}</span>
+                            <span class="dir-rtl-hide">
+                                <span class="edw-icon edw-icon-Long-Left_24"></span>
+                            </span>
+                            <span class="dir-ltr-hide">
+                                <span class="edw-icon edw-icon-Long-Right_24"></span>
+                            </span>
+                        </button>
+                    </div>
+                {{/hasblocks}}
+            </div>
+            
+            
+
+            {{#isdashboardstatsshow}}
+                {{> theme_remui/dashboard_stats }}
+            {{/isdashboardstatsshow}}
+
+            {{#showpersonlizerinfo}}
+                {{> theme_remui/personalizer_info_dashboard }}
+            {{/showpersonlizerinfo}}
+            {{#secondarymoremenu}}
+                {{^show_course_header}}
+                <div class="secondary-navigation edw-tabs-navigation d-print-none">
+                    {{> core/moremenu}}
+                </div>
+                {{/show_course_header}}
+            {{/secondarymoremenu}}
+            {{#canaddtopblocks}}
+            <section id="region-top-blocks" class="has-blocks" aria-label="region top blocks">
+                <div role="region-main">
+                    {{{addblockbuttontop}}}
+                    {{{ sidetopblocks }}}
+                    {{#addblockbuttontop}}
+                    <div id="region-top-blocks-indicator" class="container-fluid block-indicator">
+                        <font class="text-center p-px-2d5 m-0  bg-white block-indicator-text-wrapper ">
+                            {{#str}}side-top,theme_remui {{/str}}
+                        </font>
+                    </div>
+                    {{/addblockbuttontop}}
+                </div>
+            </section>
+            {{/canaddtopblocks}}
+
+{{#js}}
+    require(['jquery'], function($){
+        if (localStorage.getItem("nighteyewState") == "1") {
+
+            const lightLogo = document.querySelector('.light-logo');
+            const lightLogoMini = document.querySelector('.light-logomini');
+            const darkLogo = document.querySelector('.dark-logo');
+            const darkLogoMini = document.querySelector('.dark-logomini');
+
+            if (lightLogo) {
+                lightLogo.style.display = 'none';
+                darkLogo.style.display = 'flex';
+            }
+
+            if (lightLogoMini) {
+                lightLogoMini.style.display = 'none';
+                darkLogoMini.style.display = 'flex';
+
+            } 
+        }
+    });
+{{/js}}
+
+{{#sitenotification}}
+{{#js}}
+    require(['jquery','theme_remui/user/repository'], function($, UserRepository){
+        // Save the preference, after dismiss the announcement
+        $('.site-announcement #dismiss_announcement').click(function(){
+        {{#applylatestuserpref}}
+            UserRepository.setUserPreference('remui_dismised_announcement', true);
+        {{/applylatestuserpref}}
+        {{^applylatestuserpref}}
+             M.util.set_user_preference('remui_dismised_announcement', true);
+        {{/applylatestuserpref}}
+        });
+    });
+{{/js}}
+{{/sitenotification}}
+
+{{#show_admin_sidebar}}
+{{#js}}
+    // Admin sidebar functionality
+    function toggleAdminSidebar() {
+        const sidebar = document.getElementById('admin-sidebar-wrapper');
+        if (sidebar) {
+            sidebar.classList.toggle('sidebar-open');
+        }
+    }
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('admin-sidebar-wrapper');
+        const toggleButton = document.querySelector('.sidebar-toggle');
+        
+        if (window.innerWidth <= 768 && sidebar && toggleButton) {
+            if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+                sidebar.classList.remove('sidebar-open');
+            }
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.getElementById('admin-sidebar-wrapper');
+        if (window.innerWidth > 768 && sidebar) {
+            sidebar.classList.remove('sidebar-open');
+        }
+    });
+{{/js}}
+{{/show_admin_sidebar}}

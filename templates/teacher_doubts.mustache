@@ -1,0 +1,153 @@
+<div class="doubts-workspace" data-region="doubts-workspace">
+    <style>
+    body.teacher-doubts-page .teacher-css-wrapper {
+        margin-top: 0 !important;
+    }
+    body.teacher-doubts-page .teacher-dashboard-wrapper {
+        min-height: auto;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 0;
+    }
+    body.teacher-doubts-page .teacher-main-content {
+        min-height: auto;
+        margin-left: 0;
+        width: 100%;
+        padding-bottom: 0;
+    }
+    body.teacher-doubts-page .teacher-main-content > .container-fluid {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding: 2rem clamp(1.25rem, 2vw, 2.5rem) 0;
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+    }
+    body.teacher-doubts-page .teacher-main-content > .container-fluid::before {
+        content: '';
+        display: none;
+    }
+    body.teacher-doubts-page .doubts-workspace {
+        flex: 1;
+        width: 100%;
+    }
+    .main-area-bg:not(.pagelayout-login) div[role="main"] {
+    background: #fff;
+    padding:0px;
+    }
+    .doubts-workspace { display:flex; flex-direction:column; gap:1.5rem; }
+    .doubts-header { background: linear-gradient(135deg,#eef2ff,#e8f7ff); color:#1f2937; padding:1.75rem; border-radius:20px; box-shadow:0 20px 40px rgba(15,23,42,.08); position:relative; overflow:hidden; border:1px solid rgba(148,163,184,.25); }
+    .doubts-header::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.55),transparent 65%); }
+    .doubts-header-content { position:relative; z-index:2; display:flex; flex-direction:column; gap:1.25rem; }
+    .doubts-header-title { display:flex; flex-direction:column; gap:.35rem; }
+    .doubts-header-title h1 { margin:0; font-weight:700; font-size:2rem; letter-spacing:-0.01em; }
+    .doubts-header-title p { margin:0; font-size:1rem; color:#475569; }
+    .doubt-summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.85rem; }
+    .doubt-summary-card { background:#fff; border-radius:14px; padding:1rem 1.25rem; display:flex; flex-direction:column; gap:.3rem; border:1px solid rgba(148,163,184,.18); box-shadow:0 12px 22px rgba(15,23,42,.05); }
+    .doubt-summary-card span.label { font-size:.75rem; text-transform:uppercase; letter-spacing:.08rem; color:#64748b; }
+    .doubt-summary-card span.value { font-size:1.5rem; font-weight:700; color:#1f2937; }
+    .doubts-controls { display:grid; grid-template-columns:minmax(240px,2fr) repeat(3,minmax(160px,1fr)) auto; column-gap:1rem; row-gap:.75rem; align-items:end; background:#fff; padding:1.1rem 1.35rem; border-radius:18px; border:1px solid rgba(148,163,184,.25); box-shadow:0 6px 18px rgba(15,23,42,.05); }
+    .doubts-controls .search-field { position:relative; align-self:end; }
+    .doubts-controls input[type="search"] { width:100%; padding:1rem 1rem 1rem 2.6rem; border-radius:12px; border:1px solid #cbd5e1; font-size:.95rem; background:#f8fafc; transition:border-color .2s, background .2s; height:52px; }
+    .doubts-controls input[type="search"]:focus { border-color:#6366f1; background:#fff; outline:none; }
+    .doubts-controls .search-field i { position:absolute; top:50%; left:1rem; transform:translateY(-50%); color:#94a3b8; }
+    .doubts-controls .filter-group { display:flex; flex-direction:column; gap:.35rem; }
+    .doubts-controls label { font-size:.78rem; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:.05rem; }
+    .doubts-controls select { width:100%; padding:.85rem .9rem; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; font-size:.9rem; line-height:1.2; transition:border-color .2s, background .2s; height:52px; }
+    .doubts-controls select:focus { border-color:#6366f1; background:#fff; outline:none; }
+    .doubts-controls .actions { display:flex; align-items:center; justify-content:flex-end; align-self:end; }
+    .button-ghost { background:#fff; color:#475569; border:1px solid #cbd5e1; border-radius:10px; font-weight:600; cursor:pointer; padding:.65rem 1.2rem; transition:background .2s, border-color .2s; display:inline-flex; gap:.45rem; align-items:center; }
+    .button-ghost:hover { background:#eef2ff; border-color:#94a3b8; }
+    .doubts-body { display:grid; grid-template-columns:380px 1fr; gap:1.5rem; min-height:520px; }
+    .doubts-list-pane { background:#fff; border:1px solid rgba(148,163,184,.25); box-shadow:0 14px 30px rgba(15,23,42,.08); overflow:hidden; display:flex; flex-direction:column; }
+    .doubts-detail-pane { background:#fff; border-radius:16px; border:1px solid rgba(148,163,184,.25); box-shadow:0 14px 30px rgba(15,23,42,.08); padding:1.5rem; overflow:hidden; display:flex; flex-direction:column; }
+    .doubt-empty { text-align:center; padding:4rem 1rem; color:#94a3b8; font-weight:600; }
+    .doubt-empty i { font-size:2rem; margin-bottom:1rem; display:block; }
+    @media (max-width: 1200px) {
+        .doubts-body { grid-template-columns:1fr; }
+        .doubts-list-pane { order:1; }
+        .doubts-detail-pane { order:2; }
+    }
+    @media (max-width: 1024px) {
+        .doubts-controls { grid-template-columns: minmax(200px,1fr) minmax(160px,1fr); }
+        .doubts-controls .actions { justify-content:flex-start; }
+    }
+    @media (max-width: 768px) {
+        .doubts-controls { grid-template-columns:1fr; }
+        .doubts-controls .actions { justify-content:flex-start; }
+    }
+    </style>
+
+    <div class="doubts-header">
+        <div class="doubts-header-content">
+            <div class="doubts-header-title">
+                <h1>{{teacher_doubts_heading}}</h1>
+                <p>{{teacher_doubts_subheading}}</p>
+            </div>
+            <div class="doubt-summary-grid">
+                {{#summarycards}}
+                    <div class="doubt-summary-card" data-summary="{{key}}">
+                        <span class="label">{{label}}</span>
+                        <span class="value" data-summary-value>{{value}}</span>
+                    </div>
+                {{/summarycards}}
+            </div>
+        </div>
+    </div>
+
+    <div class="doubts-controls" data-region="doubt-filters">
+        <div class="search-field">
+            <i class="fa fa-search"></i>
+            <input type="search" name="search" placeholder="{{searchplaceholder}}" data-filter="search" autocomplete="off">
+        </div>
+        <div class="filter-group">
+            <label for="doubt-status-filter">{{statuslabel}}</label>
+            <select id="doubt-status-filter" data-filter="status">
+                <option value="">{{alllabel}}</option>
+                {{#statusoptions}}
+                    <option value="{{value}}">{{label}}</option>
+                {{/statusoptions}}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="doubt-priority-filter">{{prioritylabel}}</label>
+            <select id="doubt-priority-filter" data-filter="priority">
+                <option value="">{{alllabel}}</option>
+                {{#priorityoptions}}
+                    <option value="{{value}}">{{label}}</option>
+                {{/priorityoptions}}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="doubt-assigned-filter">{{assignmentlabel}}</label>
+            <select id="doubt-assigned-filter" data-filter="assigned">
+                <option value="">{{alllabel}}</option>
+                <option value="unassigned">{{unassignedlabel}}</option>
+                <option value="self">{{doubt_assign_to_me}}</option>
+            </select>
+        </div>
+        <div class="actions">
+            <button type="button" class="button-ghost" data-action="reset-filters"><i class="fa fa-undo"></i>{{doubt_filters_reset}}</button>
+        </div>
+    </div>
+
+    <div class="doubts-body">
+        <div class="doubts-list-pane" data-region="doubt-list">
+            {{> theme_remui_kids/teacher_doubts_list}}
+        </div>
+        <div class="doubts-detail-pane" data-region="doubt-detail">
+            {{#initialdetail}}
+                {{> theme_remui_kids/teacher_doubt_detail}}
+            {{/initialdetail}}
+            {{^initialdetail}}
+                <div class="doubt-empty">
+                    <i class="fa fa-question-circle"></i>
+                    <p>{{selectprompt}}</p>
+                </div>
+            {{/initialdetail}}
+        </div>
+    </div>
+</div>
+

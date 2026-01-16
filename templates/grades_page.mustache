@@ -1,0 +1,852 @@
+{{#custom_grades}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+<style>
+.container, .container-fluid, #page, #page-content, .main-inner, #topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+.container {
+    max-width: calc(100vw - 280px) !important;
+    width: calc(100vw - 280px) !important;
+    margin-left: 280px !important;
+}
+.g4g7-sidebar { background: #ffffff !important; border-right: 1px solid #e5e7eb !important; }
+.g4g7-nav-content { background: #ffffff !important; }
+
+.grades-page-header {
+    position: relative;
+    padding: 40px 36px;
+    border-radius: 28px;
+    overflow: hidden;
+    margin-bottom: 36px;
+    color: #0f172a;
+    background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 30%, #6366f1 60%, #a855f7 100%);
+    box-shadow: 0 24px 45px rgba(99, 102, 241, 0.25);
+}
+.grades-page-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.35), transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.35), transparent 50%);
+    mix-blend-mode: screen;
+    animation: shimmer 12s ease-in-out infinite alternate;
+}
+.grades-header-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    z-index: 1;
+}
+.grades-avatar {
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #f8fafc;
+    box-shadow: inset 0 0 18px rgba(255,255,255,0.35);
+}
+.grades-title-block {
+    flex: 1;
+    min-width: 240px;
+}
+.grades-page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin: 0;
+    color: #f8fafc;
+}
+.grades-page-title i { font-size: 2.2rem; }
+.grades-page-subtitle {
+    margin: 10px 0 0;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.92);
+}
+.grades-highlight-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.15);
+    color: #e0f2fe;
+    font-weight: 600;
+    margin-top: 16px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+@keyframes shimmer {
+    0% { transform: scale(1) translateX(0); opacity: 0.8; }
+    100% { transform: scale(1.05) translateX(-2%); opacity: 1; }
+}
+
+.grades-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.stat-card {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    padding: 28px 26px;
+    color: #0f172a;
+    background: #ffffff;
+    box-shadow: 0 28px 45px rgba(15, 23, 42, 0.12);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 32px 60px rgba(59, 130, 246, 0.18);
+}
+.stat-card:hover::before { opacity: 1; }
+.stat-card.blue { background: linear-gradient(140deg, #e0f2fe 0%, #bae6fd 35%, #f0f9ff 100%); }
+.stat-card.green { background: linear-gradient(140deg, #dcfce7 0%, #bbf7d0 40%, #f0fdf4 100%); }
+.stat-card.orange { background: linear-gradient(140deg, #fde68a 0%, #fcd34d 40%, #fdf6b2 100%); }
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+.stat-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(15, 23, 42, 0.65);
+}
+.stat-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin: 0 auto 15px;
+}
+.stat-card-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.stat-card-icon.green { background: linear-gradient(135deg, #27ae60, #229954); }
+.stat-card-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-align: center;
+}
+
+.grades-analytics-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 28px;
+    margin-bottom: 36px;
+}
+.analytics-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 24px 45px rgba(15, 23, 42, 0.12);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.analytics-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), transparent 65%);
+    pointer-events: none;
+}
+.analytics-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 55px rgba(37, 99, 235, 0.18);
+}
+.analytics-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.analytics-subtle {
+    font-size: 0.9rem;
+    color: rgba(15, 23, 42, 0.6);
+    font-weight: 500;
+}
+.category-breakdown-bar {
+    width: 100%;
+    height: 22px;
+    border-radius: 14px;
+    background: rgba(226, 232, 240, 0.65);
+    overflow: hidden;
+    display: flex;
+    box-shadow: inset 0 0 6px rgba(15, 23, 42, 0.08);
+}
+.category-breakdown-segment {
+    height: 100%;
+    transition: flex 0.4s ease;
+    position: relative;
+}
+.category-breakdown-segment::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -4px);
+    background: rgba(15, 23, 42, 0.85);
+    color: #f8fafc;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+}
+.category-breakdown-segment:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -6px);
+}
+.category-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.category-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(248, 250, 252, 0.85);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #0f172a;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+.category-legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.grades-insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 36px;
+}
+.insight-card {
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 24px 45px rgba(15, 23, 42, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.insight-card h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.insight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.insight-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(248, 250, 252, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+.insight-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.insight-item-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    background: rgba(59, 130, 246, 0.15);
+}
+.insight-item-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.insight-item-label strong {
+    font-weight: 700;
+    color: #0f172a;
+}
+.insight-item-label span {
+    font-size: 0.85rem;
+    color: rgba(15, 23, 42, 0.65);
+}
+.insight-item-value {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 1rem;
+}
+.badge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.badge-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(248, 250, 252, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+.badge-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+.badge-gold { background: linear-gradient(135deg, #fcd34d, #fbbf24); color: #92400e; }
+.badge-green { background: linear-gradient(135deg, #34d399, #10b981); color: #065f46; }
+.badge-blue { background: linear-gradient(135deg, #93c5fd, #60a5fa); color: #1e3a8a; }
+.badge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.badge-text strong {
+    font-weight: 700;
+    color: #0f172a;
+}
+.badge-text span {
+    font-size: 0.85rem;
+    color: rgba(15, 23, 42, 0.65);
+}
+.main-inner { margin-top: 0 !important; margin-bottom: 0 !important; margin-right: 0 !important; margin-left: 0 !important; }
+
+.grades-accordion { display: flex; flex-direction: column; gap: 24px; }
+.course-card { border-radius: 20px; overflow: hidden; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14); background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%); border: 1px solid rgba(226, 232, 240, 0.8); transition: transform 0.35s ease, box-shadow 0.35s ease; }
+.course-card:hover { transform: translateY(-6px); box-shadow: 0 26px 55px rgba(37, 99, 235, 0.2); }
+.course-card-toggle { width: 100%; text-align: left; background: transparent; border: none; padding: 32px; cursor: pointer; display: flex; flex-direction: column; gap: 20px; position: relative; transition: background 0.3s ease; }
+.course-card-toggle:hover { background: rgba(59, 130, 246, 0.08); }
+.course-card-toggle .toggle-icon { position: absolute; top: 32px; right: 32px; width: 40px; height: 40px; border-radius: 12px; background: rgba(148, 163, 184, 0.16); display: flex; align-items: center; justify-content: center; color: #1e293b; transition: transform 0.3s ease, background 0.3s ease; }
+.course-card-toggle[aria-expanded="true"] .toggle-icon { transform: rotate(180deg); background: rgba(59, 130, 246, 0.16); }
+.course-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.course-card-title { display: flex; flex-direction: column; gap: 6px; }
+.course-card-title .course-name { font-size: 1.4rem; font-weight: 700; color: #1f2937; margin: 0; }
+.course-card-title .course-shortname { font-size: 0.95rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.course-card-metrics { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.course-card-metrics .overall-grade { font-size: 2rem; font-weight: 800; color: #0ea5e9; }
+.course-card-metrics .performance-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.performance-excellent { background: rgba(16, 185, 129, 0.15); color: #047857; }
+.performance-good { background: rgba(59, 130, 246, 0.15); color: #1d4ed8; }
+.performance-average { background: rgba(234, 179, 8, 0.15); color: #b45309; }
+.performance-watch { background: rgba(239, 68, 68, 0.18); color: #b91c1c; }
+
+.course-card-body { padding: 0 32px 32px 32px; border-top: 1px solid rgba(226, 232, 240, 0.7); background: white; }
+.grade-item-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.grade-item-card { border-radius: 16px; padding: 18px; background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%); border: 1px solid rgba(226, 232, 240, 0.9); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08); display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.grade-item-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent); opacity: 0; transition: opacity 0.3s ease; }
+.grade-item-card:hover { transform: translateY(-4px); box-shadow: 0 18px 35px rgba(59, 130, 246, 0.2); }
+.grade-item-card:hover::before { opacity: 1; }
+.grade-item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.grade-item-name { font-weight: 700; color: #1f2937; font-size: 1rem; flex: 1; }
+.grade-item-category { font-size: 0.8rem; font-weight: 600; color: #0f172a; background: rgba(148, 163, 184, 0.18); padding: 6px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; position: relative; }
+.grade-item-score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
+.grade-item-percentage { font-size: 1.8rem; font-weight: 800; color: #0ea5e9; }
+.grade-item-fraction { font-size: 0.85rem; color: #475569; font-weight: 600; }
+.grade-item-feedback { font-size: 0.9rem; color: #475569; background: rgba(59, 130, 246, 0.08); border-radius: 10px; padding: 12px; line-height: 1.4; }
+.empty-grade-items { padding: 24px; text-align: center; color: #64748b; background: rgba(241, 245, 249, 0.6); border-radius: 14px; border: 1px dashed rgba(148, 163, 184, 0.5); font-weight: 600; }
+
+.course-filter { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.course-filter label { font-weight: 600; color: #1f2937; }
+.course-filter select { padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.4); background: white; font-weight: 600; color: #1e293b; min-width: 220px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); }
+.course-filter select:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15); }
+
+.popover-detail {
+    position: absolute;
+    z-index: 99;
+    max-width: 260px;
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.25);
+    font-size: 0.85rem;
+    display: none;
+    pointer-events: none;
+}
+.popover-detail strong {
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+@media (max-width: 1024px) {
+    .grades-analytics-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .grades-page-header { padding: 28px 24px; }
+    .grades-header-content { flex-direction: column; align-items: flex-start; }
+    .grades-avatar { width: 72px; height: 72px; font-size: 2rem; border-radius: 22px; }
+    .grades-page-title { font-size: 2.2rem; }
+    .course-card-toggle { padding: 24px; }
+    .course-card-header { flex-direction: column; align-items: flex-start; }
+    .course-card-metrics { width: 100%; }
+    .course-card-toggle .toggle-icon { position: static; align-self: flex-end; margin-top: -10px; }
+    .course-card-body { padding: 0 24px 24px 24px; }
+    .course-filter { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="grades-page-header">
+            <div class="grades-header-content">
+                <div class="grades-avatar">
+                    <i class="fa fa-chart-line"></i>
+                </div>
+                <div class="grades-title-block">
+            <h2 class="grades-page-title">
+                <i class="fa fa-graduation-cap"></i>
+                My Grades
+            </h2>
+            <p class="grades-page-subtitle">
+                {{#usercohortname}}
+                            You’re doing great in {{usercohortname}}! Keep pushing your average above 50% 🚀
+                {{/usercohortname}}
+                {{^usercohortname}}
+                            Here’s a quick look at your current academic progress. Keep the momentum going! 🚀
+                {{/usercohortname}}
+            </p>
+                    <div class="grades-highlight-pill">
+                        <i class="fa fa-star"></i>
+                        Current average: {{average_grade}}%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grades Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="grades-stats">
+            <div class="stat-card blue">
+                <div class="stat-card-icon blue">
+                    <i class="fa fa-book"></i>
+                </div>
+                <div class="stat-number">{{total_courses}}</div>
+                <div class="stat-label">Total Courses</div>
+            </div>
+            
+            <div class="stat-card green">
+                <div class="stat-card-icon green">
+                    <i class="fa fa-check-circle"></i>
+                </div>
+                <div class="stat-number">{{completed_courses}}</div>
+                <div class="stat-label">Completed Courses</div>
+            </div>
+            
+            <div class="stat-card orange">
+                <div class="stat-card-icon orange">
+                    <i class="fa fa-chart-line"></i>
+                </div>
+                <div class="stat-number">{{average_grade}}%</div>
+                <div class="stat-label">Average Grade</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="grades-analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-card-title">
+                    Grade Trend
+                    <span class="analytics-subtle">How your course averages compare</span>
+                </div>
+                <canvas id="gradeTrendChart" height="220"></canvas>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-card-title">
+                    Category Breakdown
+                    <span class="analytics-subtle">Assignments vs Quizzes vs Projects</span>
+                </div>
+                <div class="category-breakdown-bar" id="categoryBreakdownBar"></div>
+                <div class="category-legend" id="categoryLegend"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#has_recent_grades}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="grades-insights-grid">
+            <div class="insight-card">
+                <h3>Recent Grades</h3>
+                <div class="insight-list">
+                    {{#recent_grades}}
+                    <div class="insight-list-item">
+                        <div class="insight-item-meta">
+                            <div class="insight-item-icon">{{course_initial}}</div>
+                            <div class="insight-item-label">
+                                <strong>{{item_name}}</strong>
+                                <span>{{course_name}} • {{category_label}}</span>
+                            </div>
+                        </div>
+                        <div class="insight-item-value">{{percentage_display}}</div>
+                    </div>
+                    {{/recent_grades}}
+                </div>
+            </div>
+            {{#has_performance_badges}}
+            <div class="insight-card">
+                <h3>Performance Badges</h3>
+                <div class="badge-list">
+                    {{#performance_badges}}
+                    <div class="badge-list-item">
+                        <div class="badge-icon {{accent}}"><i class="fa {{icon}}"></i></div>
+                        <div class="badge-text">
+                            <strong>{{title}}</strong>
+                            <span>{{description}}</span>
+                        </div>
+                    </div>
+                    {{/performance_badges}}
+                </div>
+            </div>
+            {{/has_performance_badges}}
+        </div>
+    </div>
+</div>
+{{/has_recent_grades}}
+
+<!-- Course Grades -->
+{{#has_grades}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="course-filter">
+            <label for="gradesCourseSelect">Select course</label>
+            <select id="gradesCourseSelect">
+                <option value="all">All courses</option>
+                {{#grades_data}}
+                <option value="{{collapse_id}}">{{course_name}}</option>
+                {{/grades_data}}
+            </select>
+        </div>
+        <div class="grades-accordion" id="gradesAccordion">
+        {{#grades_data}}
+            <div class="course-card" data-course-id="{{collapse_id}}">
+                <button class="course-card-toggle {{performance_class}}" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#{{collapse_id}}" data-bs-target="#{{collapse_id}}" aria-expanded="{{#is_first}}true{{/is_first}}{{^is_first}}false{{/is_first}}" aria-controls="{{collapse_id}}">
+                    <div class="course-card-header">
+                        <div class="course-card-title">
+                            <h3 class="course-name">{{course_name}}</h3>
+                            {{#course_shortname}}
+                            <span class="course-shortname">{{course_shortname}}</span>
+                            {{/course_shortname}}
+                        </div>
+                        <div class="course-card-metrics">
+                            <span class="overall-grade">{{overall_grade_display}}</span>
+                            <span class="performance-chip">
+                                <i class="fa {{performance_icon}}"></i>
+                                {{performance_label}}
+                            </span>
+                        </div>
+            </div>
+            
+                    <div class="toggle-icon">
+                        <i class="fa fa-chevron-down"></i>
+                    </div>
+                </button>
+                <div id="{{collapse_id}}" class="collapse {{#is_first}}show{{/is_first}}" data-parent="#gradesAccordion" data-bs-parent="#gradesAccordion">
+                    <div class="course-card-body">
+                        {{#has_items}}
+                        <div class="grade-item-grid">
+                            {{#grade_items}}
+                            <div class="grade-item-card" data-letter-grade="{{letter_grade}}">
+                                <div class="grade-item-header">
+                                    <span class="grade-item-name">{{name}}</span>
+                                    <span class="grade-item-category">{{category_label}}</span>
+                                </div>
+                                <div class="grade-item-score">
+                                    <span class="grade-item-percentage">{{percentage_display}}</span>
+                                    <span class="grade-item-fraction">{{grade_fraction}}</span>
+                                </div>
+                                {{#feedback}}
+                                <div class="grade-item-feedback">{{feedback}}</div>
+                                {{/feedback}}
+                            </div>
+                            {{/grade_items}}
+                        </div>
+                        {{/has_items}}
+                        {{^has_items}}
+                        <div class="empty-grade-items">
+                            No graded items available for this course yet.
+                        </div>
+                        {{/has_items}}
+            </div>
+            </div>
+        </div>
+        {{/grades_data}}
+        </div>
+    </div>
+</div>
+{{/has_grades}}
+
+{{^has_grades}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="stat-card" style="text-align: center; padding: 60px 20px;">
+            <i class="fa fa-graduation-cap" style="font-size: 4rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+            <h3 style="color: #6c757d; margin: 0 0 10px 0;">No Grades Available</h3>
+            <p style="color: #95a5a6; margin: 0;">Complete assignments and quizzes to see your grades!</p>
+        </div>
+    </div>
+</div>
+{{/has_grades}}
+
+{{/custom_grades}}
+
+<div class="popover-detail" id="gradePopover"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" integrity="sha384-oEc/7cQFKbGXpiIOxc3KfnL5P8Bc1XBykfyq1inxN0Zy3Di99YHc7efFQQtrLPM9" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const trendCanvas = document.getElementById('gradeTrendChart');
+    if (trendCanvas && typeof Chart !== 'undefined') {
+        const courseLabels = [];
+        const courseAverages = [];
+
+        document.querySelectorAll('.grades-accordion .course-card').forEach(card => {
+            const title = card.querySelector('.course-name');
+            const average = card.querySelector('.overall-grade');
+            if (title && average) {
+                courseLabels.push(title.textContent.trim());
+                const numeric = parseFloat(average.textContent);
+                courseAverages.push(!isNaN(numeric) ? numeric : 0);
+            }
+        });
+
+        if (courseLabels.length) {
+            new Chart(trendCanvas, {
+                type: 'line',
+                data: {
+                    labels: courseLabels,
+                    datasets: [{
+                        label: 'Average Grade (%)',
+                        data: courseAverages,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.18)',
+                        borderWidth: 3,
+                        tension: 0.35,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#2563eb',
+                        pointHoverRadius: 8,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { stepSize: 10, color: '#475569', font: { weight: 600 } },
+                            grid: { color: 'rgba(148, 163, 184, 0.35)', drawBorder: false }
+                        },
+                        x: {
+                            ticks: { color: '#475569', font: { weight: 600 } },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#e2e8f0',
+                            cornerRadius: 12,
+                            padding: 14
+                        }
+                    },
+                    animation: { duration: 1200, easing: 'easeOutQuart' }
+                }
+            });
+        } else {
+            trendCanvas.insertAdjacentHTML('afterend', '<p class="analytics-subtle">Not enough data yet for a trend chart.</p>');
+        }
+    }
+
+    const breakdownBar = document.getElementById('categoryBreakdownBar');
+    const legend = document.getElementById('categoryLegend');
+    if (breakdownBar && legend) {
+        const colorPalette = ['#38bdf8', '#22c55e', '#f97316', '#a855f7', '#facc15', '#ef4444', '#14b8a6'];
+        let colorIndex = 0;
+        const totals = {};
+
+        document.querySelectorAll('.grade-item-card').forEach(card => {
+            const categoryLabel = card.querySelector('.grade-item-category');
+            const percentageText = card.querySelector('.grade-item-percentage');
+            if (!categoryLabel) {
+                return;
+            }
+            const label = categoryLabel.textContent.trim();
+            if (!totals[label]) {
+                totals[label] = { count: 0, sum: 0, color: colorPalette[colorIndex % colorPalette.length] };
+                colorIndex++;
+            }
+            totals[label].count += 1;
+            if (percentageText) {
+                const numeric = parseFloat(percentageText.textContent);
+                totals[label].sum += isNaN(numeric) ? 0 : numeric;
+            }
+        });
+
+        const entries = Object.entries(totals);
+        if (entries.length) {
+            const totalItems = entries.reduce((acc, [, data]) => acc + data.count, 0);
+            entries.forEach(([label, data]) => {
+                const flexValue = data.count / totalItems;
+                const average = data.count ? Math.round(data.sum / data.count) : 0;
+
+                const segment = document.createElement('div');
+                segment.className = 'category-breakdown-segment';
+                segment.style.flex = flexValue;
+                segment.style.background = data.color;
+                segment.dataset.label = `${label}: ${average}% (${data.count} items)`;
+                breakdownBar.appendChild(segment);
+
+                const legendItem = document.createElement('div');
+                legendItem.className = 'category-legend-item';
+                legendItem.innerHTML = `<span class="category-legend-color" style="background:${data.color}"></span>${label} • ${average}%`;
+                legend.appendChild(legendItem);
+            });
+        } else {
+            breakdownBar.innerHTML = '<div style="flex:1; display:flex; align-items:center; justify-content:center; color:#64748b; font-weight:600;">No graded categories yet.</div>';
+        }
+    }
+
+    const popover = document.getElementById('gradePopover');
+    function showPopover(card) {
+        if (!popover) return;
+        const name = card.querySelector('.grade-item-name')?.textContent?.trim() || 'Grade Item';
+        const fraction = card.querySelector('.grade-item-fraction')?.textContent?.trim() || 'Score unavailable';
+        const feedback = card.querySelector('.grade-item-feedback')?.textContent?.trim() || 'No feedback yet.';
+        popover.innerHTML = `<strong>${name}</strong><div>${fraction}</div><div style="margin-top:6px; font-weight:500;">${feedback}</div>`;
+        popover.style.display = 'block';
+        popover.style.opacity = '0';
+
+        requestAnimationFrame(() => {
+            const rect = card.getBoundingClientRect();
+            const popoverRect = popover.getBoundingClientRect();
+            const top = window.scrollY + rect.top - popoverRect.height - 12;
+            const left = window.scrollX + rect.left + rect.width / 2 - popoverRect.width / 2;
+            popover.style.top = `${Math.max(window.scrollY + 10, top)}px`;
+            popover.style.left = `${Math.max(16, left)}px`;
+            popover.style.opacity = '1';
+        });
+    }
+    function hidePopover() {
+        if (popover) {
+            popover.style.display = 'none';
+            popover.style.opacity = '0';
+        }
+    }
+    document.querySelectorAll('.grade-item-card').forEach(card => {
+        card.addEventListener('mouseenter', () => showPopover(card));
+        card.addEventListener('mouseleave', hidePopover);
+    });
+
+    const courseSelect = document.getElementById('gradesCourseSelect');
+    const courseCards = document.querySelectorAll('.grades-accordion .course-card');
+    if (courseSelect) {
+        courseSelect.addEventListener('change', function() {
+            const target = this.value;
+            courseCards.forEach(card => {
+                if (target === 'all' || card.dataset.courseId === target) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (target !== 'all') {
+                const targetCard = Array.from(courseCards).find(card => card.dataset.courseId === target);
+                if (targetCard) {
+                    const collapse = targetCard.querySelector('.collapse');
+                    if (collapse && typeof bootstrap !== 'undefined') {
+                        new bootstrap.Collapse(collapse, { show: true });
+                    } else if (collapse) {
+                        collapse.classList.add('show');
+                    }
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    }
+});
+</script>

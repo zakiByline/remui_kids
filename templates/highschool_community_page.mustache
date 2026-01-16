@@ -1,0 +1,1035 @@
+{{> theme_remui_kids/highschool_sidebar }}>
+<div class="highschool-community-page">
+    <!-- Page Header -->
+    <div class="community-page-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="page-title">
+                        <i class="fa fa-users me-3"></i>
+                        Community
+                    </h1>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-outline-light me-2" onclick="refreshCommunity()">
+                        <i class="fa fa-refresh me-2"></i>Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="showCreatePostModal()">
+                        <i class="fa fa-plus me-2"></i>New Post
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Community Statistics -->
+    <div class="container-fluid">
+        <div class="community-stats-section">
+            <div class="row g-3 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon posts"><i class="fa fa-comments"></i></div>
+                        <div>
+                            <div class="stat-value">{{total_posts}}</div>
+                            <div>Total Posts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon users"><i class="fa fa-users"></i></div>
+                        <div>
+                            <div class="stat-value">{{total_users}}</div>
+                            <div>Active Users</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon today"><i class="fa fa-calendar-day"></i></div>
+                        <div>
+                            <div class="stat-value">{{today_posts}}</div>
+                            <div>Today's Posts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon engagement"><i class="fa fa-heart"></i></div>
+                        <div>
+                            <div class="stat-value">High</div>
+                            <div>Engagement</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Posts Feed -->
+            <div class="col-lg-12">
+                <div class="community-feed">
+                    <!-- Current user summary -->
+                    <div class="user-summary-card mb-3">
+                        <div class="user-summary-left">
+                            <div class="user-summary-avatar">{{{current_user.picture}}}</div>
+                            <div>
+                                <div class="user-summary-name">{{current_user.name}}</div>
+                                <div class="user-summary-email">{{current_user.email}}</div>
+                            </div>
+                        </div>
+                        <div class="user-summary-right">
+                            <span class="user-summary-tag">{{current_user.cohort}}</span>
+                        </div>
+                    </div>
+                    <!-- Filter Tabs -->
+                    <div class="feed-filters">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">
+                                <i class="fa fa-globe me-2"></i>All Posts
+                            </button>
+                            <button class="filter-tab" data-filter="homework">
+                                <i class="fa fa-book me-2"></i>Homework Help
+                            </button>
+                            <button class="filter-tab" data-filter="study">
+                                <i class="fa fa-graduation-cap me-2"></i>Study Groups
+                            </button>
+                            <button class="filter-tab" data-filter="projects">
+                                <i class="fa fa-project-diagram me-2"></i>Projects
+                            </button>
+                            <button class="filter-tab" data-filter="qa">
+                                <i class="fa fa-question-circle me-2"></i>Q&A
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Posts List -->
+                    <div class="posts-container">
+                        {{#posts}}
+                        <div class="post-card" data-category="{{category}}">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="author-avatar">
+                                        {{{author_picture}}}
+                                    </div>
+                                    <div class="author-info">
+                                        <div class="author-name">{{author_name}}</div>
+                                        <div class="post-meta">
+                                            <span class="post-time">{{time_ago}}</span>
+                                            <span class="post-course">{{course_name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="post-category">
+                                    <span class="category-badge category-{{category}}">{{category}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="post-content">
+                                <h3 class="post-title">{{title}}</h3>
+                                <div class="post-text">{{{content_preview}}}</div>
+                            </div>
+                            
+                            <div class="post-actions">
+                                <button class="action-btn like-btn" data-post-id="{{id}}">
+                                    <i class="fa fa-heart"></i>
+                                    <span class="like-count">{{likes_count}}</span>
+                                </button>
+                                <button class="action-btn comment-btn" data-post-id="{{id}}">
+                                    <i class="fa fa-comment"></i>
+                                    <span class="comment-count">{{comments_count}}</span>
+                                </button>
+                                <button class="action-btn share-btn" data-post-id="{{id}}">
+                                    <i class="fa fa-share"></i>
+                                    <span>Share</span>
+                                </button>
+                                <a href="{{{post_url}}}" class="action-btn read-more-btn">
+                                    <i class="fa fa-arrow-right"></i>
+                                    <span>Read More</span>
+                                </a>
+                            </div>
+                        </div>
+                        {{/posts}}
+                        
+                        {{^posts}}
+                        <div class="no-posts">
+                            <div class="no-posts-icon">
+                                <i class="fa fa-comments fa-3x"></i>
+                            </div>
+                            <h3>No posts yet</h3>
+                            <p>Be the first to start a conversation in the community!</p>
+                            <button class="btn btn-primary" onclick="showCreatePostModal()">
+                                <i class="fa fa-plus me-2"></i>Create First Post
+                            </button>
+                        </div>
+                        {{/posts}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Post Modal -->
+<div class="modal fade" id="createPostModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-plus me-2"></i>Create New Post
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createPostForm">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">Post Title</label>
+                        <input type="text" class="form-control" id="postTitle" placeholder="What's on your mind?">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postCategory" class="form-label">Category</label>
+                        <select class="form-select" id="postCategory">
+                            <option value="General">General Discussion</option>
+                            <option value="Homework Help">Homework Help</option>
+                            <option value="Study Group">Study Group</option>
+                            <option value="Projects">Projects</option>
+                            <option value="Q&A">Q&A</option>
+                            <option value="Announcements">Announcements</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="postContent" rows="6" placeholder="Share your thoughts, ask questions, or start a discussion..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postCourse" class="form-label">Related Course (Optional)</label>
+                        <select class="form-select" id="postCourse">
+                            <option value="">Select a course</option>
+                            <option value="math">Mathematics</option>
+                            <option value="english">English Literature</option>
+                            <option value="science">Science</option>
+                            <option value="history">History</option>
+                            <option value="computer">Computer Science</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitPost()">
+                    <i class="fa fa-paper-plane me-2"></i>Post
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Community Page Styles */
+
+.highschool-community-page {
+    margin-right: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.community-page-header {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.community-page-header .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0c4a6e;
+}
+
+/* Statistics Cards */
+.community-stats-section .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.community-stats-section .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.community-stats-section .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.community-stats-section .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.community-stats-section .stat-icon.posts {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.community-stats-section .stat-icon.users {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.community-stats-section .stat-icon.today {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.community-stats-section .stat-icon.engagement {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.community-stats-section .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.community-stats-section .stat-card > div:last-child {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Feed Filters */
+.feed-filters {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    background: #f8fafc;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-tab:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.filter-tab.active {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border-color: #1d4ed8;
+}
+
+/* Post Cards */
+.post-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* User summary card */
+.user-summary-card{display:flex;align-items:center;justify-content:space-between;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 16px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.user-summary-left{display:flex;align-items:center;gap:12px}
+.user-summary-avatar img,
+.current-user-profile-img {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+}
+.user-summary-name{font-weight:700;color:#1e293b}
+.user-summary-email{font-size:12px;color:#64748b}
+.user-summary-right .user-summary-tag{background:#eef2ff;color:#1d4ed8;border-radius:999px;padding:6px 10px;font-weight:700}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #e2e8f0;
+    position: relative;
+}
+
+.author-avatar img,
+.author-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.post-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.post-category {
+    flex-shrink: 0;
+}
+
+.category-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-badge.category-Homework\ Help {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+}
+
+.category-badge.category-Study\ Group {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.category-badge.category-Projects {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.category-badge.category-Q\&A {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.category-badge.category-Announcements {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.category-badge.category-General {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    color: white;
+}
+
+.post-content {
+    margin-bottom: 1.5rem;
+}
+
+.post-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.post-text {
+    color: #475569;
+    line-height: 1.6;
+}
+
+.post-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-btn:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.action-btn.like-btn.liked {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.action-btn.like-btn.liked i {
+    color: #ef4444;
+}
+
+/* Sidebar */
+.community-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.sidebar-widget {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.widget-header {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.widget-header h4 {
+    margin: 0;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.widget-content {
+    padding: 1.5rem;
+}
+
+/* User Items */
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+}
+
+.user-avatar img,
+.user-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.user-stats {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.user-status {
+    flex-shrink: 0;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #10b981;
+}
+
+/* Quick Actions */
+.quick-action-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.quick-action-btn:hover {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.quick-action-btn:last-child {
+    margin-bottom: 0;
+}
+
+/* Guidelines */
+.guidelines-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.guideline-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+/* No Posts */
+.no-posts {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.no-posts-icon {
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.no-posts h3 {
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.no-posts p {
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 16px 16px 0 0;
+}
+
+.modal-title {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.form-control, .form-select {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 1.5rem 2rem;
+}
+
+/* Profile Image Enhancements */
+.author-profile-img,
+.user-profile-img,
+.current-user-profile-img {
+    transition: all 0.3s ease;
+}
+
+.author-profile-img:hover,
+.user-profile-img:hover,
+.current-user-profile-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Fallback for missing profile images */
+.author-avatar:empty::before,
+.user-avatar:empty::before,
+.user-summary-avatar:empty::before {
+    content: '👤';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    color: #64748b;
+    font-size: 1.2rem;
+    border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .highschool-community-page {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .community-page-header .page-title {
+        font-size: 2rem;
+    }
+    
+    .filter-tabs {
+        flex-direction: column;
+    }
+    
+    .filter-tab {
+        text-align: center;
+    }
+    
+    .post-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .post-actions {
+        flex-wrap: wrap;
+    }
+    
+    .community-sidebar {
+        position: static;
+        margin-top: 2rem;
+    }
+}
+</style>
+
+<script>
+// Community Page JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCommunityPage();
+});
+
+function initializeCommunityPage() {
+    // Initialize filter tabs
+    initializeFilterTabs();
+    
+    // Initialize post interactions
+    initializePostInteractions();
+    
+    // Initialize real-time updates
+    initializeRealTimeUpdates();
+    
+    // Animate statistics cards
+    animateStatsCards();
+}
+
+function initializeFilterTabs() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const postCards = document.querySelectorAll('.post-card');
+    
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Update active tab
+            filterTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter posts
+            postCards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const category = card.dataset.category.toLowerCase().replace(/\s+/g, '');
+                    if (category.includes(filter)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+}
+
+function initializePostInteractions() {
+    // Like button functionality
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            const likeCount = this.querySelector('.like-count');
+            const icon = this.querySelector('i');
+            
+            // Toggle like state
+            this.classList.toggle('liked');
+            
+            if (this.classList.contains('liked')) {
+                likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                icon.style.color = '#ef4444';
+            } else {
+                likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                icon.style.color = '';
+            }
+            
+            // Add animation
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+    
+    // Comment button functionality
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            // TODO: Open comment modal or redirect to post
+            console.log('Open comments for post:', postId);
+        });
+    });
+    
+    // Share button functionality
+    document.querySelectorAll('.share-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            // TODO: Implement share functionality
+            console.log('Share post:', postId);
+        });
+    });
+}
+
+function initializeRealTimeUpdates() {
+    // Simulate real-time updates every 30 seconds
+    setInterval(() => {
+        updatePostCounts();
+    }, 30000);
+}
+
+function updatePostCounts() {
+    // Simulate new posts and updates
+    const statCards = document.querySelectorAll('.stat-card .stat-value');
+    statCards.forEach(card => {
+        const currentValue = parseInt(card.textContent);
+        if (!isNaN(currentValue) && Math.random() > 0.7) {
+            const newValue = currentValue + Math.floor(Math.random() * 3);
+            animateCounter(card, currentValue, newValue);
+        }
+    });
+}
+
+function animateCounter(element, start, end) {
+    const duration = 1000;
+    const startTime = performance.now();
+    
+    function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(start + (end - start) * progress);
+        
+        element.textContent = current;
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+        }
+    }
+    
+    requestAnimationFrame(updateCounter);
+}
+
+function animateStatsCards() {
+    const statCards = document.querySelectorAll('.stat-card');
+    
+    statCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        }, index * 100);
+    });
+}
+
+function refreshCommunity() {
+    const refreshBtn = document.querySelector('.btn-outline-light');
+    const icon = refreshBtn.querySelector('i');
+    
+    // Add loading animation
+    icon.style.animation = 'spin 1s linear infinite';
+    refreshBtn.disabled = true;
+    
+    // Simulate refresh
+    setTimeout(() => {
+        icon.style.animation = '';
+        refreshBtn.disabled = false;
+        
+        // Show success message
+        showNotification('Community refreshed successfully!', 'success');
+    }, 2000);
+}
+
+function showCreatePostModal() {
+    const modal = new bootstrap.Modal(document.getElementById('createPostModal'));
+    modal.show();
+}
+
+function submitPost() {
+    const title = document.getElementById('postTitle').value;
+    const category = document.getElementById('postCategory').value;
+    const content = document.getElementById('postContent').value;
+    const course = document.getElementById('postCourse').value;
+    
+    if (!title || !content) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    // Simulate post submission
+    const submitBtn = document.querySelector('#createPostModal .btn-primary');
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Posting...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('createPostModal'));
+        modal.hide();
+        
+        // Clear form
+        document.getElementById('createPostForm').reset();
+        
+        // Show success message
+        showNotification('Post created successfully!', 'success');
+    }, 2000);
+}
+
+function showStudyGroupModal() {
+    showNotification('Study Group feature coming soon!', 'info');
+}
+
+function showQuestionModal() {
+    showNotification('Q&A feature coming soon!', 'info');
+}
+
+function showAnnouncementModal() {
+    showNotification('Announcement feature coming soon!', 'info');
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Add CSS for spinner animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
+</script>

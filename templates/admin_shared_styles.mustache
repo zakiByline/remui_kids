@@ -1,0 +1,29 @@
+{{!
+    Shared Admin Styles Include
+    Include this at the top of any admin template to apply consistent styling
+}}
+<link rel="stylesheet" href="{{config.wwwroot}}/theme/remui_kids/style/admin-shared.css">
+
+<style>
+/* Additional inline styles for immediate application */
+/* Override any template-specific animations */
+.page-header::before,
+.detail-header::before,
+.header-background::before {
+    animation: none !important;
+    display: none !important;
+}
+
+/* Ensure pastel purple theme */
+body {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%) !important;
+}
+
+/* Wider wrappers */
+.container,
+.main-container,
+.content-wrapper {
+    max-width: 1600px !important;
+}
+</style>
+

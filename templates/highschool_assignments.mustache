@@ -1,0 +1,526 @@
+{{!
+    High School Assignments Page Template (Grade 9-12)
+    Displays assignments for high school students in a professional format
+}}
+
+{{! Include High School Sidebar Component for Grade 9-12 Students }}
+{{> theme_remui_kids/highschool_sidebar }}
+
+<style>
+/* Force body and html to not scroll - IMPORTANT for fixed sidebar */
+html,
+body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove default Moodle containers */
+.page-header,
+.context-header {
+    display: none !important;
+}
+
+.container,
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Main Container - FIXED positioning with independent scroll */
+.highschool-assignments-container {
+    position: fixed;
+    top: 0;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    padding: 100px 30px 30px 30px;
+    background: #f5f7fa;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+/* Professional Header */
+.assignments-header {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #4A90E2;
+}
+
+.assignments-header h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.assignments-header h1 i {
+    font-size: 2rem;
+    color: #4A90E2;
+}
+
+.assignments-subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid #e8ecef;
+}
+
+.stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+    font-size: 1.8rem;
+}
+
+.stat-card.total-stat .stat-icon {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.stat-card.pending-stat .stat-icon {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.stat-card.graded-stat .stat-icon {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.stat-card.overdue-stat .stat-icon {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 10px 0 5px 0;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Assignments Container */
+.assignments-container {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.assignments-container-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e8ecef;
+}
+
+.assignments-container-header h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 700;
+}
+
+.assignments-container-header i {
+    font-size: 1.5rem;
+    color: #4A90E2;
+}
+
+/* Assignment Cards */
+.assignment-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+    border-left: 4px solid #4A90E2;
+}
+
+.assignment-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-card.overdue {
+    border-left-color: #d32f2f;
+    background: #fff5f5;
+}
+
+.assignment-card.graded {
+    border-left-color: #388e3c;
+    background: #f0f8f0;
+}
+
+.assignment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.assignment-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.assignment-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.assignment-status.pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.assignment-status.graded {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.assignment-status.overdue {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.assignment-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #7f8c8d;
+    font-size: 0.875rem;
+    margin-bottom: 15px;
+}
+
+.assignment-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.assignment-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #4A90E2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #357abd;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    color: white;
+    text-decoration: none;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #cfd8dc;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.empty-message {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+.empty-btn {
+    background: #4A90E2;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.empty-btn:hover {
+    background: #357abd;
+    text-decoration: none;
+    color: white;
+}
+    
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .highschool-assignments-container {
+        left: 0;
+        padding: 90px 20px 25px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .assignments-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .assignment-title {
+        font-size: 1.1rem;
+    }
+    
+    .assignment-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .highschool-assignments-container {
+        padding: 80px 15px 20px 15px;
+    }
+    
+    .assignments-header {
+        padding: 20px;
+    }
+    
+    .assignments-header h1 {
+        font-size: 1.25rem;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    html,
+    body {
+        overflow: visible !important;
+        height: auto !important;
+    }
+    
+    .highschool-assignments-container {
+        position: static !important;
+        left: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .student-sidebar.enhanced-sidebar {
+        display: none !important;
+    }
+}
+</style>
+
+<!-- Main Container -->
+<div class="highschool-assignments-container">
+    
+    <!-- Professional Header -->
+    <div class="assignments-header">
+        <h1>
+            <i class="fa fa-tasks"></i>
+            My Assignments
+        </h1>
+        <p class="assignments-subtitle">Track and manage your assignments and submissions</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card total-stat">
+            <div class="stat-icon">
+                <i class="fa fa-list-alt"></i>
+            </div>
+            <div class="stat-number">{{total_assignments}}</div>
+            <div class="stat-label">Total Assignments</div>
+        </div>
+
+        <div class="stat-card pending-stat">
+            <div class="stat-icon">
+                <i class="fa fa-clock"></i>
+            </div>
+            <div class="stat-number">{{pending_count}}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        
+        <div class="stat-card graded-stat">
+            <div class="stat-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+            <div class="stat-number">{{graded_count}}</div>
+            <div class="stat-label">Graded</div>
+        </div>
+        
+        <div class="stat-card overdue-stat">
+            <div class="stat-icon">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-number">{{overdue_count}}</div>
+            <div class="stat-label">Overdue</div>
+        </div>
+    </div>
+
+    <!-- Assignments Container -->
+    <div class="assignments-container">
+        <div class="assignments-container-header">
+            <i class="fa fa-tasks"></i>
+            <h2>Assignment List</h2>
+        </div>
+        
+        {{#has_assignments}}
+        <!-- Assignment List -->
+        {{#assignments}}
+        <div class="assignment-card {{#overdue}}overdue{{/overdue}} {{#graded}}graded{{/graded}}">
+            <div class="assignment-header">
+                <h3 class="assignment-title">{{name}}</h3>
+                <span class="assignment-status {{status}}">{{status_text}}</span>
+            </div>
+            
+            <div class="assignment-meta">
+                <div class="assignment-meta-item">
+                    <i class="fa fa-book"></i>
+                    <span>{{course_name}}</span>
+                </div>
+                <div class="assignment-meta-item">
+                    <i class="fa fa-calendar"></i>
+                    <span>Due: {{due_date}}</span>
+                </div>
+                {{#grade}}
+                <div class="assignment-meta-item">
+                    <i class="fa fa-star"></i>
+                    <span>Grade: {{grade}}</span>
+                </div>
+                {{/grade}}
+            </div>
+            
+            <div class="assignment-actions">
+                <a href="{{url}}" class="btn btn-primary">
+                    <i class="fa fa-eye"></i> View Assignment
+                </a>
+                {{#can_submit}}
+                <a href="{{submit_url}}" class="btn btn-secondary">
+                    <i class="fa fa-upload"></i> Submit
+                </a>
+                {{/can_submit}}
+            </div>
+        </div>
+        {{/assignments}}
+        {{/has_assignments}}
+        
+        {{^has_assignments}}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <h3 class="empty-title">No Assignments Yet!</h3>
+            <p class="empty-message">Your assignments will appear here when they are assigned by your teachers.</p>
+            <a href="{{mycoursesurl}}" class="empty-btn">
+                <i class="fa fa-book"></i> View My Courses
+            </a>
+        </div>
+        {{/has_assignments}}
+    </div>
+
+</div>

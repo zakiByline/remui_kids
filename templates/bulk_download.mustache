@@ -1,0 +1,853 @@
+{{> theme_remui_kids/admin_shared_styles }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Download</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .download-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #d4edda, #d4edda);
+            color: black;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            to { text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.3); }
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e3f2fd;
+            animation: slideInDown 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .export-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f0f0f0;
+            animation: slideInLeft 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .export-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 2px solid #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .checkbox-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .checkbox.checked {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .export-actions {
+            background: linear-gradient(135deg,rgb(246, 250, 247),rgb(238, 241, 239));
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid #c3e6cb;
+            animation: slideInUp 0.8s ease-out 0.6s both;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .export-actions h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .history-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f0f0f0;
+            animation: slideInRight 0.8s ease-out 0.8s both;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .history-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .history-icon.csv {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .history-icon.excel {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .history-icon.json {
+            background: linear-gradient(135deg, #ffc107, #ff8c00);
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-filename {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .history-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .export-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="download-container">
+        <div class="header">
+            <h1><i class="fas fa-download"></i> Bulk Download</h1>
+            <p>Export user data in various formats with advanced filtering options</p>
+        </div>
+
+        <div class="content">
+           
+
+            <div class="export-section">
+                <h2><i class="fas fa-cog"></i> Export Configuration</h2>
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Export Format</label>
+                            <select id="exportFormat" class="form-select">
+                                <option value="csv">CSV (Comma Separated Values)</option>
+                                <option value="excel">Excel (XLSX)</option>
+                                <option value="json">JSON (JavaScript Object Notation)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Filter by Role</label>
+                            <select id="roleFilter" class="form-select">
+                                <option value="">All Roles</option>
+                                <option value="student">Students</option>
+                                <option value="teacher">Teachers</option>
+                                <option value="manager">Managers</option>
+                                <option value="admin">Administrators</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Filter by Status</label>
+                            <select id="statusFilter" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="active">Active Users</option>
+                                <option value="suspended">Suspended Users</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Date Range</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <input type="date" id="dateFrom" class="form-input" placeholder="From Date">
+                                <input type="date" id="dateTo" class="form-input" placeholder="To Date">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Fields to Export</label>
+                            <div class="checkbox-group" id="fieldsGroup">
+                                <div class="checkbox-item selected" data-field="username">
+                                    <div class="checkbox checked"></div>
+                                    <span>Username</span>
+                                </div>
+                                <div class="checkbox-item selected" data-field="email">
+                                    <div class="checkbox checked"></div>
+                                    <span>Email</span>
+                                </div>
+                                <div class="checkbox-item selected" data-field="firstname">
+                                    <div class="checkbox checked"></div>
+                                    <span>First Name</span>
+                                </div>
+                                <div class="checkbox-item selected" data-field="lastname">
+                                    <div class="checkbox checked"></div>
+                                    <span>Last Name</span>
+                                </div>
+                                <div class="checkbox-item" data-field="phone">
+                                    <div class="checkbox"></div>
+                                    <span>Phone</span>
+                                </div>
+                                <div class="checkbox-item" data-field="city">
+                                    <div class="checkbox"></div>
+                                    <span>City</span>
+                                </div>
+                                <div class="checkbox-item" data-field="country">
+                                    <div class="checkbox"></div>
+                                    <span>Country</span>
+                                </div>
+                                <div class="checkbox-item" data-field="timecreated">
+                                    <div class="checkbox"></div>
+                                    <span>Created Date</span>
+                                </div>
+                                <div class="checkbox-item" data-field="lastaccess">
+                                    <div class="checkbox"></div>
+                                    <span>Last Access</span>
+                                </div>
+                                <div class="checkbox-item" data-field="suspended">
+                                    <div class="checkbox"></div>
+                                    <span>Suspended</span>
+                                </div>
+                                <div class="checkbox-item" data-field="role">
+                                    <div class="checkbox"></div>
+                                    <span>Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-actions">
+                <h3><i class="fas fa-rocket"></i> Ready to Export</h3>
+                <div class="export-buttons">
+                    <button id="exportBtn" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button id="previewBtn" class="btn btn-secondary">
+                        <i class="fas fa-eye"></i> Preview Data
+                    </button>
+                    <a href="{{config.wwwroot}}/theme/remui_kids/admin/users_management_dashboard.php" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h2><i class="fas fa-history"></i> Export History</h2>
+                <div class="history-list" id="historyList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading export history...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFields = ['username', 'email', 'firstname', 'lastname'];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserStats();
+            loadExportHistory();
+            initializeEventListeners();
+        });
+
+        function initializeEventListeners() {
+            // Field selection
+            document.querySelectorAll('.checkbox-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const field = this.dataset.field;
+                    const checkbox = this.querySelector('.checkbox');
+                    
+                    if (selectedFields.includes(field)) {
+                        selectedFields = selectedFields.filter(f => f !== field);
+                        this.classList.remove('selected');
+                        checkbox.classList.remove('checked');
+                    } else {
+                        selectedFields.push(field);
+                        this.classList.add('selected');
+                        checkbox.classList.add('checked');
+                    }
+                });
+            });
+
+            // Export button
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            document.getElementById('previewBtn').addEventListener('click', previewData);
+        }
+
+        function loadUserStats() {
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/bulk_download.php?action=get_user_stats')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('totalUsers').textContent = data.stats.total_users;
+                        document.getElementById('activeUsers').textContent = data.stats.active_users;
+                        document.getElementById('students').textContent = data.stats.students;
+                        document.getElementById('teachers').textContent = data.stats.teachers;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading stats:', error);
+                });
+        }
+
+        function loadExportHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/bulk_download.php?action=get_export_history')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        if (data.history.length === 0) {
+                            historyList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No export history found</p>';
+                        } else {
+                            historyList.innerHTML = data.history.map(item => `
+                                <div class="history-item">
+                                    <div class="history-icon ${item.format}">
+                                        <i class="fas fa-file-${item.format === 'excel' ? 'excel' : item.format === 'json' ? 'code' : 'csv'}"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <div class="history-filename">${item.filename}</div>
+                                        <div class="history-details">
+                                            ${item.record_count} records • ${item.format.toUpperCase()} • ${new Date(item.created_date * 1000).toLocaleString()}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading history:', error);
+                    historyList.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 20px;">Error loading export history</p>';
+                });
+        }
+
+        function exportData() {
+            if (selectedFields.length === 0) {
+                showMessage('Please select at least one field to export', 'error');
+                return;
+            }
+
+            const filters = {
+                role: document.getElementById('roleFilter').value,
+                status: document.getElementById('statusFilter').value,
+                date_from: document.getElementById('dateFrom').value,
+                date_to: document.getElementById('dateTo').value
+            };
+
+            const format = document.getElementById('exportFormat').value;
+
+            const exportBtn = document.getElementById('exportBtn');
+            const originalText = exportBtn.innerHTML;
+            exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+            exportBtn.disabled = true;
+
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/bulk_download.php?action=export_users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    format: format,
+                    filters: filters,
+                    fields: selectedFields
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('Export failed');
+                }
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `users_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showMessage('Export completed successfully!', 'success');
+                loadExportHistory();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error exporting data', 'error');
+            })
+            .finally(() => {
+                exportBtn.innerHTML = originalText;
+                exportBtn.disabled = false;
+            });
+        }
+
+        function previewData() {
+            if (selectedFields.length === 0) {
+                showMessage('Please select at least one field to preview', 'error');
+                return;
+            }
+
+            const filters = {
+                role: document.getElementById('roleFilter').value,
+                status: document.getElementById('statusFilter').value,
+                date_from: document.getElementById('dateFrom').value,
+                date_to: document.getElementById('dateTo').value
+            };
+
+            const previewBtn = document.getElementById('previewBtn');
+            const originalText = previewBtn.innerHTML;
+            previewBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            previewBtn.disabled = true;
+
+            fetch('{{config.wwwroot}}/theme/remui_kids/admin/bulk_download.php?action=export_users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    format: 'json',
+                    filters: filters,
+                    fields: selectedFields
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show preview in a modal or new window
+                    const previewWindow = window.open('', '_blank', 'width=800,height=600');
+                    previewWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>Data Preview</title>
+                                <style>
+                                    body { font-family: Arial, sans-serif; margin: 20px; }
+                                    table { border-collapse: collapse; width: 100%; }
+                                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                    th { background-color: #f2f2f2; }
+                                </style>
+                            </head>
+                            <body>
+                                <h2>Data Preview (${data.data.length} records)</h2>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            ${selectedFields.map(field => `<th>${field}</th>`).join('')}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${data.data.slice(0, 50).map(row => `
+                                            <tr>
+                                                ${selectedFields.map(field => `<td>${row[field] || ''}</td>`).join('')}
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                                ${data.data.length > 50 ? `<p><em>Showing first 50 records of ${data.data.length} total records.</em></p>` : ''}
+                            </body>
+                        </html>
+                    `);
+                    previewWindow.document.close();
+                } else {
+                    showMessage('Error previewing data: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error previewing data', 'error');
+            })
+            .finally(() => {
+                previewBtn.innerHTML = originalText;
+                previewBtn.disabled = false;
+            });
+        }
+
+        function showMessage(text, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.animation = 'slideInRight 0.3s ease-out reverse';
+                setTimeout(() => message.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

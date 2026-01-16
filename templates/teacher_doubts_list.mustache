@@ -1,0 +1,91 @@
+<div class="doubt-list" data-region="doubt-list-inner">
+    {{#records}}
+        <article class="doubt-list-item {{#iscurrent}}active{{/iscurrent}}" data-doubtid="{{id}}" data-lastactivity="{{lastactivity}}">
+            <div class="doubt-avatar">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="doubt-content">
+                <div class="doubt-row">
+                    <h3 class="doubt-subject">{{subject}}</h3>
+                    <span class="doubt-time" data-region="doubt-item-time">{{lastactivityhuman}}</span>
+                </div>
+                <div class="doubt-student-row">
+                    <span class="doubt-student">{{student.name}}</span>
+                    <span class="doubt-status status-{{status}}">{{statuslabel}}</span>
+                </div>
+            </div>
+        </article>
+    {{/records}}
+    {{^records}}
+        <div class="doubt-empty">
+            <i class="fa fa-inbox"></i>
+            <p>{{noresults}}</p>
+        </div>
+    {{/records}}
+</div>
+
+<style>
+.doubt-list { display:flex; flex-direction:column; max-height:100%; overflow:auto; padding:.5rem; gap:.25rem; }
+.doubt-list-item { display:flex; gap:1rem; align-items:center; padding:.85rem 1rem; border:1px solid rgba(148,163,184,.18); background:#f9fafb; cursor:pointer; transition:background .2s, border-color .2s; }
+.doubt-list-item:hover { background:#eef2ff; border-color:#cbd5f5; }
+.doubt-list-item.active { border-color:#6366f1; background:#eef2ff; }
+.doubt-avatar { width:48px; height:48px; border-radius:50px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:1.35rem; color:#475569; flex-shrink:0; }
+.doubt-avatar i { opacity:.75; }
+.doubt-content { flex:1; min-width:0; display:flex; flex-direction:column; gap:.35rem; }
+.doubt-row { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.doubt-subject { margin:0; font-size:1rem; font-weight:600; color:#1f2937; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.doubt-time { font-size:.78rem; color:#64748b; white-space:nowrap; }
+.doubt-student-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.doubt-student { font-size:.85rem; color:#475569; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.doubt-status { font-size:.75rem; font-weight:600; color:#2563eb; background:#e0f2fe; border-radius:999px; padding:.25rem .7rem; white-space:nowrap; text-transform:capitalize; }
+.doubt-status.status-open { color:#2563eb; background:#dbeafe; }
+.doubt-status.status-inprogress { color:#b45309; background:#fef3c7; }
+.doubt-status.status-waiting_student { color:#0369a1; background:#bae6fd; }
+.doubt-status.status-resolved { color:#047857; background:#d1fae5; }
+.doubt-status.status-archived { color:#475569; background:#e2e8f0; }
+.doubt-empty { text-align:center; padding:3rem 1rem; color:#94a3b8; font-weight:600; }
+.doubt-empty i { display:block; font-size:2rem; margin-bottom:1rem; }
+.doubt-list::-webkit-scrollbar { width:6px; }
+.doubt-list::-webkit-scrollbar-thumb { background:#cbd5f5; border-radius:10px; }
+</style>
+
+{{#js}}
+require(['jquery'], function($) {
+    const renderTimes = function(container) {
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const endOfToday = startOfToday + 24 * 60 * 60 * 1000;
+
+        container.find('.doubt-list-item').each(function() {
+            const item = $(this);
+            const target = item.find('[data-region="doubt-item-time"]');
+            if (!target.length) {
+                return;
+            }
+
+            const raw = parseInt(item.data('lastactivity'), 10);
+            if (!raw) {
+                return;
+            }
+
+            const timestamp = raw * 1000;
+            const date = new Date(timestamp);
+            let label;
+
+            if (timestamp >= startOfToday && timestamp < endOfToday) {
+                label = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            } else {
+                label = date.toLocaleDateString();
+            }
+
+            target.text(label);
+        });
+    };
+
+    const root = $('[data-region="doubt-list-inner"]');
+    if (root.length) {
+        renderTimes(root);
+    }
+});
+{{/js}}
+

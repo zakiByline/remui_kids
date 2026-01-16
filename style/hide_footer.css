@@ -1,0 +1,12 @@
+/*
+ * Styles specific to the RemUI Kids theme to hide the global footer
+ * on pages that request this stylesheet.
+ */
+
+#page-footer,
+.page-footer,
+.remui-footer,
+.footer-content {
+    display: none !important;
+    visibility: hidden;
+}

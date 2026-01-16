@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/codeeditor/db" VERSION="20251029.01" COMMENT="XMLDB file for Moodle mod/codeeditor - Full grading parity with Assignment"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="codeeditor" COMMENT="Stores the code editor activity instances">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course codeeditor activity belongs to"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Name of the code editor activity"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="General introduction of the code editor activity"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Optional description"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of description field"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Maximum grade for this activity"/>
+        <FIELD NAME="duedate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Due date for code submission"/>
+        <FIELD NAME="cutoffdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Cut-off date after which submissions are not accepted"/>
+        <FIELD NAME="allowsubmissionsfromdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Date from which submissions are allowed"/>
+        <FIELD NAME="requiresubmit" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether students must explicitly submit their code (1) or auto-save (0)"/>
+        <FIELD NAME="blindmarking" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Anonymous submissions - hide student identity from graders"/>
+        <FIELD NAME="hidegrader" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Hide grader identity from students"/>
+        <FIELD NAME="markingworkflow" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Enable marking workflow states"/>
+        <FIELD NAME="markingallocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Enable allocation of markers to students"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp when the instance was created"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp when the instance was last modified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="codeeditor_submissions" COMMENT="Stores student code submissions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="codeeditorid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ID of the code editor activity"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ID of the user who made the submission"/>
+        <FIELD NAME="code" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The submitted code"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Programming language used"/>
+        <FIELD NAME="output" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Output from code execution"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Submission status: draft, submitted"/>
+        <FIELD NAME="grade" TYPE="number" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="5" COMMENT="Grade given for this submission"/>
+        <FIELD NAME="grader" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="ID of the user who graded this submission"/>
+        <FIELD NAME="feedbacktext" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Feedback comments from teacher"/>
+        <FIELD NAME="feedbackformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of feedback text"/>
+        <FIELD NAME="attemptnumber" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Attempt number (for multiple attempts)"/>
+        <FIELD NAME="latest" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Is this the latest submission? 1=yes, 0=no"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of submission creation"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of last modification"/>
+        <FIELD NAME="timegraded" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp when graded"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="codeeditorid" TYPE="foreign" FIELDS="codeeditorid" REFTABLE="codeeditor" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="grader" TYPE="foreign" FIELDS="grader" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="codeeditorid-userid" UNIQUE="false" FIELDS="codeeditorid, userid"/>
+        <INDEX NAME="status" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="latest" UNIQUE="false" FIELDS="latest"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

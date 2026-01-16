@@ -1,0 +1,436 @@
+/**
+ * Clean Course Sidebar Styles
+ * Optimized and minimal CSS for course index sidebar
+ * 
+ * @package theme_remui_kids
+ * @copyright 2025 Kodeit
+ */
+
+/* ============================================
+   SIDEBAR CONTAINER
+   ============================================ */
+
+#theme_remui-drawers-courseindex,
+.theme_remui-drawers-courseindex {
+    background: #ffffff;
+    width: 350px;
+    border-right: 1px solid #e5e7eb;
+}
+
+#theme_remui-drawers-courseindex .drawercontent,
+.theme_remui-drawers-courseindex .drawercontent {
+    padding: 16px 20px;
+}
+
+/* ============================================
+   SECTION CONTAINER
+   ============================================ */
+
+/* Hide first section (Introduction/General) completely */
+.courseindex-section:first-child {
+    display: none !important;
+}
+
+/* Top-level sections (lessons) */
+.courseindex-section:not(:first-child) {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+/* Nested sections (subsections/modules) - render inside activity list */
+.courseindex-sectioncontent .courseindex-section,
+.courseindex-sectioncontent > li.courseindex-item.hasdelegatedsection .courseindex-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin: 8px 0;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+/* Ensure nested sections are visible */
+.courseindex-item-content .courseindex-section {
+    display: block !important;
+}
+
+/* ============================================
+   SECTION TITLE (LESSON HEADER)
+   ============================================ */
+
+.courseindex-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 0;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Override any blue/active background from parent theme */
+.courseindex-section.current .courseindex-section-title,
+.courseindex-section-title.current,
+.courseindex-section-title.active,
+.courseindex-section-title.pageitem,
+.courseindex-item.active,
+.courseindex-item.pageitem {
+    background: #ffffff !important;
+    border-left: none !important;
+}
+
+/* Active subsections: light grey background instead of blue */
+.courseindex-sectioncontent .courseindex-section.current .courseindex-section-title,
+.courseindex-sectioncontent .courseindex-section.active .courseindex-section-title,
+.courseindex-item.hasdelegatedsection .courseindex-section.current .courseindex-section-title,
+.courseindex-item.hasdelegatedsection .courseindex-section.active .courseindex-section-title {
+    background: #f3f4f6 !important;
+    background-color: #f3f4f6 !important;
+}
+
+#theme_remui-drawers-courseindex .courseindex-section-title.pageitem{
+    background-color: #e9e9e9 !important;
+}
+
+/* Override any blue background for active subsection containers */
+.courseindex-sectioncontent .courseindex-section.current,
+.courseindex-sectioncontent .courseindex-section.active,
+.courseindex-item.hasdelegatedsection .courseindex-section.current,
+.courseindex-item.hasdelegatedsection .courseindex-section.active {
+    background: #f3f4f6 !important;
+    background-color: #f3f4f6 !important;
+}
+
+/* Status Badge - Leftmost element */
+.courseindex-section-status-badge {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.status-badge.status-complete {
+    background: #10b981;
+    color: #ffffff;
+}
+
+.status-badge.status-complete i {
+    font-size: 16px;
+}
+
+.status-badge.status-incomplete {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Hide status badge for first section */
+.courseindex-section:first-child .courseindex-section-status-badge {
+    display: none;
+}
+
+/* Book Icon - Open book outline */
+.courseindex-section-book-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #10b981;
+}
+
+.courseindex-section-book-icon i {
+    font-size: 18px;
+}
+
+/* Title and Progress Content */
+.courseindex-section-title-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.courseindex-link {
+    color: #111827;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    line-height: 1.4;
+}
+
+.courseindex-link:hover {
+    color: #111827;
+    text-decoration: none;
+}
+
+/* Progress Text */
+.courseindex-section-progress {
+    font-size: 11px !important;
+    color: #6b7280 !important;
+    font-weight: 400 !important;
+    line-height: 1.3 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-top: 3px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.courseindex-section-progress .progress-activities {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.courseindex-section-progress .progress-modules {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* For subsections, justify progress to the right (activities only) */
+.courseindex-sectioncontent .courseindex-section .courseindex-section-progress,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-progress {
+    justify-content: flex-end !important;
+}
+
+/* Chevron - Rightmost element for main sections */
+.courseindex-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.courseindex-chevron.collapsed .expanded-icon {
+    display: none;
+}
+
+.courseindex-chevron:not(.collapsed) .collapsed-icon {
+    display: none;
+}
+
+.courseindex-chevron:hover {
+    color: #111827;
+}
+
+/* Subsections: Chevron on LEFT side, stacked layers icon */
+.courseindex-sectioncontent .courseindex-section .courseindex-section-title,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row; /* Keep normal flex direction, use order for positioning */
+}
+
+/* Hide status badge for subsections */
+.courseindex-sectioncontent .courseindex-section .courseindex-section-status-badge,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-status-badge {
+    display: none !important;
+}
+
+/* Chevron first (left side) for subsections - use negative order to ensure it's first */
+.courseindex-sectioncontent .courseindex-section .courseindex-chevron,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-chevron {
+    order: -1 !important;
+    margin-left: 0;
+    margin-right: 8px;
+    flex-shrink: 0;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+/* Stacked layers icon for subsections (second position, after chevron) */
+.courseindex-sectioncontent .courseindex-section .courseindex-section-book-icon,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-book-icon {
+    order: 0 !important;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #10b981;
+}
+
+.courseindex-sectioncontent .courseindex-section .courseindex-section-book-icon i,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-book-icon i {
+    font-size: 18px;
+}
+
+/* Title content for subsections (third position) */
+.courseindex-sectioncontent .courseindex-section .courseindex-section-title-content,
+.courseindex-item.hasdelegatedsection .courseindex-section .courseindex-section-title-content {
+    order: 1 !important;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+/* ============================================
+   SECTION CONTENT (Activities)
+   ============================================ */
+
+.courseindex-item-content {
+    padding: 0;
+}
+
+.courseindex-sectioncontent {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.courseindex-sectioncontent .courseindex-item {
+    padding: 8px 16px 8px 44px; /* Extra left padding for circle (16px + 20px circle + 8px gap) */
+    border-bottom: 1px solid #f3f4f6;
+    background: #ffffff !important;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.courseindex-sectioncontent .courseindex-item:last-child {
+    border-bottom: none;
+}
+
+/* Reset padding for subsections (they have their own layout and don't need circle space) */
+.courseindex-sectioncontent .courseindex-item.hasdelegatedsection {
+    padding-left: 16px !important;
+}
+
+/* Remove blue background from activities */
+.courseindex-sectioncontent .courseindex-item.active,
+.courseindex-sectioncontent .courseindex-item.pageitem,
+.courseindex-sectioncontent .courseindex-item.current {
+    background: #ffffff !important;
+}
+
+/* Active activity text - Dark green color */
+.courseindex-sectioncontent .courseindex-item.active a,
+.courseindex-sectioncontent .courseindex-item.pageitem a,
+.courseindex-sectioncontent .courseindex-item.current a,
+.courseindex-sectioncontent .courseindex-item.active .courseindex-link,
+.courseindex-sectioncontent .courseindex-item.pageitem .courseindex-link,
+.courseindex-sectioncontent .courseindex-item.current .courseindex-link,
+.courseindex-sectioncontent .courseindex-item.active span,
+.courseindex-sectioncontent .courseindex-item.pageitem span,
+.courseindex-sectioncontent .courseindex-item.current span {
+    color: #059669 !important; /* Dark green color */
+    font-weight: 600 !important;
+}
+
+/* Completion circle before activity name - only for regular activities, NOT subsections */
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection)::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    background: #ffffff;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+/* NO circles for subsections - explicitly hide */
+.courseindex-sectioncontent .courseindex-item.hasdelegatedsection::before,
+.courseindex-sectioncontent .courseindex-item:has(.courseindex-section)::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* Reset padding for subsections (they don't need circle space) */
+.courseindex-sectioncontent .courseindex-item.hasdelegatedsection,
+.courseindex-sectioncontent .courseindex-item:has(.courseindex-section) {
+    padding-left: 16px !important;
+}
+
+/* Completed activity: green circle with checkmark (only for regular activities) */
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection).completed::before,
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection)[data-completion-state="1"]::before,
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection)[data-completion-state="2"]::before {
+    border-color: #10b981;
+}
+
+/* Checkmark icon for completed activities (only for regular activities) */
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection).completed::after,
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection)[data-completion-state="1"]::after,
+.courseindex-sectioncontent > .courseindex-item:not(.hasdelegatedsection)[data-completion-state="2"]::after {
+    content: '\f00c'; /* Font Awesome checkmark */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 11px;
+    color: #10b981;
+    position: absolute;
+    left: 21px; /* Center in circle (16px + 2.5px adjustment) */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    line-height: 1;
+}
+
+/* Hide default Moodle completion indicators (we're using our own circles and checkmarks) */
+.courseindex-sectioncontent .courseindex-item .completioninfo {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+.courseindex-sectioncontent .courseindex-item .completioninfo *,
+.courseindex-sectioncontent .courseindex-item .completioninfo img,
+.courseindex-sectioncontent .courseindex-item .completioninfo svg,
+.courseindex-sectioncontent .courseindex-item .completion_complete,
+.courseindex-sectioncontent .courseindex-item .completion_incomplete {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* NO checkmarks for subsections */
+.courseindex-sectioncontent .courseindex-item.hasdelegatedsection::after,
+.courseindex-sectioncontent .courseindex-item:has(.courseindex-section)::after {
+    display: none !important;
+    content: none !important;
+}
+

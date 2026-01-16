@@ -1,0 +1,87 @@
+{{!
+    Example template showing how to use the admin sidebar
+    
+    This template demonstrates how to include the admin sidebar
+    in any admin page or dashboard.
+}}
+
+{{> theme_remui_kids/common_start}}
+
+{{#admin_page}}
+<!-- Admin Page Wrapper -->
+<div class="admin-page-wrapper">
+    <!-- Mobile Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Admin Page Header -->
+    <div class="admin-page-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="admin-page-title mb-2">
+                        {{page_title}}
+                    </h1>
+                    <p class="admin-page-subtitle mb-0">
+                        {{page_subtitle}}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="admin-page-badge">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Admin Sidebar -->
+    {{> theme_remui_kids/admin_sidebar}}
+
+    <!-- Main Content Area -->
+    <div class="admin-main-content">
+        <!-- Your page content goes here -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="admin-content-card">
+                        <h3>Page Content</h3>
+                        <p>This is where your page content would go.</p>
+                        <p>The admin sidebar is now reusable and can be included in any admin page.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/admin_page}}
+
+{{> theme_remui/common_end}}
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    sidebar.classList.toggle('sidebar-open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const toggleButton = document.querySelector('.sidebar-toggle');
+    
+    if (window.innerWidth <= 768) {
+        if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+            sidebar.classList.remove('sidebar-open');
+        }
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('sidebar-open');
+    }
+});
+</script>

@@ -1,0 +1,462 @@
+/**
+ * Force LTR Layout for ALL Languages
+ * 
+ * This file ensures the page layout stays Left-to-Right (LTR) 
+ * even when using RTL languages like Arabic.
+ * Only the TEXT content gets translated, not the layout.
+ *
+ * @package    theme_remui_kids
+ * @copyright  2025 Kodeit
+ */
+
+/* Force LTR direction on entire page */
+html,
+html[dir="rtl"],
+html[lang="ar"],
+html[lang="ar-SA"],
+html[lang="he"],
+body,
+body.dir-rtl,
+body[dir="rtl"] {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Force LTR on all major containers */
+#page,
+#page-wrapper,
+.drawer,
+.main-inner,
+.container,
+.container-fluid,
+.row,
+.col,
+[class*="col-"],
+.card,
+.navbar,
+nav,
+aside,
+header,
+footer,
+main,
+section,
+article,
+div {
+    direction: ltr !important;
+}
+
+/* Keep sidebar on left */
+.school-manager-sidebar,
+.admin-sidebar-wrapper,
+.elementary-student-sidebar,
+.drawer-left,
+#nav-drawer,
+.sidebar,
+[data-region="drawer"] {
+    direction: ltr !important;
+    left: 0 !important;
+    right: auto !important;
+    text-align: left !important;
+}
+
+/* Keep navigation items left-aligned */
+.nav,
+.nav-item,
+.nav-link,
+.navbar-nav,
+.menu,
+.menu-item,
+.sidebar-menu,
+.sidebar-navigation,
+.nav-list {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep nav icons on left */
+.nav-icon,
+.menu-icon,
+.sidebar-icon {
+    margin-right: 10px !important;
+    margin-left: 0 !important;
+}
+
+/* Keep cards and grids in LTR order */
+.elementary-courses-container,
+.courses-static-grid,
+.admin-stats-container,
+.user-stats-container,
+.course-stats-grid,
+.elementary-stats-container,
+.slider-track,
+.slider-viewport,
+.grid,
+.flex,
+.d-flex {
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+
+/* Keep course cards in correct order */
+.elementary-course-card,
+.enhanced-course-card,
+.small-course-card,
+.course-card,
+.stat-card,
+.admin-stat-card,
+.user-stat-card {
+    direction: ltr !important;
+}
+
+/* Keep stat boxes in LTR */
+.stat-box,
+.stat-item,
+.course-stats-grid .stat-item {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep progress bars LTR */
+.progress,
+.progress-bar,
+.progress-fill {
+    direction: ltr !important;
+}
+
+/* Keep forms LTR */
+form,
+.form-group,
+.form-control,
+input,
+select,
+textarea,
+button {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep tables LTR */
+table,
+thead,
+tbody,
+tr,
+th,
+td {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep dropdowns LTR */
+.dropdown,
+.dropdown-menu,
+.dropdown-item {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep buttons with icons in correct order */
+.btn i,
+.button i,
+a i {
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+}
+
+/* Keep slider navigation in correct position */
+.slider-nav-btn[data-slider-prev] {
+    left: 0 !important;
+    right: auto !important;
+}
+
+.slider-nav-btn[data-slider-next] {
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* Keep Quick Actions section LTR */
+.quick-actions-section,
+.quick-actions-container {
+    direction: ltr !important;
+}
+
+/* Keep section headers LTR */
+.section-header,
+.sections-section-title,
+.hs-block-title {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Keep view-all links on right */
+.view-all-link,
+.hs-inline-link {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+/* Keep hero stats in order */
+.hs-hero-stats,
+.highschool-stats {
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+
+/* Subject Focus card position */
+.hs-surface-card.hs-subject-focus,
+.subject-focus-card {
+    direction: ltr !important;
+}
+
+/* Calendar widget */
+.elementary-calendar-widget,
+.calendar-body-container {
+    direction: ltr !important;
+}
+
+/* Keep modals LTR */
+.modal,
+.modal-dialog,
+.modal-content,
+.modal-header,
+.modal-body,
+.modal-footer {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Override any RTL classes from parent theme */
+.dir-rtl,
+[dir="rtl"] .drawer-left,
+[dir="rtl"] .navbar,
+[dir="rtl"] .sidebar {
+    direction: ltr !important;
+}
+
+/* Specific overrides for high school dashboard */
+.highschool-dashboard,
+.highschool-dashboard-wrapper,
+.hs-main-layout,
+.hs-content-area,
+.courseSubject {
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+
+/* Keep welcome header centered */
+.hs-hero-welcome,
+.welcome-header {
+    direction: ltr !important;
+    text-align: center !important;
+}
+
+/* Elementary dashboard specific */
+.elementary-dashboard,
+.grade-panel-elementary {
+    direction: ltr !important;
+}
+
+/* Middle school dashboard */
+.middle-dashboard,
+.grade-panel-middle {
+    direction: ltr !important;
+}
+
+/* Admin dashboard */
+.admin-dashboard-wrapper,
+.admin-main-content {
+    direction: ltr !important;
+}
+
+/* Force flex containers to use row direction */
+.d-flex:not(.flex-column),
+.flex-row {
+    flex-direction: row !important;
+}
+
+/* Ensure grid layouts maintain order */
+.row {
+    flex-direction: row !important;
+}
+
+/* Keep breadcrumbs LTR */
+.breadcrumb,
+.breadcrumb-item {
+    direction: ltr !important;
+}
+
+/* Keep pagination LTR */
+.pagination {
+    direction: ltr !important;
+}
+
+/* Keep alerts LTR */
+.alert {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+
+
+/* ============================================
+   NAVBAR & LANGUAGE SWITCHER - CRITICAL FIX
+   Ensures navbar elements stay in exact position
+   regardless of language direction (RTL/LTR)
+   ============================================ */
+
+/* Force navbar to always be LTR layout */
+.navbar,
+.navbar.fixed-top,
+nav.navbar {
+    direction: ltr !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+}
+
+/* Keep navbar brand on left */
+.navbar-brand {
+    direction: ltr !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    order: 0 !important;
+}
+
+/* Keep sub-nav and user navigation on right */
+.sub-nav {
+    direction: ltr !important;
+    display: flex !important;
+    flex-direction: row !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    order: 1 !important;
+}
+
+#usernavigation {
+    direction: ltr !important;
+    display: flex !important;
+    flex-direction: row !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+/* Language Switcher - Fixed Position */
+.langswitch-nav-item {
+    direction: ltr !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    order: unset !important;
+}
+
+.langswitch-dropdown-wrapper {
+    direction: ltr !important;
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.langswitch-select {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Ensure the globe icon stays on left */
+.langswitch-dropdown-wrapper>i.fa-globe {
+    left: 10px !important;
+    right: auto !important;
+}
+
+/* Ensure the caret icon stays on right */
+.langswitch-dropdown-wrapper>i.fa-caret-down {
+    right: 10px !important;
+    left: auto !important;
+}
+
+/* Keep all nav items in correct order */
+.nav-item,
+.langswitch-nav-item,
+.usermenu-wrapper,
+.nav-darkmode {
+    direction: ltr !important;
+    float: none !important;
+}
+
+/* Ensure consistent flex order for navbar items */
+.navbar .navbar-nav {
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+
+.navbar .ml-auto,
+.navbar .ms-auto {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+/* Fix dividers positioning */
+.usermenu-wrapper .divider {
+    direction: ltr !important;
+}
+
+/* Primary navigation stays in order */
+.primary-navigation {
+    direction: ltr !important;
+    order: 0 !important;
+}
+
+/* Edwiser navigation stays in order */
+.edwiser-navigation {
+    direction: ltr !important;
+}
+
+/* User menu positioning */
+.usermenu-container {
+    direction: ltr !important;
+}
+
+/* Dark mode toggle positioning */
+.nav-darkmode {
+    direction: ltr !important;
+}
+
+/* Search box positioning */
+.edw-search-box,
+[class*="search-box"] {
+    direction: ltr !important;
+}
+
+/* Override any RTL float/position changes in navbar */
+[dir="rtl"] .navbar,
+[dir="rtl"] .navbar-brand,
+[dir="rtl"] .sub-nav,
+[dir="rtl"] #usernavigation,
+[dir="rtl"] .langswitch-nav-item,
+[dir="rtl"] .langswitch-dropdown-wrapper,
+[dir="rtl"] .nav-item,
+[dir="rtl"] .usermenu-wrapper,
+[dir="rtl"] .primary-navigation,
+[dir="rtl"] .edwiser-navigation,
+body.dir-rtl .navbar,
+body.dir-rtl .navbar-brand,
+body.dir-rtl .sub-nav,
+body.dir-rtl #usernavigation,
+body.dir-rtl .langswitch-nav-item,
+body.dir-rtl .langswitch-dropdown-wrapper,
+body.dir-rtl .nav-item,
+body.dir-rtl .usermenu-wrapper {
+    direction: ltr !important;
+    float: none !important;
+}
+
+/* Ensure navbar toggler stays on left */
+.navbar-toggler,
+.navbar-toggler-wrapper {
+    direction: ltr !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+/* Fix any RTL transform issues */
+[dir="rtl"] .langswitch-dropdown-wrapper i,
+body.dir-rtl .langswitch-dropdown-wrapper i {
+    transform: translateY(-50%) !important;
+}

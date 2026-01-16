@@ -1,0 +1,215 @@
+{{!
+    Elementary Dashboard Sidebar Template for remui_kids theme
+    
+    This template provides the sidebar navigation specifically for Elementary (Grades 1-3) dashboard.
+    It's designed to be kid-friendly with colorful, engaging elements and proper scrollbar positioning.
+}}
+
+<!-- Elementary Student Sidebar -->
+<div class="elementary-student-sidebar">
+    <!-- Fixed Sidebar Header -->
+    <div class="elementary-sidebar-header">
+        <div class="sidebar-school-logo">
+            🎓
+        </div>
+        <div class="sidebar-school-name">Al-Faisaliah Islamic School</div>
+        <div class="sidebar-user-info">{{student_name}}</div>
+        <div class="sidebar-role-badge">Elementary Student</div>
+    </div>
+
+    <!-- Scrollable Navigation Area -->
+    <nav class="elementary-sidebar-nav">
+        
+        <!-- DASHBOARD Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title">
+                <span class="elementary-section-bullet blue"></span>
+                DASHBOARD
+            </div>
+            <ul class="elementary-nav-list">
+                <li class="elementary-nav-item">
+                    <a href="{{{dashboardurl}}}" class="elementary-nav-link {{#is_dashboard_page}}active{{/is_dashboard_page}}">
+                        <i class="fa fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{elementary_mycoursesurl}}}" class="elementary-nav-link {{#is_mycourses_page}}active{{/is_mycourses_page}}">
+                        <i class="fa fa-book-open"></i>
+                        <span>My Courses1</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{lessonsurl}}}" class="elementary-nav-link {{#is_lessons_page}}active{{/is_lessons_page}}">
+                        <i class="fa fa-play-circle"></i>
+                        <span>Lessons</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{activitiesurl}}}" class="elementary-nav-link {{#is_activities_page}}active{{/is_activities_page}}">
+                        <i class="fa fa-chart-line"></i>
+                        <span>Activities</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{achievementsurl}}}" class="elementary-nav-link {{#is_achievements_page}}active{{/is_achievements_page}}">
+                        <i class="fa fa-trophy"></i>
+                        <span>Achievements</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{competenciesurl}}}" class="elementary-nav-link {{#is_competencies_page}}active{{/is_competencies_page}}">
+                        <i class="fa fa-bullseye"></i>
+                        <span>Competencies</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{scheduleurl}}}" class="elementary-nav-link {{#is_schedule_page}}active{{/is_schedule_page}}">
+                        <i class="fa fa-calendar"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{myreportsurl}}}" class="elementary-nav-link {{#is_myreports_page}}active{{/is_myreports_page}}">
+                        <i class="fa fa-file-alt"></i>
+                        <span>My Reports</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{communityurl}}}" class="elementary-nav-link {{#is_community_page}}active{{/is_community_page}}">
+                        <i class="fa fa-people-group"></i>
+                        <span>Communities</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="/theme/remui_kids/elementary_current_activity.php" class="elementary-nav-link {{#is_currentactivity_page}}active{{/is_currentactivity_page}}">
+                        <i class="fa fa-clock"></i>
+                        <span>My Actions</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="/theme/remui_kids/need_help.php" class="elementary-nav-link {{#is_needhelp_page}}active{{/is_needhelp_page}}">
+                        <i class="fa fa-question-circle"></i>
+                        <span>Need Help</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- SETTINGS & PROFILE Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title">
+                <span class="elementary-section-bullet orange"></span>
+                SETTINGS & PROFILE
+            </div>
+            <ul class="elementary-nav-list">
+                <li class="elementary-nav-item">
+                    <a href="{{{settingsurl}}}" class="elementary-nav-link">
+                        <i class="fa fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{profileurl}}}" class="elementary-nav-link {{#is_profile_page}}active{{/is_profile_page}}">
+                        <i class="fa fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="elementary-nav-item">
+                    <a href="{{{logouturl}}}" class="elementary-nav-link">
+                        <i class="fa fa-sign-out"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- QUICK ACTIONS Section -->
+        <div class="elementary-nav-section">
+            <div class="elementary-section-title quick-actions-toggle" id="quick-actions-toggle" onclick="toggleQuickActionsMenu()" style="cursor: pointer; user-select: none;" role="button" tabindex="0" aria-expanded="false" aria-controls="quick-actions-container">
+                <span class="elementary-section-bullet purple"></span>
+                QUICK ACTIONS
+                <i class="fa fa-chevron-down quick-actions-arrow" id="quick-actions-arrow" style="float: right; transition: transform 0.3s;"></i>
+            </div>
+            <div class="elementary-quick-actions-container" id="quick-actions-container">
+                <div class="elementary-quick-action-card ebooks-card" onclick="navigateToPage('ebooks')" style="cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-book"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4 style="color: white;">E-books</h4>
+                        <p style="color: rgba(255,255,255,0.9);">Access digital learning materials</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-arrow-right" style="color: white;"></i>
+                    </div>
+                </div>
+                
+                <div class="elementary-quick-action-card ask-teacher-card" onclick="navigateToPage('ask-teacher')" style="cursor: pointer; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4 style="color: white;">Ask Teacher</h4>
+                        <p style="color: rgba(255,255,255,0.9);">Get help from your instructor</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-arrow-right" style="color: white;"></i>
+                    </div>
+                </div>
+
+                <div class="elementary-quick-action-card games-card" onclick="navigateToPage('games')" style="cursor: pointer; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="elementary-quick-action-icon">
+                        <i class="fa fa-gamepad"></i>
+                    </div>
+                    <div class="elementary-quick-action-content">
+                        <h4 style="color: white;">Learning Games</h4>
+                        <p style="color: rgba(255,255,255,0.9);">Fun educational activities</p>
+                    </div>
+                    <div class="elementary-quick-action-arrow">
+                        <i class="fa fa-arrow-right" style="color: white;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script>
+function toggleQuickActionsMenu() {
+    const container = document.getElementById('quick-actions-container');
+    const arrow = document.getElementById('quick-actions-arrow');
+    const toggle = document.getElementById('quick-actions-toggle');
+    
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        arrow.classList.remove('expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+    } else {
+        container.classList.add('expanded');
+        arrow.classList.add('expanded');
+        toggle.setAttribute('aria-expanded', 'true');
+    }
+}
+
+function navigateToPage(page) {
+    const urls = {
+        'ebooks': '/theme/remui_kids/ebooks.php',
+        'ask-teacher': '/theme/remui_kids/ask_teacher.php',
+        'games': '/theme/remui_kids/learning_games.php'
+    };
+    
+    if (urls[page]) {
+        window.location.href = urls[page];
+    }
+}
+
+// Initialize quick actions menu state
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('quick-actions-container');
+    if (container) {
+        container.style.maxHeight = '0px';
+        container.style.padding = '0 20px';
+    }
+});
+</script>

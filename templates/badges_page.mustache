@@ -1,0 +1,157 @@
+{{#custom_badges}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+<style>
+/* Layout styles - same as other pages */
+.container, .container-fluid, #page, #page-content, .main-inner, #topofscroll {
+    margin: 0 !important; padding: 0 !important; max-width: none !important; width: 100% !important;
+}
+.container { max-width: calc(100vw - 280px) !important; width: calc(100vw - 280px) !important; margin-left: 280px !important; }
+#page, #page-content, .main-inner, #topofscroll { margin-top: 0 !important; padding-top: 0 !important; }
+.container, .container-fluid, body, html { margin-top: 0 !important; padding-top: 0 !important; }
+.g4g7-sidebar { background: #ffffff !important; border-right: 1px solid #e5e7eb !important; }
+.g4g7-nav-content { background: #ffffff !important; }
+
+/* Page Header */
+.badges-page-header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center; }
+.badges-page-title { font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin: 0 0 15px 0; display: flex; align-items: center; justify-content: center; gap: 15px; }
+.badges-page-title i { color: #3498db; font-size: 2.2rem; }
+.badges-page-subtitle { font-size: 1.2rem; color: #6c757d; margin: 0; line-height: 1.5; }
+
+{{#is_middle_grade}}
+.badges-page-header { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; }
+.badges-page-title { color: white; }
+.badges-page-title i { color: white; opacity: 0.9; }
+.badges-page-subtitle { color: white; opacity: 0.9; }
+{{/is_middle_grade}}
+
+/* Stats */
+.badges-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.stat-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+.stat-card:hover { transform: translateY(-5px); }
+.stat-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.5rem; color: white; }
+.stat-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.stat-icon.green { background: linear-gradient(135deg, #27ae60, #229954); }
+.stat-icon.purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.stat-icon.gold { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.stat-number { font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
+.stat-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
+
+/* Badge Grid */
+.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.badge-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; border-left: 5px solid #3498db; }
+.badge-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+.badge-card.blue { border-left-color: #3498db; }
+.badge-card.green { border-left-color: #27ae60; }
+.badge-card.purple { border-left-color: #9b59b6; }
+.badge-card.gold { border-left-color: #f39c12; }
+.badge-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2rem; color: white; }
+.badge-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.badge-icon.green { background: linear-gradient(135deg, #27ae60, #229954); }
+.badge-icon.purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.badge-icon.gold { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.badge-title { font-size: 1.2rem; font-weight: 600; color: #2c3e50; margin: 0 0 10px 0; }
+.badge-description { color: #6c757d; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
+.badge-course { font-size: 0.8rem; color: #95a5a6; margin-bottom: 10px; }
+.badge-date { font-size: 0.8rem; color: #bdc3c7; }
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="badges-page-header">
+            <h2 class="badges-page-title">
+                <i class="fa fa-shield-alt"></i>
+                My Badges
+            </h2>
+            <p class="badges-page-subtitle">
+                {{#usercohortname}}
+                    Celebrate your achievements and milestones in {{usercohortname}}
+                {{/usercohortname}}
+                {{^usercohortname}}
+                    Collect badges for your learning achievements and milestones!
+                {{/usercohortname}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Badges Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="badges-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa fa-shield-alt"></i>
+                </div>
+                <div class="stat-number">{{total_badges}}</div>
+                <div class="stat-label">Total Badges</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+                <div class="stat-number">{{category_counts.academic}}</div>
+                <div class="stat-label">Academic</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fa fa-lightbulb"></i>
+                </div>
+                <div class="stat-number">{{category_counts.creativity}}</div>
+                <div class="stat-label">Creativity</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fa fa-star"></i>
+                </div>
+                <div class="stat-number">{{category_counts.special}}</div>
+                <div class="stat-label">Special</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Badges Grid -->
+{{#has_badges}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="badges-grid">
+            {{#badges}}
+            <div class="badge-card {{color}}">
+                <div class="badge-icon {{color}}">
+                    <i class="fa {{icon}}"></i>
+                </div>
+                <h3 class="badge-title">{{name}}</h3>
+                <p class="badge-description">{{description}}</p>
+                <p class="badge-course">{{course_name}}</p>
+                <p class="badge-date">
+                    <i class="fa fa-calendar"></i>
+                    {{date_earned}}
+                </p>
+            </div>
+            {{/badges}}
+        </div>
+    </div>
+</div>
+{{/has_badges}}
+
+{{^has_badges}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="stat-card" style="text-align: center; padding: 60px 20px;">
+            <i class="fa fa-shield-alt" style="font-size: 4rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+            <h3 style="color: #6c757d; margin: 0 0 10px 0;">No Badges Yet</h3>
+            <p style="color: #95a5a6; margin: 0;">Complete activities and achieve milestones to earn your first badge!</p>
+        </div>
+    </div>
+</div>
+{{/has_badges}}
+
+{{/custom_badges}}

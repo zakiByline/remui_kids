@@ -1,0 +1,59 @@
+/* Hide the Google Translate top bar/banner */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+}
+
+body {
+    top: 0 !important;
+}
+
+/* Hide unwanted injected elements but keep the dropdown widget visible */
+.goog-te-gadget-icon {
+    display: none !important;
+}
+
+.goog-te-menu-value span {
+    text-decoration: none !important;
+}
+
+/* Hide additional Google Translate banner element */
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+    display: none !important;
+}
+
+/* Ensure the Google Translate dropdown widget is visible on non-login pages */
+:not(.pagelayout-login) #google_translate_element {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+:not(.pagelayout-login) .goog-te-menu-frame {
+    display: block !important;
+}
+
+:not(.pagelayout-login) .goog-te-menu-value {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+/* Hide iframe banners but keep dropdown functional */
+:not(.pagelayout-login) iframe[title*="Google Translate"]:not([src*="element.js"]),
+:not(.pagelayout-login) iframe[name*="google_translate"]:not([src*="element.js"]) {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+

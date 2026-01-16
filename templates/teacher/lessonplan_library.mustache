@@ -1,0 +1,79 @@
+<div class="lp-container lp-library" data-ajax="{{ajaxurl}}" data-sesskey="{{sesskey}}">
+    <header class="lp-hero">
+        <div class="lp-hero-content">
+            <div>
+                <p class="lp-hero-label">Reusable Plans</p>
+                <h1>Lesson Plan Library</h1>
+                <p>Browse every AI-generated lesson plan and course planner you've saved, organized by grade level and lesson focus.</p>
+            </div>
+            <div class="lp-hero-actions">
+                <a href="{{builderurl}}" class="lp-hero-button">
+                    <i class="fa fa-magic"></i>
+                    Open Lesson Plan Generator
+                </a>
+                <button id="lp-library-refresh-top" class="lp-hero-button secondary">
+                    <i class="fa fa-rotate"></i>
+                    Refresh Library
+                </button>
+            </div>
+        </div>
+        <div class="lp-hero-meta-grid">
+            <article>
+                <p class="lp-hero-meta-label">Filters</p>
+                <h4>Search by Grade</h4>
+                <p>Quickly narrow down lesson plans by grade or lesson topic using the controls below.</p>
+            </article>
+            <article>
+                <p class="lp-hero-meta-label">Actions</p>
+                <h4>Ready to Use</h4>
+                <p>Preview plans instantly, print, download, or load them back into the generator to customize further.</p>
+            </article>
+            <article>
+                <p class="lp-hero-meta-label">Organization</p>
+                <h4>Folder View</h4>
+                <p>Plans are grouped into folders per grade with quick counts so you always know what's available.</p>
+            </article>
+        </div>
+    </header>
+
+    <section class="lp-section lp-saved">
+        <div class="lp-section-header">
+            <div>
+                <p class="lp-section-label">Lesson Plan Library</p>
+                <h3 class="lp-section-title">Saved Plans</h3>
+            </div>
+            <div class="lp-saved-controls">
+                <select id="lp-library-grade" class="lp-dropdown">
+                    <option value="">All grades</option>
+                </select>
+                <select id="lp-library-lesson" class="lp-dropdown">
+                    <option value="">All lessons</option>
+                </select>
+            </div>
+        </div>
+        <p class="lp-saved-empty" id="lp-library-empty">Loading your saved lesson plans...</p>
+        <div id="lp-library-list" class="lp-saved-list"></div>
+    </section>
+
+    <div id="lp-library-message" class="lp-message" hidden></div>
+
+    <section id="lp-library-detail" class="lp-section lp-result" hidden>
+        <div class="lp-section-header">
+            <div>
+                <p class="lp-section-label">Plan Preview</p>
+                <h3 class="lp-section-title" id="lp-library-plan-title"></h3>
+            </div>
+            <div class="lp-secondary-actions">
+                <button id="lp-library-print" class="lp-button lp-button-light" disabled>
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button id="lp-library-download" class="lp-button lp-button-light" disabled>
+                    <i class="fa fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+        <div id="lp-library-plan"></div>
+    </section>
+</div>
+
+

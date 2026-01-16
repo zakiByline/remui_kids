@@ -1,0 +1,1163 @@
+{{!
+    Custom My Courses Page Template for remui_kids theme
+    
+    This template displays student courses in the same card format as the dashboard.
+}}
+
+{{> theme_remui/head }}
+
+<body {{{ bodyattributes }}}>
+
+<div id='page-loader-wrapper' style='background:#ffffff;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;z-index: 9999;overflow:hidden;'>
+    {{#loaderimage}}<img src='{{{loaderimage}}}' alt='loader image' style='width: 50px;height: 50px;'>{{/loaderimage}}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function() {
+            document.querySelector('#page-loader-wrapper').style.display = 'none';
+        }, 100);
+    });
+    if (localStorage.getItem("nighteyewState") == "1") {
+        document.querySelector("#page-loader-wrapper").style.background = "#090909";
+    }
+</script>
+
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper" class="d-print-block">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{#focusdata.enabled}} {{> theme_remui/navbar_fm }} {{/focusdata.enabled}}
+
+    {{^hide_default_navbar}}
+    {{> theme_remui/navbar }}
+    {{/hide_default_navbar}}
+
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers drag-container">
+        {{#sitenotification}}{{{sitenotification}}}{{/sitenotification}}
+        
+        <div id="topofscroll" class="main-inner">
+            {{#notification}}{{> theme_remui/product_notification}}{{/notification}}
+
+<style>
+/* Inline CSS for My Courses Page */
+/* Hide default navbar completely */
+.navbar {
+    display: none !important;
+}
+
+.navbar-expand-lg {
+    display: none !important;
+}
+
+.navbar-nav {
+    display: none !important;
+}
+
+/* Adjust page layout when navbar is hidden */
+.custom-mycourses-page {
+    margin-left: 0 !important;
+    min-height: 100vh;
+    background: #f8f9fa !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 0 !important;
+}
+
+/* Ensure page content starts from top */
+#page-wrapper {
+    padding-top: 0 !important;
+}
+
+#page {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.main-inner {
+    padding-top: 0 !important;
+}
+
+.custom-mycourses-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 2rem 0 !important;
+    margin-bottom: 2rem !important;
+}
+
+.mycourses-greeting {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    color: white !important;
+}
+
+.mycourses-subtitle {
+    font-size: 1.1rem !important;
+    opacity: 0.9 !important;
+    margin: 0 !important;
+    color: white !important;
+}
+
+.mycourses-badge {
+    width: 60px !important;
+    height: 60px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+}
+
+.mycourses-badge i {
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+/* Enhanced Elementary Sidebar */
+.student-sidebar.enhanced-elementary-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    z-index: 1040 !important;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1) !important;
+    border-right: 2px solid #e8eaf0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.sidebar-nav {
+    padding: 1.5rem 0 !important;
+}
+
+.nav-section {
+    margin-bottom: 2rem !important;
+}
+
+.section-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #666666 !important;
+    margin-bottom: 1rem !important;
+    padding: 0 1.5rem !important;
+}
+
+.section-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+}
+
+.section-bullet.blue { background: #3b82f6 !important; }
+.section-bullet.green { background: #10b981 !important; }
+.section-bullet.orange { background: #f59e0b !important; }
+.section-bullet.purple { background: #8b5cf6 !important; }
+
+.nav-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.nav-item {
+    margin: 0 !important;
+}
+
+.nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.875rem 1.5rem !important;
+    color: #333333 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    font-weight: 500 !important;
+    margin: 0.125rem 1rem !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+}
+
+.nav-link i {
+    font-size: 1.1rem !important;
+    width: 20px !important;
+    text-align: center !important;
+    transition: all 0.2s ease !important;
+    color: #666666 !important;
+}
+
+.nav-link span {
+    transition: all 0.2s ease !important;
+}
+
+.nav-link:hover {
+    background: #f8f9fa !important;
+    color: #333333 !important;
+}
+
+.nav-link:hover i {
+    color: #666666 !important;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+.nav-link.active i,
+.nav-link.active span {
+    color: #ffffff !important;
+}
+
+.nav-link.active span {
+    font-weight: 600 !important;
+}
+
+/* Quick Actions */
+.quick-actions-container {
+    padding: 0 1rem !important;
+}
+
+.quick-action-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.quick-action-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.quick-action-icon i {
+    font-size: 1.2rem !important;
+    color: #ffffff !important;
+}
+
+.quick-action-content {
+    flex: 1 !important;
+}
+
+.quick-action-content h4 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+
+.quick-action-content p {
+    margin: 0 !important;
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    line-height: 1.3 !important;
+}
+
+.quick-action-arrow {
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.quick-action-arrow i {
+    font-size: 0.8rem !important;
+    color: #ffffff !important;
+}
+
+/* Quick Action Card Colors */
+.ebooks-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+}
+
+.ask-teacher-card {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.code-editor-card {
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%) !important;
+}
+
+.share-class-card {
+    background: linear-gradient(135deg, #ec4899 0%, #dc2626 100%) !important;
+}
+
+.scratch-editor-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+}
+
+/* My Courses Content */
+.mycourses-content {
+    padding: 0 2rem 2rem 2rem !important;
+}
+
+.courses-page-header {
+    text-align: center !important;
+    margin-bottom: 3rem !important;
+}
+
+.courses-page-title {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.courses-page-title i {
+    color: #667eea !important;
+    margin-right: 0.5rem !important;
+}
+
+.courses-page-subtitle {
+    font-size: 1.1rem !important;
+    color: #666666 !important;
+    margin: 0 !important;
+}
+
+/* Course Statistics */
+.courses-stats-container {
+    display: flex !important;
+    gap: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    flex-wrap: wrap !important;
+}
+
+.course-stat-card {
+    flex: 1 !important;
+    min-width: 200px !important;
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.course-stat-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-icon-container {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.stat-icon {
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+.stat-content .stat-number {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    line-height: 1 !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.stat-content .stat-label {
+    font-size: 0.9rem !important;
+    color: #666666 !important;
+    margin: 0 !important;
+}
+
+/* Course Cards Grid */
+.courses-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    gap: 2rem !important;
+}
+
+.mycourses-card {
+    background: white !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.mycourses-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.course-image-container {
+    position: relative !important;
+    height: 200px !important;
+    overflow: hidden !important;
+}
+
+.course-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.course-image-placeholder {
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.course-image-placeholder i {
+    font-size: 3rem !important;
+    color: white !important;
+    opacity: 0.8 !important;
+}
+
+.course-level-badge {
+    position: absolute !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #333333 !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 20px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+}
+
+.course-status-indicator {
+    position: absolute !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.course-status-indicator.completed { background: #27ae60 !important; }
+.course-status-indicator.in-progress { background: #f39c12 !important; }
+.course-status-indicator.not-started { background: #95a5a6 !important; }
+
+.course-status-indicator i {
+    color: white !important;
+    font-size: 1.2rem !important;
+}
+
+.course-content {
+    padding: 1.5rem !important;
+}
+
+.course-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 1rem !important;
+}
+
+.course-title {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    margin: 0 !important;
+    flex: 1 !important;
+}
+
+.course-grade {
+    background: #667eea !important;
+    color: white !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 20px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    margin-left: 1rem !important;
+}
+
+.course-summary {
+    color: #666666 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.5rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.course-progress-section {
+    margin-bottom: 1.5rem !important;
+}
+
+.progress-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.progress-label {
+    font-size: 0.9rem !important;
+    color: #666666 !important;
+    font-weight: 600 !important;
+}
+
+.progress-percentage {
+    font-size: 0.9rem !important;
+    color: #667eea !important;
+    font-weight: 700 !important;
+}
+
+.progress-bar-container .progress-bar {
+    height: 8px !important;
+    background: #e9ecef !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+
+.progress-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 4px !important;
+    transition: width 0.3s ease !important;
+}
+
+.course-stats-grid {
+    margin-bottom: 1.5rem !important;
+}
+
+.course-stat-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    font-size: 0.9rem !important;
+    color: #666666 !important;
+}
+
+.course-stat-item i {
+    font-size: 1rem !important;
+}
+
+.course-action-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 25px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.course-action-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.course-action-button i {
+    font-size: 0.8rem !important;
+}
+
+/* No Courses Message */
+.no-courses-message {
+    text-align: center !important;
+    background: white !important;
+    border-radius: 15px !important;
+    padding: 3rem !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.no-courses-icon {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 2rem !important;
+}
+
+.no-courses-icon i {
+    font-size: 2.5rem !important;
+    color: white !important;
+}
+
+.no-courses-message h3 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    margin-bottom: 1rem !important;
+}
+
+.no-courses-message p {
+    font-size: 1.1rem !important;
+    color: #666666 !important;
+    margin-bottom: 2rem !important;
+}
+
+.no-courses-message .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 2rem !important;
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+}
+
+.no-courses-message .btn i {
+    font-size: 0.9rem !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .custom-mycourses-page {
+        margin-left: 0 !important;
+    }
+    
+    .student-sidebar.enhanced-elementary-sidebar {
+        display: none !important;
+    }
+    
+    .courses-stats-container {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+    
+    .course-stat-card {
+        min-width: auto !important;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{{#custom_mycourses}}
+
+<div class="custom-mycourses-page">
+    <!-- Custom My Courses Header -->
+    <div class="custom-mycourses-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mycourses-greeting mb-2">
+                        My Courses
+                    </h1>
+                    <p class="mycourses-subtitle mb-0">
+                        {{#user_cohort_name}}
+                            Your {{user_cohort_name}} learning journey continues here!
+                        {{/user_cohort_name}}
+                        {{^user_cohort_name}}
+                            Explore your courses and continue learning!
+                        {{/user_cohort_name}}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mycourses-badge">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cohort-specific content -->
+    {{#dashboard_type}}
+        {{#elementary}}
+    <!-- Sidebar removed - using default Moodle sidebar -->
+    <div class="student-sidebar enhanced-elementary-sidebar" style="display: none;">
+                <nav class="sidebar-nav">
+                    
+                    <!-- DASHBOARD Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet blue"></span>
+                            DASHBOARD
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{dashboardurl}}}" class="nav-link">
+                                    <i class="fa fa-th-large"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{mycoursesurl}}}" class="nav-link active mycourses-link">
+                                    <i class="fa fa-book-open"></i>
+                                    <span>My Courses</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{lessonsurl}}}" class="nav-link">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Lessons</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{activitiesurl}}}" class="nav-link">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>Activities</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{achievementsurl}}}" class="nav-link">
+                                    <i class="fa fa-trophy"></i>
+                                    <span>Achievements</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{competenciesurl}}}" class="nav-link">
+                                    <i class="fa fa-bullseye"></i>
+                                    <span>Competencies</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{scheduleurl}}}" class="nav-link">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Schedule</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- TOOLS & RESOURCES Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet green"></span>
+                            TOOLS & RESOURCES
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{treeviewurl}}}" class="nav-link">
+                                    <i class="fa fa-sitemap"></i>
+                                    <span>Tree View</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- SETTINGS & PROFILE Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet orange"></span>
+                            SETTINGS & PROFILE
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{settingsurl}}}" class="nav-link">
+                                    <i class="fa fa-cog"></i>
+                                    <span>Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- QUICK ACTIONS Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet purple"></span>
+                            QUICK ACTIONS
+                        </div>
+                        <div class="quick-actions-container">
+                            <div class="quick-action-card ebooks-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>E-books</h4>
+                                    <p>Access digital learning materials</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card ask-teacher-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Ask Teacher</h4>
+                                    <p>Get help from your instructor</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card code-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-desktop"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Code Editor</h4>
+                                    <p>Write and run JavaScript code</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card share-class-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-share-alt"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Share with Class</h4>
+                                    <p>Collaborate with classmates</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card scratch-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Scratch Editor</h4>
+                                    <p>Create interactive projects</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- My Courses Content -->
+            <div class="mycourses-content">
+                <div class="container-fluid">
+                    <!-- Page Header -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="courses-page-header">
+                                <h2 class="courses-page-title">
+                                    <i class="fa fa-graduation-cap"></i>
+                                    My Learning Journey
+                                </h2>
+                                <p class="courses-page-subtitle">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courses Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="courses-stats-container">
+                                <div class="course-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-book stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number">{{total_courses_count}}</div>
+                                        <div class="stat-label">Total Courses</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="course-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-play-circle stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="in-progress-count">0</div>
+                                        <div class="stat-label">In Progress</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="course-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-check-circle stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="completed-count">0</div>
+                                        <div class="stat-label">Completed</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="course-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-clock-o stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="not-started-count">0</div>
+                                        <div class="stat-label">Not Started</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courses Grid -->
+                    {{#has_student_courses}}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="courses-grid">
+                                {{#student_courses}}
+                                <div class="elementary-course-card enhanced mycourses-card" data-course-id="{{id}}">
+                                    <!-- Course Header with Image -->
+                                    <div class="course-image-container">
+                                        {{#courseimage}}
+                                        <img src="{{courseimage}}" alt="{{fullname}}" class="course-image">
+                                        {{/courseimage}}
+                                        {{^courseimage}}
+                                        <div class="course-image-placeholder">
+                                            <i class="fa fa-book"></i>
+                                        </div>
+                                        {{/courseimage}}
+                                        
+                                        <!-- Course Level Badge -->
+                                        <div class="course-level-badge">{{categoryname}}</div>
+                                        
+                                        <!-- Course Status Indicator -->
+                                        <div class="course-status-indicator {{#completed}}completed{{/completed}}{{^completed}}{{#in_progress}}in-progress{{/in_progress}}{{^in_progress}}not-started{{/in_progress}}{{/completed}}">
+                                            <i class="fa {{#completed}}fa-check-circle{{/completed}}{{^completed}}{{#in_progress}}fa-play-circle{{/in_progress}}{{^in_progress}}fa-circle-o{{/in_progress}}{{/completed}}"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Course Content -->
+                                    <div class="course-content">
+                                        <!-- Course Title and Grade -->
+                                        <div class="course-header">
+                                            <h4 class="course-title">{{fullname}}</h4>
+                                            <span class="course-grade">{{grade_level}}</span>
+                                        </div>
+                                        
+                                        <!-- Course Summary -->
+                                        <p class="course-summary">{{summary}}</p>
+                                        
+                                        <!-- Progress Section -->
+                                        <div class="course-progress-section">
+                                            <div class="progress-header">
+                                                <span class="progress-label">Your Progress</span>
+                                                <span class="progress-percentage">{{progress_percentage}}%</span>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: {{progress_percentage}}%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Course Statistics -->
+                                        <div class="course-stats-grid">
+                                            <div class="course-stat-item">
+                                                <i class="fa fa-check-circle" style="color: #27ae60;"></i>
+                                                <span>{{completed_activities}}/{{total_activities}} activities</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Course Action Button -->
+                                        <a href="{{courseurl}}" class="course-action-button">
+                                            <i class="fa {{#completed}}fa-check{{/completed}}{{^completed}}fa-play{{/completed}}"></i>
+                                            {{#completed}}View Course{{/completed}}{{^completed}}Continue Learning{{/completed}}
+                                        </a>
+                                    </div>
+                                </div>
+                                {{/student_courses}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/has_student_courses}}
+                    
+                    {{^has_student_courses}}
+                    <!-- No Courses Message -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="no-courses-message">
+                                <div class="no-courses-icon">
+                                    <i class="fa fa-book-open"></i>
+                                </div>
+                                <h3>No Courses Yet</h3>
+                                <p>You haven't been enrolled in any courses yet. Check back later or contact your teacher!</p>
+                                <a href="{{{dashboardurl}}}" class="btn btn-primary">
+                                    <i class="fa fa-arrow-left"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/has_student_courses}}
+                </div>
+            </div>
+        {{/elementary}}
+    {{/dashboard_type}}
+</div>
+
+<script>
+$(document).ready(function() {
+    // Add body class for content shifting
+    $('body').addClass('has-student-sidebar');
+    
+    // Count courses by status
+    let inProgressCount = 0;
+    let completedCount = 0;
+    let notStartedCount = 0;
+    
+    $('.mycourses-card').each(function() {
+        const card = $(this);
+        if (card.hasClass('completed')) {
+            completedCount++;
+        } else if (card.hasClass('in-progress')) {
+            inProgressCount++;
+        } else if (card.hasClass('not-started')) {
+            notStartedCount++;
+        }
+    });
+    
+    // Update statistics
+    $('#in-progress-count').text(inProgressCount);
+    $('#completed-count').text(completedCount);
+    $('#not-started-count').text(notStartedCount);
+    
+    // Handle sidebar navigation clicks
+    $('.student-sidebar .nav-link[href="#"]').on('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        $('.student-sidebar .nav-link').removeClass('active');
+        
+        // Add active class to clicked link
+        $(this).addClass('active');
+        
+        // Get the link text to determine action
+        var linkText = $(this).find('span').text().trim();
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different navigation items
+        switch(linkText) {
+            case 'Dashboard':
+                window.location.href = baseUrl + '/my/';
+                break;
+            case 'My Courses':
+                // Already on mycourses page
+                break;
+            case 'Lessons':
+                window.location.href = baseUrl + '/mod/lesson/index.php';
+                break;
+            case 'Activities':
+                window.location.href = baseUrl + '/mod/quiz/index.php';
+                break;
+            case 'Achievements':
+                window.location.href = baseUrl + '/badges/mybadges.php';
+                break;
+            case 'Competencies':
+                window.location.href = baseUrl + '/theme/remui_kids/elementary_competencies.php';
+                break;
+            case 'Schedule':
+                window.location.href = baseUrl + '/calendar/view.php';
+                break;
+            case 'Tree View':
+                window.location.href = baseUrl + '/course/view.php';
+                break;
+            case 'Settings':
+                window.location.href = baseUrl + '/user/preferences.php';
+                break;
+            default:
+                console.log('Navigation to:', linkText);
+        }
+    });
+    
+    // Handle Quick Action Cards
+    $('.quick-action-card').on('click', function(e) {
+        e.preventDefault();
+        
+        var cardType = $(this).attr('class').split(' ')[1]; // Get the card type class
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different quick action cards
+        switch(cardType) {
+            case 'ebooks-card':
+                window.location.href = baseUrl + '/mod/book/index.php';
+                break;
+            case 'ask-teacher-card':
+                window.location.href = baseUrl + '/message/index.php';
+                break;
+            case 'code-editor-card':
+                window.open(baseUrl + '/mod/codeeditor/view.php', '_blank');
+                break;
+            case 'share-class-card':
+                window.location.href = baseUrl + '/mod/forum/index.php';
+                break;
+            case 'scratch-editor-card':
+                window.open(baseUrl + '/mod/scratch/view.php', '_blank');
+                break;
+            default:
+                console.log('Quick action clicked:', cardType);
+        }
+    });
+    
+    // Add hover effects to course cards
+    $('.mycourses-card').hover(
+        function() {
+            $(this).css('transform', 'translateY(-5px)');
+            $(this).css('box-shadow', '0 10px 30px rgba(0, 0, 0, 0.15)');
+        },
+        function() {
+            $(this).css('transform', 'translateY(0)');
+            $(this).css('box-shadow', '0 5px 20px rgba(0, 0, 0, 0.1)');
+        }
+    );
+});
+</script>
+
+{{/custom_mycourses}}
+
+        </div> <!-- end main-inner -->
+    </div> <!-- end page -->
+</div> <!-- end page-wrapper -->
+
+{{> theme_remui/footer}}

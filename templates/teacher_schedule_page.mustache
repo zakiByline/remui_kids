@@ -1,0 +1,268 @@
+{{!
+    Teacher Schedule Page Template
+    Full calendar view with week/month/list views
+}}
+
+<link rel="stylesheet" href="{{config.wwwroot}}/theme/remui_kids/style/teacher_schedule.css">
+<link rel="stylesheet" href="{{config.wwwroot}}/theme/remui_kids/style/teacher_schedule_page.css">
+
+<!-- Main Content Area -->
+<div class="teacher-main-content">
+    <div class="teacher-schedule-page">
+    <!-- Page Header -->
+    <div class="schedule-page-header">
+        <div class="header-left">
+            <h1 class="page-title">
+                <i class="fa fa-calendar"></i>
+                My Schedule
+            </h1>
+            <p class="page-subtitle">Welcome, {{teacher_name}}</p>
+        </div>
+        <div class="header-right">
+            <a href="{{dashboard_url}}" class="btn btn-outline">
+                <i class="fa fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="schedule-stats">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                <i class="fa fa-calendar-check"></i>
+            </div>
+            <div class="stat-label">TOTAL EVENTS</div>
+            <div class="stat-content">
+                <div class="stat-number">{{total_events}}</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i class="fa fa-calendar-day"></i>
+            </div>
+            <div class="stat-label">TODAY</div>
+            <div class="stat-content">
+                <div class="stat-number">{{today_events}}</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <i class="fa fa-calendar-week"></i>
+            </div>
+            <div class="stat-label">THIS WEEK</div>
+            <div class="stat-content">
+                <div class="stat-number">{{this_week_events}}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Navigation -->
+    <div class="schedule-controls">
+        <div class="view-selector">
+            <a href="{{week_view_url}}" class="view-btn {{#is_week_view}}active{{/is_week_view}}">
+                <i class="fa fa-calendar-week"></i>
+                Week
+            </a>
+            <a href="{{month_view_url}}" class="view-btn {{#is_month_view}}active{{/is_month_view}}">
+                <i class="fa fa-calendar"></i>
+                Month
+            </a>
+            <a href="{{list_view_url}}" class="view-btn {{#is_list_view}}active{{/is_list_view}}">
+                <i class="fa fa-list"></i>
+                List
+            </a>
+        </div>
+
+        <div class="date-navigation">
+            <button class="nav-btn" onclick="navigateSchedule(-1)">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            <div class="current-date">
+                {{#is_month_view}}{{current_month}}{{/is_month_view}}
+                {{^is_month_view}}{{date_range}}{{/is_month_view}}
+            </div>
+            <button class="nav-btn" onclick="navigateSchedule(1)">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+            <button class="today-btn" onclick="goToToday()">Today</button>
+        </div>
+    </div>
+
+    <!-- Week View -->
+    {{#is_week_view}}
+    <div class="week-view">
+        <div class="week-grid">
+            {{#schedule_data}}
+            <div class="week-day {{#is_today}}today{{/is_today}}">
+                <div class="day-header">
+                    <div class="day-name">{{day_name}}</div>
+                    <div class="day-number">{{day_num}}</div>
+                    <div class="month-name">{{month_name}}</div>
+                </div>
+                <div class="day-events-container">
+                    {{#events}}
+                    <a href="{{url}}" class="event-item{{#is_grading_event}} grade-event{{/is_grading_event}}" style="border-left: 4px solid {{color}};">
+                        <div class="event-time">
+                            {{time}}
+                            {{#grade_label}}
+                            <span class="event-label">{{grade_label}}</span>
+                            {{/grade_label}}
+                        </div>
+                        {{#lecture_session}}
+                        <div class="event-title lecture-title">{{coursename}}</div>
+                        <div class="event-type-badge">LECTURE</div>
+                        {{/lecture_session}}
+                        {{^lecture_session}}
+                        <div class="event-title">
+                            <i class="fa {{icon}}"></i>
+                            {{name}}
+                        </div>
+                        <div class="event-course">{{coursename}}</div>
+                        {{/lecture_session}}
+                    </a>
+                    {{/events}}
+                    {{^events}}
+                    <div class="no-events">No events</div>
+                    {{/events}}
+                </div>
+            </div>
+            {{/schedule_data}}
+        </div>
+    </div>
+    {{/is_week_view}}
+
+    <!-- Month View -->
+    {{#is_month_view}}
+    <div class="month-view">
+        <div class="month-grid">
+            <div class="weekday-header">Sun</div>
+            <div class="weekday-header">Mon</div>
+            <div class="weekday-header">Tue</div>
+            <div class="weekday-header">Wed</div>
+            <div class="weekday-header">Thu</div>
+            <div class="weekday-header">Fri</div>
+            <div class="weekday-header">Sat</div>
+            
+            {{#schedule_data}}
+            <div class="month-day {{#is_today}}today{{/is_today}}" {{#has_more_events}}data-total-events="{{total_event_count}}"{{/has_more_events}}>
+                <div class="day-number">{{day_num}}</div>
+                <div class="day-events">
+                    {{#events}}
+                    {{#lecture_session}}
+                    <!-- Lecture sessions - show as colored dots with course name -->
+                    <span class="calendar-event-dot" style="background: {{color}};" title="{{coursename}} - LECTURE"></span>
+                    {{/lecture_session}}
+                    {{#admin_event}}
+                    <!-- School admin events - show as colored dots -->
+                    <span class="calendar-event-dot" style="background: {{color}};" title="{{name}} - {{coursename}}"></span>
+                    {{/admin_event}}
+                    {{^admin_event}}{{^lecture_session}}
+                    <!-- Regular events - show as full items or dots based on count -->
+                    {{#is_first_three}}
+                    <a href="{{url}}" class="month-event-item" style="border-left: 3px solid {{color}};" title="{{name}} - {{coursename}}">
+                        <i class="fa {{icon}} event-icon"></i>
+                        <span class="event-name">{{name}}</span>
+                    </a>
+                    {{/is_first_three}}
+                    {{^is_first_three}}
+                    <span class="calendar-event-dot" style="background: {{color}};" title="{{name}} - {{coursename}}"></span>
+                    {{/is_first_three}}
+                    {{/lecture_session}}{{/admin_event}}
+                    {{/events}}
+                    {{#has_more_events}}
+                    <div class="more-events">+{{remaining_count}} more</div>
+                    {{/has_more_events}}
+                </div>
+            </div>
+            {{/schedule_data}}
+        </div>
+    </div>
+    {{/is_month_view}}
+
+    <!-- List View -->
+    {{#is_list_view}}
+    <div class="list-view">
+        {{#has_events}}
+        {{#schedule_data}}
+        <div class="list-day {{#is_today}}today{{/is_today}}">
+            <div class="list-day-header">
+                <div class="list-date">
+                    <div class="date-day">{{day_num}}</div>
+                    <div class="date-info">
+                        <div class="date-month">{{month_name}}</div>
+                        <div class="date-weekday">{{day_name}}</div>
+                    </div>
+                </div>
+                <div class="event-count">{{event_count}} event(s)</div>
+            </div>
+            <div class="list-events">
+                {{#events}}
+                <a href="{{url}}" class="list-event-item{{#is_grading_event}} grade-event{{/is_grading_event}}" style="border-left: 4px solid {{color}};">
+                    <div class="event-time">
+                        {{time}}
+                        {{#grade_label}}
+                        <span class="event-label">{{grade_label}}</span>
+                        {{/grade_label}}
+                    </div>
+                    <div class="event-details">
+                        {{#lecture_session}}
+                        <div class="event-title lecture-title">{{coursename}}</div>
+                        <div class="event-type-badge">LECTURE</div>
+                        {{/lecture_session}}
+                        {{^lecture_session}}
+                        <div class="event-title">
+                            <i class="fa {{icon}}"></i>
+                            {{name}}
+                        </div>
+                        <div class="event-course">{{coursename}}</div>
+                        {{#description}}
+                        <div class="event-description">{{description}}</div>
+                        {{/description}}
+                        {{/lecture_session}}
+                    </div>
+                    {{^lecture_session}}
+                    <div class="event-type">
+                        <span class="type-badge" style="background: {{color}};">{{type}}</span>
+                    </div>
+                    {{/lecture_session}}
+                </a>
+                {{/events}}
+            </div>
+        </div>
+        {{/schedule_data}}
+        {{/has_events}}
+        
+        {{^has_events}}
+        <div class="empty-schedule">
+            <i class="fa fa-calendar"></i>
+            <h3>No Events Scheduled</h3>
+            <p>You have no events in the selected time period.</p>
+            <a href="{{calendar_url}}" class="btn btn-primary">Add Event</a>
+        </div>
+        {{/has_events}}
+    </div>
+    {{/is_list_view}}
+    </div> <!-- End teacher-schedule-page -->
+</div> <!-- End teacher-main-content -->
+
+<script>
+// Track current offset
+let currentScheduleOffset = {{week_offset}};
+let currentScheduleView = '{{view}}';
+
+// Navigate schedule (previous/next)
+function navigateSchedule(direction) {
+    currentScheduleOffset += direction;
+    const url = '{{config.wwwroot}}/theme/remui_kids/teacher/schedule.php?view=' + currentScheduleView + '&weekoffset=' + currentScheduleOffset;
+    window.location.href = url;
+}
+
+// Go to today
+function goToToday() {
+    currentScheduleOffset = 0;
+    const url = '{{config.wwwroot}}/theme/remui_kids/teacher/schedule.php?view=' + currentScheduleView + '&weekoffset=0';
+    window.location.href = url;
+}
+</script>
+

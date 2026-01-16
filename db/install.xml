@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLDB PATH="theme/remui_kids/db" VERSION="2025120503" COMMENT="XMLDB file for RemUI Kids theme" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://moodle.org/xmldb/xmldb.xsd">
+    <TABLES>
+        <TABLE NAME="activity_log" COMMENT="Captured student activity logs scoped for teacher dashboards">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="contextinstanceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="eventname" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="action" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="target" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="other" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+                <INDEX NAME="courseid_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="eventname_idx" FIELDS="eventname" UNIQUE="false"/>
+                <INDEX NAME="timecreated_idx" FIELDS="timecreated" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_lessonplans" COMMENT="Saved AI lesson plans for teachers">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="lessonid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="grade" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="coursename" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="lessonname" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="planjson" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+                <INDEX NAME="courseid_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="lessonid_idx" FIELDS="lessonid" UNIQUE="false"/>
+                <INDEX NAME="grade_idx" FIELDS="grade" UNIQUE="false"/>
+                <INDEX NAME="lesson_idx" FIELDS="lessonname" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_dbt" COMMENT="Student doubt tickets for teacher resolution">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Owning course for contextual permissions"/>
+                <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Context to scope capability checks"/>
+                <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Optional course module source"/>
+                <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Origin student user id"/>
+                <FIELD NAME="assignedto" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Teacher currently assigned"/>
+                <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Short subject heading"/>
+                <FIELD NAME="summary" TYPE="text" NOTNULL="false" COMMENT="Initial doubt question body"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="open" COMMENT="Workflow state"/>
+                <FIELD NAME="priority" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="normal" COMMENT="Priority flag"/>
+                <FIELD NAME="tags" TYPE="text" NOTNULL="false" COMMENT="Comma separated tags"/>
+                <FIELD NAME="gradeband" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="" COMMENT="Optional grade band label"/>
+                <FIELD NAME="timeresolved" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Resolution timestamp"/>
+                <FIELD NAME="duedate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Optional follow-up due date"/>
+                <FIELD NAME="lastmessageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Fast pointer to last message"/>
+                <FIELD NAME="extradata" TYPE="text" NOTNULL="false" COMMENT="JSON metadata for integrations"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="student_idx" FIELDS="studentid" UNIQUE="false"/>
+                <INDEX NAME="assigned_idx" FIELDS="assignedto" UNIQUE="false"/>
+                <INDEX NAME="status_idx" FIELDS="status" UNIQUE="false"/>
+                <INDEX NAME="context_idx" FIELDS="contextid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_dbtmsg" COMMENT="Conversation messages for a doubt ticket">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="doubtid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="actorrole" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="student" COMMENT="Author role snapshot"/>
+                <FIELD NAME="message" TYPE="text" NOTNULL="false" COMMENT="Message body"/>
+                <FIELD NAME="messageformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" COMMENT="FORMAT constant"/>
+                <FIELD NAME="visibility" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="public" COMMENT="public/internal"/>
+                <FIELD NAME="hasattachments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Attachment flag"/>
+                <FIELD NAME="isresolution" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Marks message as resolution"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="doubtid_idx" FIELDS="doubtid" UNIQUE="false"/>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+                <INDEX NAME="resolution_idx" FIELDS="isresolution" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_dbtlog" COMMENT="Status transitions for doubt ticket">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="doubtid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="oldstatus" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="newstatus" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="note" TYPE="text" NOTNULL="false" COMMENT="Optional remarks"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="doubtid_idx" FIELDS="doubtid" UNIQUE="false"/>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_dbtatt" COMMENT="Metadata for files attached to doubt messages">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="messageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="filepath" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="/" COMMENT="File path within storage area"/>
+                <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="filesize" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="filehash" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="" COMMENT="SHA1 hash of stored file"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="message_idx" FIELDS="messageid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_classroom_events" COMMENT="Classroom events/evidence for student competencies">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Student user id"/>
+                <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Competency id"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Course id"/>
+                <FIELD NAME="eventtitle" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Title of the classroom event"/>
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Description of what happened in the classroom"/>
+                <FIELD NAME="eventdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Date when the event occurred"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Teacher who created this event"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+                <INDEX NAME="competencyid_idx" FIELDS="competencyid" UNIQUE="false"/>
+                <INDEX NAME="courseid_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="eventdate_idx" FIELDS="eventdate" UNIQUE="false"/>
+                <INDEX NAME="createdby_idx" FIELDS="createdby" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_emulator_access" COMMENT="Scoped emulator access rules for schools and cohorts">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="emulator" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="scope" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="company"/>
+                <FIELD NAME="scopeid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Company ID for cohort scope - allows multiple schools to have independent access to same cohort"/>
+                <FIELD NAME="allowteachers" TYPE="int" LENGTH="1" NOTNULL="false"/>
+                <FIELD NAME="allowstudents" TYPE="int" LENGTH="1" NOTNULL="false"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="uniq_scope" UNIQUE="true" FIELDS="emulator, scope, scopeid, companyid"/>
+                <INDEX NAME="scope_idx" FIELDS="scope"/>
+                <INDEX NAME="scopeid_idx" FIELDS="scopeid"/>
+                <INDEX NAME="companyid_idx" FIELDS="companyid"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_emulator_school_grants" COMMENT="School-level emulator grants - controls which emulators are available to each school">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="emulator" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="" COMMENT="Emulator slug identifier"/>
+                <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="School/company ID"/>
+                <FIELD NAME="granted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="1=granted, 0=explicitly denied"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Admin who created grant"/>
+                <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Admin who last modified"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="emulator_companyid_idx" UNIQUE="true" FIELDS="emulator,companyid"/>
+                <INDEX NAME="emulator_idx" FIELDS="emulator" UNIQUE="false"/>
+                <INDEX NAME="companyid_idx" FIELDS="companyid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_teacher_emulator" COMMENT="Individual teacher emulator access permissions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Teacher user ID"/>
+                <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="School/company ID"/>
+                <FIELD NAME="emulator" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="" COMMENT="Emulator slug"/>
+                <FIELD NAME="allowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="1=allowed, 0=denied"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Admin who created"/>
+                <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Admin who last modified"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="teacher_emulator_unique" UNIQUE="true" FIELDS="teacherid,companyid,emulator"/>
+                <INDEX NAME="teacherid_idx" FIELDS="teacherid" UNIQUE="false"/>
+                <INDEX NAME="companyid_idx" FIELDS="companyid" UNIQUE="false"/>
+                <INDEX NAME="emulator_idx" FIELDS="emulator" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_helptickets" COMMENT="Help/Support tickets for site-wide user assistance">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="ticketnumber" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="" COMMENT="Unique ticket reference number"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User who created the ticket"/>
+                <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="general" COMMENT="bug, query, feature, general"/>
+                <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Ticket subject/title"/>
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Initial ticket description"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="open" COMMENT="open, in_progress, resolved, closed"/>
+                <FIELD NAME="priority" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="normal" COMMENT="low, normal, high, urgent"/>
+                <FIELD NAME="assignedto" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Admin user assigned to ticket"/>
+                <FIELD NAME="lastmessageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Quick reference to last message"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timeresolved" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="When ticket was resolved"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="ticketnumber_idx" UNIQUE="true" FIELDS="ticketnumber"/>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+                <INDEX NAME="status_idx" FIELDS="status" UNIQUE="false"/>
+                <INDEX NAME="assignedto_idx" FIELDS="assignedto" UNIQUE="false"/>
+                <INDEX NAME="category_idx" FIELDS="category" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_helpticket_msgs" COMMENT="Messages/replies in help tickets">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="ticketid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Reference to help ticket"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User who sent message"/>
+                <FIELD NAME="message" TYPE="text" NOTNULL="false" COMMENT="Message content"/>
+                <FIELD NAME="messageformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" COMMENT="Text format constant"/>
+                <FIELD NAME="isadmin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Whether sender is admin"/>
+                <FIELD NAME="isinternal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Internal admin note"/>
+                <FIELD NAME="hasattachments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Has file attachments"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="ticketid_idx" FIELDS="ticketid" UNIQUE="false"/>
+                <INDEX NAME="userid_idx" FIELDS="userid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_helpticket_files" COMMENT="File attachments for help ticket messages">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="messageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Message this file belongs to"/>
+                <FIELD NAME="ticketid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Ticket reference"/>
+                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="filepath" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="/"/>
+                <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="filesize" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="filehash" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="" COMMENT="SHA1 hash"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="messageid_idx" FIELDS="messageid" UNIQUE="false"/>
+                <INDEX NAME="ticketid_idx" FIELDS="ticketid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_support_videos" COMMENT="Support and instructional videos for help system">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Video title"/>
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Video description"/>
+                <FIELD NAME="category" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="" COMMENT="Feature category"/>
+                <FIELD NAME="subcategory" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Optional subcategory"/>
+                <FIELD NAME="videotype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="upload" COMMENT="uploaded, youtube, vimeo, external"/>
+                <FIELD NAME="videourl" TYPE="char" LENGTH="500" NOTNULL="false" COMMENT="URL for external videos"/>
+                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="File name for uploaded videos"/>
+                <FIELD NAME="filepath" TYPE="char" LENGTH="500" NOTNULL="false" COMMENT="File path"/>
+                <FIELD NAME="filesize" TYPE="int" LENGTH="20" NOTNULL="false" COMMENT="File size in bytes"/>
+                <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Video duration in seconds"/>
+                <FIELD NAME="thumbnail" TYPE="char" LENGTH="500" NOTNULL="false" COMMENT="Thumbnail path"/>
+                <FIELD NAME="captionfile" TYPE="char" LENGTH="500" NOTNULL="false" COMMENT="Caption/subtitle file"/>
+                <FIELD NAME="targetrole" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="all" COMMENT="Target audience role"/>
+                <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Sort order"/>
+                <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="Visibility flag"/>
+                <FIELD NAME="views" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="View count"/>
+                <FIELD NAME="uploadedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User who uploaded the video"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="uploadedby" TYPE="foreign" FIELDS="uploadedby" REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="category" FIELDS="category" UNIQUE="false"/>
+                <INDEX NAME="targetrole" FIELDS="targetrole" UNIQUE="false"/>
+                <INDEX NAME="visible" FIELDS="visible" UNIQUE="false"/>
+                <INDEX NAME="sortorder" FIELDS="sortorder" UNIQUE="false"/>
+                <INDEX NAME="category_sortorder" FIELDS="category,sortorder" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_video_views" COMMENT="Video view tracking for users">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="videoid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Support video ID"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User who viewed"/>
+                <FIELD NAME="watchtime" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Total watch time in seconds"/>
+                <FIELD NAME="completed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Whether video was completed"/>
+                <FIELD NAME="timeviewed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="When viewed"/>
+                <FIELD NAME="lastposition" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Last playback position"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="videoid" TYPE="foreign" FIELDS="videoid" REFTABLE="theme_remui_kids_support_videos" REFFIELDS="id"/>
+                <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="videoid_userid" FIELDS="videoid,userid" UNIQUE="false"/>
+                <INDEX NAME="timeviewed" FIELDS="timeviewed" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_calendar_events" COMMENT="School calendar events created by admin">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="School/company ID"/>
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Event title"/>
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Event description"/>
+                <FIELD NAME="eventdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Event date (timestamp)"/>
+                <FIELD NAME="starttime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="Start time (HH:MM format)"/>
+                <FIELD NAME="endtime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="End time (HH:MM format)"/>
+                <FIELD NAME="eventtype" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="meeting" COMMENT="meeting, lecture, exam, activity, etc."/>
+                <FIELD NAME="color" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="blue" COMMENT="Event color for calendar display"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Admin who created event"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="companyid_idx" FIELDS="companyid" UNIQUE="false"/>
+                <INDEX NAME="eventdate_idx" FIELDS="eventdate" UNIQUE="false"/>
+                <INDEX NAME="eventtype_idx" FIELDS="eventtype" UNIQUE="false"/>
+                <INDEX NAME="createdby_idx" FIELDS="createdby" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_calendar_event_participants" COMMENT="Event participants (teachers, students, cohorts)">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="eventid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Calendar event ID"/>
+                <FIELD NAME="participanttype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="" COMMENT="teacher, student, cohort"/>
+                <FIELD NAME="participantid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User ID or Cohort ID"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="eventid_idx" FIELDS="eventid" UNIQUE="false"/>
+                <INDEX NAME="participant_idx" FIELDS="participanttype,participantid" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_lecture_schedules" COMMENT="Course lecture schedules created by admin">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="School/company ID"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Course ID"/>
+                <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Assigned teacher ID"/>
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Lecture title"/>
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Lecture description"/>
+                <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Schedule start date"/>
+                <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Schedule end date"/>
+                <FIELD NAME="starttime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="Start time (HH:MM)"/>
+                <FIELD NAME="endtime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="End time (HH:MM)"/>
+                <FIELD NAME="frequency" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="weekly" COMMENT="daily, weekly, custom"/>
+                <FIELD NAME="days" TYPE="char" LENGTH="50" NOTNULL="false" COMMENT="Comma-separated days (1=Mon, 2=Tue, etc.) for custom frequency"/>
+                <FIELD NAME="color" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="green" COMMENT="Lecture color"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Admin who created schedule"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="companyid_idx" FIELDS="companyid" UNIQUE="false"/>
+                <INDEX NAME="courseid_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="teacherid_idx" FIELDS="teacherid" UNIQUE="false"/>
+                <INDEX NAME="startdate_idx" FIELDS="startdate" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="theme_remui_kids_lecture_sessions" COMMENT="Generated lecture sessions from schedules">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="scheduleid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Parent schedule ID"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Course ID"/>
+                <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Teacher ID"/>
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" COMMENT="Session title"/>
+                <FIELD NAME="sessiondate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Session date"/>
+                <FIELD NAME="starttime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="Start time"/>
+                <FIELD NAME="endtime" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="" COMMENT="End time"/>
+                <FIELD NAME="color" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="green" COMMENT="Session color"/>
+                <FIELD NAME="teacher_available" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="Teacher availability: 1=available, 0=not available"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="scheduleid_idx" FIELDS="scheduleid" UNIQUE="false"/>
+                <INDEX NAME="courseid_idx" FIELDS="courseid" UNIQUE="false"/>
+                <INDEX NAME="teacherid_idx" FIELDS="teacherid" UNIQUE="false"/>
+                <INDEX NAME="sessiondate_idx" FIELDS="sessiondate" UNIQUE="false"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>
+

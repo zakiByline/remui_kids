@@ -1,0 +1,2200 @@
+{{!
+    Admin Dashboard Template for remui_kids theme
+    
+    This template provides a management dashboard interface for admin users
+    with real-time insights and analytics for the educational platform.
+}}
+
+{{> theme_remui_kids/common_start}}
+
+<style>
+/* Admin Dashboard Specific Padding Override */
+.admin-main-content {
+    padding-top: 0 !important;
+}
+
+/* School Filter Styles */
+#schoolFilter:hover {
+    border-color: #4fc3f7;
+    box-shadow: 0 0 0 3px rgba(129, 212, 250, 0.1);
+}
+
+#schoolFilter:focus {
+    outline: none;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 0 4px rgba(129, 212, 250, 0.2);
+}
+
+.filter-card {
+    transition: all 0.3s ease;
+}
+
+.filter-card:hover {
+    box-shadow: 0 6px 20px rgba(225, 245, 254, 0.5) !important;
+    transform: translateY(-2px);
+}
+
+/* Force course categories height limit with scrollbar */
+.course-categories-section .categories-list {
+    max-height: 280px !important;
+    overflow-y: auto !important;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+    border: 1px solid #e0e0e0;
+}
+
+.course-categories-section .categories-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.course-categories-section .categories-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.course-categories-section .categories-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.course-categories-section .categories-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Force student enrollments height limit with scrollbar */
+.admin-student-enrollments-section .enrollments-list {
+    max-height: 240px !important;
+    overflow-y: auto !important;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.admin-student-enrollments-section .enrollments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-student-enrollments-section .enrollments-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.admin-student-enrollments-section .enrollments-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.admin-student-enrollments-section .enrollments-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.maptest-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 80px 20px 40px;
+    z-index: 1000;
+}
+
+/* Custom Scrollbar for MAP Test Modal */
+.maptest-modal-backdrop::-webkit-scrollbar {
+    width: 10px;
+}
+
+.maptest-modal-backdrop::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.1);
+    border-radius: 10px;
+}
+
+.maptest-modal-backdrop::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg,rgb(177, 183, 194),rgb(136, 135, 146));
+    border-radius: 10px;
+    border: 2px solid rgba(15, 23, 42, 0.1);
+}
+
+.maptest-modal-backdrop::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg,rgb(176, 180, 187),rgb(228, 228, 241));
+}
+
+/* Firefox scrollbar */
+.maptest-modal-backdrop {
+    scrollbar-width: thin;
+    scrollbar-color:rgb(215, 219, 228) rgba(156, 159, 165, 0.1);
+}
+
+.maptest-modal-backdrop.active {
+    display: flex;
+}
+
+.maptest-modal {
+    background: linear-gradient(135deg, #fef3f2 0%, #f0f9ff 50%, #f5f3ff 100%);
+    border-radius: 24px;
+    width: min(960px, 100%);
+    box-shadow: 0 40px 70px rgba(15, 23, 42, 0.25);
+    position: relative;
+    margin-top: 20px;
+    animation: maptestModalIn 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+@keyframes maptestModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.maptest-modal-header {
+    padding: 28px 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.3) 0%, rgba(173, 216, 230, 0.3) 50%, rgba(221, 160, 221, 0.3) 100%);
+    border-radius: 24px 24px 0 0;
+    margin: -1px -1px 0 -1px;
+}
+
+.maptest-modal-close {
+    border: none;
+    background: transparent;
+    color: #0f172a;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.maptest-modal-body {
+    padding: 0 32px 32px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color:rgb(215, 223, 240) rgba(15, 23, 42, 0.05);
+}
+
+/* Custom Scrollbar for Modal Body */
+.maptest-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.maptest-modal-body::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: 10px;
+}
+
+.maptest-modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    border-radius: 10px;
+}
+
+.maptest-modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+.maptest-admin-section {
+    margin-top: 30px;
+}
+
+.maptest-admin-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 245, 255, 0.9) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(221, 160, 221, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.maptest-admin-card h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.maptest-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 1.5rem;
+}
+
+.maptest-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+}
+
+.maptest-switch input[type="checkbox"] {
+    width: 44px;
+    height: 24px;
+    accent-color: #ffb3ba;
+}
+
+.maptest-settings-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #0f172a;
+}
+
+.maptest-settings-field input,
+.maptest-settings-field textarea,
+.maptest-settings-field select {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.maptest-settings-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.maptest-settings-field input:focus,
+.maptest-settings-field textarea:focus,
+.maptest-settings-field select:focus {
+    outline: none;
+    border-color: #ffb3ba;
+    box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.maptest-admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.maptest-admin-save {
+    align-self: flex-start;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffb3ba 0%, #bae1ff 50%, #c9c9ff 100%);
+    color: #5a5a5a;
+    font-weight: 600;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+}
+
+.maptest-admin-save:hover:not(.disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 15px 30px rgba(255, 182, 193, 0.5);
+    background: linear-gradient(135deg, #ff9aa2 0%, #a8d8ff 50%, #b8b8ff 100%);
+}
+
+.maptest-admin-save.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.maptest-admin-feedback {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.maptest-admin-feedback.success {
+    color: #059669;
+}
+
+.maptest-admin-feedback.error {
+    color: #dc2626;
+}
+</style>
+
+{{#admin_dashboard}}
+<!-- Full Screen Admin Dashboard Wrapper -->
+<div class="admin-dashboard-wrapper">
+    <!-- Mobile Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fa fa-bars"></i>
+    </button>
+
+<!-- Admin Dashboard Header -->
+<div class="admin-dashboard-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="admin-dashboard-title mb-2">
+                    {{#str}}nav_dashboard, theme_remui_kids{{/str}}
+                </h1>
+                <p class="admin-dashboard-subtitle mb-0">
+                    {{#str}}platform_metrics, theme_remui_kids{{/str}}
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="admin-dashboard-actions d-flex flex-column flex-md-row align-items-md-center justify-content-md-end gap-2">
+                    <div class="admin-dashboard-badge">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#maptest_admin_panel}}
+<div class="maptest-modal-backdrop" id="maptest-modal" role="dialog" aria-modal="true" aria-labelledby="maptest-modal-title" aria-hidden="true" tabindex="-1">
+    <div class="maptest-modal">
+        <div class="maptest-modal-header">
+            <div>
+                <p class="text-uppercase text-muted mb-1" style="letter-spacing: 0.1em;">MAP Test launcher</p>
+                <h3 id="maptest-modal-title" style="margin: 0;">Student card visibility</h3>
+            </div>
+            <button type="button" class="maptest-modal-close" id="maptest-modal-close" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="maptest-modal-body">
+            <div class="maptest-admin-card">
+                <div class="maptest-admin-grid">
+                    <div>
+                        <div class="maptest-switch">
+                            <input type="checkbox" id="maptest-enable-toggle" {{#enabled}}checked{{/enabled}}>
+                            <span>Enable MAP Test card</span>
+                        </div>
+                        <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">
+                            Toggle the launch card for all eligible students.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="maptest-switch">
+                            <input type="checkbox" id="maptest-allowall-toggle" {{#allowallcohorts}}checked{{/allowallcohorts}}>
+                            <span>Allow every cohort</span>
+                        </div>
+                        <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">
+                            When enabled, the card ignores cohort restrictions.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="maptest-settings-field" style="margin-top: 1.5rem;">
+                    <label for="maptest-cohorts">Allowed cohorts</label>
+                    <select id="maptest-cohorts" multiple>
+                        {{#maptest_cohort_options}}
+                        <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                        {{/maptest_cohort_options}}
+                    </select>
+                    {{^hascohortoptions}}
+                    <small class="text-muted">No cohorts found yet. Create cohorts under Site administration to limit access.</small>
+                    {{/hascohortoptions}}
+                </div>
+
+                <div class="maptest-admin-grid" style="margin-top: 1.5rem;">
+                    <div class="maptest-settings-field">
+                        <label for="maptest-title">Card title</label>
+                        <input type="text" id="maptest-title" value="{{cardtitle}}" maxlength="120">
+                    </div>
+                    <div class="maptest-settings-field">
+                        <label for="maptest-button">Button label</label>
+                        <input type="text" id="maptest-button" value="{{buttontitle}}" maxlength="60">
+                    </div>
+                </div>
+
+                <div class="maptest-settings-field" style="margin-top: 1.2rem;">
+                    <label for="maptest-description">Card description</label>
+                    <textarea id="maptest-description">{{carddescription}}</textarea>
+                </div>
+
+                <!-- SSO Settings Section -->
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(221, 160, 221, 0.3);">
+                    <h4 style="margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 600; color: #0f172a;">SSO Integration</h4>
+                    
+                    <div class="maptest-switch" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="maptest-enablesso" {{#enablesso}}checked{{/enablesso}}>
+                        <span>Enable Single Sign-On</span>
+                    </div>
+                    <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 1rem;">
+                        Automatically log users into MAP Test without entering credentials.
+                    </p>
+
+                    <div class="maptest-settings-field" style="margin-top: 1rem;">
+                        <label for="maptest-url">MAP Test Platform URL</label>
+                        <input type="url" id="maptest-url" value="{{maptesturl}}" placeholder="https://map-test.bylinelms.com/login">
+                    </div>
+
+                    <div class="maptest-settings-field" style="margin-top: 1rem;">
+                        <label for="maptest-ssosecret">SSO Secret Key</label>
+                        <input type="text" id="maptest-ssosecret" value="{{ssosecret}}" placeholder="Enter shared secret key">
+                        <small class="text-muted" style="display: block; margin-top: 0.5rem; font-size: 0.8rem;">
+                            Must match the secret configured on the MAP Test platform. Leave empty to use default.
+                        </small>
+                    </div>
+
+                    <!-- Information Box: What to Share with MAP Test -->
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(173, 216, 230, 0.2); border-radius: 8px; border-left: 3px solid #4fc3f7;">
+                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.95rem; font-weight: 600; color: #0f172a;">
+                            <i class="fa fa-info-circle"></i> Share with MAP Test Platform
+                        </h5>
+                        <p style="margin: 0 0 0.75rem 0; font-size: 0.85rem; color: #475569;">
+                            Provide the following information to the MAP Test platform team:
+                        </p>
+                        <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem;">Validation Endpoint URL:</div>
+                            <div style="font-size: 0.85rem; font-family: monospace; color: #0f172a; word-break: break-all; background: #f8f9fa; padding: 0.5rem; border-radius: 4px;">
+                                {{moodle_validation_url}}
+                            </div>
+                            <button type="button" onclick="copyToClipboard('{{moodle_validation_url}}', this)" style="margin-top: 0.5rem; padding: 0.25rem 0.75rem; font-size: 0.75rem; background: #4fc3f7; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <i class="fa fa-copy"></i> Copy URL
+                            </button>
+                        </div>
+                        <div style="background: white; padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem;">Shared Secret Key:</div>
+                            <div style="font-size: 0.85rem; font-family: monospace; color: #0f172a; word-break: break-all; background: #f8f9fa; padding: 0.5rem; border-radius: 4px;">
+                                {{#ssosecret}}{{ssosecret}}{{/ssosecret}}{{^ssosecret}}<em style="color: #94a3b8;">Not set - using default</em>{{/ssosecret}}
+                            </div>
+                            {{#ssosecret}}
+                            <button type="button" onclick="copyToClipboard('{{ssosecret}}', this)" style="margin-top: 0.5rem; padding: 0.25rem 0.75rem; font-size: 0.75rem; background: #4fc3f7; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <i class="fa fa-copy"></i> Copy Secret
+                            </button>
+                            {{/ssosecret}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="maptest-admin-actions">
+                    <button class="maptest-admin-save" id="maptest-admin-save"
+                        data-endpoint="{{maptest_save_url}}"
+                        data-sesskey="{{sesskey}}">
+                        <i class="fa fa-save"></i>
+                        Save MAP settings
+                    </button>
+                    <div class="maptest-admin-feedback" id="maptest-admin-feedback" aria-live="polite"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/maptest_admin_panel}}
+
+<!-- Admin Sidebar Navigation - Include from PHP -->
+{{{admin_sidebar_html}}}
+
+
+<!-- Main Content Area with Sidebar -->
+<div class="admin-main-content">
+
+<!-- Management Dashboard Statistics -->
+<div class="admin-dashboard-stats">
+    <div class="stats-section-container">
+        <div class="section-header">
+            <h3 class="section-title">Dashboard </h3>
+            <p class="section-subtitle">Key performance indicators and platform metrics</p>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="admin-stats-container">
+                    {{#admin_stats}}
+                    <!-- Total Schools Card -->
+                    <div class="admin-stat-card schools-card" id="schools-card">
+
+                        <div class="stat-icon-container">
+                            <i class="fa fa-building stat-icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="total-schools-count">{{total_schools}}</div>
+                            <div class="stat-label">{{#str}}total_schools, theme_remui_kids{{/str}}</div>
+                            <div class="stat-status">• {{#str}}active, theme_remui_kids{{/str}}</div>
+                            <div class="stat-updated" id="schools-updated" style="font-size: 10px; color: #666; margin-top: 5px;">
+                                {{#admin_stats}}{{#last_updated}}{{last_updated}}{{/last_updated}}{{/admin_stats}}
+                            </div>
+                        </div>
+                        <div class="stat-refresh-btn"  style="position: absolute; top: 10px; right: 10px; cursor: pointer;">
+                            <i class="fa fa-refresh" id="schools-refresh-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Courses Card -->
+                    <div class="admin-stat-card courses-card" id="courses-card">
+                        <div class="stat-icon-container">
+                            <i class="fa fa-book stat-icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="total-courses-count">{{total_courses}}</div>
+                            <div class="stat-label">{{#str}}total_courses, theme_remui_kids{{/str}}</div>
+                            <div class="stat-status">• {{#str}}available, theme_remui_kids{{/str}}</div>
+                            <div class="stat-updated" id="courses-updated" style="font-size: 10px; color: #666; margin-top: 5px;">
+                                {{#admin_stats}}{{#last_updated}}{{last_updated}}{{/last_updated}}{{/admin_stats}}
+                            </div>
+                        </div>
+                        <div class="stat-refresh-btn" style="position: absolute; top: 10px; right: 10px; cursor: pointer;">
+                            <i class="fa fa-refresh" id="courses-refresh-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Students Card -->
+                    <div class="admin-stat-card students-card" id="students-card">
+                        <div class="stat-icon-container">
+                            <i class="fa fa-users stat-icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="total-students-count">{{total_students}}</div>
+                            <div class="stat-label">{{#str}}total_students, theme_remui_kids{{/str}}</div>
+                            <div class="stat-status">• {{#str}}enrolled, theme_remui_kids{{/str}}</div>
+                            <div class="stat-updated" id="students-updated" style="font-size: 10px; color: #666; margin-top: 5px;">
+                                {{#admin_stats}}{{#last_updated}}{{last_updated}}{{/last_updated}}{{/admin_stats}}
+                            </div>
+                        </div>
+                        <div class="stat-refresh-btn"  style="position: absolute; top: 10px; right: 10px; cursor: pointer;">
+                            <i class="fa fa-refresh" id="students-refresh-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Average Course Rating Card -->
+                    <div class="admin-stat-card rating-card">
+                        <div class="stat-icon-container">
+                            <i class="fa fa-star stat-icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{avg_course_rating}}/5</div>
+                            <div class="stat-label">{{#str}}avg_course_rating, theme_remui_kids{{/str}}</div>
+                            <div class="stat-status">• {{#str}}excellent, theme_remui_kids{{/str}}</div>
+                        </div>
+                    </div>
+                    {{/admin_stats}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Global Search Bar -->
+{{> theme_remui_kids/admin_search_bar}}
+
+<!-- User Statistics Section -->
+<div class="admin-user-stats-section">
+    <div class="stats-section-container">
+        <div class="section-header">
+            <h3 class="section-title">{{#str}}user_statistics, theme_remui_kids{{/str}}</h3>
+            
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="user-stats-container">
+                    {{#admin_user_stats}}
+                    <div class="user-stat-card total-users" id="total-users-card">
+                        <div class="stat-number" id="total-users-count">{{total_users}}</div>
+                        <div class="stat-label">{{#str}}total_users, theme_remui_kids{{/str}}</div>
+                        <div class="stat-refresh-btn"  style="position: absolute; top: 5px; right: 5px; cursor: pointer; color: #666; font-size: 12px;" title="{{#str}}refresh, theme_remui_kids{{/str}}">
+                            <i class="fa fa-refresh" id="all-stats-refresh-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="user-stat-card teachers" id="teachers-card">
+                        <div class="stat-number" id="teachers-count">{{teachers}}</div>
+                        <div class="stat-label">{{#str}}teachers, theme_remui_kids{{/str}}</div>
+                    </div>
+                    
+                    <div class="user-stat-card students" id="students-card">
+                        <div class="stat-number" id="students-count">{{students}}</div>
+                        <div class="stat-label">{{#str}}students, theme_remui_kids{{/str}}</div>
+                    </div>
+                    
+                    <div class="user-stat-card admins" id="admins-card">
+                        <div class="stat-number" id="admins-count">{{admins}}</div>
+                        <div class="stat-label">{{#str}}admins, theme_remui_kids{{/str}}</div>
+                    </div>
+                    
+                    <div class="user-stat-card active-users" id="active-users-card">
+                        <div class="stat-number" id="active-users-count">{{active_users}}</div>
+                        <div class="stat-label">{{#str}}active_users, theme_remui_kids{{/str}}</div>
+                    </div>
+                    
+                    <div class="user-stat-card new-users" id="new-users-card">
+                        <div class="stat-number" id="new-users-count">{{new_this_month}}</div>
+
+                        <div class="stat-label">{{#str}}new_this_month, theme_remui_kids{{/str}}</div>
+                    </div>
+                    {{/admin_user_stats}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Statistics and Recent Activity Section -->
+<div class="admin-stats-activity-container">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left Column: Course Statistics -->
+            <div class="col-md-6">
+                <div class="admin-course-stats-section">
+                {{#admin_course_stats}}
+                    <div class="stats-section-container">
+                        <div class="section-header">
+                            <h3 class="section-title">{{#str}}course_statistics, theme_remui_kids{{/str}}</h3>
+                            
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="course-stats-grid">
+                                        <!-- Total Courses Card -->
+                                        <div class="course-stat-card total-courses">
+                                            <div class="stat-content">
+                                                <div class="stat-label">{{#str}}total_courses, theme_remui_kids{{/str}}</div>
+                                                <div class="stat-number">{{total_courses}}</div>
+                                            </div>
+                                            <div class="stat-icon-container">
+                                                <i class="fa fa-book stat-icon"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Completion Rate Card -->
+                                        <div class="course-stat-card completion-rate">
+                                            <div class="stat-content">
+                                                <div class="stat-label">{{#str}}completion_rate, theme_remui_kids{{/str}}</div>
+                                                <div class="stat-number">0%</div>
+                                            </div>
+                                            <div class="stat-icon-container">
+                                                <i class="fa fa-bullseye stat-icon"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Average Rating Card -->
+                                        <div class="course-stat-card avg-rating">
+                                            <div class="stat-content">
+                                                <div class="stat-label">{{#str}}average_grade, theme_remui_kids{{/str}}</div>
+                                                <div class="stat-number">0/5</div>
+                                            </div>
+                                            <div class="stat-icon-container">
+                                                <i class="fa fa-star stat-icon"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Categories Card -->
+                                        <div class="course-stat-card categories">
+                                            <div class="stat-content">
+                                                <div class="stat-label">{{#str}}nav_certifications, theme_remui_kids{{/str}}</div>
+                                                <div class="stat-number">{{categories}}</div>
+                                            </div>
+                                            <div class="stat-icon-container">
+                                                <i class="fa fa-building stat-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Categories Section -->
+                        <div class="course-categories-section">
+                            <div class="subsection-header">
+                                <h4 class="subsection-title">{{#str}}nav_certifications, theme_remui_kids{{/str}}</h4>
+                                <a class="view-all-btn" href="{{config.wwwroot}}/theme/remui_kids/admin/manage_course_content.php">
+                                    <span class="btn-glow"></span>
+                                    <i class="fa fa-arrow-right"></i>
+                                    {{#str}}view_all, theme_remui_kids{{/str}}
+                                </a>
+                            </div>
+                            <div class="categories-list">
+                                {{#admin_course_categories}}
+                                <div class="category-item">
+                                    <div class="category-left">
+                                        <div class="category-name">{{name}}</div>
+                                        <div class="category-enrollments">{{enrollment_count}} enrollments</div>
+                                    </div>
+                                    <div class="category-right">
+                                        <div class="category-courses">{{course_count}} courses</div>
+                                        <div class="category-completion">{{completion_rate}}% completion</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {{completion_rate}}%"></div>
+                                    </div>
+                                </div>
+                                {{/admin_course_categories}}
+                                
+                                {{^admin_course_categories}}
+                                <div class="category-item">
+                                    <div class="category-left">
+                                        <div class="category-name">No categories found</div>
+                                        <div class="category-enrollments">0 enrollments</div>
+                                    </div>
+                                    <div class="category-right">
+                                        <div class="category-courses">0 courses</div>
+                                        <div class="category-completion">0% completion</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                {{/admin_course_categories}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/admin_course_stats}}
+                </div>
+            </div>
+            
+            <!-- Right Column: Recent Activity -->
+            <div class="col-md-6">
+                <div class="admin-recent-activity-section">
+                    <div class="stats-section-container">
+                        <div class="section-header">
+                            <h3 class="section-title">{{#str}}recent_activity, theme_remui_kids{{/str}}</h3>
+                            
+                        </div>
+                        <div class="recent-activity-container">
+                            <!-- Course Completion -->
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fa fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Course Completion</div>
+                                    <div class="activity-description">9 teachers completed "Advanced Teaching Methods"</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">9/23/2025</span>
+                                        <span class="activity-author">Fatima ki</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Teacher Certified -->
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Teacher Certified</div>
+                                    <div class="activity-description">za ki received Master Trainer certification</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">9/23/2025</span>
+                                        <span class="activity-author">za ki</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New School Added -->
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fa fa-building"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">New School Added</div>
+                                    <div class="activity-description">Al-Huda-Global-School joined the platform</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">9/23/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New Course Created -->
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">New Course Created</div>
+                                    <div class="activity-description">"Digital Learning Fundamentals" course published</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">9/23/2025</span>
+                                        <span class="activity-author">shak zaki</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Course Completion -->
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fa fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Course Completion</div>
+                                    <div class="activity-description">8 teachers completed "Advanced Teaching Methods"</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">9/22/2025</span>
+                                        <span class="activity-author">za ki</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- School Filter Section -->
+<div class="school-filter-section" style="margin: 30px 0 20px 0;">
+    <div class="container-fluid">
+        <div class="filter-card" style="background: linear-gradient(135deg, #e1f5fe 0%, #f3e5f5 100%); padding: 20px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(225, 245, 254, 0.3); border: 1px solid #b3e5fc;">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem;">
+                            <i class="fa fa-filter"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #1976d2;">Student Data Filter</h4>
+                            <p style="margin: 0; font-size: 0.9rem; color: #546e7a;">Filter student enrollments and activities by school</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="school-filter-container">
+                        <label for="schoolFilter" style="display: block; font-size: 0.85rem; font-weight: 600; color: #1976d2; margin-bottom: 8px;">
+                            <i class="fa fa-school"></i> Select School
+                        </label>
+                        <select id="schoolFilter" class="form-control" style="padding: 12px 15px; border: 2px solid #81d4fa; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">
+                            <option value="">All Schools</option>
+                            {{#schools}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/schools}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Student Enrollments Section -->
+<div class="admin-student-enrollments-section">
+    <div class="container-fluid">
+        <div class="student-enrollments-container">
+        <div class="section-header">
+            <div class="section-header-left">
+                <h3 class="section-title">Student Enrollments <span id="schoolFilterLabel" style="font-size: 0.85rem; color: #81d4fa; font-weight: 500;"></span></h3>
+                <p class="section-subtitle">Real-time enrollment data</p>
+            </div>
+            <div class="section-header-right">
+                
+                <a class="view-all-btn" href="{{config.wwwroot}}/theme/remui_kids/admin/enrollments.php">
+                    <span class="btn-glow"></span>
+                    <i class="fa fa-arrow-right"></i>
+                    View All
+                </a>
+            </div>
+        </div>
+            
+            <div class="recent-enrollments-section">
+                <div class="subsection-header">
+                    <h4 class="subsection-title">Recent Student Enrollments</h4>
+                </div>
+                
+                <div class="enrollments-list">
+                    {{#student_enrollments}}
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">{{name}}</div>
+                                <div class="user-role">Role: {{role}}</div>
+                                {{#activity_level}}
+                                <div class="activity-level">
+                                    <div class="activity-bar">
+                                        <div class="activity-fill" style="width: {{percentage}}%"></div>
+                                    </div>
+                                    <span class="activity-score">{{level}}/5</span>
+                                </div>
+                                {{/activity_level}}
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot {{status_class}}"></span>
+                                <span class="status-text">{{status}}</span>
+                            </div>
+                            <div class="user-stats">{{logins}} logins • {{courses}} courses</div>
+                        </div>
+                    </div>
+                    {{/student_enrollments}}
+                    
+                    {{^student_enrollments}}
+                    <!-- Default Student Enrollments Matching Image -->
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">Guest user</div>
+                                <div class="user-role">Role: student</div>
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot inactive"></span>
+                                <span class="status-text">Inactive</span>
+                            </div>
+                            <div class="user-stats">0 logins • 0 courses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">Kodeit Admin</div>
+                                <div class="user-role">Role: school_admin</div>
+                                <div class="activity-level">
+                                    <div class="activity-bar">
+                                        <div class="activity-fill" style="width: 80%"></div>
+                                    </div>
+                                    <span class="activity-score">1/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot active"></span>
+                                <span class="status-text">Active</span>
+                            </div>
+                            <div class="user-stats">29 logins • 0 courses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">alhuda admin</div>
+                                <div class="user-role">Role: school_admin</div>
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot inactive"></span>
+                                <span class="status-text">Inactive</span>
+                            </div>
+                            <div class="user-stats">0 logins • 0 courses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">James Walker</div>
+                                <div class="user-role">Role: student</div>
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot inactive"></span>
+                                <span class="status-text">Inactive</span>
+                            </div>
+                            <div class="user-stats">0 logins • 0 courses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-item">
+                        <div class="user-info">
+                            <div class="user-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">Sophia Turner</div>
+                                <div class="user-role">Role: student</div>
+                            </div>
+                        </div>
+                        <div class="enrollment-status">
+                            <div class="status-indicator">
+                                <span class="status-dot inactive"></span>
+                                <span class="status-text">Inactive</span>
+                            </div>
+                            <div class="user-stats">0 logins • 0 courses</div>
+                        </div>
+                    </div>
+                    {{/student_enrollments}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Student Activities Section -->
+<div class="admin-student-activities-section">
+        <div class="container-fluid">
+        <div class="student-activities-container">
+            <div class="section-header">
+                <h3 class="section-title">Student Activities (Last 30 Days)</h3>
+                <p class="section-subtitle">Detailed student activity tracking and engagement metrics</p>
+                <div class="live-indicator">
+                    <span class="live-dot blue"></span>
+                    <span class="live-text">Live Activity Data</span>
+                </div>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="activities-summary-cards">
+                {{#admin_student_activity_stats}}
+                <div class="summary-card total-students">
+                    <div class="card-icon">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">{{total_students}}</div>
+                        <div class="card-label">Total Students</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card active-students">
+                    <div class="card-icon">
+                        <i class="fa fa-user-check"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">{{active_students}}</div>
+                        <div class="card-label">Active Students</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card avg-activity">
+                    <div class="card-icon">
+                        <i class="fa fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">{{avg_activity_level}}</div>
+                        <div class="card-label">Avg Activity Level</div>
+                    </div>
+                </div>
+                {{/admin_student_activity_stats}}
+            </div>
+            
+            <!-- All School Admins Activities Section -->
+            <div class="all-activities-section">
+                <div class="subsection-header">
+                    <h4 class="subsection-title">All School Admins Activities (Last 30 Days)</h4>
+                    <button class="realtime-data-btn">Real-time data</button>
+                </div>
+                
+                <div class="activities-scrollable-list">
+                    {{#student_activities}}
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="header-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>Last active: {{last_active}}</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-eye"></i>
+                                <span>Engagement: {{engagement}}</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-book"></i>
+                                <span>Courses: {{courses}}</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-clock"></i>
+                                <span>Logins: {{logins}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="student-info">
+                                <div class="student-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="student-content">
+                                    <div class="student-name">{{name}}</div>
+                                    <div class="student-role" style="font-size: 0.85rem; color: #666; margin: 4px 0;">{{role}} • {{school_name}}</div>
+                                    <div class="student-stats">
+                                        <span class="stat-item">
+                                            <i class="fa fa-users"></i>
+                                            {{students}} students
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-book"></i>
+                                            {{courses}} courses
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-clock"></i>
+                                            {{logins}} logins
+                                        </span>
+                                    </div>
+                                    <div class="activity-level-section">
+                                        <div class="activity-level-label">Activity Level</div>
+                                        <div class="activity-level-bar">
+                                            <div class="activity-level-fill" style="width: {{activity_percentage}}%"></div>
+                                        </div>
+                                        <div class="activity-level-score">{{level}}/5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-status">
+                                <div class="status-indicator">
+                                    <span class="status-dot {{status_class}}"></span>
+                                    <span class="status-text">{{status}}</span>
+                                </div>
+                                <div class="last-seen">{{last_seen}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/student_activities}}
+                    
+                    {{^student_activities}}
+                    <!-- Default Student Activities Matching Image -->
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="header-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>Last active: Recently</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-eye"></i>
+                                <span>Engagement: Low</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-book"></i>
+                                <span>Courses: 0</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-clock"></i>
+                                <span>Logins: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="student-info">
+                                <div class="student-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="student-content">
+                                    <div class="student-name">James Walker</div>
+                                    <div class="student-stats">
+                                        <span class="stat-item">
+                                            <i class="fa fa-clock"></i>
+                                            0 logins
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-book"></i>
+                                            0 courses
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-bullseye"></i>
+                                            Level 0/5
+                                        </span>
+                                    </div>
+                                    <div class="activity-level-section">
+                                        <div class="activity-level-label">Activity Level</div>
+                                        <div class="activity-level-bar">
+                                            <div class="activity-level-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="activity-level-score">0/5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-status">
+                                <div class="status-indicator">
+                                    <span class="status-dot inactive"></span>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                                <div class="last-seen">Last seen recently</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="header-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>Last active: Recently</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-eye"></i>
+                                <span>Engagement: Low</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-book"></i>
+                                <span>Courses: 0</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-clock"></i>
+                                <span>Logins: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="student-info">
+                                <div class="student-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="student-content">
+                                    <div class="student-name">Sophia Turner</div>
+                                    <div class="student-stats">
+                                        <span class="stat-item">
+                                            <i class="fa fa-clock"></i>
+                                            0 logins
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-book"></i>
+                                            0 courses
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-bullseye"></i>
+                                            Level 0/5
+                                        </span>
+                                    </div>
+                                    <div class="activity-level-section">
+                                        <div class="activity-level-label">Activity Level</div>
+                                        <div class="activity-level-bar">
+                                            <div class="activity-level-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="activity-level-score">0/5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-status">
+                                <div class="status-indicator">
+                                    <span class="status-dot inactive"></span>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                                <div class="last-seen">Last seen recently</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional sample cards for scrolling demonstration -->
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="header-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>Last active: Recently</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-eye"></i>
+                                <span>Engagement: Low</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-book"></i>
+                                <span>Courses: 0</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-clock"></i>
+                                <span>Logins: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="student-info">
+                                <div class="student-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="student-content">
+                                    <div class="student-name">Alex Johnson</div>
+                                    <div class="student-stats">
+                                        <span class="stat-item">
+                                            <i class="fa fa-clock"></i>
+                                            0 logins
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-book"></i>
+                                            0 courses
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-bullseye"></i>
+                                            Level 0/5
+                                        </span>
+                                    </div>
+                                    <div class="activity-level-section">
+                                        <div class="activity-level-label">Activity Level</div>
+                                        <div class="activity-level-bar">
+                                            <div class="activity-level-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="activity-level-score">0/5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-status">
+                                <div class="status-indicator">
+                                    <span class="status-dot inactive"></span>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                                <div class="last-seen">Last seen recently</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="header-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>Last active: Recently</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-eye"></i>
+                                <span>Engagement: Low</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-book"></i>
+                                <span>Courses: 0</span>
+                            </div>
+                            <div class="header-item">
+                                <i class="fa fa-clock"></i>
+                                <span>Logins: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="student-info">
+                                <div class="student-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="student-content">
+                                    <div class="student-name">Emma Davis</div>
+                                    <div class="student-stats">
+                                        <span class="stat-item">
+                                            <i class="fa fa-clock"></i>
+                                            0 logins
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-book"></i>
+                                            0 courses
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fa fa-bullseye"></i>
+                                            Level 0/5
+                                        </span>
+                                    </div>
+                                    <div class="activity-level-section">
+                                        <div class="activity-level-label">Activity Level</div>
+                                        <div class="activity-level-bar">
+                                            <div class="activity-level-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="activity-level-score">0/5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-status">
+                                <div class="status-indicator">
+                                    <span class="status-dot inactive"></span>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                                <div class="last-seen">Last seen recently</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/student_activities}}
+                </div>
+            </div>
+            
+            <!-- Bottom Summary Bar -->
+            <div class="bottom-summary-bar">
+                <div class="summary-stats">
+                    {{#admin_student_activity_stats}}
+                    <span class="summary-stat">{{active_students}} Active Students</span>
+                    <span class="summary-stat">{{avg_activity_level}} Avg Activity Level</span>
+                    <span class="summary-stat">0 Total Course Access</span>
+                    <span class="summary-stat">0 Total Logins</span>
+                    {{/admin_student_activity_stats}}
+                </div>
+                <div class="floating-action-btn">
+                    <i class="fa fa-plus"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div> <!-- End admin-main-content -->
+
+{{/admin_dashboard}}
+
+<!-- Regular Dashboard Content (fallback) -->
+<div class="dashboard-content">
+    <div id="region-main-box" class="d-print-block">
+        <section id="region-main" class="d-print-block" aria-label="{{#str}}content{{/str}}">
+            <div class="rui-course-content">
+                {{{ output.main_content }}}
+            </div>
+        </section>
+    </div>
+</div>
+
+{{> theme_remui/common_end}}
+
+{{#js}}
+// JavaScript modules are now loaded directly via lib.php
+// No AMD require calls needed
+{{/js}}
+
+<script>
+// Copy to clipboard function
+function copyToClipboard(text, button) {
+    if (!text || text === 'Not set - using default') {
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function() {
+        // Show feedback
+        if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fa fa-check"></i> Copied!';
+            button.style.background = '#10b981';
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.style.background = '#4fc3f7';
+            }, 2000);
+        }
+    }).catch(function(err) {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const launcherBtn = document.getElementById('maptest-launcher-btn');
+    const sidebarLink = document.getElementById('maptest-sidebar-link');
+    const modal = document.getElementById('maptest-modal');
+    const closeBtn = document.getElementById('maptest-modal-close');
+
+    const setModalState = (open) => {
+        if (!modal) {
+            return;
+        }
+        modal.classList.toggle('active', open);
+        modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open && typeof modal.focus === 'function') {
+            modal.focus();
+        }
+    };
+
+    // Handle floating button (if it exists)
+    if (launcherBtn && modal) {
+        launcherBtn.addEventListener('click', () => setModalState(true));
+    }
+
+    // Handle sidebar link
+    if (sidebarLink && modal) {
+        sidebarLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            setModalState(true);
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => setModalState(false));
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                setModalState(false);
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+            setModalState(false);
+        }
+    });
+
+    const saveButton = document.getElementById('maptest-admin-save');
+    if (!saveButton) {
+        return;
+    }
+
+    const enableToggle = document.getElementById('maptest-enable-toggle');
+    const allowAllToggle = document.getElementById('maptest-allowall-toggle');
+    const cohortSelect = document.getElementById('maptest-cohorts');
+    const titleInput = document.getElementById('maptest-title');
+    const descriptionInput = document.getElementById('maptest-description');
+    const buttonInput = document.getElementById('maptest-button');
+    const enablessoToggle = document.getElementById('maptest-enablesso');
+    const maptestUrlInput = document.getElementById('maptest-url');
+    const ssosecretInput = document.getElementById('maptest-ssosecret');
+    const feedbackEl = document.getElementById('maptest-admin-feedback');
+    const endpoint = saveButton.dataset.endpoint;
+    const sesskey = saveButton.dataset.sesskey;
+
+    const setFeedback = (message, type) => {
+        if (!feedbackEl) {
+            return;
+        }
+        feedbackEl.textContent = message || '';
+        feedbackEl.classList.remove('success', 'error');
+        if (type) {
+            feedbackEl.classList.add(type);
+        }
+    };
+
+    const setLoading = (isLoading) => {
+        saveButton.classList.toggle('disabled', isLoading);
+        saveButton.disabled = isLoading;
+        if (isLoading) {
+            setFeedback('Saving...', null);
+        }
+    };
+
+    const syncCohortState = () => {
+        if (!cohortSelect || !allowAllToggle) {
+            return;
+        }
+        cohortSelect.disabled = allowAllToggle.checked;
+    };
+
+    if (allowAllToggle) {
+        allowAllToggle.addEventListener('change', syncCohortState);
+    }
+    syncCohortState();
+
+    saveButton.addEventListener('click', () => {
+        if (!endpoint || !sesskey) {
+            setFeedback('Missing endpoint configuration.', 'error');
+            return;
+        }
+
+        const cohortIds = (!cohortSelect || (allowAllToggle && allowAllToggle.checked))
+            ? []
+            : Array.from(cohortSelect.selectedOptions).map(option => parseInt(option.value, 10)).filter(Boolean);
+
+        const payload = {
+            action: 'save',
+            enablecard: enableToggle && enableToggle.checked ? 1 : 0,
+            enableallcohorts: allowAllToggle && allowAllToggle.checked ? 1 : 0,
+            cohortids: cohortIds,
+            cardtitle: titleInput ? titleInput.value.trim() : '',
+            carddescription: descriptionInput ? descriptionInput.value.trim() : '',
+            buttontitle: buttonInput ? buttonInput.value.trim() : '',
+            enablesso: enablessoToggle && enablessoToggle.checked ? 1 : 0,
+            maptesturl: maptestUrlInput ? maptestUrlInput.value.trim() : '',
+            ssosecret: ssosecretInput ? ssosecretInput.value.trim() : ''
+        };
+
+        setLoading(true);
+
+        fetch(`${endpoint}?sesskey=${encodeURIComponent(sesskey)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                setFeedback('MAP Test settings saved successfully.', 'success');
+            } else {
+                throw new Error(data.message || 'Unexpected response.');
+            }
+        })
+        .catch(error => {
+            console.error('MAP Test save error:', error);
+            setFeedback('Unable to save MAP Test settings. Please try again.', 'error');
+        })
+        .finally(() => setLoading(false));
+    });
+});
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    sidebar.classList.toggle('sidebar-open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const toggleButton = document.querySelector('.sidebar-toggle');
+    
+    if (window.innerWidth <= 768) {
+        if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+            sidebar.classList.remove('sidebar-open');
+        }
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('sidebar-open');
+    }
+});
+
+// Highlight active sidebar menu item based on current URL
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname;
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    
+    // Remove all active classes first
+    sidebarItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Find and highlight the matching menu item
+    sidebarItems.forEach(item => {
+        const link = item.querySelector('.sidebar-link');
+        if (link) {
+            const href = link.getAttribute('href');
+            
+            // Skip empty or hash-only links
+            if (!href || href === '#') {
+                return;
+            }
+            
+            // Check if current URL matches this link
+            if (currentUrl === href || currentUrl.includes(href)) {
+                item.classList.add('active');
+            } else {
+                // Try matching just the filename
+                const linkPath = href.split('/').pop().split('?')[0];
+                const currentFile = currentPath.split('/').pop().split('?')[0];
+                
+                if (linkPath && currentFile && linkPath === currentFile) {
+                    item.classList.add('active');
+                }
+            }
+        }
+    });
+    
+    // If no item is active and we're on /my/ page, activate Admin Dashboard
+    const hasActive = document.querySelector('.sidebar-item.active');
+    if (!hasActive && (currentPath.includes('/my/') || currentPath.endsWith('/my'))) {
+        const dashboardItem = document.querySelector('.sidebar-item a[href*="/my/"]');
+        if (dashboardItem) {
+            dashboardItem.closest('.sidebar-item').classList.add('active');
+        }
+    }
+});
+
+// Real-time statistics update functions
+function refreshSchoolCount() {
+    const refreshIcon = document.getElementById('schools-refresh-icon');
+    const schoolsCount = document.getElementById('total-schools-count');
+    const schoolsUpdated = document.getElementById('schools-updated');
+    
+    // Show loading state
+    refreshIcon.classList.add('fa-spin');
+    
+    // Fetch real-time data
+    fetch('{{config.wwwroot}}/theme/remui_kids/tests/test_ajax.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.text(); // Get as text first
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.status === 'success') {
+                    // Update the count with animation
+                    animateCountUpdate(schoolsCount, data.total_schools);
+                    schoolsUpdated.textContent = 'Last updated: ' + data.timestamp;
+                    
+                    // Show success feedback
+                    showUpdateFeedback('schools-card', 'success');
+                } else {
+                    console.error('API Error:', data);
+                    showUpdateFeedback('schools-card', 'error');
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response text:', text);
+                showUpdateFeedback('schools-card', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showUpdateFeedback('schools-card', 'error');
+        })
+        .finally(() => {
+            // Remove loading state
+            refreshIcon.classList.remove('fa-spin');
+        });
+}
+
+// Course count refresh function for admin dashboard
+function refreshCourseCountAdmin() {
+    const refreshIcon = document.getElementById('courses-refresh-icon');
+    const coursesCount = document.getElementById('total-courses-count');
+    const coursesUpdated = document.getElementById('courses-updated');
+    
+    // Show loading state
+    refreshIcon.classList.add('fa-spin');
+    
+    // Fetch real-time data
+    fetch('{{config.wwwroot}}/theme/remui_kids/tests/test_ajax.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.text(); // Get as text first
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.status === 'success') {
+                    // Update the count with animation
+                    animateCountUpdate(coursesCount, data.total_courses);
+                    coursesUpdated.textContent = 'Last updated: ' + data.timestamp;
+                    
+                    // Show success feedback
+                    showUpdateFeedback('courses-card', 'success');
+                } else {
+                    console.error('API Error:', data);
+                    showUpdateFeedback('courses-card', 'error');
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response text:', text);
+                showUpdateFeedback('courses-card', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showUpdateFeedback('courses-card', 'error');
+        })
+        .finally(() => {
+            // Remove loading state
+            refreshIcon.classList.remove('fa-spin');
+        });
+}
+
+function animateCountUpdate(element, newValue) {
+    const currentValue = parseInt(element.textContent) || 0;
+    const increment = newValue > currentValue ? 1 : -1;
+    const duration = 1000; // 1 second
+    const steps = Math.abs(newValue - currentValue);
+    const stepDuration = duration / steps;
+    
+    let currentStep = 0;
+    const timer = setInterval(() => {
+        currentStep++;
+        const newDisplayValue = currentValue + (increment * currentStep);
+        element.textContent = newDisplayValue;
+        
+        if (currentStep >= steps) {
+            clearInterval(timer);
+            element.textContent = newValue;
+        }
+    }, stepDuration);
+}
+
+function showUpdateFeedback(cardId, type) {
+    const card = document.getElementById(cardId);
+    const feedback = document.createElement('div');
+    feedback.className = `update-feedback ${type}`;
+    feedback.textContent = type === 'success' ? '✓ Updated' : '✗ Error';
+    feedback.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s;
+    `;
+    
+    card.style.position = 'relative';
+    card.appendChild(feedback);
+    
+    // Fade in
+    setTimeout(() => feedback.style.opacity = '1', 10);
+    
+    // Fade out and remove
+    setTimeout(() => {
+        feedback.style.opacity = '0';
+        setTimeout(() => card.removeChild(feedback), 300);
+    }, 2000);
+}
+
+// Student count refresh function for admin dashboard
+function refreshStudentCountAdmin() {
+    const refreshIcon = document.getElementById('students-refresh-icon');
+    const studentsCount = document.getElementById('total-students-count');
+    const studentsUpdated = document.getElementById('students-updated');
+    
+    // Show loading state
+    refreshIcon.classList.add('fa-spin');
+    
+    // Fetch real-time data
+    fetch('{{config.wwwroot}}/theme/remui_kids/tests/test_ajax.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.text(); // Get as text first
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.status === 'success') {
+                    // Update the count with animation
+                    animateCountUpdate(studentsCount, data.total_students);
+                    studentsUpdated.textContent = 'Last updated: ' + data.timestamp;
+                    
+                    // Show success feedback
+                    showUpdateFeedback('students-card', 'success');
+                } else {
+                    console.error('API Error:', data);
+                    showUpdateFeedback('students-card', 'error');
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response text:', text);
+                showUpdateFeedback('students-card', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showUpdateFeedback('students-card', 'error');
+        })
+        .finally(() => {
+            // Remove loading state
+            refreshIcon.classList.remove('fa-spin');
+        });
+}
+
+// Refresh all stats function
+function refreshAllStats() {
+    const refreshIcon = document.getElementById('all-stats-refresh-icon');
+    
+    // Show loading state
+    refreshIcon.classList.add('fa-spin');
+    
+    // Fetch real-time data
+    fetch('{{config.wwwroot}}/theme/remui_kids/tests/test_ajax.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.text();
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.status === 'success') {
+                    // Update all counts with animation
+                    animateCountUpdate(document.getElementById('total-schools-count'), data.total_schools);
+                    animateCountUpdate(document.getElementById('total-courses-count'), data.total_courses);
+                    animateCountUpdate(document.getElementById('total-students-count'), data.total_students);
+                    animateCountUpdate(document.getElementById('total-users-count'), data.total_users);
+                    animateCountUpdate(document.getElementById('teachers-count'), data.teachers);
+                    animateCountUpdate(document.getElementById('students-count'), data.total_students);
+                    animateCountUpdate(document.getElementById('admins-count'), data.admins);
+                    animateCountUpdate(document.getElementById('active-users-count'), data.active_users);
+                    animateCountUpdate(document.getElementById('new-users-count'), data.new_this_month);
+                    
+                    // Update timestamps
+                    const timestamp = data.timestamp;
+                    const timestampElements = document.querySelectorAll('[id$="-updated"]');
+                    timestampElements.forEach(element => {
+                        element.textContent = 'Last updated: ' + timestamp;
+                    });
+                    
+                    // Show success feedback
+                    showUpdateFeedback('total-users-card', 'success');
+                } else {
+                    console.error('API Error:', data);
+                    showUpdateFeedback('total-users-card', 'error');
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response text:', text);
+                showUpdateFeedback('total-users-card', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showUpdateFeedback('total-users-card', 'error');
+        })
+        .finally(() => {
+            // Remove loading state
+            refreshIcon.classList.remove('fa-spin');
+        });
+}
+
+// Auto-refresh every 30 seconds
+
+// ========================================
+// School Filter Functionality
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    const schoolFilter = document.getElementById('schoolFilter');
+    
+    if (schoolFilter) {
+        schoolFilter.addEventListener('change', function() {
+            const companyid = this.value;
+            filterDashboardBySchool(companyid);
+        });
+    }
+});
+
+function filterDashboardBySchool(companyid) {
+    // Show loading indicator
+    showLoadingState();
+    
+    // Update filter label
+    const schoolFilter = document.getElementById('schoolFilter');
+    const filterLabel = document.getElementById('schoolFilterLabel');
+    if (filterLabel && schoolFilter) {
+        if (companyid) {
+            const selectedOption = schoolFilter.options[schoolFilter.selectedIndex];
+            filterLabel.textContent = ' (Filtered by: ' + selectedOption.text + ')';
+        } else {
+            filterLabel.textContent = ' (All Schools)';
+        }
+    }
+    
+    // Build AJAX URL - use window.location.origin for better compatibility
+    const baseUrl = '{{config.wwwroot}}' || window.location.origin;
+    const ajaxUrl = baseUrl + '/theme/remui_kids/ajax/get_admin_dashboard_data.php';
+    
+    // Build query parameters
+    const params = new URLSearchParams({
+        'action': 'get_all_dashboard_data',
+        'sesskey': (typeof M !== 'undefined' && M.cfg && M.cfg.sesskey) ? M.cfg.sesskey : '{{sesskey}}'
+    });
+    
+    if (companyid) {
+        params.append('companyid', companyid);
+    }
+    
+    const fullUrl = ajaxUrl + '?' + params.toString();
+    console.log('Fetching from:', fullUrl);
+    
+    // Fetch filtered data
+    fetch(fullUrl, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            if (data.success) {
+                // Update Student Activities stats
+                updateStudentActivitiesStats(data.data.student_activities);
+                
+                // Update Student Enrollments list
+                updateStudentEnrollmentsList(data.data.student_enrollments);
+                
+                // Update Student Activities Detail list
+                updateStudentActivitiesDetail(data.data.student_activities_detail);
+                
+                hideLoadingState();
+            } else {
+                console.error('Error filtering dashboard:', data.error);
+                alert('Error loading filtered data: ' + (data.error || 'Unknown error'));
+                hideLoadingState();
+            }
+        })
+        .catch(error => {
+            console.error('AJAX Error:', error);
+            alert('Network error while filtering data: ' + error.message);
+            hideLoadingState();
+        });
+}
+
+function showLoadingState() {
+    // Add loading overlay to student activities and enrollments sections
+    const activitySection = document.querySelector('.admin-student-activities-section');
+    const enrollmentSection = document.querySelector('.admin-student-enrollments-section');
+    
+    if (activitySection) {
+        activitySection.style.opacity = '0.5';
+        activitySection.style.pointerEvents = 'none';
+    }
+    if (enrollmentSection) {
+        enrollmentSection.style.opacity = '0.5';
+        enrollmentSection.style.pointerEvents = 'none';
+    }
+}
+
+function hideLoadingState() {
+    const activitySection = document.querySelector('.admin-student-activities-section');
+    const enrollmentSection = document.querySelector('.admin-student-enrollments-section');
+    
+    if (activitySection) {
+        activitySection.style.opacity = '1';
+        activitySection.style.pointerEvents = 'auto';
+    }
+    if (enrollmentSection) {
+        enrollmentSection.style.opacity = '1';
+        enrollmentSection.style.pointerEvents = 'auto';
+    }
+}
+
+function updateStudentActivitiesStats(stats) {
+    // Update Student Activities (Last 30 Days) section - Fixed selectors to match actual HTML structure
+    const totalStudentsElem = document.querySelector('.admin-student-activities-section .summary-card.total-students .card-number');
+    const activeStudentsElem = document.querySelector('.admin-student-activities-section .summary-card.active-students .card-number');
+    const avgActivityElem = document.querySelector('.admin-student-activities-section .summary-card.avg-activity .card-number');
+    
+    if (totalStudentsElem) totalStudentsElem.textContent = stats.total_students || 0;
+    if (activeStudentsElem) activeStudentsElem.textContent = stats.active_students || 0;
+    if (avgActivityElem) avgActivityElem.textContent = (stats.avg_activity_level || 0).toFixed(1) + '/5.0';
+}
+
+function updateStudentEnrollmentsList(enrollments) {
+    // Update Recent Student Enrollments section
+    const enrollmentsContainer = document.querySelector('.admin-student-enrollments-section .enrollments-list');
+    
+    if (!enrollmentsContainer) return;
+    
+    if (!enrollments || enrollments.length === 0) {
+        enrollmentsContainer.innerHTML = `
+            <div class="empty-state" style="padding: 40px; text-align: center; color: #6c757d;">
+                <i class="fa fa-user-slash" style="font-size: 3rem; opacity: 0.3; margin-bottom: 15px;"></i>
+                <p style="margin: 0; font-size: 1.1rem; font-weight: 500;">No recent student enrollments found</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    enrollments.forEach(enrollment => {
+        // Match the exact HTML structure and class names from the original template
+        html += `
+            <div class="enrollment-item">
+                <div class="user-info">
+                    <div class="user-icon">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">${enrollment.name}</div>
+                        <div class="user-role">Role: ${enrollment.role || 'student'}</div>
+                    </div>
+                </div>
+                <div class="enrollment-status">
+                    <div class="status-indicator">
+                        <span class="status-dot ${enrollment.status_class || 'active'}"></span>
+                        <span class="status-text">${enrollment.status || 'Active'}</span>
+                    </div>
+                    <div class="user-stats">${enrollment.logins || 0} logins • ${enrollment.courses || 0} courses</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    enrollmentsContainer.innerHTML = html;
+}
+
+function updateStudentActivitiesDetail(activities) {
+    // Update "All School Admins Activities (Last 30 Days)" section
+    const activitiesContainer = document.querySelector('.admin-student-activities-section .activities-scrollable-list');
+    
+    if (!activitiesContainer) return;
+    
+    if (!activities || activities.length === 0) {
+        activitiesContainer.innerHTML = `
+            <div class="empty-state" style="padding: 40px; text-align: center; color: #6c757d;">
+                <i class="fa fa-user-tie" style="font-size: 3rem; opacity: 0.3; margin-bottom: 15px;"></i>
+                <p style="margin: 0; font-size: 1.1rem; font-weight: 500;">No school admin activities found</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    activities.forEach(activity => {
+        html += `
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="header-item">
+                        <i class="fa fa-calendar"></i>
+                        <span>Last active: ${activity.last_active}</span>
+                    </div>
+                    <div class="header-item">
+                        <i class="fa fa-eye"></i>
+                        <span>Engagement: ${activity.engagement}</span>
+                    </div>
+                    <div class="header-item">
+                        <i class="fa fa-users"></i>
+                        <span>Students: ${activity.students || 0}</span>
+                    </div>
+                    <div class="header-item">
+                        <i class="fa fa-clock"></i>
+                        <span>Logins: ${activity.logins}</span>
+                    </div>
+                </div>
+                
+                <div class="student-details">
+                    <div class="student-info">
+                        <div class="student-icon">
+                            <i class="fa fa-user-tie"></i>
+                        </div>
+                        <div class="student-content">
+                            <div class="student-name">${activity.name}</div>
+                            <div class="student-role" style="font-size: 0.85rem; color: #666; margin: 4px 0;">${activity.role || 'School Admin'} • ${activity.school_name || 'Unknown School'}</div>
+                            <div class="student-stats">
+                                <span class="stat-item">
+                                    <i class="fa fa-users"></i>
+                                    ${activity.students || 0} students
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fa fa-book"></i>
+                                    ${activity.courses} courses
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fa fa-clock"></i>
+                                    ${activity.logins} logins
+                                </span>
+                            </div>
+                            <div class="activity-level-section">
+                                <div class="activity-level-label">Activity Level</div>
+                                <div class="activity-level-bar">
+                                    <div class="activity-level-fill" style="width: ${activity.activity_percentage || 0}%"></div>
+                                </div>
+                                <div class="activity-level-score">${activity.level || 0}/5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="student-status">
+                        <div class="status-indicator">
+                            <span class="status-dot ${activity.status_class || 'inactive'}"></span>
+                            <span class="status-text">${activity.status || 'Inactive'}</span>
+                        </div>
+                        <div class="last-seen">${activity.last_seen || 'Never'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    activitiesContainer.innerHTML = html;
+}
+
+</script>
+</div> <!-- End admin-dashboard-wrapper -->

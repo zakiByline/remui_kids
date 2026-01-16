@@ -1,0 +1,129 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    Edwiser RemUI
+    @package theme_remui
+    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+
+}}
+{{!
+    @template theme_remui/course_card_grid
+}}
+
+<div class="course_card-0 card-wrapper card dashboard-card edwanimate-{{animation}}"  data-course-id="{{id}}">
+    <div tabindex="-1">
+        <div class="card-img dashboard-card-img p-p-4 edw-course-img-wrapper" style='background-image: url("{{{courseimage}}}");'>
+            <a href="{{ courseurl }} " class="view-course-url"></a>
+
+            <div class="d-flex align-items-center justify-content-between">
+                {{#skillleveltag}}
+                    <p class="skilltag m-0 badge {{badge}}">{{{labeltag}}}</p>
+                {{/skillleveltag}}
+
+                <div class="card-img-icons-wrapper d-flex align-items-center flex-gap-2 ml-auto">
+                    {{^visible}}
+                        <div class="visibilityicon">
+                            <i class="hidden-icon edw-icon edw-icon-Hide" aria-hidden="true" title="{{#str}} hiddencourse, theme_remui {{/str}}"></i>
+                        </div>
+                    {{/visible}}
+                    {{#usercanmanage}}
+                        {{>theme_remui/coursearchive_menu-picker-select}}
+                    {{/usercanmanage}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+     <div class="course-card-body-wrapper d-flex h-100">
+        <div class="card-body course-info-container d-flex flex-column  justify-content-between  flex-gap-5" id="course-info-container-{{id}}-{{uniqid}}">
+            <div class="edw-card-design-hd d-flex flex-column flex-gap-3">
+                <div class="d-flex flex-column align-items-start flex-gap-3">
+                    <span class="categoryname text-truncate small-info-semibold" title="{{{categoryname}}}">
+                        {{{categoryname}}}
+                    </span>
+                    <div class="w-100 ">
+                        <a class="coursename text-decoration-none ellipsis ellipsis-3 h-semibold-6" href="{{courseurl}}" title="{{{ coursename }}}">
+                            {{{coursename}}}
+                        </a>
+                    </div>
+                </div>
+                {{#instructors}}
+                    <div class="d-flex flex-row flex-gap-0d5">
+                        <div class="d-flex flex-row instructor-info-wrapper">
+                            <a href="{{ url }}" class="d-flex  align-items-center flex-gap-d5 instructor-img {{ imgStyle }}"
+                                aria-label="Instructor for {{coursename}} is - {{name}}" title="{{{name}}}">
+                                <img src="{{ picture }}" class="rounded-circle" alt="{{ name }}" loading="lazy"/>
+                                <h6 class="h-regular-6 course-instructors m-0 break-word ellipsis ellipsis-2" title="{{{name}}}">{{{name}}}</h6>
+                            </a>
+                        </div>
+
+                        {{#instructorcount}}
+                            <span class="small-info-semibold instructorscount d-flex align-items-center justify-content-center" title="{{#str}}instructorcounttitle,theme_remui{{/str}}">
+                                +{{instructorcount}}
+                            </span>
+                        {{/instructorcount}}
+                    </div>
+                {{/instructors}}
+
+                {{#coursesummary}}
+                    <p class="coursesummary ellipsis ellipsis-2 para-regular-2 m-0">{{{coursesummary}}}</p>
+                {{/coursesummary}}
+            </div>
+            <div class="edw-card-design-ft d-flex flex-column align-self-strech flex-gap-5">
+                <div class="d-flex text-nowrap ernr-lesson-wrapper flex-gap-1">
+                    <div class="lesson-date-wrapper d-flex flex-wrap justify-content-between">
+                         {{#lessoncount}}
+                        <div class="lesson-count small-info-semibold m-0 d-flex flex-gap-d5 align-items-center">
+                            <span class="edw-icon edw-icon-Book" title="{{lessoncount}} lessons"></span>
+                            <span>{{lessoncount}} {{{lessonstitletext}}}</span>
+                        </div>
+                        {{/lessoncount}}
+                        {{#showselecteddatesetting}}
+                        <div class="updated-date small-info-semibold m-0 d-flex flex-gap-d5 align-items-center">
+                            <span class="edw-icon edw-icon-Time" title=""></span> {{showselecteddatesetting}}
+                        </div>
+                        {{/showselecteddatesetting}}
+                    </div>
+                    <div class="rating-enroll-wrapper d-flex justify-content-between">
+                        {{#ernrshortdesign}}
+                            <div>{{{ernrshortdesign}}}</div>
+                        {{/ernrshortdesign}}
+                        {{#enrolleduserscount}}
+                            <div class="enrolled-users-count small-info-semibold m-0 d-flex flex-gap-d5 align-items-center">
+                            <span class="edw-icon edw-icon-Group-user" title=""></span> <span>{{{enrolleduserscount}}} {{{enrolledusertitletext}}}</span>
+                            </div>
+                        {{/enrolleduserscount}}
+                    </div>
+                </div>
+                <div class="payment-view-wrapper d-flex justify-content-between flex-gap-4">
+                    <div class="d-flex flex-gap-1 align-items-center enrollmenticons-wrapper">
+                        {{#enrollmenticons }}{{{enrollmenticons}}}{{/enrollmenticons }}
+                        {{#enrollmenticonsremainig}}
+                            <span class="small-info-semibold paymentmethodcount d-flex align-items-center justify-content-center" title="">+{{{enrollmenticonsremainig}}}</span>
+                        {{/enrollmenticonsremainig}}
+                    </div>
+                    <a class="btn btn-secondary btn-sm view-course-btn" href="{{ courseurl }} " title="{{#str}}viewcoursetitle,theme_remui{{/str}}">{{#str}}viewcourse,theme_remui{{/str}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+require(['jquery'], function($) {
+    $('.edw-course-card-grid .dashboard-card').each(function(index, gridCard) {
+        $(gridCard).css('height', $(gridCard).outerHeight(true));
+    });
+});
+{{/js}}

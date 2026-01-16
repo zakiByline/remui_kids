@@ -1,0 +1,284 @@
+{{!
+    Dashboard Selector Template
+    Allows users to select their preferred dashboard based on their roles
+}}
+
+<div class="dashboard-selector-container">
+    <div class="selector-header">
+        <div class="header-content">
+            <h1 class="selector-title">Welcome, {{user_name}}!</h1>
+            <p class="selector-subtitle">Please select your dashboard based on your role</p>
+        </div>
+        <div class="header-icon">
+            <i class="fa fa-tachometer-alt"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-cards">
+        {{#available_roles}}
+        <div class="dashboard-card" style="border-top: 4px solid {{color}}">
+            <div class="card-icon" style="background: {{color}}">
+                <i class="{{icon}}"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">{{title}}</h3>
+                <p class="card-description">{{description}}</p>
+                <a href="{{url}}" class="card-button" style="background: {{color}}">
+                    Access Dashboard
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        {{/available_roles}}
+    </div>
+
+    <div class="selector-footer">
+        <p class="footer-text">
+            <i class="fa fa-info-circle"></i>
+            If you need access to additional dashboards, please contact your administrator.
+        </p>
+    </div>
+</div>
+
+<style>
+    .dashboard-selector-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .selector-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .selector-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: rotate(45deg);
+    }
+
+    .header-content {
+        flex: 1;
+        z-index: 2;
+    }
+
+    .selector-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .selector-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .header-icon {
+        font-size: 5rem;
+        opacity: 0.3;
+        z-index: 1;
+    }
+
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--card-color);
+    }
+
+    .card-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-content {
+        flex: 1;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .card-description {
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+    }
+
+    .card-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: var(--card-color);
+        color: white;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .card-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .card-button i {
+        transition: transform 0.3s ease;
+    }
+
+    .card-button:hover i {
+        transform: translateX(3px);
+    }
+
+    .selector-footer {
+        text-align: center;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 1rem;
+        border: 1px solid #e9ecef;
+    }
+
+    .footer-text {
+        color: #6c757d;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .footer-text i {
+        color: #17a2b8;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-selector-container {
+            margin: 1rem auto;
+            padding: 1rem;
+        }
+
+        .selector-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            padding: 2rem 1rem;
+        }
+
+        .selector-title {
+            font-size: 2rem;
+        }
+
+        .selector-subtitle {
+            font-size: 1rem;
+        }
+
+        .header-icon {
+            font-size: 3rem;
+        }
+
+        .dashboard-cards {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .dashboard-card {
+            padding: 1.5rem;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+        }
+    }
+
+    /* Animation */
+    .dashboard-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+    .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+    .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+    .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+    .dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+

@@ -1,0 +1,890 @@
+{{! Elementary Settings Page Template - Kid-friendly settings interface }}
+
+<style>
+/* Elementary Settings Page Styles */
+.elementary-settings-page {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.settings-header {
+    background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 50%, #f5f0ff 100%);
+    color: #4a5568;
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(139, 195, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(139, 195, 255, 0.3);
+}
+
+.settings-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #a8d8ff 0%, #b8e6ff 25%, #c8f0ff 50%, #d8faff 75%, #e8ffff 100%);
+}
+
+.settings-header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.settings-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(139, 195, 255, 0.4);
+    background: linear-gradient(135deg, #a8d8ff 0%, #b8e6ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #4a5568;
+    box-shadow: 0 4px 15px rgba(139, 195, 255, 0.3);
+}
+
+.settings-title-section h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin: 15px 0 0 0;
+    color: #6b7280;
+}
+
+.student-info {
+    margin: 10px 0;
+}
+
+.grade-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #a8d8ff 0%, #b8e6ff 100%);
+    color: #4a5568;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 2px solid rgba(139, 195, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(139, 195, 255, 0.2);
+}
+
+.grade-badge i {
+    font-size: 1rem;
+    color: #667eea;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.settings-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.settings-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+}
+
+.settings-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.settings-card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.settings-card-icon.profile {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.settings-card-icon.preferences {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.settings-card-icon.notifications {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.settings-card-icon.security {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.settings-card-icon.appearance {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.settings-card-icon.help {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+}
+
+.settings-card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.settings-card-content {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item:hover {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.settings-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.settings-item-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+}
+
+.settings-item-icon.edit {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.settings-item-icon.password {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.settings-item-icon.language {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.settings-item-icon.theme {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.settings-item-icon.notification {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.settings-item-icon.privacy {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+}
+
+.settings-item-text {
+    flex: 1;
+}
+
+.settings-item-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 4px 0;
+}
+
+.settings-item-description {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.settings-item-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.settings-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.settings-btn.secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.settings-btn.secondary:hover {
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+}
+
+.settings-toggle {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background: #ddd;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-toggle.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.settings-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.settings-toggle.active::after {
+    transform: translateX(25px);
+}
+
+.back-to-dashboard {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #667eea;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    z-index: 1000;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-to-dashboard:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    color: #667eea;
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .elementary-settings-page {
+        padding: 15px;
+    }
+    
+    .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .settings-header {
+        padding: 20px;
+    }
+    
+    .settings-header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .settings-title-section h1 {
+        font-size: 2rem;
+    }
+    
+    .back-to-dashboard {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-bottom: 20px;
+        display: inline-flex;
+    }
+}
+
+/* Animation for page load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.settings-card:nth-child(1) { animation-delay: 0.1s; }
+.settings-card:nth-child(2) { animation-delay: 0.2s; }
+.settings-card:nth-child(3) { animation-delay: 0.3s; }
+.settings-card:nth-child(4) { animation-delay: 0.4s; }
+.settings-card:nth-child(5) { animation-delay: 0.5s; }
+.settings-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Header Animation */
+@keyframes headerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-header {
+    animation: headerFadeIn 0.8s ease-out;
+}
+
+.grade-badge {
+    animation: headerFadeIn 1s ease-out 0.3s both;
+}
+
+/* Hover effects for grade badge */
+.grade-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 195, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Enhanced text shadow for better readability */
+.settings-title-section h1 {
+    text-shadow: 0 2px 4px rgba(139, 195, 255, 0.3);
+}
+</style>
+
+<div class="elementary-settings-page">
+    <!-- Back to Dashboard Button -->
+    <a href="{{{dashboardurl}}}" class="back-to-dashboard">
+        <i class="fa fa-arrow-left"></i>
+        Back to Dashboard
+    </a>
+
+    <!-- Settings Header -->
+    <div class="settings-header">
+        <div class="settings-header-content">
+            <div class="settings-avatar">
+                {{{user_picture}}}
+            </div>
+            <div class="settings-title-section">
+                <h1>Welcome, {{user.firstname}}!</h1>
+                <div class="student-info">
+                    <div class="grade-badge">
+                        <i class="fa fa-graduation-cap"></i>
+                        Elementary
+                    </div>
+                </div>
+                <p class="settings-subtitle">
+                    Manage your account and preferences here. Let's make your learning experience perfect!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Grid -->
+    <div class="settings-grid">
+        <!-- Profile Settings Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon profile">
+                    <i class="fa fa-user"></i>
+                </div>
+                <h3 class="settings-card-title">Profile Settings</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon edit">
+                            <i class="fa fa-edit"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Edit Profile</h4>
+                            <p class="settings-item-description">Update your name, email, and personal information</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{profileurl}}}" class="settings-btn">
+                            <i class="fa fa-edit"></i>
+                            Edit
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon password">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Change Password</h4>
+                            <p class="settings-item-description">Update your account password for security</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{passwordurl}}}" class="settings-btn">
+                            <i class="fa fa-key"></i>
+                            Change
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon preferences">
+                    <i class="fa fa-cog"></i>
+                </div>
+                <h3 class="settings-card-title">Preferences</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon language">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Language</h4>
+                            <p class="settings-item-description">Choose your preferred language</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <span class="current-value">{{language}}</span>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon theme">
+                            <i class="fa fa-palette"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Theme</h4>
+                            <p class="settings-item-description">Customize the appearance</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <span class="current-value">{{theme}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon notifications">
+                    <i class="fa fa-bell"></i>
+                </div>
+                <h3 class="settings-card-title">Notifications</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon notification">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Email Notifications</h4>
+                            <p class="settings-item-description">Receive updates about your courses</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <div class="settings-toggle active" onclick="toggleNotification(this)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon notification">
+                            <i class="fa fa-mobile"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Push Notifications</h4>
+                            <p class="settings-item-description">Get instant updates on your device</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <div class="settings-toggle" onclick="toggleNotification(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon security">
+                    <i class="fa fa-shield"></i>
+                </div>
+                <h3 class="settings-card-title">Security & Privacy</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon privacy">
+                            <i class="fa fa-user-secret"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Privacy Settings</h4>
+                            <p class="settings-item-description">Control who can see your information</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{privacyurl}}}" class="settings-btn secondary">
+                            <i class="fa fa-cog"></i>
+                            Manage
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon security">
+                            <i class="fa fa-history"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Login History</h4>
+                            <p class="settings-item-description">View your recent account activity</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{activityurl}}}" class="settings-btn secondary">
+                            <i class="fa fa-eye"></i>
+                            View
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon appearance">
+                    <i class="fa fa-paint-brush"></i>
+                </div>
+                <h3 class="settings-card-title">Appearance</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon theme">
+                            <i class="fa fa-adjust"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Dark Mode</h4>
+                            <p class="settings-item-description">Switch between light and dark themes</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <div class="settings-toggle" onclick="toggleDarkMode(this)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon appearance">
+                            <i class="fa fa-font"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Font Size</h4>
+                            <p class="settings-item-description">Make text bigger or smaller</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <select class="settings-btn" onchange="changeFontSize(this.value)">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help & Support Card -->
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <div class="settings-card-icon help">
+                    <i class="fa fa-question-circle"></i>
+                </div>
+                <h3 class="settings-card-title">Help & Support</h3>
+            </div>
+            <div class="settings-card-content">
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon help">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">User Guide</h4>
+                            <p class="settings-item-description">Learn how to use your dashboard</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{helpurl}}}" class="settings-btn secondary">
+                            <i class="fa fa-external-link"></i>
+                            Open
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <div class="settings-item-icon help">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <h4 class="settings-item-title">Contact Support</h4>
+                            <p class="settings-item-description">Get help from your teacher</p>
+                        </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <a href="{{{supporturl}}}" class="settings-btn secondary">
+                            <i class="fa fa-envelope"></i>
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Settings page JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Elementary Settings page loaded');
+    
+    // Initialize settings based on user preferences
+    initializeSettings();
+});
+
+function initializeSettings() {
+    // Load saved preferences from localStorage
+    const savedPreferences = JSON.parse(localStorage.getItem('elementary_settings') || '{}');
+    
+    // Apply saved settings
+    if (savedPreferences.darkMode) {
+        document.body.classList.add('dark-mode');
+        const darkToggle = document.querySelector('.settings-toggle');
+        if (darkToggle) darkToggle.classList.add('active');
+    }
+    
+    if (savedPreferences.fontSize) {
+        document.body.style.fontSize = savedPreferences.fontSize;
+        const fontSizeSelect = document.querySelector('select');
+        if (fontSizeSelect) fontSizeSelect.value = savedPreferences.fontSize;
+    }
+}
+
+function toggleNotification(toggle) {
+    toggle.classList.toggle('active');
+    
+    // Save preference
+    const preferences = JSON.parse(localStorage.getItem('elementary_settings') || '{}');
+    preferences.emailNotifications = toggle.classList.contains('active');
+    localStorage.setItem('elementary_settings', JSON.stringify(preferences));
+    
+    // Show feedback
+    showNotification('Notification settings updated!', 'success');
+}
+
+function toggleDarkMode(toggle) {
+    toggle.classList.toggle('active');
+    document.body.classList.toggle('dark-mode');
+    
+    // Save preference
+    const preferences = JSON.parse(localStorage.getItem('elementary_settings') || '{}');
+    preferences.darkMode = toggle.classList.contains('active');
+    localStorage.setItem('elementary_settings', JSON.stringify(preferences));
+    
+    // Show feedback
+    showNotification('Theme updated!', 'success');
+}
+
+function changeFontSize(size) {
+    const sizeMap = {
+        'small': '14px',
+        'medium': '16px',
+        'large': '18px'
+    };
+    
+    document.body.style.fontSize = sizeMap[size];
+    
+    // Save preference
+    const preferences = JSON.parse(localStorage.getItem('elementary_settings') || '{}');
+    preferences.fontSize = sizeMap[size];
+    localStorage.setItem('elementary_settings', JSON.stringify(preferences));
+    
+    // Show feedback
+    showNotification('Font size updated!', 'success');
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fa fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Style the notification
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#43e97b' : '#667eea'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    .dark-mode {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+        color: #e0e0e0 !important;
+    }
+    
+    .dark-mode .settings-card {
+        background: #2c3e50 !important;
+        color: #e0e0e0 !important;
+    }
+    
+    .dark-mode .settings-card-title {
+        color: #e0e0e0 !important;
+    }
+    
+    .dark-mode .settings-item-title {
+        color: #e0e0e0 !important;
+    }
+`;
+document.head.appendChild(style);
+</script>

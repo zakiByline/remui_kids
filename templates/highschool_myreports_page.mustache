@@ -1,0 +1,428 @@
+{{!
+    High School Assignments Page Template (Grade 9-12)
+    Displays assignments for high school students in a professional format
+}}
+
+{{! Include High School Sidebar Component for Grade 9-12 Students }}
+{{> theme_remui_kids/highschool_sidebar }}
+
+
+<!-- Main Reports Content -->
+<div class="highschool-reports-container">
+    <!-- Page Header -->
+    <div class="reports-page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fa fa-file-text"></i>
+                My Academic Reports
+            </h1>
+            <p class="page-subtitle">Comprehensive overview of your academic performance</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline-primary" onclick="window.print()">
+                <i class="fa fa-print"></i>
+                Print Reports
+            </button>
+            <a href="{{dashboardurl}}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Comprehensive Grade Reports Section -->
+    {{#grade_reports.overall_gradebook}}
+    <div class="grade-reports-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-chart-line"></i>
+                Comprehensive Grade Reports
+            </h2>
+            <p class="section-subtitle">Detailed analysis of all your grades across courses</p>
+        </div>
+
+        <!-- Grade Statistics Overview -->
+        {{#grade_reports.grade_statistics}}
+        <div class="grade-stats-overview">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fa fa-calculator"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{average_grade}}</div>
+                    <div class="stat-label">Average Grade</div>
+                    <div class="stat-sublabel">Across all activities</div>
+                </div>
+            </div>
+
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fa fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{highest_grade}}</div>
+                    <div class="stat-label">Highest Grade</div>
+                    <div class="stat-sublabel">Best performance</div>
+                </div>
+            </div>
+
+            <div class="stat-card purple">
+                <div class="stat-icon">
+                    <i class="fa fa-chart-bar"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{total_grades}}</div>
+                    <div class="stat-label">Total Grades</div>
+                    <div class="stat-sublabel">All activities</div>
+                </div>
+            </div>
+
+            <div class="stat-card orange">
+                <div class="stat-icon">
+                    <i class="fa fa-trending-up"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{grade_range}}</div>
+                    <div class="stat-label">Grade Range</div>
+                    <div class="stat-sublabel">Performance spread</div>
+                </div>
+            </div>
+        </div>
+        {{/grade_reports.grade_statistics}}
+
+        <!-- Grade Distribution Chart -->
+        {{#grade_reports.grade_distribution}}
+        <div class="grade-distribution-section">
+            <div class="section-header">
+                <h3 class="subsection-title">
+                    <i class="fa fa-pie-chart"></i>
+                    Grade Distribution
+                </h3>
+            </div>
+            <div class="grade-distribution-chart">
+                <div class="grade-dist-item">
+                    <div class="grade-letter A">A</div>
+                    <div class="grade-bar">
+                        <div class="grade-fill" style="width: {{A}}%"></div>
+                    </div>
+                    <div class="grade-count">{{A}}</div>
+                </div>
+                <div class="grade-dist-item">
+                    <div class="grade-letter B">B</div>
+                    <div class="grade-bar">
+                        <div class="grade-fill" style="width: {{B}}%"></div>
+                    </div>
+                    <div class="grade-count">{{B}}</div>
+                </div>
+                <div class="grade-dist-item">
+                    <div class="grade-letter C">C</div>
+                    <div class="grade-bar">
+                        <div class="grade-fill" style="width: {{C}}%"></div>
+                    </div>
+                    <div class="grade-count">{{C}}</div>
+                </div>
+                <div class="grade-dist-item">
+                    <div class="grade-letter D">D</div>
+                    <div class="grade-bar">
+                        <div class="grade-fill" style="width: {{D}}%"></div>
+                    </div>
+                    <div class="grade-count">{{D}}</div>
+                </div>
+                <div class="grade-dist-item">
+                    <div class="grade-letter F">F</div>
+                    <div class="grade-bar">
+                        <div class="grade-fill" style="width: {{F}}%"></div>
+                    </div>
+                    <div class="grade-count">{{F}}</div>
+                </div>
+            </div>
+        </div>
+        {{/grade_reports.grade_distribution}}
+
+        <!-- Course Grade Details -->
+        <div class="course-grades-section">
+            <div class="section-header">
+                <h3 class="subsection-title">
+                    <i class="fa fa-graduation-cap"></i>
+                    Course Grade Details
+                </h3>
+            </div>
+            <div class="course-grades-grid">
+                {{#grade_reports.course_grades}}
+                <div class="course-grade-card">
+                    <div class="card-header">
+                        <h4 class="course-name">{{course_name}}</h4>
+                        <div class="course-grade-info">
+                            <span class="grade-percentage">{{grade_percentage}}%</span>
+                            <span class="grade-letter">{{grade_letter}}</span>
+                        </div>
+                    </div>
+                    <div class="grade-items-list">
+                        {{#grade_items}}
+                        <div class="grade-item">
+                            <div class="item-info">
+                                <span class="item-name">{{itemname}}</span>
+                                <span class="item-type">{{itemmodule}}</span>
+                            </div>
+                            <div class="item-grade">
+                                <span class="grade-value">{{finalgrade}}/{{grademax}}</span>
+                                <span class="grade-percentage">({{percentage}}%)</span>
+                            </div>
+                        </div>
+                        {{/grade_items}}
+                    </div>
+                </div>
+                {{/grade_reports.course_grades}}
+            </div>
+        </div>
+
+        <!-- Assignment Grades -->
+        {{#grade_reports.assignment_grades}}
+        <div class="assignment-grades-section">
+            <div class="section-header">
+                <h3 class="subsection-title">
+                    <i class="fa fa-file-text"></i>
+                    Assignment Grades
+                </h3>
+            </div>
+            <div class="assignment-grades-list">
+                {{#grade_reports.assignment_grades}}
+                <div class="assignment-grade-item">
+                    <div class="assignment-info">
+                        <span class="assignment-name">{{itemname}}</span>
+                        <span class="assignment-date">{{timemodified}}</span>
+                    </div>
+                    <div class="assignment-grade">
+                        <span class="grade-value">{{finalgrade}}/{{grademax}}</span>
+                        <span class="grade-percentage">({{percentage}}%)</span>
+                        <span class="grade-letter">{{letter_grade}}</span>
+                    </div>
+                </div>
+                {{/grade_reports.assignment_grades}}
+            </div>
+        </div>
+        {{/grade_reports.assignment_grades}}
+
+        <!-- Quiz Grades -->
+        {{#grade_reports.quiz_grades}}
+        <div class="quiz-grades-section">
+            <div class="section-header">
+                <h3 class="subsection-title">
+                    <i class="fa fa-question-circle"></i>
+                    Quiz Grades
+                </h3>
+            </div>
+            <div class="quiz-grades-list">
+                {{#grade_reports.quiz_grades}}
+                <div class="quiz-grade-item">
+                    <div class="quiz-info">
+                        <span class="quiz-name">{{itemname}}</span>
+                        <span class="quiz-date">{{timemodified}}</span>
+                    </div>
+                    <div class="quiz-grade">
+                        <span class="grade-value">{{finalgrade}}/{{grademax}}</span>
+                        <span class="grade-percentage">({{percentage}}%)</span>
+                        <span class="grade-letter">{{letter_grade}}</span>
+                    </div>
+                </div>
+                {{/grade_reports.quiz_grades}}
+            </div>
+        </div>
+        {{/grade_reports.quiz_grades}}
+    </div>
+    {{/grade_reports.overall_gradebook}}
+
+    {{#has_reports}}
+    <!-- Course Reports Grid -->
+    <div class="course-reports-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-graduation-cap"></i>
+                Course Performance Reports
+            </h2>
+            <p class="section-subtitle">Detailed breakdown of your performance in each course</p>
+        </div>
+
+        <div class="course-reports-grid">
+            {{#reports}}
+            <div class="course-report-card">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="course-info">
+                        <h3 class="course-title">{{coursename}}</h3>
+                        <span class="course-code">{{shortname}}</span>
+                        <span class="course-category">{{category}}</span>
+                    </div>
+                    <div class="course-status">
+                        {{#is_complete}}
+                        <span class="status-badge completed">
+                            <i class="fa fa-check-circle"></i>
+                            Completed
+                        </span>
+                        {{/is_complete}}
+                        {{^is_complete}}
+                        <span class="status-badge in-progress">
+                            <i class="fa fa-clock"></i>
+                            In Progress
+                        </span>
+                        {{/is_complete}}
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="card-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Course Progress</span>
+                        <span class="progress-value">{{progress}}%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{progress}}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grade Section -->
+                {{#has_grade}}
+                <div class="card-grade">
+                    <div class="grade-display">
+                        <div class="grade-circle {{#grade_percentage}}{{#.}}grade-{{.}}{{/.}}{{/grade_percentage}}">
+                            <div class="grade-value">{{grade_percentage}}%</div>
+                            <div class="grade-label">Final Grade</div>
+                        </div>
+                        <div class="grade-details">
+                            <div class="grade-text">{{final_grade}}</div>
+                        </div>
+                    </div>
+                </div>
+                {{/has_grade}}
+
+                <!-- Activities Section -->
+                <div class="card-activities">
+                    <div class="activity-stat">
+                        <div class="activity-icon assignments">
+                            <i class="fa fa-file-text"></i>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-value">{{completed_assignments}}/{{total_assignments}}</div>
+                            <div class="activity-label">Assignments</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-stat">
+                        <div class="activity-icon quizzes">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-value">{{completed_quizzes}}/{{total_quizzes}}</div>
+                            <div class="activity-label">Quizzes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-stat">
+                        <div class="activity-icon activities">
+                            <i class="fa fa-tasks"></i>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-value">{{completed_all_activities}}/{{total_activities}}</div>
+                            <div class="activity-label">All Activities</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Grades -->
+                {{#has_subject_grades}}
+                <div class="card-subjects">
+                    <div class="subjects-header">
+                        <i class="fa fa-list"></i>
+                        <span>Activity Grades ({{subject_grades.length}} items)</span>
+                    </div>
+                    <div class="subjects-list">
+                        {{#subject_grades}}
+                        <div class="subject-item">
+                            <div class="subject-name-container">
+                                <span class="subject-name">{{name}}</span>
+                                {{#type}}
+                                <span class="subject-type">{{type}}</span>
+                                {{/type}}
+                            </div>
+                            <div class="subject-grade-container">
+                                <span class="subject-grade">{{grade}}%</span>
+                                {{#formatted_grade}}
+                                <span class="subject-raw">({{formatted_grade}})</span>
+                                {{/formatted_grade}}
+                            </div>
+                        </div>
+                        {{/subject_grades}}
+                    </div>
+                </div>
+                {{/has_subject_grades}}
+                
+                <!-- Course Information Section -->
+                <div class="card-info">
+                    <div class="info-header">
+                        <i class="fa fa-info-circle"></i>
+                        <span>Course Information</span>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label">Teacher:</span>
+                            <span class="info-value">{{teacher_list}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Accessed:</span>
+                            <span class="info-value">{{last_accessed}}</span>
+                        </div>
+                        {{#time_spent_hours}}
+                        <div class="info-item">
+                            <span class="info-label">Time Spent:</span>
+                            <span class="info-value">~{{time_spent_hours}} hours</span>
+                        </div>
+                        {{/time_spent_hours}}
+                        <div class="info-item">
+                            <span class="info-label">Start Date:</span>
+                            <span class="info-value">{{start_date}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">End Date:</span>
+                            <span class="info-value">{{end_date}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <a href="{{wwwroot}}/course/view.php?id={{courseid}}" class="btn-view-course">
+                        <i class="fa fa-external-link-alt"></i>
+                        View Course
+                    </a>
+                    <a href="{{wwwroot}}/grade/report/user/index.php?id={{courseid}}" class="btn-view-grades">
+                        <i class="fa fa-chart-bar"></i>
+                        Full Grade Report
+                    </a>
+                </div>
+            </div>
+            {{/reports}}
+        </div>
+    </div>
+    {{/has_reports}}
+
+    {{^has_reports}}
+    <!-- No Reports Message -->
+    <div class="no-reports-message">
+        <div class="no-reports-icon">
+            <i class="fa fa-file-text"></i>
+        </div>
+        <h3>No Reports Available</h3>
+        <p>You don't have any course enrollments yet. Once you enroll in courses, your academic reports will appear here.</p>
+        <a href="{{wwwroot}}/course/index.php" class="btn btn-primary">
+            <i class="fa fa-search"></i>
+            Browse Courses
+        </a>
+    </div>
+    {{/has_reports}}
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,226 @@
+/* Fix for language selector appearing in the middle of assignment grader page */
+
+/* Hide language selector from the grader navigation area - Target by URL pattern */
+/* But keep translator visible in grading-navigation */
+body.path-mod-assign [data-region="grading-navigation"] .langmenu,
+body.path-mod-assign [data-region="grading-navigation"] .language-menu,
+body.path-mod-assign [data-region="grading-navigation"] .langswitch-nav-item,
+body.path-mod-assign [data-region="grading-navigation"] .langswitch-select,
+body.path-mod-assign [data-region="grading-navigation"] select[title*="Language"],
+body.path-mod-assign [data-region="grading-navigation"] select[title*="language"],
+body.path-mod-assign [data-region="grading-navigation"] select[name="lang"],
+body.path-mod-assign [data-region="user-selector"] .langmenu,
+body.path-mod-assign [data-region="user-selector"] .language-menu,
+body.path-mod-assign [data-region="user-selector"] .langswitch-nav-item,
+body.path-mod-assign [data-region="user-selector"] .langswitch-select,
+body.path-mod-assign [data-region="user-selector"] select[title*="Language"],
+body.path-mod-assign [data-region="user-selector"] select[title*="language"],
+body.path-mod-assign [data-region="user-selector"] select[name="lang"],
+body.path-mod-assign [data-region="user-selector"] .local-translator-switcher {
+    display: none !important;
+}
+
+/* Show translator option in grading-navigation navbar */
+body.path-mod-assign [data-region="grading-navigation"] .local-translator-switcher,
+body.path-mod-assign [data-region="grading-navigation"] #google_translate_element,
+body.path-mod-assign [data-region="grading-navigation"] #google_translate_element_grader,
+body.path-mod-assign [data-region="grading-navigation"] .grader-nav-translator {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+/* Style translator container in grading-navigation for better appearance */
+body.path-mod-assign [data-region="grading-navigation"] .grader-nav-translator {
+    display: inline-block !important;
+    margin-left: 15px !important;
+    vertical-align: middle !important;
+    float: right !important;
+}
+
+body.path-mod-assign [data-region="grading-navigation"] .local-translator-switcher,
+body.path-mod-assign [data-region="grading-navigation"] #google_translate_element,
+body.path-mod-assign [data-region="grading-navigation"] #google_translate_element_grader {
+    display: inline-block !important;
+    margin-top: 0 !important;
+}
+
+/* Style Google Translate dropdown in grading-navigation */
+body.path-mod-assign [data-region="grading-navigation"] .goog-te-combo,
+body.path-mod-assign [data-region="grading-navigation"] .goog-te-gadget {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+/* More specific targeting for grader navigation alignment area */
+/* Hide native language selector but keep translator visible */
+body.path-mod-assign [data-region="grading-navigation"] .alignment .langmenu,
+body.path-mod-assign [data-region="grading-navigation"] .alignment .language-menu,
+body.path-mod-assign [data-region="grading-navigation"] .alignment .langswitch-nav-item,
+body.path-mod-assign [data-region="grading-navigation"] .alignment .langswitch-select,
+body.path-mod-assign [data-region="grading-navigation"] .alignment select[title*="Language"],
+body.path-mod-assign [data-region="grading-navigation"] .alignment select[title*="language"],
+body.path-mod-assign [data-region="grading-navigation"] .alignment select[name="lang"] {
+    display: none !important;
+}
+
+/* Show translator in alignment area of grading-navigation */
+body.path-mod-assign [data-region="grading-navigation"] .alignment .local-translator-switcher,
+body.path-mod-assign [data-region="grading-navigation"] .alignment #google_translate_element {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+/* Hide language selector from user selector region specifically */
+[data-region="user-selector"] .langmenu,
+[data-region="user-selector"] .language-menu,
+[data-region="user-selector"] .langswitch-nav-item,
+[data-region="user-selector"] .langswitch-select,
+[data-region="user-selector"] select[id*="lang"]:not([id="change-user-select"]),
+[data-region="user-selector"] select[name*="lang"]:not([id="change-user-select"]),
+[data-region="user-selector"] select[name="lang"],
+[data-region="user-selector"] .local-translator-switcher {
+    display: none !important;
+}
+
+/* Hide any select dropdown in user-selector that's not the change-user select or filter selects */
+body.path-mod-assign [data-region="user-selector"] select:not([id="change-user-select"]):not([id*="filter"]):not([data-action]):not([id*="marker"]):not([id*="workflow"]) {
+    display: none !important;
+}
+
+/* Additional targeting for any language-related elements that might appear */
+body.path-mod-assign [data-region="grading-navigation"] form[action*="lang"],
+body.path-mod-assign [data-region="user-selector"] form[action*="lang"] {
+    display: none !important;
+}
+
+/* Prevent Google Translate popups/modals from appearing on assignment grader page */
+body.path-mod-assign .goog-te-menu-frame,
+body.path-mod-assign .goog-te-banner-frame,
+body.path-mod-assign .goog-te-menu,
+body.path-mod-assign .goog-te-menu-value,
+body.path-mod-assign .VIpgJd-ZVi9od-l4eHX-hSRGPd,
+body.path-mod-assign .VIpgJd-ZVi9od-ORHb-OEVmcd,
+body.path-mod-assign .goog-te-spinner-pos,
+body.path-mod-assign .goog-te-balloon-frame,
+body.path-mod-assign .goog-te-balloon,
+body.path-mod-assign .goog-te-ftab,
+body.path-mod-assign .goog-te-ftab-link,
+body.path-mod-assign .goog-te-ftab-link:link,
+body.path-mod-assign .goog-te-ftab-link:visited,
+body.path-mod-assign .goog-te-ftab-link:hover,
+body.path-mod-assign .goog-te-ftab-link:active {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    z-index: -1 !important;
+}
+
+/* Prevent Google Translate from intercepting clicks on grader form buttons */
+body.path-mod-assign [data-region="grade-panel"] form button[type="submit"],
+body.path-mod-assign [data-region="grade-panel"] form input[type="submit"],
+body.path-mod-assign [data-region="grade-panel"] form button[data-action="save"],
+body.path-mod-assign [data-region="grade-panel"] form button[data-action="saveandshownext"],
+body.path-mod-assign [data-region="grade-panel"] form button[data-action="saveandprevious"],
+body.path-mod-assign [data-region="grade-panel"] form button[data-action="next"],
+body.path-mod-assign [data-region="grade-panel"] form button[data-action="previous"] {
+    position: relative !important;
+    z-index: 10000 !important;
+}
+
+/* Ensure Google Translate doesn't create overlays that block the grader */
+.path-mod-assign [data-region="grade-panel"] {
+    position: fixed !important;
+    z-index: 999 !important;
+}
+
+
+/* Prevent Google Translate from modifying form elements in grader */
+body.path-mod-assign [data-region="grade-panel"] form input,
+body.path-mod-assign [data-region="grade-panel"] form textarea,
+body.path-mod-assign [data-region="grade-panel"] form select,
+body.path-mod-assign [data-region="grade-panel"] form button {
+    pointer-events: auto !important;
+}
+
+/* Hide any Google Translate overlay that might appear */
+body.path-mod-assign .goog-te-banner-frame,
+body.path-mod-assign .goog-te-menu-frame {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    z-index: -9999 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Completely disable Google Translate widget on assignment grader pages */
+body.path-mod-assign [data-region="grade-panel"] .local-translator-switcher,
+body.path-mod-assign [data-region="grade-panel"] #google_translate_element,
+body.path-mod-assign [data-region="grade-panel"] .goog-te-combo,
+body.path-mod-assign [data-region="grade-panel"] .goog-te-gadget {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide ALL Google Translate elements globally on grader pages */
+body.path-mod-assign .goog-te-banner-frame,
+body.path-mod-assign .goog-te-menu-frame,
+body.path-mod-assign .goog-te-menu,
+body.path-mod-assign .goog-te-menu-value,
+body.path-mod-assign .VIpgJd-ZVi9od-l4eHX-hSRGPd,
+body.path-mod-assign .VIpgJd-ZVi9od-ORHb-OEVmcd,
+body.path-mod-assign .goog-te-spinner-pos,
+body.path-mod-assign .goog-te-balloon-frame,
+body.path-mod-assign .goog-te-balloon,
+body.path-mod-assign .goog-te-ftab,
+body.path-mod-assign .goog-te-ftab-link,
+body.path-mod-assign iframe[src*="translate.google.com"],
+body.path-mod-assign iframe[src*="translate.googleapis.com"],
+body.path-mod-assign div[id*="google_translate"],
+body.path-mod-assign div[class*="goog-te"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    z-index: -9999 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Prevent any overlay or modal from Google Translate */
+body.path-mod-assign .goog-te-banner-frame,
+body.path-mod-assign .goog-te-menu-frame {
+    position: fixed !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}

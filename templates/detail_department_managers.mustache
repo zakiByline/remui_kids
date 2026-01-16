@@ -1,0 +1,686 @@
+{{> theme_remui_kids/admin_shared_styles }}
+
+<div class="detail-page">
+    <!-- Header Section -->
+    <div class="detail-header">
+        <div class="header-content">
+            <div class="back-button">
+                <a href="javascript:history.back()" class="btn-back">
+                    <i class="fa fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+            <div class="header-info">
+                <h1 class="detail-title">
+                    <i class="fa fa-building"></i>
+                    Department Managers Details
+                </h1>
+                <p class="detail-subtitle">Users with manager roles in departments</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-overview">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-building"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="department-managers">-</div>
+                    <div class="stat-label">Department Managers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-user-tie"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="company-managers">-</div>
+                    <div class="stat-label">Company Managers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="total-employees">-</div>
+                    <div class="stat-label">Total Employees</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa fa-bolt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="active-managers">-</div>
+                    <div class="stat-label">Active Managers</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="filters-section">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search managers..." class="search-input">
+                <button id="searchBtn" class="search-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div class="filter-controls">
+                <select id="sortSelect" class="filter-select">
+                    <option value="firstname">Sort by First Name</option>
+                    <option value="lastname">Sort by Last Name</option>
+                    <option value="username">Sort by Username</option>
+                    <option value="email">Sort by Email</option>
+                    <option value="department_name">Sort by Department</option>
+                </select>
+                <select id="orderSelect" class="filter-select">
+                    <option value="ASC">Ascending</option>
+                    <option value="DESC">Descending</option>
+                </select>
+                <select id="perPageSelect" class="filter-select">
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Managers Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h3>Department Managers</h3>
+            <div class="table-actions">
+                <button id="refreshBtn" class="btn-refresh">
+                    <i class="fa fa-refresh"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table class="managers-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Employees</th>
+                        <th>Last Access</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="managersTableBody">
+                    <tr>
+                        <td colspan="9" class="loading-cell">
+                            <div class="loading-spinner">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Loading managers...
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.detail-page {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.detail-header {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.back-button {
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.back-button .btn-back {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.back-button .btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-5px);
+}
+
+.header-info {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.detail-subtitle {
+    font-size: 1.1rem;
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+}
+
+/* Statistics Overview */
+.stats-overview {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(108, 117, 125, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+.stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, #6c757d, #5a6268); }
+
+.stat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Filters Section */
+.filters-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(108, 117, 125, 0.1);
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.search-btn:hover {
+    color: #495057;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 25px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.table-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-refresh {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-refresh:hover {
+    background: #138496;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.managers-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.managers-table th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.managers-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.managers-table tr:hover {
+    background: #f8f9fa;
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.manager-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.manager-username {
+    color: #6c757d;
+    font-family: monospace;
+}
+
+.manager-email {
+    color: #495057;
+}
+
+.manager-department {
+    color: #495057;
+    font-weight: 500;
+}
+
+.manager-role {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.manager-employees {
+    color: #495057;
+    font-weight: 500;
+}
+
+.manager-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #138496;
+}
+
+.btn-view {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #5a6268;
+}
+</style>
+
+<script>
+let currentPage = 1;
+let currentPerPage = 20;
+let currentSearch = '';
+let currentSort = 'firstname';
+let currentOrder = 'ASC';
+let totalPages = 1;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadManagers();
+    initializeEventListeners();
+});
+
+function initializeEventListeners() {
+    document.getElementById('searchBtn').addEventListener('click', handleSearch);
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+    
+    document.getElementById('sortSelect').addEventListener('change', function() {
+        currentSort = this.value;
+        loadManagers();
+    });
+    
+    document.getElementById('orderSelect').addEventListener('change', function() {
+        currentOrder = this.value;
+        loadManagers();
+    });
+    
+    document.getElementById('perPageSelect').addEventListener('change', function() {
+        currentPerPage = parseInt(this.value);
+        currentPage = 1;
+        loadManagers();
+    });
+    
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        loadStats();
+        loadManagers();
+    });
+}
+
+function handleSearch() {
+    currentSearch = document.getElementById('searchInput').value.trim();
+    currentPage = 1;
+    loadManagers();
+}
+
+function loadStats() {
+    fetch('{{config.wwwroot}}/theme/remui_kids/admin/detail_department_managers.php?action=get_manager_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('department-managers').textContent = data.stats.department_managers;
+                document.getElementById('company-managers').textContent = data.stats.company_managers;
+                document.getElementById('total-employees').textContent = data.stats.total_employees;
+                document.getElementById('active-managers').textContent = data.stats.active_managers;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading stats:', error);
+        });
+}
+
+function loadManagers() {
+    const params = new URLSearchParams({
+        action: 'get_managers',
+        page: currentPage,
+        per_page: currentPerPage,
+        search: currentSearch,
+        sort: currentSort,
+        order: currentOrder
+    });
+    
+    fetch(`{{config.wwwroot}}/theme/remui_kids/admin/detail_department_managers.php?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                displayManagers(data.managers);
+                updatePagination(data);
+            } else {
+                console.error('Error loading managers:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading managers:', error);
+        });
+}
+
+function displayManagers(managers) {
+    const tbody = document.getElementById('managersTableBody');
+    
+    if (managers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="loading-cell">No managers found</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = managers.map(manager => `
+        <tr>
+            <td>
+                <div class="manager-name">${manager.firstname} ${manager.lastname}</div>
+            </td>
+            <td>
+                <div class="manager-username">${manager.username}</div>
+            </td>
+            <td>
+                <div class="manager-email">${manager.email}</div>
+            </td>
+            <td>
+                <div class="manager-department">${manager.department_name || 'N/A'}</div>
+            </td>
+            <td>
+                <div class="manager-company">${manager.company_name || 'N/A'}</div>
+            </td>
+            <td>
+                <div class="manager-role">${getManagerRole(manager.managertype)}</div>
+            </td>
+            <td>
+                <div class="manager-employees">${manager.employees_count || 0}</div>
+            </td>
+            <td>
+                <div class="manager-date">${formatDate(manager.lastaccess)}</div>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-action btn-view" onclick="viewManager(${manager.id})">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn-action btn-edit" onclick="editManager(${manager.id})">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getManagerRole(managertype) {
+    switch(managertype) {
+        case 1: return 'Company Manager';
+        case 2: return 'Department Manager';
+        default: return 'User';
+    }
+}
+
+function formatDate(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return date.toLocaleDateString();
+}
+
+function viewManager(managerId) {
+    window.location.href = `{{config.wwwroot}}/user/profile.php?id=${managerId}`;
+}
+
+function editManager(managerId) {
+    window.location.href = `{{config.wwwroot}}/theme/remui_kids/admin/edit_users.php?user_id=${managerId}`;
+}
+
+function updatePagination(data) {
+    totalPages = data.total_pages;
+    
+    // Update pagination info if element exists
+    const paginationInfo = document.getElementById('paginationInfo');
+    if (paginationInfo) {
+        paginationInfo.textContent = 
+            `Showing ${((data.page - 1) * data.per_page) + 1} to ${Math.min(data.page * data.per_page, data.total_count)} of ${data.total_count} managers`;
+    }
+}
+</script>

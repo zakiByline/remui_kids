@@ -1,0 +1,496 @@
+{{!
+    My Courses Page Template
+    Dedicated page for viewing all student courses with proper navigation
+}}
+
+{{> theme_remui_kids/common_start}}
+
+<div class="my-courses-page">
+    <!-- Page Header -->
+    <div class="courses-page-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+            <div class="col-md-8">
+                    <h1 class="page-title">
+                        <i class="fa-solid fa-book-open text-white me-3"></i>
+                        My Courses
+                    </h1>
+                    <p class="page-subtitle">
+                        Welcome {{user_name}}! Here are all your courses.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{{dashboard_url}}" class="btn btn-outline-primary btn-sm align-middle">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Statistics -->
+    <div class="courses-stats">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="stats-card">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="stat-item">
+                                    <div class="stat-number">{{total_courses}}</div>
+                                    <div class="stat-label">Total Courses</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item">
+                                    <div class="stat-number">High School</div>
+                                    <div class="stat-label">Your Grade Level</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item">
+                                    <div class="stat-number">Ready!</div>
+                                    <div class="stat-label">Learning Status</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item">
+                                    <div class="stat-number">Fun!</div>
+                                    <div class="stat-label">Learning Mode</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-graduation-cap text-white me-2"></i>
+                        All My Courses
+                    </h2>
+                </div>
+            </div>
+            
+            {{#courses}}
+            <div class="courses-grid-container">
+                {{#courses}}
+                <div class="course-card-grid-item">
+                    <div class="course-card-student">
+                        <div class="card h-100 shadow-sm border-0">
+                            <!-- Course Image Header -->
+                            <div class="course-image-wrapper">
+                                <img src="{{image}}" class="course-image" alt="{{fullname}}">
+                                <div class="course-grade-badge">
+                                    {{categoryname}}
+                                </div>
+                                <div class="course-status-indicator {{#completed}}completed{{/completed}}{{^completed}}{{#in_progress}}in-progress{{/in_progress}}{{^in_progress}}not-started{{/in_progress}}{{/completed}}">
+                                    <i class="fa-solid {{#completed}}fa-check-circle{{/completed}}{{^completed}}{{#in_progress}}fa-play-circle{{/in_progress}}{{^in_progress}}fa-circle{{/in_progress}}{{/completed}}"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Course Content -->
+                            <div class="card-body">
+                                <h3 class="course-title">
+                                    <a href="{{url}}" class="text-decoration-none">
+                                        {{fullname}}
+                                    </a>
+                                </h3>
+                                <p class="course-shortname text-muted mb-2">
+                                    {{shortname}}
+                                </p>
+                                {{#summary}}
+                                <p class="course-description">
+                                    {{{summary}}}
+                                </p>
+                                {{/summary}}
+                                
+                                <!-- Progress Bar -->
+                                <div class="progress-section">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="progress-label">Progress</span>
+                                        <span class="progress-percentage">{{progress}}%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             style="width: {{progress}}%" 
+                                             aria-valuenow="{{progress}}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Course Stats -->
+                                <div class="course-stats-row">
+                                    <div class="stat-item">
+                                        <i class="fa-solid fa-book"></i>
+                                        <span>{{completed_sections}}/{{total_sections}}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <i class="fa-solid fa-tasks"></i>
+                                        <span>{{completed_activities}}/{{total_activities}}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <i class="fa-solid fa-star"></i>
+                                        <span>{{points_earned}} pts</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Course Action -->
+                                <div class="course-action">
+                                    {{#completed}}
+                                    <a href="{{url}}" class="btn btn-tertiary btn-sm w-100">
+                                        <i class="fa-solid fa-check me-2"></i>Review Course
+                                    </a>
+                                    {{/completed}}
+                                    {{^completed}}
+                                    {{#in_progress}}
+                                    <a href="{{url}}" class="btn btn-primary btn-sm w-100">
+                                        <i class="fa-solid fa-play me-2"></i>Continue
+                                    </a>
+                                    {{/in_progress}}
+                                    {{^in_progress}}
+                                    <a href="{{url}}" class="btn btn-secondary btn-sm w-100">
+                                        <i class="fa-solid fa-play me-2"></i>Start Course
+                                    </a>
+                                    {{/in_progress}}
+                                    {{/completed}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/courses}}
+            </div>
+            {{/courses}}
+            
+            {{^courses}}
+            <!-- No Courses Message -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="no-courses-message text-center py-5">
+                        <div class="no-courses-icon">
+                            <i class="fa fa-book-open fa-5x text-muted mb-4"></i>
+                        </div>
+                        <h3 class="text-muted mb-3">No Courses Available Yet</h3>
+                        <p class="text-muted mb-4">
+                            Your teacher will assign courses soon. 
+                            Check back later or contact your teacher for more information.
+                        </p>
+                        <a href="{{dashboard_url}}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {{/courses}}
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.my-courses-page {
+    background: linear-gradient(145deg, #0c1430 15%, #1f3a60 55%, #3b5998 100%);
+    min-height: 100vh;
+    padding: 2rem 0 3rem;
+    color: #f8fafc;
+}
+
+.courses-page-header {
+    background: rgba(17, 24, 39, 0.85);
+    border-radius: 18px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.page-title {
+    color: #f0f9ff;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: rgba(248, 250, 252, 0.7);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.courses-stats {
+    margin-bottom: 2rem;
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-item {
+    padding: 1rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #a5b4fc;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: rgba(248, 250, 252, 0.7);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.courses-grid-section {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.section-title {
+    color: #f8fafc;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Courses Grid Layout */
+.courses-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.course-card-grid-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card-grid-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.4);
+}
+
+.course-card-student {
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(15, 23, 42, 0.4);
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.course-card-student:hover {
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.5);
+}
+
+.course-image-wrapper {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.course-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.course-card-student:hover .course-image {
+    transform: scale(1.08);
+}
+
+.course-grade-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #1f3a60, #3b5998);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15rem;
+    max-width: 70px;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.course-status-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.course-status-indicator.completed {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+}
+
+.course-status-indicator.in-progress {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+}
+
+.course-status-indicator.not-started {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
+    color: white;
+}
+
+.course-title a {
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.course-title a:hover {
+    color: #a5b4fc;
+}
+
+.course-description {
+    color: rgba(248, 250, 252, 0.75);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.course-stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+.course-stats-row .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: rgba(248, 250, 252, 0.7);
+}
+
+.course-stats-row .stat-item i {
+    color: #a5b4fc;
+}
+
+.btn-outline-primary {
+    border: 2px solid #3498db;
+    color: #3498db;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.no-courses-message {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 3rem;
+}
+
+.no-courses-icon i {
+    opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .courses-grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .courses-grid-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .course-image-wrapper {
+        height: 140px;
+    }
+    
+    .course-stats-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .course-stats-row .stat-item {
+        justify-content: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+</style>
+
+{{> theme_remui_kids/common_end}}
+
+<script>
+// Handle active navigation
+document.addEventListener('DOMContentLoaded', function() {
+    // Add active class to My Courses navigation if on courses page
+    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname;
+    
+    // Check if we're on the my courses page
+    if (currentPath.includes('/theme/remui_kids/my_courses.php')) {
+        // Remove active class from all nav items
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Add active class to My Courses nav item
+        const coursesNavItem = document.querySelector('.sidebar-item a[href*="my_courses.php"]');
+        if (coursesNavItem) {
+            coursesNavItem.closest('.sidebar-item').classList.add('active');
+        }
+    }
+});
+</script>
+
+
+
+
+
+
+
+

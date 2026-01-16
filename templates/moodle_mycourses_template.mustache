@@ -1,0 +1,1210 @@
+{{!
+    Moodle My Courses Page Template for remui_kids theme
+    Specifically designed for Grade 4-7 students (including Grade 5)
+}}
+
+{{#custom_mycourses}}
+
+{{#is_middle_grade}}
+{{> theme_remui_kids/g4g7_sidebar}}
+{{/is_middle_grade}}
+
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="courses-page-header">
+                        <div>
+                            <h2 class="courses-page-title">
+                                <i class="fa fa-book-open"></i>
+                                My Courses
+                            </h2>
+                            <p class="courses-page-subtitle">
+                                {{#usercohortname}}
+                                    Welcome to your {{usercohortname}} courses
+                                {{/usercohortname}}
+                                {{^usercohortname}}
+                                    Explore your courses and track your learning progress!
+                                {{/usercohortname}}
+                            </p>
+                        </div>
+                        <!-- View Toggle Buttons -->
+                        <div class="view-toggle-buttons">
+                            <button class="view-toggle-btn active" id="cards-view-btn" onclick="switchView('cards')">
+                                <i class="fa fa-th-large"></i>
+                                <span>Cards View</span>
+                            </button>
+                            <button class="view-toggle-btn" id="tree-view-btn" onclick="switchView('tree')">
+                                <i class="fa fa-sitemap"></i>
+                                <span>Tree View</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {{#has_courses}}
+            <!-- Cards View Container -->
+            <div class="courses-view-container" id="cards-view-container">
+                <div class="courses-grid">
+                    {{#courses}}
+                <div class="course-card">
+                    <!-- Course Image -->
+                    <div class="course-image-container">
+                        {{#courseimage}}
+                        <img src="{{courseimage}}" alt="{{fullname}}" class="course-image">
+                        {{/courseimage}}
+                        {{^courseimage}}
+                        <div class="course-image-placeholder">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        {{/courseimage}}
+                        
+                        <!-- Category Badge (Top Left) -->
+                        <div class="course-category-badge">
+                            {{categoryname}}
+                        </div>
+                        
+                        <!-- Three-Dot Menu Icon (Top Right) -->
+                        <div class="course-options-icon">
+                            <i class="fa fa-ellipsis-v"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Content -->
+                    <div class="course-content">
+                        <!-- Course Title -->
+                        <h3 class="course-title">{{fullname}}</h3>
+                        
+                        <!-- Progress Section -->
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Your Progress</span>
+                                <span class="progress-percentage">{{progress_percentage}}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{progress_percentage}}%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Statistics - 2x2 Grid -->
+                        <div class="course-stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-icon lessons">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">{{completed_sections}}/{{total_sections}}</div>
+                                    <div class="stat-label">Lessons</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item">
+                                <div class="stat-icon activities">
+                                    <i class="fa fa-list-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">{{completed_activities}}/{{total_activities}}</div>
+                                    <div class="stat-label">Activities</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item">
+                                <div class="stat-icon time">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">{{estimated_time}}</div>
+                                    <div class="stat-label">Minutes</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item">
+                                <div class="stat-icon points">
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">{{points_earned}}</div>
+                                    <div class="stat-label">Points</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Actions -->
+                        <div class="course-actions">
+                            {{#completed}}
+                            <a href="{{courseurl}}" class="btn-primary">
+                                <i class="fa fa-check"></i> Review Course
+                            </a>
+                            {{/completed}}
+                            {{#in_progress}}
+                            <a href="{{courseurl}}" class="btn-primary">
+                                <i class="fa fa-play"></i> Continue Learning
+                            </a>
+                            {{/in_progress}}
+                            {{#not_started}}
+                            <a href="{{courseurl}}" class="btn-primary">
+                                <i class="fa fa-play"></i> Start Course
+                            </a>
+                            {{/not_started}}
+                        </div>
+                    </div>
+                </div>
+                {{/courses}}
+                </div>
+            </div>
+            
+            <!-- Tree View Container -->
+            <div class="courses-view-container" id="tree-view-container" style="display: none;">
+                <div class="tree-view-courses">
+                    {{#treeview_courses}}
+                    <div class="course-tree-item">
+                        <div class="course-tree-header" onclick="toggleCourseTree('{{id}}')">
+                            <div class="course-title-section">
+                                <div class="course-icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div>
+                                    <h3 class="tree-course-name">{{fullname}}</h3>
+                                    <div class="course-meta">
+                                        <span><i class="fa fa-list-alt"></i> {{total_sections}} Lessons</span>
+                                        <span><i class="fa fa-chart-line"></i> {{progress_percentage}}% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-toggle" id="course-toggle-{{id}}">
+                                <i class="fa fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="course-progress-section">
+                            <div class="course-progress-label">
+                                <span>Course Progress</span>
+                                <span class="progress-percent">{{progress_percentage}}%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {{progress_percentage}}%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="lessons-container" id="lessons-container-{{id}}">
+                            {{#lessons}}
+                            <div class="lesson-tree-item">
+                                <div class="lesson-header" onclick="toggleLessonTree('{{../id}}-{{id}}')">
+                                    <div class="lesson-title-section">
+                                        <div class="lesson-icon">
+                                            <i class="fa fa-book-open"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="lesson-title">{{name}}</h4>
+                                            <div class="lesson-meta">
+                                                <span><i class="fa fa-tasks"></i> {{activity_count}} Activities</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="lesson-toggle" id="lesson-toggle-{{../id}}-{{id}}">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-progress">
+                                    <div class="lesson-progress-bar-container">
+                                        <div class="lesson-progress-bar-fill" style="width: {{progress_percentage}}%;"></div>
+                                    </div>
+                                    <span class="lesson-progress-text">{{progress_percentage}}%</span>
+                                </div>
+                                
+                                <div class="activities-container" id="activities-container-{{../id}}-{{id}}">
+                                    {{#activities}}
+                                    <a href="{{url}}" class="activity-tree-item {{#completed}}completed{{/completed}}">
+                                        <div class="activity-icon-wrapper">
+                                            <i class="fa {{icon}}"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title-row">
+                                                <span class="activity-number">{{activity_number}}</span>
+                                                <h5 class="activity-title">{{name}}</h5>
+                                            </div>
+                                            <div class="activity-meta-row">
+                                                <span class="activity-type"><i class="fa fa-tag"></i> {{type}}</span>
+                                                <span class="activity-duration"><i class="fa fa-clock-o"></i> {{duration}} mins</span>
+                                                <span class="activity-points"><i class="fa fa-star"></i> {{points}} pts</span>
+                                            </div>
+                                        </div>
+                                        {{#completed}}
+                                        <div class="activity-completed-badge">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        {{/completed}}
+                                    </a>
+                                    {{/activities}}
+                                </div>
+                            </div>
+                            {{/lessons}}
+                        </div>
+                    </div>
+                    {{/treeview_courses}}
+                </div>
+            </div>
+            {{/has_courses}}
+            
+            {{^has_courses}}
+            <!-- No Courses Message -->
+            <div class="no-courses">
+                <i class="fa fa-book-open"></i>
+                <h3>No Courses Available</h3>
+                <p>You are not currently enrolled in any courses.</p>
+                <a href="{{dashboardurl}}" class="back-to-dashboard">
+                    <i class="fa fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+            {{/has_courses}}
+
+<style>
+/* Main Content Area - Full Width */
+.main-content-full {
+    width: 100%;
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding: 0;
+}
+
+/* G4G7 Main Content - With Sidebar */
+.g4g7-main-content {
+    margin-left: 280px;
+    padding: 20px 20px 20px 10px;
+    min-height: 100vh;
+    background: #f8fafc;
+    transition: margin-left 0.3s ease;
+}
+
+/* Responsive - Hide sidebar on mobile */
+@media (max-width: 768px) {
+    .g4g7-main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+
+
+
+/* Full width container minus sidebar */
+.container,
+.container-fluid,
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Specific container overrides - push content away from sidebar */
+.container {
+    max-width: calc(100vw - 280px) !important;
+    width: calc(100vw - 280px) !important;
+    margin-left: 280px !important;
+}
+
+/* Remove top spacing */
+#page,
+#page-content,
+.main-inner,
+#topofscroll {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.container,
+.container-fluid,
+body,
+html {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Page Header Styles */
+.courses-page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.courses-page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.courses-page-title i {
+    color: white;
+    font-size: 2.2rem;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+.courses-page-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* G4G7 Header Style for Grade 5 */
+{{#is_middle_grade}}
+.courses-page-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    color: white;
+}
+
+.courses-page-title {
+    color: white;
+}
+
+.courses-page-title i {
+    color: white;
+    opacity: 0.9;
+}
+
+.courses-page-subtitle {
+    color: white;
+    opacity: 0.9;
+}
+{{/is_middle_grade}}
+
+/* View Toggle Buttons */
+.view-toggle-buttons {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.view-toggle-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.view-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.view-toggle-btn.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+}
+
+.view-toggle-btn i {
+    font-size: 1.1rem;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.course-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.course-image-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.course-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.course-category-badge {
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    background: #4A90E2;
+    color: white;
+    padding: 5px 11px;
+    border-radius: 15px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.course-options-icon {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.course-options-icon:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.course-content {
+    padding: 22px;
+}
+
+.course-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #ff6b9d 50%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 14px 0;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.3rem;
+}
+
+.course-grade {
+    display: none;
+}
+
+.course-summary {
+    display: none;
+}
+
+.progress-section {
+    margin-bottom: 22px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.progress-label {
+    font-size: 0.9rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.progress-percentage {
+    font-size: 0.9rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
+.progress-bar {
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #28a745;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+}
+
+/* Course Stats - 2x2 Grid Design */
+.course-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 11px;
+    margin-bottom: 22px;
+}
+
+.stat-item {
+    background: #f8f9fa;
+    padding: 13px 11px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-item .stat-icon {
+    width: 29px;
+    height: 29px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.stat-item .stat-content {
+    flex: 1;
+    text-align: left;
+}
+
+.stat-number {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.63rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.course-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    flex: 1;
+    background: rgb(142, 181, 253);
+    color: rgb(84, 86, 88);
+    border: 1px solid #dee2e6;
+    padding: 12px 18px;
+    border-radius: 11px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-transform: none;
+    letter-spacing: 0.3px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #495057;
+    text-decoration: none;
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.btn-primary i {
+    font-size: 0.9rem;
+}
+
+.btn-secondary {
+    display: none;
+}
+
+/* Responsive Cards View */
+@media (max-width: 768px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .course-card {
+        max-width: 100%;
+    }
+    
+    .course-image-container {
+        height: 160px;
+    }
+    
+    .course-title {
+        font-size: 1.4rem;
+    }
+    
+    .course-stats-grid {
+        gap: 9px;
+    }
+    
+    .stat-item {
+        padding: 10px 9px;
+    }
+}
+
+/* Tree View Styles */
+.tree-view-courses {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Course Tree Items */
+.course-tree-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+    border-left: 4px solid #4A90E2;
+}
+
+.course-tree-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.course-tree-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.course-title-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.course-icon {
+    width: 50px;
+    height: 50px;
+    background: #e3f2fd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #1976d2;
+    flex-shrink: 0;
+}
+
+.tree-course-name {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.course-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #7f8c8d;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.course-meta i {
+    margin-right: 4px;
+}
+
+.course-toggle {
+    background: #e8ecef;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5a6c7d;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.course-toggle:hover {
+    background: #d5dce3;
+}
+
+.course-toggle.expanded {
+    transform: rotate(180deg);
+}
+
+/* Course Progress Section */
+.course-progress-section {
+    margin-top: 12px;
+    background: white;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.course-progress-label {
+    color: #5a6c7d;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-percent {
+    color: #4caf50;
+    font-weight: 700;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: #e8ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #4caf50;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Lessons Container */
+.lessons-container {
+    margin-top: 15px;
+    padding-left: 20px;
+    display: none;
+}
+
+.lessons-container.show {
+    display: block;
+}
+
+/* Lesson Tree Items */
+.lesson-tree-item {
+    background: white;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    border-left: 3px solid #7b1fa2;
+    transition: box-shadow 0.2s ease;
+}
+
+.lesson-tree-item:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.lesson-title-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.lesson-icon {
+    width: 40px;
+    height: 40px;
+    background: #f3e5f5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #7b1fa2;
+    flex-shrink: 0;
+}
+
+.lesson-title {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.lesson-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #7f8c8d;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.lesson-meta i {
+    margin-right: 4px;
+}
+
+.lesson-toggle {
+    background: #f3e5f5;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7b1fa2;
+    font-size: 1rem;
+    transition: transform 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.lesson-toggle:hover {
+    background: #e1bee7;
+}
+
+.lesson-toggle.expanded {
+    transform: rotate(180deg);
+}
+
+.lesson-progress {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lesson-progress-bar-container {
+    flex: 1;
+    height: 6px;
+    background: #e8ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.lesson-progress-bar-fill {
+    height: 100%;
+    background: #7b1fa2;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.lesson-progress-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #7b1fa2;
+}
+
+/* Activities Container */
+.activities-container {
+    margin-top: 12px;
+    padding-left: 15px;
+    display: none;
+}
+
+.activities-container.show {
+    display: block;
+}
+
+/* Activity Tree Items */
+.activity-tree-item {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    border: 1px solid #e8ecef;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.activity-tree-item:hover {
+    border-color: #4A90E2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+}
+
+.activity-tree-item.completed {
+    background: #e8f5e9;
+    border-color: #4caf50;
+}
+
+.activity-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    background: #e0f2f1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #00796b;
+    flex-shrink: 0;
+}
+
+.activity-tree-item.completed .activity-icon-wrapper {
+    background: #c8e6c9;
+    color: #2e7d32;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.activity-number {
+    background: #4A90E2;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.activity-title {
+    color: #2c3e50;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.activity-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.activity-meta-row i {
+    margin-right: 2px;
+}
+
+.activity-completed-badge {
+    background: #4caf50;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Responsive Tree View */
+@media (max-width: 768px) {
+    .course-tree-item {
+        padding: 15px;
+    }
+    
+    .course-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .tree-course-name {
+        font-size: 1.1rem;
+    }
+    
+    .course-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .lesson-tree-item {
+        padding: 12px;
+    }
+    
+    .lesson-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .activity-tree-item {
+        padding: 10px;
+    }
+    
+    .activity-icon-wrapper {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .activity-meta-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+.no-courses {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.no-courses i {
+    font-size: 4rem;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.no-courses h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.no-courses p {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.back-to-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.back-to-dashboard:hover {
+    background: #2980b9;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+</style>
+
+<script>
+// View Switching Function
+function switchView(viewType) {
+    const cardsView = document.getElementById('cards-view-container');
+    const treeView = document.getElementById('tree-view-container');
+    const cardsBtn = document.getElementById('cards-view-btn');
+    const treeBtn = document.getElementById('tree-view-btn');
+    
+    if (viewType === 'cards') {
+        cardsView.style.display = 'block';
+        treeView.style.display = 'none';
+        cardsBtn.classList.add('active');
+        treeBtn.classList.remove('active');
+        localStorage.setItem('mycourses_view', 'cards');
+    } else if (viewType === 'tree') {
+        cardsView.style.display = 'none';
+        treeView.style.display = 'block';
+        cardsBtn.classList.remove('active');
+        treeBtn.classList.add('active');
+        localStorage.setItem('mycourses_view', 'tree');
+    }
+}
+
+// Toggle Course Tree (Shows/Hides Lessons)
+function toggleCourseTree(courseId) {
+    const lessonsContainer = document.getElementById('lessons-container-' + courseId);
+    const toggleElement = document.getElementById('course-toggle-' + courseId);
+    
+    if (lessonsContainer) {
+        if (lessonsContainer.classList.contains('show')) {
+            lessonsContainer.classList.remove('show');
+            toggleElement.classList.remove('expanded');
+        } else {
+            lessonsContainer.classList.add('show');
+            toggleElement.classList.add('expanded');
+        }
+    }
+}
+
+// Toggle Lesson Tree (Shows/Hides Activities)
+function toggleLessonTree(lessonId) {
+    const activitiesContainer = document.getElementById('activities-container-' + lessonId);
+    const toggleElement = document.getElementById('lesson-toggle-' + lessonId);
+    
+    if (activitiesContainer) {
+        if (activitiesContainer.classList.contains('show')) {
+            activitiesContainer.classList.remove('show');
+            toggleElement.classList.remove('expanded');
+        } else {
+            activitiesContainer.classList.add('show');
+            toggleElement.classList.add('expanded');
+        }
+    }
+}
+
+// Restore saved view preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedView = localStorage.getItem('mycourses_view') || 'cards';
+    switchView(savedView);
+});
+</script>
+
+{{/custom_mycourses}}
+

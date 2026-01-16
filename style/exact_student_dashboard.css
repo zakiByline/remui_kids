@@ -1,0 +1,921 @@
+/* ========================================
+   EXACT STUDENT DASHBOARD STYLES
+   Matching the image exactly
+   ======================================== */
+
+.exact-student-dashboard {
+    min-height: 100vh;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+/* ========================================
+   TOP BANNER
+   ======================================== */
+
+.top-banner {
+    background: #10b981;
+    color: white;
+    padding: 16px 24px;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.banner-text {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.banner-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.banner-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   DASHBOARD CONTENT
+   ======================================== */
+
+.dashboard-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+/* ========================================
+   LEFT COLUMN
+   ======================================== */
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   PERFORMANCE CARD
+   ======================================== */
+
+.performance-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.performance-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.performance-card .card-header p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 24px 0;
+}
+
+.circular-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.progress-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(#10b981 0deg 288deg, #e5e7eb 288deg 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.progress-circle::before {
+    content: '';
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.progress-text {
+    text-align: center;
+    z-index: 1;
+}
+
+.progress-text .percentage {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+}
+
+.progress-text .label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #10b981;
+    margin-top: 4px;
+}
+
+/* ========================================
+   UPCOMING CLASSES CARD
+   ======================================== */
+
+.upcoming-classes-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.upcoming-classes-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+}
+
+.classes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.class-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.instructor-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.instructor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.class-info {
+    flex: 1;
+}
+
+.class-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.class-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.course-tag {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.course-tag.red {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.course-tag.blue {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.course-tag.green {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.class-number {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.class-time {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.time-remaining {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.time-remaining.red {
+    color: #dc2626;
+}
+
+.time-remaining.blue {
+    color: #2563eb;
+}
+
+.time-remaining .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.join-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.join-btn:hover {
+    background: #059669;
+}
+
+/* ========================================
+   COURSES CARD
+   ======================================== */
+
+.courses-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.courses-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+}
+
+.courses-table {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.course-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.col-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.course-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.course-icon.orange {
+    background: #f97316;
+}
+
+.course-icon.blue {
+    background: #3b82f6;
+}
+
+.course-details {
+    flex: 1;
+}
+
+.course-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
+
+.course-meta {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.col-progress {
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.orange {
+    background: #f97316;
+}
+
+.progress-fill.green {
+    background: #10b981;
+}
+
+.col-score {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.inprogress {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.completed {
+    background: #d1fae5;
+    color: #059669;
+}
+
+/* ========================================
+   RIGHT COLUMN
+   ======================================== */
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   METRICS CARD
+   ======================================== */
+
+.metrics-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+}
+
+.metric-icon.green {
+    background: #10b981;
+}
+
+.metric-icon.blue {
+    background: #3b82f6;
+}
+
+.metric-icon.pink {
+    background: #ec4899;
+}
+
+.metric-content {
+    flex: 1;
+}
+
+.metric-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+}
+
+.metric-label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.metric-subtitle {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+/* ========================================
+   ACTIVITY CARD
+   ======================================== */
+
+.activity-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.activity-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+}
+
+.activity-icon.orange {
+    background: #f97316;
+}
+
+.activity-icon.purple {
+    background: #8b5cf6;
+}
+
+.activity-icon.blue {
+    background: #3b82f6;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+}
+
+.activity-label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* ========================================
+   STREAK CARD
+   ======================================== */
+
+.streak-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.streak-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.streak-card .card-header p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 20px 0;
+}
+
+.streak-visual {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.streak-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border-radius: 8px;
+    min-width: 40px;
+}
+
+.streak-day.active {
+    background: #fef3c7;
+}
+
+.streak-day.inactive {
+    background: #f3f4f6;
+}
+
+.streak-day i {
+    font-size: 16px;
+    color: #f97316;
+}
+
+.streak-day.inactive i {
+    color: #9ca3af;
+}
+
+.streak-day span {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.streak-summary {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* ========================================
+   ASSIGNMENT CARD
+   ======================================== */
+
+.assignment-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+}
+
+.assignment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.assignment-info {
+    flex: 1;
+}
+
+.assignment-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.assignment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.assignment-number {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.assignment-due {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.assignment-due.red {
+    color: #dc2626;
+}
+
+.assignment-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.upload-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* ========================================
+   QUIZZES CARD
+   ======================================== */
+
+.quizzes-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.quizzes-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.quizzes-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.see-all-btn {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.quizzes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quiz-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.quiz-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+}
+
+.quiz-icon.purple {
+    background: #8b5cf6;
+}
+
+.quiz-info {
+    flex: 1;
+}
+
+.quiz-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
+
+.quiz-meta {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.start-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .right-column {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        padding: 0 16px;
+    }
+    
+    .top-banner {
+        padding: 12px 16px;
+    }
+    
+    .banner-text {
+        font-size: 14px;
+    }
+    
+    .performance-card,
+    .upcoming-classes-card,
+    .courses-card,
+    .metrics-card,
+    .activity-card,
+    .streak-card,
+    .assignment-card,
+    .quizzes-card {
+        padding: 20px;
+    }
+    
+    .table-header,
+    .course-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .table-header {
+        display: none;
+    }
+    
+    .course-row {
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+    
+    .col-name,
+    .col-progress,
+    .col-score,
+    .col-status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+    
+    .col-name::before {
+        content: "Course:";
+        font-weight: 600;
+        color: #6b7280;
+    }
+    
+    .col-progress::before {
+        content: "Progress:";
+        font-weight: 600;
+        color: #6b7280;
+    }
+    
+    .col-score::before {
+        content: "Score:";
+        font-weight: 600;
+        color: #6b7280;
+    }
+    
+    .col-status::before {
+        content: "Status:";
+        font-weight: 600;
+        color: #6b7280;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.no-classes,
+.no-courses,
+.no-assignments,
+.no-quizzes {
+    text-align: center;
+    padding: 40px 20px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+
+
+
+
+

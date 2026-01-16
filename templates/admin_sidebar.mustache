@@ -1,0 +1,25 @@
+{{!
+    Admin Sidebar Template for remui_kids theme
+    
+    This template provides a reusable admin sidebar navigation component
+    that can be included in any admin dashboard or management interface.
+}}
+
+<!-- Admin Sidebar Navigation -->
+<!-- FORCE LTR: Inline styles ensure sidebar stays on LEFT regardless of language direction -->
+<div class="admin-sidebar" style="direction: ltr !important; left: 0 !important; right: auto !important; text-align: left !important;">
+    <div class="sidebar-content">
+        <!-- DASHBOARD Section -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-category">DASHBOARD</h3>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item {{#dashboard_active}}active{{/dashboard_active}}">
+                    <a href="{{{dashboard_url}}}" class="sidebar-link">
+                        <i class="fa fa-th-large sidebar-icon"></i>
+                        <span class="sidebar-text">Admin Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

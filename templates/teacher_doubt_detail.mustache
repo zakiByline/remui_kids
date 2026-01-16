@@ -1,0 +1,207 @@
+<div class="doubt-detail" data-doubtid="{{doubt.id}}">
+    <style>
+    .doubt-detail { display:flex; flex-direction:column; gap:1.5rem; height:100%; }
+    .doubt-detail-header { display:flex; flex-direction:column; gap:1rem; }
+    .doubt-title-row { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; }
+    .doubt-title-row h2 { margin:0; font-size:1.6rem; font-weight:800; color:#1e293b; }
+    .doubt-badges { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .doubt-badges .badge { padding:.4rem .85rem; border-radius:999px; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.05rem; color:#fff; }
+    .badge.status-open { background:linear-gradient(135deg,#6366f1,#8b5cf6); }
+    .badge.status-inprogress { background:linear-gradient(135deg,#f59e0b,#f97316); }
+    .badge.status-waiting_student { background:linear-gradient(135deg,#0ea5e9,#2563eb); }
+    .badge.status-resolved { background:linear-gradient(135deg,#10b981,#14b8a6); }
+    .badge.status-archived { background:linear-gradient(135deg,#64748b,#475569); }
+    .badge.priority-low { background:linear-gradient(135deg,#22d3ee,#38bdf8); }
+    .badge.priority-normal { background:linear-gradient(135deg,#6366f1,#7c3aed); }
+    .badge.priority-high { background:linear-gradient(135deg,#f97316,#ef4444); }
+    .badge.priority-urgent { background:linear-gradient(135deg,#ef4444,#dc2626); }
+    .doubt-meta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; background:#f8fafc; border-radius:12px; padding:1rem; border:1px solid rgba(148,163,184,.2); }
+    .doubt-meta-item { display:flex; flex-direction:column; gap:.3rem; }
+    .doubt-meta-item label { text-transform:uppercase; font-size:.75rem; color:#64748b; letter-spacing:.06rem; font-weight:700; }
+    .doubt-meta-item span { font-weight:600; color:#1e293b; }
+    .doubt-actions { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
+    .doubt-actions select { padding:.6rem .85rem; border-radius:10px; border:2px solid #e2e8f0; font-weight:600; color:#1e293b; background:#fff; }
+    .doubt-body { display:grid; gap:1.5rem; flex:1; min-height:0; }
+    .conversation-panel { background:#f8fafc; border-radius:14px; border:1px solid rgba(148,163,184,.18); padding:1.25rem; display:flex; flex-direction:column; gap:1.25rem; overflow:hidden; }
+    .conversation-messages { flex:1; overflow:auto; display:flex; flex-direction:column; gap:1.25rem; padding:.25rem .25rem 1rem; }
+    .conversation-messages::-webkit-scrollbar { width:8px; }
+    .conversation-messages::-webkit-scrollbar-thumb { background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:10px; }
+    .message-card { background:#fff; border-radius:16px; padding:1rem 1.15rem; border:1px solid rgba(148,163,184,.12); box-shadow:0 8px 22px rgba(15,23,42,.06); display:flex; flex-direction:column; gap:.55rem; max-width:72%; position:relative; align-self:flex-start; }
+    .message-card.student { background:#ffffff; }
+    .message-card.student::before { display:none; }
+    .message-card.teacher,
+    .message-card.manager { align-self:flex-end; background:#ede9ff; color:#1f2937; border:1px solid rgba(99,102,241,.18); }
+    .message-card.teacher::after,
+    .message-card.manager::after { content:''; position:absolute; right:-6px; bottom:18px; width:16px; height:16px; background:#ede9ff; clip-path:polygon(0 0,100% 50%,0 100%); border-right:1px solid rgba(99,102,241,.18); border-bottom:1px solid rgba(99,102,241,.18); border-radius:0 0 6px 0; }
+    .message-card.internal { align-self:flex-end; background:#f8fafc; border:1px dashed #94a3b8; color:#1f2937; }
+    .message-card.teacher .message-header .name,
+    .message-card.teacher .message-header .meta,
+    .message-card.manager .message-header .name,
+    .message-card.manager .message-header .meta { color:#4338ca; }
+    .message-card.teacher .message-body,
+    .message-card.teacher .message-attachments a,
+    .message-card.manager .message-body,
+    .message-card.manager .message-attachments a { color:#1f2937; }
+    .message-card.teacher .message-attachments a:hover,
+    .message-card.manager .message-attachments a:hover { color:#3730a3; }
+    .message-header { display:none; }
+    .message-body { color:#1f2937; line-height:1.6; word-break:break-word; }
+    .message-attachments { display:flex; flex-direction:column; gap:.4rem; }
+    .message-attachments .attachment-item { display:flex; }
+    .message-attachments a { font-size:.82rem; color:#6366f1; text-decoration:none; font-weight:600; display:inline-flex; gap:.35rem; align-items:center; }
+    .message-attachments .attachment-image img { max-width:260px; max-height:200px; border-radius:10px; box-shadow:0 8px 20px rgba(15,23,42,.08); border:1px solid rgba(99,102,241,.25); }
+    .message-wrapper { display:flex; flex-direction:column; gap:.45rem; }
+    .message-card { margin-right:auto; }
+    .message-card.teacher,
+    .message-card.manager,
+    .message-card.internal { margin-left:auto; margin-right:0; }
+    .message-meta-row { display:flex; align-items:center; gap:.6rem; font-size:.78rem; color:#94a3b8; }
+    .message-meta-row.teacher-meta,
+    .message-meta-row.manager-meta,
+    .message-meta-row.internal-meta { justify-content:flex-end; }
+    .message-meta-row.teacher-meta .avatar,
+    .message-meta-row.manager-meta .avatar,
+    .message-meta-row.internal-meta .avatar { order:2; }
+    .message-meta-row.teacher-meta .timestamp,
+    .message-meta-row.manager-meta .timestamp,
+    .message-meta-row.internal-meta .timestamp { order:1; }
+    .message-meta-row .avatar { width:36px; height:36px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; color:#475569; position:relative; cursor:default; overflow:hidden; }
+    .message-meta-row .avatar img { width:100%; height:100%; object-fit:cover; }
+    .message-meta-row .avatar .tooltip { position:absolute; bottom:110%; left:50%; transform:translateX(-50%); background:#1f2937; color:#f8fafc; padding:.35rem .6rem; border-radius:6px; font-size:.72rem; white-space:nowrap; opacity:0; visibility:hidden; transition:opacity .15s ease; }
+    .message-meta-row .avatar:hover .tooltip { opacity:1; visibility:visible; }
+    .message-meta-row .timestamp { font-size:.72rem; letter-spacing:.03rem; color:#9ca3af; }
+    .message-card.teacher .message-meta-row .avatar,
+    .message-card.manager .message-meta-row .avatar { background:#c7d2fe; color:#3730a3; }
+    .reply-form { background:#fff; border-radius:12px; border:1px solid rgba(148,163,184,.2); padding:1.1rem; display:flex; flex-direction:column; gap:1rem; box-shadow:0 12px 24px rgba(15,23,42,.06); }
+    .reply-form textarea { width:100%; min-height:140px; border-radius:10px; border:2px solid #e2e8f0; padding:.85rem 1rem; font-size:.95rem; resize:vertical; }
+    .reply-form textarea:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.1); outline:none; }
+    .reply-form .form-options { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+    .reply-form .form-options label { display:flex; gap:.4rem; align-items:center; font-size:.85rem; color:#475569; font-weight:600; }
+    .reply-form .attachments-preview { display:flex; flex-wrap:wrap; gap:.5rem; font-size:.82rem; color:#6366f1; }
+    .reply-form .attachments-preview .attachment-chip { background:#eef2ff; border-radius:999px; padding:.35rem .8rem; border:1px solid #c7d2fe; color:#4338ca; font-weight:600; }
+    .reply-form .form-actions { display:flex; gap:.75rem; justify-content:flex-end; }
+    .reply-form .button-primary { background:#6366f1; color:#fff; border:none; padding:.75rem 1.4rem; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 12px 25px rgba(99,102,241,.25); transition:transform .2s, box-shadow .2s; }
+    .reply-form .button-primary:hover { transform:translateY(-1px); box-shadow:0 18px 30px rgba(79,70,229,.25); }
+    .reply-form .button-outline { background:#f8fafc; border:1px solid #cbd5f5; color:#475569; border-radius:10px; padding:.75rem 1.2rem; font-weight:700; cursor:pointer; }
+    @media (max-width: 1200px) {
+        .doubt-body { flex-direction:column; }
+    }
+    </style>
+
+    <div class="doubt-detail-header">
+        <div class="doubt-meta-bar">
+            <div class="doubt-meta-avatar">
+                <i class="fa fa-user"></i>
+            </div>
+        </div>
+        <div class="doubt-meta-grid">
+            <div class="doubt-meta-item">
+                <label>{{doubt_status_label}}</label>
+                <span>{{doubt.statuslabel}}</span>
+            </div>
+            <div class="doubt-meta-item">
+                <label>{{doubt_priority_label}}</label>
+                <span>{{doubt.prioritylabel}}</span>
+            </div>
+            <div class="doubt-meta-item">
+                <label>{{doubt_course_label}}</label>
+                <span>{{doubt.course.fullname}}</span>
+            </div>
+            <div class="doubt-meta-item">
+                <label>{{doubt_student_label}}</label>
+                <span>{{student.name}}</span>
+            </div>
+            {{#doubt.duedatehuman}}
+            <div class="doubt-meta-item">
+                <label>{{doubt_due_label}}</label>
+                <span>{{doubt.duedatehuman}}</span>
+            </div>
+            {{/doubt.duedatehuman}}
+        </div>
+        <div class="doubt-actions">
+            <select data-action="change-status">
+                {{#statusoptions}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                {{/statusoptions}}
+            </select>
+        </div>
+
+    <div class="doubt-body">
+        <section class="conversation-panel">
+            <div class="conversation-messages" data-region="messages">
+                {{#messages}}
+            <div class="message-wrapper {{actorrole}}-wrapper">
+                <div class="message-card {{actorrole}} {{#visibility_internal}}internal{{/visibility_internal}}" data-messageid="{{id}}">
+                        <div class="message-body">{{{message}}}</div>
+                        {{#hasattachments}}
+                            <div class="message-attachments">
+                                <span>{{doubt_uploaded_files}}</span>
+                                {{#attachments}}
+                                    {{#isimage}}
+                                        <div class="attachment-item attachment-image" data-mimetype="{{mimetype}}">
+                                            <a href="{{url}}" target="_blank" rel="noopener" data-filename="{{filename}}">
+                                                <img src="{{url}}" alt="{{filename}}">
+                                            </a>
+                                        </div>
+                                    {{/isimage}}
+                                    {{^isimage}}
+                                        <div class="attachment-item" data-mimetype="{{mimetype}}">
+                                            <a href="{{url}}" target="_blank" rel="noopener" data-filename="{{filename}}">
+                                                <i class="fa fa-paperclip"></i>{{filename}}
+                                            </a>
+                                        </div>
+                                    {{/isimage}}
+                                {{/attachments}}
+                            </div>
+                        {{/hasattachments}}
+                </div>
+                <div class="message-meta-row {{actorrole}}-meta">
+                    <div class="avatar">
+                        {{#profileimage}}
+                            <img src="{{profileimage}}" alt="{{fullname}}">
+                        {{/profileimage}}
+                        {{^profileimage}}
+                            {{#avatarinitials}}{{avatarinitials}}{{/avatarinitials}}{{^avatarinitials}}<i class="fa fa-user"></i>{{/avatarinitials}}
+                        {{/profileimage}}
+                        <span class="tooltip">{{fullname}}</span>
+                    </div>
+                    <span class="timestamp">{{timehuman}}</span>
+                </div>
+            </div>
+                {{/messages}}
+                {{^messages}}
+                    <div class="doubt-empty">
+                        <i class="fa fa-comments"></i>
+                        <p>{{messagesempty}}</p>
+                    </div>
+                {{/messages}}
+            </div>
+
+            <form class="reply-form" data-region="reply-form">
+                <textarea name="message" placeholder="{{doubt_reply_placeholder}}"></textarea>
+                <div class="form-options">
+                    <label>
+                        <input type="radio" name="visibility" value="public" checked>
+                        {{doubt_visibility_public}}
+                    </label>
+                    <label>
+                        <input type="radio" name="visibility" value="internal">
+                        {{doubt_visibility_internal}}
+                    </label>
+                    <label>
+                        <input type="checkbox" name="resolution" value="1">
+                        {{doubt_resolution_toggle}}
+                    </label>
+                </div>
+                <div class="attachments-preview" data-region="attachments-preview"></div>
+                <input type="file" name="attachments[]" multiple hidden data-region="file-input">
+                <div class="form-actions">
+                    <button type="button" class="button-outline" data-action="clear-files"><i class="fa fa-times"></i>{{doubt_remove_files}}</button>
+                    <button type="button" class="button-outline" data-action="add-files"><i class="fa fa-paperclip"></i>{{doubt_add_attachments}}</button>
+                    <button type="submit" class="button-primary"><i class="fa fa-paper-plane"></i>{{doubt_send_reply}}</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+

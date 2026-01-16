@@ -1,0 +1,2152 @@
+{{> theme_remui_kids/highschool_sidebar}}
+<style>
+    /* Enhanced Sidebar Styles */
+    .student-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 320px;
+        height: 100vh;
+        background: #ffffff;
+        color: #1f2937;
+        overflow-y: auto;
+        z-index: 1000;
+        padding: 2rem 0;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-sidebar.enhanced-sidebar {
+        padding: 1.5rem 0;
+    }
+
+    .sidebar-nav {
+        padding: 0 1rem;
+    }
+
+    .nav-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: rgba(15, 23, 42, 0.6);
+        margin-bottom: 0.75rem;
+        padding: 0 0.75rem;
+    }
+
+    .nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-item {
+        margin-bottom: 0.25rem;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        color: rgba(30, 41, 59, 0.9);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background: rgba(59, 130, 246, 0.12);
+        color: #1d4ed8;
+        transform: translateX(5px);
+    }
+
+    .nav-link.active {
+        background: rgba(59, 130, 246, 0.18);
+        color: #1d4ed8;
+        font-weight: 600;
+    }
+
+    .nav-link i {
+        width: 24px;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+    .quick-actions {
+        padding: 0 0.75rem;
+    }
+
+    .quick-action-buttons {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .quick-action-btn {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: rgba(148, 163, 184, 0.08);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quick-action-btn:hover {
+        background: rgba(59, 130, 246, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .action-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        margin-right: 0.75rem;
+    }
+
+    .quick-action-btn.purple .action-icon {
+        background: rgba(147, 51, 234, 0.3);
+    }
+
+    .quick-action-btn.blue .action-icon {
+        background: rgba(59, 130, 246, 0.3);
+    }
+
+    .quick-action-btn.green .action-icon {
+        background: rgba(34, 197, 94, 0.3);
+    }
+
+    .quick-action-btn.orange .action-icon {
+        background: rgba(249, 115, 22, 0.3);
+    }
+
+    .action-content {
+        flex: 1;
+    }
+
+    .action-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .action-desc {
+        font-size: 0.75rem;
+        color: rgba(30, 41, 59, 0.65);
+    }
+
+    .sidebar-footer {
+        padding: 1rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: rgba(148, 163, 184, 0.08);
+        border-radius: 8px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        background: rgba(59, 130, 246, 0.12);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .user-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .user-role {
+        font-size: 0.75rem;
+        color: rgba(100, 116, 139, 0.9);
+    }
+
+    /* Hide Moodle default page heading to avoid duplicate titles */
+    .highschool-grades-page .page-header,
+    .highschool-grades-page #page-header,
+    .highschool-grades-page .page-context-header {
+        display: none !important;
+    }
+
+    /* Custom styles for High School Grades Page */
+    .highschool-grades-page {
+        position: relative;
+        min-height: 100vh;
+        margin-left: 320px;
+        padding-top: 1rem;
+        margin-right: 40px;
+        padding: 0;
+        width: calc(100% - 360px);
+    }
+
+    .grades-main-content {
+        padding: 0;
+        width: 100%;
+    }
+
+    /* Container fluid padding */
+    .container-fluid {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    /* Remove all padding from main content */
+    .grades-main-content {
+        padding: 0 !important;
+    }
+
+    /* Remove padding from page wrapper */
+    #page-wrapper {
+        padding: 0 !important;
+    }
+
+    /* Remove padding from page content */
+    #page-content {
+        padding: 0 !important;
+    }
+
+    /* Remove all margins and padding from main content areas */
+    .main-content,
+    .content,
+    .region-main,
+    .region-main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Remove padding from row and column classes */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .col-lg-3,
+    .col-md-6,
+    .col-12 {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    /* Full width navbar and page adjustments */
+    body.has-student-sidebar #page,
+    body.has-enhanced-sidebar #page {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    body.has-student-sidebar .highschool-grades-page,
+    body.has-enhanced-sidebar .highschool-grades-page {
+        margin-right: 40px;
+    }
+
+    body.has-student-sidebar #page-wrapper,
+    body.has-enhanced-sidebar #page-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* Make navbar span full width and sticky */
+    body.has-student-sidebar .navbar,
+    body.has-enhanced-sidebar .navbar,
+    body.has-student-sidebar .navbar-expand,
+    body.has-enhanced-sidebar .navbar-expand {
+        width: 100% !important;
+        margin-left: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        z-index: 1030 !important;
+        background: white !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    }
+
+
+
+    /* Adjust main content area to account for sidebar */
+    body.has-student-sidebar .main-content,
+    body.has-enhanced-sidebar .main-content,
+    body.has-student-sidebar .content,
+    body.has-enhanced-sidebar .content {
+        margin-left: 320px;
+    }
+
+    /* Ensure page header spans full width */
+    body.has-student-sidebar .page-header,
+    body.has-enhanced-sidebar .page-header {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .grades-page-header {
+        position: relative;
+        padding: 40px 36px;
+        border-radius: 28px;
+        overflow: hidden;
+        margin-bottom: 36px;
+        color: #0f172a;
+        box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+    }
+
+    .grades-page-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+            radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.35), transparent 50%);
+        mix-blend-mode: screen;
+        animation: shimmer 12s ease-in-out infinite alternate;
+    }
+
+    .grades-header-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        flex-wrap: wrap;
+        z-index: 1;
+    }
+
+    .grades-avatar {
+        width: 92px;
+        height: 92px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #f8fafc;
+        box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.35);
+    }
+
+    .grades-title-block {
+        flex: 1;
+        min-width: 240px;
+            display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    }
+
+    .grades-page-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 2.75rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .grades-page-title i {
+        font-size: 2.2rem;
+        color: #4b7af6;
+    }
+
+    .grades-page-subtitle {
+        margin: 10px 0 0;
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: rgba(248, 250, 252, 0.92);
+    }
+
+    .grades-highlight-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.15);
+        color: #2f3847;
+        font-weight: 600;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+
+    .grades-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .grades-header-actions .btn {
+        border-radius: 999px;
+        padding: 10px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: #2f3847;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+    }
+
+    .grades-header-actions .btn:hover {
+        background: rgba(15, 23, 42, 0.15);
+        color: #f8fafc;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: scale(1) translateX(0);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(1.05) translateX(-2%);
+            opacity: 1;
+        }
+    }
+
+    .grades-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        border-radius: 20px;
+        padding: 24px;
+        background: #ffffff;
+        box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .stat-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #0f172a;
+        background: rgba(59, 130, 246, 0.18);
+    }
+
+    .stat-card-label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .stat-card-label span {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(15, 23, 42, 0.6);
+        font-weight: 600;
+    }
+
+    .stat-card-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .grades-analytics-grid {
+        display: grid;
+        gap: 28px;
+        margin-bottom: 36px;
+    }
+
+    .grades-insights-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+        margin-bottom: 36px;
+    }
+
+    .insight-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 24px 45px rgba(15, 23, 42, 0.1);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .insight-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .recent-grades-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 55%);
+        pointer-events: none;
+    }
+
+    .insight-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .insight-list-item {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .insight-item-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+    }
+
+    .insight-item-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+        color: #0f172a;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .insight-item-label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .insight-item-label strong {
+        font-size: 1rem;
+        color: #0f172a;
+    }
+
+    .insight-item-label span {
+        font-size: 0.85rem;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .insight-item-bottom {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .insight-item-date {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        font-weight: 600;
+    }
+
+    .insight-item-score {
+        margin-left: auto;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fefefe;
+        font-weight: 700;
+        padding: 0.35rem 1rem;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        min-width: 90px;
+        text-align: center;
+        box-shadow: 0 8px 18px rgba(34, 197, 94, 0.35);
+    }
+
+    .badge-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .badge-list-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(248, 250, 252, 0.9);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .badge-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        font-size: 1.2rem;
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .badge-gold {
+        background: rgba(251, 191, 36, 0.25);
+        color: #b45309;
+    }
+
+    .badge-green {
+        background: rgba(16, 185, 129, 0.25);
+        color: #047857;
+    }
+
+    .badge-blue {
+        background: rgba(59, 130, 246, 0.25);
+        color: #1d4ed8;
+    }
+
+    .badge-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .badge-text strong {
+        font-size: 1rem;
+        color: #0f172a;
+    }
+
+    .badge-text span {
+        font-size: 0.9rem;
+        color: #475569;
+    }
+
+    .analytics-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 24px 45px rgba(15, 23, 42, 0.12);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .analytics-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), transparent 65%);
+        pointer-events: none;
+    }
+
+    .analytics-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 32px 55px rgba(37, 99, 235, 0.18);
+    }
+
+    .analytics-card-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 22px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .analytics-subtle {
+        font-size: 0.9rem;
+        color: rgba(15, 23, 42, 0.6);
+        font-weight: 500;
+    }
+
+    .category-breakdown-bar {
+        width: 100%;
+        height: 22px;
+        border-radius: 14px;
+        background: rgba(226, 232, 240, 0.65);
+        overflow: hidden;
+        display: flex;
+        box-shadow: inset 0 0 6px rgba(15, 23, 42, 0.08);
+    }
+
+    .category-breakdown-segment {
+        height: 100%;
+        transition: flex 0.4s ease;
+        position: relative;
+    }
+
+    .category-breakdown-segment::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translate(-50%, -4px);
+        background: rgba(15, 23, 42, 0.85);
+        color: #f8fafc;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+    }
+
+    .category-breakdown-segment:hover::after {
+        opacity: 1;
+        transform: translate(-50%, -6px);
+    }
+
+    .category-legend {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .category-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(248, 250, 252, 0.85);
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #0f172a;
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+    }
+
+    .category-legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+    }
+
+    .popover-detail {
+        position: absolute;
+        z-index: 99;
+        max-width: 260px;
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 14px 16px;
+        border-radius: 16px;
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.25);
+        font-size: 0.85rem;
+        display: none;
+        pointer-events: none;
+    }
+
+    .popover-detail strong {
+        font-size: 0.95rem;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .course-grades-card {
+        background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(125, 211, 252, 0.12);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        border: 2px solid #e0f2fe;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .course-grades-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(125, 211, 252, 0.25);
+        border-color: #7dd3fc;
+    }
+
+    .course-header {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        padding: 1.5rem;
+        border-bottom: 2px solid #bae6fd;
+    }
+
+    .course-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .course-average {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .average-grade {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0284c7;
+    }
+
+    .letter-grade {
+        background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+        color: #1e293b;
+        padding: 0.625rem 1.25rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.15rem;
+        box-shadow: 0 4px 15px rgba(125, 211, 252, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .letter-grade:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(125, 211, 252, 0.4);
+    }
+
+    .grades-list {
+        padding: 0;
+    }
+
+    .grade-item {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .grade-item:hover {
+        background: #f8fafc;
+    }
+
+    .grade-item:last-child {
+        border-bottom: none;
+    }
+
+    .grade-info {
+        flex: 1;
+    }
+
+    .grade-name {
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.25rem;
+    }
+
+    .grade-feedback {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    .grade-score {
+        text-align: right;
+    }
+
+    .grade-percentage {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+    }
+
+    .grade-fraction {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    .grade-letter {
+        background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+        color: #1e293b;
+        padding: 0.375rem 0.875rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-left: 1rem;
+        box-shadow: 0 2px 8px rgba(125, 211, 252, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .grade-letter:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(125, 211, 252, 0.4);
+    }
+
+    .no-grades {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #718096;
+    }
+
+    .no-grades i {
+        font-size: 4rem;
+        color: #cbd5e0;
+        margin-bottom: 1rem;
+    }
+
+    .no-grades h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .no-grades p {
+        font-size: 1rem;
+        color: #718096;
+    }
+
+    /* Enhanced Grade Features */
+    .grade-trend-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .trend-up {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .trend-down {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .trend-stable {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+    }
+
+    .grade-progress-ring {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+    }
+
+    .progress-ring-circle {
+        fill: none;
+        stroke-width: 4;
+        stroke-linecap: round;
+    }
+
+    .progress-ring-circle.background {
+        stroke: #e0f2fe;
+    }
+
+    .progress-ring-circle.progress {
+        stroke: url(#progressGradient);
+        stroke-dasharray: 157;
+        stroke-dashoffset: 157;
+        transition: stroke-dashoffset 0.6s ease;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #0284c7;
+    }
+
+    .grade-filters {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+        color: #1e293b;
+        border-color: #38bdf8;
+    }
+
+    .filter-btn:hover:not(.active) {
+        border-color: #7dd3fc;
+        color: #0284c7;
+    }
+
+    .grade-search {
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #7dd3fc;
+        box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.1);
+    }
+
+    .btn-outline-light {
+        background: transparent;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-outline-light:hover {
+        background: #f8fafc;
+        border-color: #7dd3fc;
+        color: #0284c7;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+
+    .grade-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .grade-timeline::before {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 100%);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem;
+        top: 0.5rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+        box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.3);
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(125, 211, 252, 0.1);
+        border: 1px solid #e0f2fe;
+    }
+
+    .timeline-date {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-description {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .grade-achievement {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .achievement-title {
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 0.25rem;
+    }
+
+    .achievement-description {
+        font-size: 0.875rem;
+        color: #92400e;
+    }
+
+    .grade-comparison {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+
+    .comparison-item {
+        text-align: center;
+        flex: 1;
+    }
+
+    .comparison-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .comparison-value {
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .grade-distribution {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .distribution-item {
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(125, 211, 252, 0.1);
+        border: 1px solid #e0f2fe;
+    }
+
+    .distribution-grade {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0284c7;
+        margin-bottom: 0.25rem;
+    }
+
+    .distribution-count {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    /* Collapsible Course Cards */
+    .grades-accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .course-card {
+        border-radius: 24px;
+        overflow: hidden;
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 16px 50px rgba(14, 116, 144, 0.15);
+    }
+
+    .course-card-toggle {
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        border: none;
+        padding: 32px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        transition: background 0.3s ease;
+        position: relative;
+    }
+
+    .course-card-toggle:hover {
+        background: rgba(14, 116, 144, 0.06);
+    }
+
+    .course-card-toggle .toggle-icon {
+        position: absolute;
+        top: 32px;
+        right: 32px;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(125, 211, 252, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .course-card-toggle[aria-expanded="true"] .toggle-icon {
+        transform: rotate(180deg);
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .course-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .course-card-title {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .course-card-title .course-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .course-card-title .course-shortname {
+        font-size: 0.95rem;
+        color: rgba(15, 23, 42, 0.65);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .course-card-metrics {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .course-card-metrics .overall-grade {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #0284c7;
+    }
+
+    .course-card-metrics .performance-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .performance-excellent {
+        background: rgba(16, 185, 129, 0.18);
+        color: #047857;
+    }
+
+    .performance-good {
+        background: rgba(59, 130, 246, 0.18);
+        color: #1d4ed8;
+    }
+
+    .performance-average {
+        background: rgba(234, 179, 8, 0.18);
+        color: #b45309;
+    }
+
+    .performance-watch {
+        background: rgba(239, 68, 68, 0.2);
+        color: #b91c1c;
+    }
+
+    .course-card-body {
+        padding: 0 32px 32px 32px;
+        border-top: 1px solid rgba(226, 232, 240, 0.6);
+        background: rgba(248, 250, 252, 0.8);
+    }
+
+    .grade-item-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .grade-item-card {
+        border-radius: 18px;
+        padding: 20px;
+        background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 12px 30px rgba(30, 64, 175, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .grade-item-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .grade-item-card:hover::before {
+        opacity: 1;
+    }
+
+    .grade-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .grade-item-name {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1.05rem;
+        flex: 1;
+    }
+
+    .grade-item-category {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0f172a;
+        background: rgba(148, 163, 184, 0.2);
+        padding: 6px 12px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .grade-item-score {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 14px;
+    }
+
+    .grade-item-percentage {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0284c7;
+    }
+
+    .grade-item-fraction {
+        font-size: 0.9rem;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .grade-item-feedback {
+        font-size: 0.95rem;
+        color: #1f2937;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 12px;
+        padding: 14px;
+        line-height: 1.5;
+    }
+
+    .empty-grade-items {
+        padding: 28px;
+        text-align: center;
+        color: #64748b;
+        background: rgba(241, 245, 249, 0.7);
+        border-radius: 16px;
+        border: 1px dashed rgba(148, 163, 184, 0.6);
+        font-weight: 600;
+    }
+
+    .course-filter {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .course-filter label {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .course-filter select {
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: white;
+        font-weight: 600;
+        color: #1e293b;
+        min-width: 240px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .course-filter select:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+    }
+    .footer-copyright-wrapper ,.footer-mainsection-wrapper{
+        display: none !important;
+     }
+    @media (max-width: 1024px) {
+        .grades-analytics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .student-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .student-sidebar.show {
+            transform: translateX(0);
+        }
+
+        .highschool-grades-page {
+            margin-left: 0 !important;
+            padding: 0 !important;
+        }
+
+        .grades-page-header {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 28px 24px;
+        }
+
+        .grades-header-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .grades-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            font-size: 2rem;
+        }
+
+        .grades-header-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        body.has-student-sidebar #page,
+        body.has-enhanced-sidebar #page,
+        body.has-student-sidebar #page-wrapper,
+        body.has-enhanced-sidebar #page-wrapper {
+            margin-left: 0 !important;
+        }
+
+        .grades-page-header .page-title {
+            font-size: 1.8rem;
+        }
+
+        .grades-main-content {
+            padding: 0;
+        }
+
+        .container-fluid {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .grades-analytics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .course-filter select {
+            min-width: 100%;
+        }
+
+        .course-card-toggle {
+            padding: 24px;
+        }
+
+        .course-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .course-card-toggle .toggle-icon {
+            position: static;
+            align-self: flex-end;
+            margin-top: -8px;
+        }
+
+        .course-card-body {
+            padding: 0 24px 24px 24px;
+        }
+
+        .course-filter {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="highschool-grades-page">
+    <!-- Page Header -->
+    <div class="grades-page-header">
+        <div class="grades-header-content">
+            <div class="grades-title-block">
+                <h1 class="grades-page-title">
+                    <i class="fa fa-chart-bar"></i>
+                    My Grades
+                </h1>
+                <div class="grades-highlight-pill">
+                    <i class="fa fa-star"></i>
+                    Current average: {{average_grade}}%
+                </div>
+            </div>
+            <div class="grades-header-actions">
+                <a href="{{{dashboard_url}}}" class="btn btn-outline-light">
+                    <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grade Statistics -->
+    <div class="container-fluid">
+        <div class="grades-stats">
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fa fa-book"></i></div>
+                <div class="stat-card-label">
+                    <span>Total Courses</span>
+                    <div class="stat-card-value">{{total_courses}}</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fa fa-clipboard-check"></i></div>
+                <div class="stat-card-label">
+                    <span>Grade Items</span>
+                    <div class="stat-card-value">{{total_grade_items}}</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fa fa-chart-line"></i></div>
+                <div class="stat-card-label">
+                    <span>Average Grade</span>
+                    <div class="stat-card-value">{{average_grade}}%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grades-analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-card-title">
+                    Category Breakdown
+                    <span class="analytics-subtle">Assignments vs Quizzes vs Projects</span>
+                </div>
+                <div class="category-breakdown-bar" id="categoryBreakdownBar"></div>
+                <div class="category-legend" id="categoryLegend"></div>
+            </div>
+        </div>
+
+        {{#has_recent_grades}}
+            <div class="grades-insights-grid">
+                <div class="insight-card recent-grades-card">
+                    <h3><i class="fa fa-clock-rotate-left"></i> Recent Grades</h3>
+                    <div class="insight-list">
+                        {{#recent_grades}}
+                            <div class="insight-list-item">
+                                <div class="insight-item-meta">
+                                    <div class="insight-item-icon">{{course_initial}}
+                                    </div>
+                                    <div class="insight-item-label">
+                                        <strong>{{item_name}}</strong>
+                                        <span>{{course_name}} • {{category_label}}</span>
+                                        <div class="insight-item-bottom">
+                                            <span class="insight-item-date">
+                                                <i class="fa fa-calendar"></i> {{gradedate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="insight-item-score">{{percentage_display}}
+                                </div>
+                            </div>
+                        {{/recent_grades}}
+                    </div>
+                </div>
+                {{#has_performance_badges}}
+                    <div class="insight-card">
+                        <h3><i class="fa fa-award"></i> Performance Badges</h3>
+                        <div class="badge-list">
+                            {{#performance_badges}}
+                                <div class="badge-list-item">
+                                    <div class="badge-icon {{accent}}"><i
+                                            class="fa {{icon}}"></i></div>
+                                    <div class="badge-text">
+                                        <strong>{{title}}</strong>
+                                        <span>{{description}}</span>
+                                    </div>
+                                </div>
+                            {{/performance_badges}}
+                        </div>
+                    </div>
+                {{/has_performance_badges}}
+            </div>
+        {{/has_recent_grades}}
+
+        <!-- Course Grades -->
+        {{#has_grades}}
+            <div class="course-filter">
+                <label for="highschoolCourseSelect">Select course</label>
+                <select id="highschoolCourseSelect">
+                    <option value="all">All courses</option>
+                    {{#grades}}
+                        <option value="{{collapse_id}}">
+                            {{course_name}}</option>
+                    {{/grades}}
+                </select>
+            </div>
+
+            <div class="grades-accordion" id="highschoolGradesAccordion">
+                {{#grades}}
+                    <div class="course-card" data-course-id="{{collapse_id}}">
+                        <button class="course-card-toggle {{performance_class}}"
+                            type="button" data-toggle="collapse" data-bs-toggle="collapse"
+                            data-target="#{{collapse_id}}"
+                            data-bs-target="#{{collapse_id}}"
+                            aria-expanded="{{#is_first}}true{{/is_first}}{{^is_first}}false{{/is_first}}"
+                            aria-controls="{{collapse_id}}">
+                            <div class="course-card-header">
+                                <div class="course-card-title">
+                                    <h3 class="course-name">{{course_name}}</h3>
+                                    {{#course_shortname}}
+                                        <span
+                                            class="course-shortname">{{course_shortname}}</span>
+                                    {{/course_shortname}}
+                                </div>
+                                <div class="course-card-metrics">
+                                    <span
+                                        class="overall-grade">{{overall_grade_display}}</span>
+                                    <span class="performance-chip">
+                                        <i class="fa {{performance_icon}}"></i>
+                                        {{performance_label}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="toggle-icon">
+                                <i class="fa fa-chevron-down"></i>
+                            </div>
+                        </button>
+
+                        <div id="{{collapse_id}}"
+                            class="collapse {{#is_first}}show{{/is_first}}"
+                            data-parent="#highschoolGradesAccordion" data-bs-parent="#highschoolGradesAccordion">
+                            <div class="course-card-body">
+                                {{#grade_items}}
+                                    <div class="grade-item-grid">
+                                        {{#grade_items}}
+                                            <div class="grade-item-card"
+                                                data-letter-grade="{{letter_grade}}">
+                                                <div class="grade-item-header">
+                                                    <span class="grade-item-name">{{name}}</span>
+                                                    <span
+                                                        class="grade-item-category">{{category_label}}</span>
+                                                </div>
+                                                <div class="grade-item-score">
+                                                    <span
+                                                        class="grade-item-percentage">{{percentage_display}}</span>
+                                                    <span
+                                                        class="grade-item-fraction">{{grade_fraction}}</span>
+                                                </div>
+                                                {{#feedback}}
+                                                    <div class="grade-item-feedback">{{feedback}}
+                                                    </div>
+                                                {{/feedback}}
+                                            </div>
+                                        {{/grade_items}}
+                                    </div>
+                                {{/grade_items}}
+                                {{^grade_items}}
+                                    <div class="empty-grade-items">
+                                        No graded items available for this course yet.
+                                    </div>
+                                {{/grade_items}}
+                            </div>
+                        </div>
+                    </div>
+                {{/grades}}
+            </div>
+        {{/has_grades}}
+        {{^grades}}
+            <div class="no-grades">
+                <i class="fa fa-chart-bar"></i>
+                <h3>No Grades Yet</h3>
+                <p>You don't have any grades yet. Complete assignments and quizzes to see your progress!</p>
+            </div>
+        {{/grades}}
+    </div>
+</div>
+
+<div class="popover-detail" id="gradePopover"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+    integrity="sha384-oEc/7cQFKbGXpiIOxc3KfnL5P8Bc1XBykfyq1inxN0Zy3Di99YHc7efFQQtrLPM9"
+    crossorigin="anonymous"></script>
+
+<div class="popover-detail" id="gradePopover"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+    integrity="sha384-oEc/7cQFKbGXpiIOxc3KfnL5P8Bc1XBykfyq1inxN0Zy3Di99YHc7efFQQtrLPM9"
+    crossorigin="anonymous"></script>
+
+<script>
+    // Initialize enhanced sidebar
+    document.addEventListener('DOMContentLoaded', function () {
+        const enhancedSidebar = document.querySelector('.enhanced-sidebar');
+        if (enhancedSidebar) {
+            document.body.classList.add('has-student-sidebar', 'has-enhanced-sidebar');
+            console.log('Enhanced sidebar initialized for high school grades page');
+        }
+
+        // Handle sidebar navigation - set active state
+        const currentUrl = window.location.href;
+        const navLinks = document.querySelectorAll('.student-sidebar .nav-link');
+        navLinks.forEach(link => {
+            if (link.href === currentUrl) {
+                link.classList.add('active');
+            }
+        });
+
+        // Mobile sidebar toggle (if you add a toggle button in the future)
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function () {
+                enhancedSidebar.classList.toggle('show');
+            });
+        }
+
+        const trendCanvas = document.getElementById('gradeTrendChart');
+        if (trendCanvas && typeof Chart !== 'undefined') {
+            const courseLabels = [];
+            const courseAverages = [];
+
+            document.querySelectorAll('.grades-accordion .course-card').forEach(card => {
+                const title = card.querySelector('.course-name');
+                const grade = card.querySelector('.overall-grade');
+                if (title && grade) {
+                    courseLabels.push(title.textContent.trim());
+                    const numeric = parseFloat(grade.textContent);
+                    courseAverages.push(!isNaN(numeric) ? numeric : 0);
+                }
+            });
+
+            if (courseLabels.length) {
+                new Chart(trendCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: courseLabels,
+                        datasets: [{
+                            label: 'Average Grade (%)',
+                            data: courseAverages,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.18)',
+                            borderWidth: 3,
+                            tension: 0.35,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#2563eb',
+                            pointHoverRadius: 8,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { stepSize: 10, color: '#475569', font: { weight: 600 } },
+                                grid: { color: 'rgba(148, 163, 184, 0.35)', drawBorder: false }
+                            },
+                            x: {
+                                ticks: { color: '#475569', font: { weight: 600 } },
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleColor: '#f8fafc',
+                                bodyColor: '#e2e8f0',
+                                cornerRadius: 12,
+                                padding: 14
+                            }
+                        },
+                        animation: { duration: 1200, easing: 'easeOutQuart' }
+                    }
+                });
+            } else {
+                trendCanvas.insertAdjacentHTML('afterend', '<p class="analytics-subtle">Not enough data yet for a trend chart.</p>');
+            }
+        }
+
+        const breakdownBar = document.getElementById('categoryBreakdownBar');
+        const legend = document.getElementById('categoryLegend');
+        if (breakdownBar && legend) {
+            const colorPalette = ['#38bdf8', '#22c55e', '#f97316', '#a855f7', '#facc15', '#ef4444', '#14b8a6'];
+            let colorIndex = 0;
+            const totals = {};
+
+            document.querySelectorAll('.grade-item-card').forEach(card => {
+                const categoryLabel = card.querySelector('.grade-item-category');
+                const percentageText = card.querySelector('.grade-item-percentage');
+                if (!categoryLabel) {
+                    return;
+                }
+                const label = categoryLabel.textContent.trim();
+                if (!totals[label]) {
+                    totals[label] = { count: 0, sum: 0, color: colorPalette[colorIndex % colorPalette.length] };
+                    colorIndex++;
+                }
+                totals[label].count += 1;
+                if (percentageText) {
+                    const numeric = parseFloat(percentageText.textContent);
+                    totals[label].sum += isNaN(numeric) ? 0 : numeric;
+                }
+            });
+
+            const entries = Object.entries(totals);
+            if (entries.length) {
+                const totalItems = entries.reduce((acc, [, data]) => acc + data.count, 0);
+                entries.forEach(([label, data]) => {
+                    const flexValue = data.count / totalItems;
+                    const average = data.count ? Math.round(data.sum / data.count) : 0;
+
+                    const segment = document.createElement('div');
+                    segment.className = 'category-breakdown-segment';
+                    segment.style.flex = flexValue;
+                    segment.style.background = data.color;
+                    segment.dataset.label = `${label}: ${average}% (${data.count} items)`;
+                    breakdownBar.appendChild(segment);
+
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'category-legend-item';
+                    legendItem.innerHTML = `<span class="category-legend-color" style="background:${data.color}"></span>${label} • ${average}%`;
+                    legend.appendChild(legendItem);
+                });
+            } else {
+                breakdownBar.innerHTML = '<div style="flex:1; display:flex; align-items:center; justify-content:center; color:#64748b; font-weight:600;">No graded categories yet.</div>';
+            }
+        }
+
+        const popover = document.getElementById('gradePopover');
+        function showPopover(card) {
+            if (!popover) return;
+            const name = card.querySelector('.grade-item-name')?.textContent?.trim() || 'Grade Item';
+            const fraction = card.querySelector('.grade-item-fraction')?.textContent?.trim() || 'Score unavailable';
+            const feedback = card.querySelector('.grade-item-feedback')?.textContent?.trim() || 'No feedback yet.';
+            popover.innerHTML = `<strong>${name}</strong><div>${fraction}</div><div style="margin-top:6px; font-weight:500;">${feedback}</div>`;
+            popover.style.display = 'block';
+            popover.style.opacity = '0';
+
+            requestAnimationFrame(() => {
+                const rect = card.getBoundingClientRect();
+                const popRect = popover.getBoundingClientRect();
+                const top = window.scrollY + rect.top - popRect.height - 12;
+                const left = window.scrollX + rect.left + rect.width / 2 - popRect.width / 2;
+                popover.style.top = `${Math.max(window.scrollY + 10, top)}px`;
+                popover.style.left = `${Math.max(16, left)}px`;
+                popover.style.opacity = '1';
+            });
+        }
+        function hidePopover() {
+            if (popover) {
+                popover.style.display = 'none';
+                popover.style.opacity = '0';
+            }
+        }
+
+        // Add course card hover effects
+        const courseCards = document.querySelectorAll('.course-card');
+        courseCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-4px)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add grade item hover effects
+        const gradeItems = document.querySelectorAll('.grade-item-card');
+        gradeItems.forEach(item => {
+            item.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-3px)';
+                showPopover(this);
+            });
+
+            item.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+                hidePopover();
+            });
+        });
+
+        // Course selector filter
+        const courseSelect = document.getElementById('highschoolCourseSelect');
+        if (courseSelect) {
+            courseSelect.addEventListener('change', function () {
+                const target = this.value;
+                const cards = document.querySelectorAll('.grades-accordion .course-card');
+                cards.forEach(card => {
+                    if (target === 'all' || card.dataset.courseId === target) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (target !== 'all') {
+                    const targetCard = Array.from(cards).find(card => card.dataset.courseId === target);
+                    if (targetCard) {
+                        const collapse = targetCard.querySelector('.collapse');
+                        if (collapse && typeof bootstrap !== 'undefined') {
+                            new bootstrap.Collapse(collapse, { show: true });
+                        } else if (collapse) {
+                            collapse.classList.add('show');
+                        }
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        }
+
+        // Add grade filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                // Remove active class from all buttons
+                filterButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Filter courses based on grade range
+                const filter = this.textContent.toLowerCase();
+                const courseCards = document.querySelectorAll('.course-card');
+
+                courseCards.forEach(card => {
+                    const averageGrade = parseFloat(card.querySelector('.overall-grade').textContent);
+                    let show = true;
+
+                    if (filter === 'excellent' && averageGrade < 90) show = false;
+                    else if (filter === 'good' && (averageGrade < 80 || averageGrade >= 90)) show = false;
+                    else if (filter === 'average' && (averageGrade < 70 || averageGrade >= 80)) show = false;
+                    else if (filter === 'needs improvement' && averageGrade >= 70) show = false;
+
+                    card.style.display = show ? 'block' : 'none';
+                });
+            });
+        });
+
+        // Add grade search functionality
+        const searchInput = document.getElementById('gradeSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                const courseCards = document.querySelectorAll('.course-card');
+
+                courseCards.forEach(card => {
+                    const courseTitleElement = card.querySelector('.course-name');
+                    const courseTitle = courseTitleElement ? courseTitleElement.textContent.toLowerCase() : '';
+                    const gradeItems = card.querySelectorAll('.grade-item-name');
+                    let hasMatch = courseTitle.includes(searchTerm);
+
+                    if (!hasMatch) {
+                        gradeItems.forEach(item => {
+                            if (item.textContent.toLowerCase().includes(searchTerm)) {
+                                hasMatch = true;
+                            }
+                        });
+                    }
+
+                    card.style.display = hasMatch ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Ctrl/Cmd + F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                const searchInput = document.getElementById('gradeSearch');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+
+            // Escape to clear search
+            if (e.key === 'Escape') {
+                const searchInput = document.getElementById('gradeSearch');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            }
+        });
+
+        // Add grade trend indicators
+        function addTrendIndicators() {
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                const averageElement = card.querySelector('.overall-grade');
+                const courseHeader = card.querySelector('.course-card-header');
+                if (!averageElement || !courseHeader) {
+                    return;
+                }
+                const averageGrade = parseFloat(averageElement.textContent);
+
+                let trendClass = 'trend-stable';
+                let trendIcon = 'fa-minus';
+                let trendText = 'Stable';
+
+                if (averageGrade >= 90) {
+                    trendClass = 'trend-up';
+                    trendIcon = 'fa-arrow-up';
+                    trendText = 'Excellent';
+                } else if (averageGrade >= 80) {
+                    trendClass = 'trend-up';
+                    trendIcon = 'fa-arrow-up';
+                    trendText = 'Good';
+                } else if (averageGrade >= 70) {
+                    trendClass = 'trend-stable';
+                    trendIcon = 'fa-minus';
+                    trendText = 'Average';
+                } else {
+                    trendClass = 'trend-down';
+                    trendIcon = 'fa-arrow-down';
+                    trendText = 'Needs Improvement';
+                }
+
+                const trendIndicator = document.createElement('div');
+                trendIndicator.className = `grade-trend-indicator ${trendClass}`;
+                trendIndicator.innerHTML = `<i class="fa ${trendIcon}"></i> ${trendText}`;
+
+                courseHeader.appendChild(trendIndicator);
+            });
+        }
+
+        // Add progress rings for course averages
+        function addProgressRings() {
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                const averageElement = card.querySelector('.overall-grade');
+                const metricsContainer = card.querySelector('.course-card-metrics');
+                if (!averageElement || !metricsContainer) {
+                    return;
+                }
+                const averageGrade = parseFloat(averageElement.textContent);
+
+                const progressRing = document.createElement('div');
+                progressRing.className = 'grade-progress-ring';
+                progressRing.innerHTML = `
+                <svg width="60" height="60">
+                    <defs>
+                        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#7dd3fc;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="progress-ring-circle background" cx="30" cy="30" r="25"></circle>
+                    <circle class="progress-ring-circle progress" cx="30" cy="30" r="25" 
+                            style="stroke-dashoffset: ${157 - (157 * averageGrade / 100)}"></circle>
+                </svg>
+                <div class="progress-text">${averageGrade}%</div>
+            `;
+
+                metricsContainer.prepend(progressRing);
+            });
+        }
+
+        // Initialize enhanced features
+        setTimeout(() => {
+            addTrendIndicators();
+            addProgressRings();
+        }, 1000);
+
+        // Add grade distribution chart
+        function createGradeDistribution() {
+            const gradeItems = document.querySelectorAll('.grade-item-card');
+            const distribution = {};
+
+            gradeItems.forEach(item => {
+                const grade = item.dataset.letterGrade;
+                if (!grade || grade === '-') {
+                    return;
+                }
+                distribution[grade] = (distribution[grade] || 0) + 1;
+            });
+
+            const container = document.querySelector('.container-fluid');
+            if (Object.keys(distribution).length > 0) {
+                const distributionHTML = `
+                <div class="grade-distribution">
+                    <h3 style="grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; color: #1e293b;">Grade Distribution</h3>
+                    ${Object.entries(distribution).map(([grade, count]) => `
+                        <div class="distribution-item">
+                            <div class="distribution-grade">${grade}</div>
+                            <div class="distribution-count">${count} grades</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+                container.insertAdjacentHTML('beforeend', distributionHTML);
+            }
+        }
+
+        // Initialize grade distribution
+        setTimeout(createGradeDistribution, 1500);
+    });
+</script>

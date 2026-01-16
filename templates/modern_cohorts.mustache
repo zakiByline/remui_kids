@@ -1,0 +1,447 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    RemUI Kids - Modern Cohorts Management
+    @package theme_remui_kids
+    @copyright (c) 2025 Kodeit
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+{{!
+    @template theme_remui_kids/modern_cohorts
+
+    Modern cohorts management interface with enhanced UX.
+
+    Context variables required for this template:
+    * cohorts - array of cohort data
+    * total_cohorts - total number of cohorts
+    * can_manage - whether user can manage cohorts
+    * can_assign - whether user can assign cohorts
+}}
+
+<!-- Modern Cohorts Management Styles -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/modern-cohorts.css">
+
+<div class="modern-cohorts-container">
+    <!-- Header Section -->
+    <div class="cohorts-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title">
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    System Cohorts
+                </h1>
+                <p class="page-subtitle">Manage and organize student groups efficiently</p>
+            </div>
+            <div class="header-right">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">{{total_cohorts}}</span>
+                            <span class="stat-label">Total Cohorts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <div class="action-left">
+            <div class="search-box">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input type="text" id="cohort-search" placeholder="Search cohorts..." class="search-input">
+            </div>
+            <div class="filter-dropdown">
+                <button class="filter-btn">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                    Filters
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="action-right">
+            {{#can_manage}}
+            <button class="btn btn-primary" id="add-cohort-btn">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Add New Cohort
+            </button>
+            <button class="btn btn-secondary" id="upload-cohorts-btn">
+                <i class="fa fa-upload" aria-hidden="true"></i>
+                Upload Cohorts
+            </button>
+            {{/can_manage}}
+        </div>
+    </div>
+
+    <!-- Cohorts Table -->
+    <div class="cohorts-table-container">
+        <div class="table-header">
+            <div class="table-actions">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="select-all-cohorts">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="selected-count">0 selected</span>
+            </div>
+            <div class="table-controls">
+                <button class="control-btn" id="refresh-btn" title="Refresh">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+                <button class="control-btn" id="export-btn" title="Export">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="cohorts-table">
+            <div class="table-header-row">
+                <div class="col-checkbox">
+                    <input type="checkbox" id="header-checkbox">
+                </div>
+                <div class="col-name sortable" data-sort="name">
+                    Name <i class="fa fa-sort" aria-hidden="true"></i>
+                </div>
+                <div class="col-id sortable" data-sort="idnumber">
+                    Cohort ID <i class="fa fa-sort" aria-hidden="true"></i>
+                </div>
+                <div class="col-description">
+                    Description
+                </div>
+                <div class="col-size sortable" data-sort="size">
+                    Cohort Size <i class="fa fa-sort" aria-hidden="true"></i>
+                </div>
+                <div class="col-source sortable" data-sort="source">
+                    Source <i class="fa fa-sort" aria-hidden="true"></i>
+                </div>
+                <div class="col-actions">
+                    Actions
+                </div>
+            </div>
+
+            <div class="table-body">
+                {{#cohorts}}
+                <div class="table-row cohort-row" data-cohort-id="{{id}}">
+                    <div class="col-checkbox">
+                        <label class="checkbox-container">
+                            <input type="checkbox" class="cohort-checkbox" value="{{id}}">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="col-name">
+                        <div class="cohort-name">
+                            <span class="name-text">{{name}}</span>
+                            <button class="edit-name-btn" title="Edit name">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-id">
+                        <div class="cohort-id">
+                            <span class="id-text">{{idnumber}}</span>
+                            <button class="edit-id-btn" title="Edit ID">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-description">
+                        <span class="description-text">{{description}}</span>
+                    </div>
+                    <div class="col-size">
+                        <span class="size-badge">{{size}}</span>
+                    </div>
+                    <div class="col-source">
+                        <span class="source-badge">{{source}}</span>
+                    </div>
+                    <div class="col-actions">
+                        <div class="action-menu">
+                            <button class="action-btn" title="More actions">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            </button>
+                            <div class="action-dropdown">
+                                <a href="#" class="action-item" data-action="view">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    View Details
+                                </a>
+                                <a href="#" class="action-item" data-action="edit">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                    Edit Cohort
+                                </a>
+                                <a href="#" class="action-item" data-action="members">
+                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                    Manage Members
+                                </a>
+                                <a href="#" class="action-item" data-action="duplicate">
+                                    <i class="fa fa-copy" aria-hidden="true"></i>
+                                    Duplicate
+                                </a>
+                                <div class="action-divider"></div>
+                                <a href="#" class="action-item danger" data-action="delete">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    Delete Cohort
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/cohorts}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <div class="pagination-info">
+            <span>Showing 1-{{total_cohorts}} of {{total_cohorts}} cohorts</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="pagination-btn" disabled>
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <span class="pagination-page">1</span>
+            <button class="pagination-btn" disabled>
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="add-cohort-modal">
+        <div class="modal-header">
+            <h3>Add New Cohort</h3>
+            <button class="modal-close">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="add-cohort-form">
+                <div class="form-group">
+                    <label for="cohort-name">Cohort Name</label>
+                    <input type="text" id="cohort-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="cohort-idnumber">Cohort ID</label>
+                    <input type="text" id="cohort-idnumber" name="idnumber">
+                </div>
+                <div class="form-group">
+                    <label for="cohort-description">Description</label>
+                    <textarea id="cohort-description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="visible" checked>
+                        <span class="checkmark"></span>
+                        Make this cohort visible
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancel-cohort">Cancel</button>
+            <button class="btn btn-primary" id="save-cohort">Create Cohort</button>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize modern cohorts functionality
+    initModernCohorts();
+});
+
+function initModernCohorts() {
+    // Search functionality
+    const searchInput = document.getElementById('cohort-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.cohort-row');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.name-text').textContent.toLowerCase();
+                const id = row.querySelector('.id-text').textContent.toLowerCase();
+                const description = row.querySelector('.description-text').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || id.includes(searchTerm) || description.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Select all functionality
+    const selectAllCheckbox = document.getElementById('select-all-cohorts');
+    const cohortCheckboxes = document.querySelectorAll('.cohort-checkbox');
+    
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            cohortCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateSelectedCount();
+        });
+    }
+
+    // Individual checkbox change
+    cohortCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectedCount);
+    });
+
+    // Action menu functionality
+    const actionBtns = document.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.nextElementSibling;
+            const isOpen = dropdown.classList.contains('show');
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.action-dropdown').forEach(dd => {
+                dd.classList.remove('show');
+            });
+            
+            if (!isOpen) {
+                dropdown.classList.add('show');
+            }
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.action-dropdown').forEach(dd => {
+            dd.classList.remove('show');
+        });
+    });
+
+    // Modal functionality
+    const addCohortBtn = document.getElementById('add-cohort-btn');
+    const modal = document.getElementById('add-cohort-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.querySelector('.modal-close');
+    const cancelBtn = document.getElementById('cancel-cohort');
+
+    if (addCohortBtn && modal) {
+        addCohortBtn.addEventListener('click', function() {
+            modalOverlay.style.display = 'flex';
+        });
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeModal);
+    }
+
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    }
+
+    function closeModal() {
+        modalOverlay.style.display = 'none';
+    }
+
+    // Sort functionality
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const sortBy = this.dataset.sort;
+            const isAsc = this.classList.contains('sort-asc');
+            
+            // Remove sort classes from all headers
+            sortableHeaders.forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // Add sort class to current header
+            this.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+            
+            // Sort rows
+            sortTableRows(sortBy, !isAsc);
+        });
+    });
+
+    function sortTableRows(sortBy, ascending) {
+        const tbody = document.querySelector('.table-body');
+        const rows = Array.from(tbody.querySelectorAll('.cohort-row'));
+        
+        rows.sort((a, b) => {
+            let aValue, bValue;
+            
+            switch(sortBy) {
+                case 'name':
+                    aValue = a.querySelector('.name-text').textContent;
+                    bValue = b.querySelector('.name-text').textContent;
+                    break;
+                case 'idnumber':
+                    aValue = a.querySelector('.id-text').textContent;
+                    bValue = b.querySelector('.id-text').textContent;
+                    break;
+                case 'size':
+                    aValue = parseInt(a.querySelector('.size-badge').textContent);
+                    bValue = parseInt(b.querySelector('.size-badge').textContent);
+                    break;
+                case 'source':
+                    aValue = a.querySelector('.source-badge').textContent;
+                    bValue = b.querySelector('.source-badge').textContent;
+                    break;
+                default:
+                    return 0;
+            }
+            
+            if (typeof aValue === 'string') {
+                return ascending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            } else {
+                return ascending ? aValue - bValue : bValue - aValue;
+            }
+        });
+        
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    function updateSelectedCount() {
+        const selectedCheckboxes = document.querySelectorAll('.cohort-checkbox:checked');
+        const count = selectedCheckboxes.length;
+        const selectedCountElement = document.querySelector('.selected-count');
+        
+        if (selectedCountElement) {
+            selectedCountElement.textContent = `${count} selected`;
+        }
+    }
+}
+{{/js}}
+
+
+
+
+
+
+
+
+

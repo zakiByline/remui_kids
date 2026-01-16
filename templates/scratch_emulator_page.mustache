@@ -1,0 +1,827 @@
+{{!
+    Scratch Emulator Page Template
+    A global Scratch emulator accessible from all dashboards
+}}
+
+{{> theme_remui_kids/common_start}}
+
+<!-- Ensure favicon is preserved -->
+<link rel="icon" type="image/x-icon" href="{{config.wwwroot}}/theme/remui_kids/pix/favicon.ico">
+
+<style>
+/* Enhanced Elementary Sidebar Styles */
+.enhanced-elementary-sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%) !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.enhanced-elementary-sidebar .sidebar-nav {
+    padding: 1.5rem 0 !important;
+}
+
+.enhanced-elementary-sidebar .nav-section {
+    margin-bottom: 2rem !important;
+}
+
+.enhanced-elementary-sidebar .section-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #666666 !important;
+    margin-bottom: 1rem !important;
+    padding: 0 1.5rem !important;
+}
+
+.enhanced-elementary-sidebar .section-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+}
+
+.enhanced-elementary-sidebar .section-bullet.blue {
+    background: #3b82f6 !important;
+}
+
+.enhanced-elementary-sidebar .section-bullet.green {
+    background: #10b981 !important;
+}
+
+.enhanced-elementary-sidebar .section-bullet.orange {
+    background: #f59e0b !important;
+}
+
+.enhanced-elementary-sidebar .section-bullet.purple {
+    background: #8b5cf6 !important;
+}
+
+.enhanced-elementary-sidebar .nav-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.enhanced-elementary-sidebar .nav-item {
+    margin: 0 !important;
+}
+
+.enhanced-elementary-sidebar .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem 1.5rem !important;
+    color: #666666 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    border-radius: 0 25px 25px 0 !important;
+    margin-right: 1rem !important;
+}
+
+.enhanced-elementary-sidebar .nav-link:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+}
+
+.enhanced-elementary-sidebar .nav-link.active {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+.enhanced-elementary-sidebar .nav-link i {
+    width: 20px !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+}
+
+.enhanced-elementary-sidebar .quick-actions-container {
+    padding: 0 1rem !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-card {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-card.active {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+    color: white !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-card.active .quick-action-content h4,
+.enhanced-elementary-sidebar .quick-action-card.active .quick-action-content p {
+    color: white !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-size: 1.2rem !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-card.scratch-editor-card .quick-action-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-content {
+    flex: 1 !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-content h4 {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 0 0.25rem 0 !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-content p {
+    font-size: 0.75rem !important;
+    color: #6b7280 !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+.enhanced-elementary-sidebar .quick-action-arrow {
+    color: #9ca3af !important;
+    font-size: 0.9rem !important;
+}
+
+/* Scratch Emulator Page Styles */
+.scratch-emulator-page .scratch-emulator-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    min-height: calc(100vh - 80px) !important;
+    background: #ffffff !important;
+    margin-top: 80px !important;
+}
+
+/* Ensure proper spacing with sidebar */
+{{#show_middle_sidebar}}
+.scratch-emulator-page .scratch-emulator-content {
+    margin-left: 280px !important;
+    margin-top: 80px !important;
+}
+{{/show_middle_sidebar}}
+
+.scratch-emulator-header {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    color: white !important;
+    padding: 1.5rem 2rem !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2) !important;
+}
+
+.scratch-header-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    max-width: 100% !important;
+}
+
+.scratch-title-section {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.scratch-icon-container {
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+}
+
+.scratch-title {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+
+.scratch-subtitle {
+    font-size: 0.9rem !important;
+    opacity: 0.9 !important;
+    margin: 0.25rem 0 0 0 !important;
+}
+
+.scratch-actions {
+    display: flex !important;
+    gap: 1rem !important;
+}
+
+.scratch-action-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.scratch-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.scratch-emulator-container {
+    height: calc(100vh - 100px) !important;
+    width: 100% !important;
+    position: relative !important;
+    background: #f5f5f5 !important;
+}
+
+.scratch-iframe-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+}
+
+.scratch-iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+}
+
+.scratch-loading {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    text-align: center !important;
+}
+
+.scratch-loading-spinner {
+    width: 60px !important;
+    height: 60px !important;
+    border: 5px solid #f3f3f3 !important;
+    border-top: 5px solid #8b5cf6 !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+    margin: 0 auto 1rem !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.scratch-loading-text {
+    color: #666 !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+.scratch-alternative {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    padding: 2rem !important;
+}
+
+.scratch-alt-content {
+    background: white !important;
+    border-radius: 16px !important;
+    padding: 3rem 2rem !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.scratch-alt-content h3 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin: 1rem 0 !important;
+}
+
+.scratch-alt-content p {
+    color: #6b7280 !important;
+    font-size: 1rem !important;
+    margin: 1rem 0 !important;
+}
+
+.scratch-open-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+    color: white !important;
+    border: none !important;
+    padding: 1rem 2rem !important;
+    border-radius: 12px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-top: 1.5rem !important;
+}
+
+.scratch-open-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+/* Project Selector */
+.scratch-project-selector {
+    padding: 1rem 2rem !important;
+    background: white !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.scratch-project-selector label {
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin: 0 !important;
+}
+
+.scratch-project-selector select {
+    flex: 1 !important;
+    max-width: 400px !important;
+    padding: 0.5rem 1rem !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+    background: white !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.scratch-project-selector select:focus {
+    outline: none !important;
+    border-color: #8b5cf6 !important;
+}
+
+.scratch-project-selector button {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.scratch-project-selector button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .scratch-emulator-page .scratch-emulator-content {
+        margin-left: 0 !important;
+    }
+    
+    .scratch-header-content {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+    
+    .scratch-actions {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .scratch-project-selector {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .scratch-project-selector select {
+        max-width: 100% !important;
+    }
+}
+
+/* Hide default navbar */
+{{#hide_default_navbar}}
+.navbar,
+.navbar-expand-lg,
+.navbar-nav {
+    display: none !important;
+}
+
+#page,
+#page-wrapper {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+{{/hide_default_navbar}}
+</style>
+
+<div class="scratch-emulator-page">
+    {{#show_middle_sidebar}}
+    <!-- Include G4G7 Sidebar for Grade 4-7 Students -->
+    {{> theme_remui_kids/g4g7_sidebar}}
+    {{/show_middle_sidebar}}
+    
+    {{#show_elementary_sidebar}}
+    <!-- Sidebar removed - using default Moodle sidebar -->
+    <div class="student-sidebar enhanced-elementary-sidebar" style="display: none;">
+        <nav class="sidebar-nav">
+            
+            <!-- DASHBOARD Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet blue"></span>
+                    DASHBOARD
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{dashboardurl}}}" class="nav-link dashboard-link">
+                            <i class="fa fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{mycoursesurl}}}" class="nav-link mycourses-link">
+                            <i class="fa fa-book-open"></i>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{lessonsurl}}}" class="nav-link">
+                            <i class="fa fa-play-circle"></i>
+                            <span>Lessons</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{activitiesurl}}}" class="nav-link">
+                            <i class="fa fa-chart-line"></i>
+                            <span>Activities</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{achievementsurl}}}" class="nav-link">
+                            <i class="fa fa-trophy"></i>
+                            <span>Achievements</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{competenciesurl}}}" class="nav-link">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Competencies</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{{scheduleurl}}}" class="nav-link">
+                            <i class="fa fa-calendar"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- TOOLS & RESOURCES Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet green"></span>
+                    TOOLS & RESOURCES
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{treeviewurl}}}" class="nav-link">
+                            <i class="fa fa-sitemap"></i>
+                            <span>Tree View</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- SETTINGS & PROFILE Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet orange"></span>
+                    SETTINGS & PROFILE
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{{settingsurl}}}" class="nav-link settings-link">
+                            <i class="fa fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- QUICK ACTIONS Section -->
+            <div class="nav-section">
+                <div class="section-title">
+                    <span class="section-bullet purple"></span>
+                    QUICK ACTIONS
+                </div>
+                <div class="quick-actions-container">
+                    <div class="quick-action-card ebooks-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>E-books</h4>
+                            <p>Access digital learning materials</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card ask-teacher-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Ask Teacher</h4>
+                            <p>Get help from your instructor</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card code-editor-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-desktop"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Code Editor</h4>
+                            <p>Write and run JavaScript code</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-action-card share-class-card">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-share-alt"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Share with Class</h4>
+                            <p>Collaborate with classmates</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <a href="{{{scratchemulatorurl}}}" class="quick-action-card scratch-editor-card {{#is_scratch_active}}active{{/is_scratch_active}}">
+                        <div class="quick-action-icon">
+                            <i class="fa fa-play"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Scratch Editor</h4>
+                            <p>Create interactive projects</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {{/show_elementary_sidebar}}
+
+    <!-- Scratch Emulator Content -->
+    <div class="scratch-emulator-content" {{#show_middle_sidebar}}style="margin-left: 280px;"{{/show_middle_sidebar}}>
+        <!-- Header -->
+        <div class="scratch-emulator-header">
+            <div class="scratch-header-content">
+                <div class="scratch-title-section">
+                    <div class="scratch-icon-container">
+                        <i class="fa fa-play"></i>
+                    </div>
+                    <div>
+                        <h1 class="scratch-title">Scratch Editor</h1>
+                        <p class="scratch-subtitle">Create amazing interactive stories, games, and animations!</p>
+                    </div>
+                </div>
+                <div class="scratch-actions">
+                    <button class="scratch-action-btn" id="save-project-btn">
+                        <i class="fa fa-save"></i>
+                        Save Project
+                    </button>
+                    <button class="scratch-action-btn" id="share-project-btn">
+                        <i class="fa fa-share-alt"></i>
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Selector -->
+        <div class="scratch-project-selector">
+            <label for="project-select">
+                <i class="fa fa-folder-open"></i>
+                Select Project:
+            </label>
+            <select id="project-select">
+                <option value="new">New Project</option>
+                <option value="example1">Example: Animation</option>
+                <option value="example2">Example: Simple Game</option>
+                <option value="example3">Example: Interactive Story</option>
+            </select>
+            <button id="load-project-btn">
+                <i class="fa fa-folder-open"></i>
+                Load Project
+            </button>
+        </div>
+
+        <!-- Emulator Container -->
+        <div class="scratch-emulator-container">
+            <div class="scratch-iframe-wrapper">
+                <!-- Loading State -->
+                <div class="scratch-loading" id="scratch-loading">
+                    <div class="scratch-loading-spinner"></div>
+                    <div class="scratch-loading-text">Loading Scratch Editor...</div>
+                </div>
+                
+                <!-- Scratch Iframe - Using Local Scratch GUI -->
+                <iframe 
+                    id="scratch-iframe"
+                    class="scratch-iframe" 
+                    src="{{config.wwwroot}}/theme/remui_kids/scratch-gui-develop/scratch-gui-develop/build/index.html"
+                    allowtransparency="true"
+                    allow="camera; microphone; fullscreen"
+                    allowfullscreen
+                    style="display: none;">
+                </iframe>
+                
+                <!-- Alternative: Direct Link to Scratch -->
+                <div class="scratch-alternative" id="scratch-alternative" style="display: none;">
+                    <div class="scratch-alt-content">
+                        <i class="fa fa-exclamation-circle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 1rem;"></i>
+                        <h3>Scratch Editor Setup Required</h3>
+                        <p>The local Scratch editor needs to be built before it can be used.</p>
+                        <div style="background: #f3f4f6; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: left;">
+                            <h4 style="margin: 0 0 1rem 0; color: #1f2937;">Build Instructions:</h4>
+                            <ol style="margin: 0; padding-left: 1.5rem; color: #6b7280; line-height: 1.8;">
+                                <li>Open terminal in: <code style="background: #e5e7eb; padding: 0.2rem 0.5rem; border-radius: 4px;">theme/remui_kids/scratch-gui-develop/scratch-gui-develop</code></li>
+                                <li>Run: <code style="background: #e5e7eb; padding: 0.2rem 0.5rem; border-radius: 4px;">npm install</code></li>
+                                <li>Run: <code style="background: #e5e7eb; padding: 0.2rem 0.5rem; border-radius: 4px;">npm run build</code></li>
+                                <li>Refresh this page after build completes</li>
+                            </ol>
+                        </div>
+                        <div style="margin-top: 2rem;">
+                            <p style="font-size: 0.9rem; color: #666;">
+                                <strong>Alternative:</strong> Use the official Scratch editor while building
+                            </p>
+                            <a href="https://scratch.mit.edu/projects/editor/" target="_blank" class="scratch-open-btn">
+                                <i class="fa fa-external-link-alt"></i>
+                                Open Scratch.mit.edu
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Scratch Emulator JavaScript
+(function() {
+    'use strict';
+    
+    // Wait for iframe to load
+    const scratchIframe = document.getElementById('scratch-iframe');
+    const loadingElement = document.getElementById('scratch-loading');
+    const alternativeElement = document.getElementById('scratch-alternative');
+    let iframeLoaded = false;
+    
+    if (scratchIframe) {
+        // Try to load TurboWarp first
+        scratchIframe.addEventListener('load', function() {
+            // Hide loading, show iframe
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+            scratchIframe.style.display = 'block';
+            iframeLoaded = true;
+        });
+        
+        // If iframe fails to load after 5 seconds, show alternative
+        setTimeout(function() {
+            if (!iframeLoaded) {
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                if (alternativeElement) {
+                    alternativeElement.style.display = 'block';
+                }
+            }
+        }, 5000);
+    }
+    
+    // Get base URL for local Scratch GUI
+    const baseUrl = window.location.origin + '{{config.wwwroot}}/theme/remui_kids/scratch-gui-develop/scratch-gui-develop/build/';
+    
+    // Update iframe src to use local Scratch GUI
+    if (scratchIframe) {
+        scratchIframe.src = baseUrl + 'index.html';
+    }
+    
+    // Project selector functionality - Note: For local Scratch GUI, project loading works differently
+    const projectSelect = document.getElementById('project-select');
+    const loadProjectBtn = document.getElementById('load-project-btn');
+    
+    if (loadProjectBtn && projectSelect) {
+        loadProjectBtn.addEventListener('click', function() {
+            const selectedProject = projectSelect.value;
+            
+            // Show loading
+            if (loadingElement) {
+                loadingElement.style.display = 'block';
+            }
+            scratchIframe.style.display = 'none';
+            if (alternativeElement) {
+                alternativeElement.style.display = 'none';
+            }
+            
+            // For local Scratch GUI, we reload the editor
+            // Note: Local Scratch GUI doesn't support URL parameters for loading specific projects
+            // Users will need to load projects manually through the File menu
+            let scratchUrl = baseUrl + 'index.html';
+            
+            scratchIframe.src = scratchUrl;
+            
+            setTimeout(function() {
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                scratchIframe.style.display = 'block';
+                
+                // Inform user about manual loading
+                if (selectedProject !== 'new') {
+                    alert('Local Scratch editor loaded! To load example projects:\n1. Click "File" menu in the editor\n2. Choose "Load from your computer"\n3. Select a .sb3 project file');
+                }
+            }, 2000);
+        });
+    }
+    
+    // Save project functionality
+    const saveProjectBtn = document.getElementById('save-project-btn');
+    if (saveProjectBtn) {
+        saveProjectBtn.addEventListener('click', function() {
+            alert('Your project is automatically saved in your browser. To save permanently, click "File" > "Save to computer" in the editor.');
+        });
+    }
+    
+    // Share project functionality
+    const shareProjectBtn = document.getElementById('share-project-btn');
+    if (shareProjectBtn) {
+        shareProjectBtn.addEventListener('click', function() {
+            alert('To share your project:\n1. Click "File" > "Save to computer" to download\n2. Upload to scratch.mit.edu to share with others');
+        });
+    }
+    
+})();
+</script>
+
+{{> theme_remui_kids/common_end}}
+

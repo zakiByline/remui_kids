@@ -1,0 +1,215 @@
+/* Modal and Enhanced Competencies Styles */
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Content */
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #e74c3c;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 30px;
+}
+
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.modal-table thead {
+    background: #f8f9fa;
+}
+
+.modal-table th,
+.modal-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-table th {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.modal-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.detail-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e3f2fd;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+}
+
+/* Button Styles */
+.btn-view-details {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.btn-view-details:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-view-details i {
+    margin-right: 5px;
+}
+
+/* Badge Styles */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.badge-info {
+    background: #3498db;
+    color: white;
+}
+
+/* Clickable Rows */
+.clickable-rows tbody tr {
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.clickable-rows tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Enhanced Chart Container */
+.chart-container {
+    position: relative;
+    height: 400px;
+    padding: 20px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

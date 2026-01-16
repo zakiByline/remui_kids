@@ -1,0 +1,1855 @@
+<link rel="stylesheet" href="{{config.wwwroot}}/theme/remui_kids/style/teacher_reports.css">
+
+<div class="teacher-dashboard-wrapper">
+    {{{sidebar_html}}}
+    <div class="teacher-main-content">
+        <div class="teacher-reports-page">
+            <div class="teacher-reports-wrapper">
+                <div class="reports-hero">
+                    <div class="reports-hero-header">
+                        <div class="reports-hero-copy">
+                            <h1>Insights & Reports</h1>
+                            <p>Track competencies, students, and course health with classroom-ready visuals.</p>
+                        </div>
+                        {{#has_courses}}
+                        <form class="reports-course-selector" method="get" action="{{course_select_action}}">
+                            <label for="reportsCourseSelect"><i class="fa fa-graduation-cap"></i> Select course</label>
+                            <select id="reportsCourseSelect" name="courseid" onchange="this.form.submit()">
+                                <option value="0">Choose a course...</option>
+                                {{#courses}}
+                                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                                {{/courses}}
+                            </select>
+                        </form>
+                        {{/has_courses}}
+                    </div>
+                    {{^has_courses}}
+                    <div class="empty-state">
+                        <p><strong>You are not assigned to any courses yet.</strong></p>
+                        <p>Once you are added as a teacher, course analytics will appear here.</p>
+                    </div>
+                    {{/has_courses}}
+                </div>
+
+                {{#has_course_selected}}
+                <div class="reports-highlight-grid">
+                    <div class="reports-highlight-card">
+                        <div class="highlight-card-header">
+                            <span class="label">Class proficiency</span>
+                            <span class="card-icon icon-proficiency"><i class="fa fa-chart-line"></i></span>
+                        </div>
+                        <span class="value">{{report.stats.classproficiency}}%</span>
+                        <span class="meta">Average competency mastery</span>
+                    </div>
+                    <div class="reports-highlight-card">
+                        <div class="highlight-card-header">
+                            <span class="label">Students</span>
+                            <span class="card-icon icon-students"><i class="fa fa-user-graduate"></i></span>
+                        </div>
+                        <span class="value">{{report.stats.studentcount}}</span>
+                        <span class="meta">Enrolled learners</span>
+                    </div>
+                    <div class="reports-highlight-card">
+                        <div class="highlight-card-header">
+                            <span class="label">Competencies</span>
+                            <span class="card-icon icon-competencies"><i class="fa fa-sitemap"></i></span>
+                        </div>
+                        <span class="value">{{report.stats.competencycount}}</span>
+                        <span class="meta">Main competencies linked to this course</span>
+                    </div>
+                    {{#report.best_student}}
+                    <div class="reports-highlight-card">
+                        <div class="highlight-card-header">
+                            <span class="label">Top performer</span>
+                            <span class="card-icon icon-top-performer"><i class="fa fa-trophy"></i></span>
+                        </div>
+                        <span class="value">{{competent_percent}}%</span>
+                        <span class="meta">{{fullname}}</span>
+                    </div>
+                    {{/report.best_student}}
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="reports-tabs">
+                    <div class="reports-tab-nav">
+                        <button type="button" class="reports-tab-button active" onclick="showReportsTab('overview')">
+                            <i class="fa fa-dashboard"></i>
+                            Overview
+                        </button>
+                        <button type="button" class="reports-tab-button" onclick="showReportsTab('assignments')">
+                            <i class="fa fa-file-text-o"></i>
+                            Assignments
+                        </button>
+                        <button type="button" class="reports-tab-button" onclick="showReportsTab('quizzes')">
+                            <i class="fa fa-question-circle"></i>
+                            Quizzes
+                        </button>
+                        <button type="button" class="reports-tab-button" onclick="showReportsTab('competencies')">
+                            <i class="fa fa-trophy"></i>
+                            Competencies
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="reports-tab-content">
+                    <!-- Overview Tab -->
+                    <div id="overview-tab" class="reports-tab-panel active">
+                        {{#report.stats}}
+                        {{#report.grade_overview}}
+                        <div class="overview-analytics-grid">
+                            {{#assignments}}
+                            <div class="analytics-card assignments-card">
+                                <div class="analytics-card-header">
+                                    <div>
+                                        <p class="analytics-label">Average assignment grade</p>
+                                        {{#has_grades}}
+                                        <h3>{{average_grade}}%</h3>
+                                        {{/has_grades}}
+                                        {{^has_grades}}
+                                        <h3 class="muted">Awaiting grades</h3>
+                                        {{/has_grades}}
+                                    </div>
+                                    <span class="analytics-pill">{{grade_count}} grades</span>
+                                </div>
+                                <p class="analytics-meta">{{item_count}} assignments in this course</p>
+                                <div class="analytics-progress secondary">
+                                    <span class="analytics-progress-fill" style="width: {{average_grade_value}}%;"></span>
+                                </div>
+                            </div>
+                            {{/assignments}}
+                            {{#quizzes}}
+                            <div class="analytics-card quiz-card">
+                                <div class="analytics-card-header">
+                                    <div>
+                                        <p class="analytics-label">Average quiz grade</p>
+                                        {{#has_grades}}
+                                        <h3>{{average_grade}}%</h3>
+                                        {{/has_grades}}
+                                        {{^has_grades}}
+                                        <h3 class="muted">Awaiting grades</h3>
+                                        {{/has_grades}}
+                                    </div>
+                                    <span class="analytics-pill">{{grade_count}} grades</span>
+                                </div>
+                                <p class="analytics-meta">{{item_count}} quizzes in this course</p>
+                                <div class="analytics-progress secondary">
+                                    <span class="analytics-progress-fill" style="width: {{average_grade_value}}%;"></span>
+                                </div>
+                            </div>
+                            {{/quizzes}}
+                        </div>
+                        {{/report.grade_overview}}
+
+                        
+                        <div class="section-card competency-overview-card">
+                            <div class="section-header">
+                                <h2>Competency Pulse</h2>
+                                <small>Mastery and linked activities for key competencies</small>
+                            </div>
+                            {{#report.has_overview_competencies}}
+                            <div class="competency-overview-list">
+                                {{#report.overview_competencies}}
+                                <div class="competency-overview-row">
+                                    <div class="competency-overview-info">
+                                        <div class="competency-name">{{name}}</div>
+                                        <div class="competency-meta">{{evidence_count}} linked activities</div>
+                                    </div>
+                                    <div class="competency-overview-progress">
+                                        <div class="competency-progress-bar">
+                                            <span style="width: {{progress_percent}}%;"></span>
+                                        </div>
+                                        <div class="competency-progress-value">{{progress_percent}}%</div>
+                                    </div>
+                                </div>
+                                {{/report.overview_competencies}}
+                            </div>
+                            {{/report.has_overview_competencies}}
+                            {{^report.has_overview_competencies}}
+                            <div class="empty-state small">
+                                <p>No competencies available for this course yet.</p>
+                            </div>
+                            {{/report.has_overview_competencies}}
+                        </div>
+
+                        {{#overview_best_students.has_data}}
+                        <div class="section-card best-students-section">
+                            <div class="section-header-best-students">
+                                <div class="students-title-group">
+                                    <h2 class="students-section-title">
+                                        Best Performing Students
+                                    </h2>
+                                </div>
+                                <p class="students-subtitle">Top performers based on grades, competencies, assignments, and quizzes</p>
+                            </div>
+                            <div class="best-students-list">
+                                {{#overview_best_students.students}}
+                                <a href="{{profile_url}}" class="student-performance-row {{#rank_is_1}}leader-row{{/rank_is_1}}">
+                                    <div class="rank-badge">{{rank}}</div>
+                                    <div class="student-info-compact">
+                                        <div class="student-avatar-small">
+                                            <img src="{{avatar_url}}" alt="{{fullname}}" onerror="this.src='{{config.wwwroot}}/user/pix.php/1/f1.jpg'">
+                                        </div>
+                                        <div class="student-details-compact">
+                                            <h3 class="student-name-compact">{{fullname}}</h3>
+                                            <div class="student-email-compact">{{email}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="student-metrics-simple">
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Grade</span>
+                                            <span class="metric-simple-value">{{grade_average}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Competency</span>
+                                            <span class="metric-simple-value">{{competency_rate}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Assignments</span>
+                                            <span class="metric-simple-value">{{assignment_rate}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Quizzes</span>
+                                            <span class="metric-simple-value">{{quiz_average}}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <span class="score-pill-value">{{performance_score}}</span>
+                                        <span class="score-pill-label">Score</span>
+                                    </div>
+                                </a>
+                                {{/overview_best_students.students}}
+                            </div>
+                        </div>
+                        {{/overview_best_students.has_data}}
+
+                        {{#overview_worst_students.has_data}}
+                        <div class="section-card best-students-section needs-support-section">
+                            <div class="section-header-best-students">
+                                <div class="students-title-group">
+                                    <h2 class="students-section-title">
+                                        Students Requiring Help
+                                    </h2>
+                                </div>
+                                <p class="students-subtitle">Learners with the lowest performance indicators</p>
+                            </div>
+                            <div class="best-students-list">
+                                {{#overview_worst_students.students}}
+                                <a href="{{profile_url}}" class="student-performance-row {{#rank_is_1}}leader-row{{/rank_is_1}}">
+                                    <div class="rank-badge">{{rank}}</div>
+                                    <div class="student-info-compact">
+                                        <div class="student-avatar-small">
+                                            <img src="{{avatar_url}}" alt="{{fullname}}" onerror="this.src='{{config.wwwroot}}/user/pix.php/1/f1.jpg'">
+                                        </div>
+                                        <div class="student-details-compact">
+                                            <h3 class="student-name-compact">{{fullname}}</h3>
+                                            <div class="student-email-compact">{{email}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="student-metrics-simple">
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Grade</span>
+                                            <span class="metric-simple-value">{{grade_average}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Competency</span>
+                                            <span class="metric-simple-value">{{competency_rate}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Assignments</span>
+                                            <span class="metric-simple-value">{{assignment_rate}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Quizzes</span>
+                                            <span class="metric-simple-value">{{quiz_average}}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <span class="score-pill-value">{{performance_score}}</span>
+                                        <span class="score-pill-label">Score</span>
+                                    </div>
+                                </a>
+                                {{/overview_worst_students.students}}
+                            </div>
+                        </div>
+                        {{/overview_worst_students.has_data}}
+
+                        {{#report.has_recent_performance}}
+                        <div class="recent-performance-grid">
+                            {{#report.recent_assignment_performance.has_data}}
+                            <div class="section-card performance-chart-card">
+                                <div class="section-header">
+                                    <h2>Assignment Performance</h2>
+                                    <small>Average scores across the previous five assignments</small>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="assignmentTrendChart"></canvas>
+                                </div>
+                            </div>
+                            {{/report.recent_assignment_performance.has_data}}
+
+                            {{#report.recent_quiz_performance.has_data}}
+                            <div class="section-card performance-chart-card">
+                                <div class="section-header">
+                                    <h2>Quiz Performance</h2>
+                                    <small>Average scores across the previous five quizzes</small>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="quizTrendChart"></canvas>
+                                </div>
+                            </div>
+                            {{/report.recent_quiz_performance.has_data}}
+                        </div>
+                        {{/report.has_recent_performance}}
+
+                        {{#report.activity_overview.has_data}}
+                            <div class="section-card course-activity-section">
+                            <div class="section-header">
+                                <h2>Course Activity Snapshot</h2>
+                                <small>Resources and experiences available for this cohort</small>
+                            </div>
+                            <div class="course-activity-grid">
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon scorm-card">
+                                        <i class="fa fa-puzzle-piece"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">SCORM Modules</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.scorm_modules}}</h3>
+                                        <span class="activity-card-meta">{{report.activity_overview.scorm_attempts}} total attempts logged</span>
+                                    </div>
+                                </div>
+                                {{#report.activity_overview.has_scorm_time}}
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon scorm-card">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">Avg SCORM Session</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.scorm_avg_time_display}}</h3>
+                                        <span class="activity-card-meta">Typical time inside interactive packages</span>
+                                    </div>
+                                </div>
+                                {{/report.activity_overview.has_scorm_time}}
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon video-card">
+                                        <i class="fa fa-video-camera"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">Video Activities</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.video_activities}}</h3>
+                                        <span class="activity-card-meta">{{report.activity_overview.video_views}} recorded plays</span>
+                                    </div>
+                                </div>
+                                {{#report.activity_overview.has_video_time}}
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon video-card">
+                                        <i class="fa fa-hourglass-half"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">Avg Watch Time</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.video_avg_time_display}}</h3>
+                                        <span class="activity-card-meta">Across recorded video sessions</span>
+                                    </div>
+                                </div>
+                                {{/report.activity_overview.has_video_time}}
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon resource-card">
+                                        <i class="fa fa-file-text-o"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">Assignments</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.resource_counts.assignments}}</h3>
+                                        <span class="activity-card-meta">Active submission touchpoints</span>
+                                    </div>
+                                </div>
+                                <div class="course-activity-card">
+                                    <div class="activity-card-icon resource-card">
+                                        <i class="fa fa-question-circle"></i>
+                                    </div>
+                                    <div class="activity-card-content">
+                                        <p class="activity-card-label">Quizzes</p>
+                                        <h3 class="activity-card-value">{{report.activity_overview.resource_counts.quizzes}}</h3>
+                                        <span class="activity-card-meta">Knowledge checks configured</span>
+                                    </div>
+                                </div>                             
+                            </div>
+                        </div>
+                        {{/report.activity_overview.has_data}}
+                        {{/report.stats}}
+                        {{^report.stats}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Overview</h2>
+                                <small>Summary of course performance and engagement</small>
+                            </div>
+                            <div class="empty-state">
+                                <p>No data available for this course.</p>
+                            </div>
+                        </div>
+                        {{/report.stats}}
+                    </div>
+
+                    <!-- Assignments Tab -->
+                    <div id="assignments-tab" class="reports-tab-panel">
+                        {{#assignment_data.has_data}}
+                        <!-- Assignment Summary Cards -->
+                        <div class="assignment-summary-grid">
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Total Assignments</p>
+                                    <h3 class="summary-card-value">{{assignment_data.total_count}}</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-check-circle"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Avg Submission Rate</p>
+                                    <h3 class="summary-card-value">{{assignment_data.avg_submission_rate}}%</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Avg Grade</p>
+                                    <h3 class="summary-card-value">{{assignment_data.avg_grade}}%</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">On-Time Rate</p>
+                                    <h3 class="summary-card-value">{{assignment_data.avg_ontime_rate}}%</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Average Grade and Timeliness Charts Row -->
+                        <div class="assignment-charts-row">
+                            <!-- Average Grade Chart -->
+                            <div class="section-card performance-chart-card chart-70">
+                                <div class="section-header">
+                                    <h2>Average Grade by Assignment</h2>
+                                    <small>Performance across all assignments in this course</small>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="assignmentGradeChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- On-Time vs Late Submissions Doughnut Chart -->
+                            <div class="section-card performance-chart-card chart-30">
+                                <div class="section-header">
+                                    <h2>On-Time vs Late Submissions</h2>
+                                    <small>Overall breakdown of submission timeliness</small>
+                                </div>
+                                <div class="chart-wrapper pie-chart-wrapper">
+                                    <canvas id="assignmentTimelinessChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Assignment Submissions -->
+                        <div class="section-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <span>Recent Assignment Submissions</span>
+                                </div>
+                                <a href="{{config.wwwroot}}/theme/remui_kids/teacher/assignments.php" class="btn-link">View All</a>
+                            </div>
+                            <div class="card-content">
+                                {{#recent_assignment_submissions}}
+                                <div class="recent-submissions-list">
+                                    {{#submissions}}
+                                    <a href="{{config.wwwroot}}/theme/remui_kids/teacher/grade_assignment.php?id={{assignment_id}}" class="submission-item">
+                                        <div class="submission-avatar">
+                                            <img src="{{student_avatar}}" alt="{{student_name}}" onerror="this.style.display='none'">
+                                        </div>
+                                        <div class="submission-details">
+                                            <div class="submission-header">
+                                                <strong class="student-name">{{student_name}}</strong>
+                                                {{#is_graded}}
+                                                <span class="submission-badge {{status_class}}">{{grade_percentage}}%</span>
+                                                {{/is_graded}}
+                                                {{^is_graded}}
+                                                <span class="submission-badge {{status_class}}">{{status}}</span>
+                                                {{/is_graded}}
+                                                <span class="submission-time-inline">
+                                                    <i class="fa fa-clock"></i>{{time_ago}}
+                                                </span>
+                                            </div>
+                                            <div class="submission-info">
+                                                <span class="assignment-name">{{assignment_name}}</span>
+                                                <span class="course-separator">•</span>
+                                                <span class="course-name">{{course_fullname}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="submission-arrow">
+                                            <i class="fa fa-chevron-right"></i>
+                                        </div>
+                                    </a>
+                                    {{/submissions}}
+                                </div>
+                                {{/recent_assignment_submissions}}
+                                {{^recent_assignment_submissions}}
+                                <div class="empty-state">
+                                    <i class="fa fa-inbox"></i>
+                                    <p>No recent assignment submissions</p>
+                                </div>
+                                {{/recent_assignment_submissions}}
+                            </div>
+                        </div>
+
+                        <!-- Top Performing Students in Assignments -->
+                        {{#top_assignment_students.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Top Performing Students in Assignments</h2>
+                                <small>Students with the best overall assignment grades in this course</small>
+                            </div>
+                            <div class="best-students-list">
+                                {{#top_assignment_students.students}}
+                                <a href="{{profile_url}}" class="student-performance-row {{#rank_is_1}}leader-row{{/rank_is_1}}">
+                                    <div class="rank-badge">
+                                        <span class="rank-badge-number">{{rank}}</span>
+                                    </div>
+                                    <div class="student-info-compact">
+                                        <div class="student-avatar-small">
+                                            <img src="{{avatar_url}}" alt="{{fullname}}" onerror="this.src='{{config.wwwroot}}/user/pix.php/1/f1.jpg'">
+                                        </div>
+                                        <div class="student-details-compact">
+                                            <h3 class="student-name-compact">{{fullname}}</h3>
+                                            <div class="student-email-compact">{{email}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="student-metrics-simple">
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Avg Grade</span>
+                                            <span class="metric-simple-value">{{avg_grade}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Graded</span>
+                                            <span class="metric-simple-value">{{graded_count}}/{{total_assignments}}</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Submitted</span>
+                                            <span class="metric-simple-value">{{submitted_count}}/{{total_assignments}}</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Completion</span>
+                                            <span class="metric-simple-value">{{completion_rate}}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <span class="score-pill-value">{{avg_grade}}</span>
+                                        <span class="score-pill-label">Avg</span>
+                                    </div>
+                                </a>
+                                {{/top_assignment_students.students}}
+                            </div>
+                        </div>
+                        {{/top_assignment_students.has_data}}
+                        {{^top_assignment_students.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Top Performing Students in Assignments</h2>
+                                <small>Students with the best overall assignment grades in this course</small>
+                            </div>
+                            <div class="empty-state">
+                                <i class="fa fa-user-graduate"></i>
+                                <p>No assignment grades available yet</p>
+                            </div>
+                        </div>
+                        {{/top_assignment_students.has_data}}
+
+                        <!-- Assignment Details Table -->
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Assignment Details</h2>
+                                <small>Comprehensive breakdown of each assignment</small>
+                            </div>
+                            <div class="assignment-details-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Assignment</th>
+                                            <th>Avg Grade</th>
+                                            <th>Submissions</th>
+                                            <th>On-Time</th>
+                                            <th>Late</th>
+                                            <th>Graded</th>
+                                            <th>Progress</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#assignment_data.assignments}}
+                                        <tr>
+                                            <td class="assignment-name-cell">
+                                                <strong>{{name}}</strong>
+                                                {{#has_duedate}}
+                                                <small>Due: {{duedate}}</small>
+                                                {{/has_duedate}}
+                                            </td>
+                                            <td>
+                                                <span class="grade-badge">{{avg_grade}}%</span>
+                                            </td>
+                                            <td>
+                                                <span class="submission-count">{{submission_count}}/{{enrolled_students}}</span>
+                                                <small class="submission-rate">({{submission_rate}}%)</small>
+                                            </td>
+                                            <td>
+                                                <span class="on-time-badge">{{on_time_submissions}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="late-badge">{{late_submissions}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="graded-count">{{graded_count}}</span>
+                                                {{#ungraded_count}}
+                                                <small class="ungraded-count">({{ungraded_count}} pending)</small>
+                                                {{/ungraded_count}}
+                                            </td>
+                                            <td>
+                                                <div class="progress-bar-mini">
+                                                    <div class="progress-fill-mini" style="width: {{grading_progress}}%"></div>
+                                                </div>
+                                                <small>{{grading_progress}}%</small>
+                                            </td>
+                                        </tr>
+                                        {{/assignment_data.assignments}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/assignment_data.has_data}}
+                        {{^assignment_data.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Assignment Reports</h2>
+                                <small>Track assignment submissions and grades</small>
+                            </div>
+                            <div class="empty-state">
+                                <p>No assignments found in this course.</p>
+                            </div>
+                        </div>
+                        {{/assignment_data.has_data}}
+                    </div>
+
+                    <!-- Quizzes Tab -->
+                    <div id="quizzes-tab" class="reports-tab-panel">
+                        {{#quiz_data.has_data}}
+                        <!-- Quiz Summary Cards -->
+                        <div class="assignment-summary-grid">
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Total Quizzes</p>
+                                    <h3 class="summary-card-value">{{quiz_data.total_count}}</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-check-circle"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Avg Completion Rate</p>
+                                    <h3 class="summary-card-value">{{quiz_data.avg_completion_rate}}%</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">Avg Grade</p>
+                                    <h3 class="summary-card-value">{{quiz_data.avg_grade}}%</h3>
+                                </div>
+                            </div>
+                            <div class="assignment-summary-card">
+                                <div class="summary-card-icon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="summary-card-content">
+                                    <p class="summary-card-label">On-Time Rate</p>
+                                    <h3 class="summary-card-value">{{quiz_data.avg_ontime_rate}}%</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Average Grade Chart -->
+                        <div class="section-card performance-chart-card">
+                            <div class="section-header">
+                                <h2>Average Grade by Quiz</h2>
+                                <small>Performance across all quizzes in this course</small>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="quizGradeChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Recent Quiz Completions -->
+                        <div class="section-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <span>Recent Quiz Completions</span>
+                                </div>
+                                <a href="{{config.wwwroot}}/theme/remui_kids/teacher/quizzes.php" class="btn-link">View All</a>
+                            </div>
+                            <div class="card-content">
+                                {{#recent_quiz_completions}}
+                                <div class="recent-submissions-list">
+                                    {{#completions}}
+                                    <a href="{{config.wwwroot}}/theme/remui_kids/teacher/quiz_review.php?attemptid={{attempt_id}}" class="submission-item">
+                                        <div class="submission-avatar">
+                                            <img src="{{student_avatar}}" alt="{{student_name}}" onerror="this.style.display='none'">
+                                        </div>
+                                        <div class="submission-details">
+                                            <div class="submission-header">
+                                                <strong class="student-name">{{student_name}}</strong>
+                                                {{#is_graded}}
+                                                <span class="submission-badge {{status_class}}">{{grade_percentage}}%</span>
+                                                {{/is_graded}}
+                                                {{^is_graded}}
+                                                <span class="submission-badge {{status_class}}">{{status}}</span>
+                                                {{/is_graded}}
+                                                <span class="submission-time-inline">
+                                                    <i class="fa fa-clock"></i>{{time_ago}}
+                                                </span>
+                                            </div>
+                                            <div class="submission-info">
+                                                <span class="assignment-name">{{quiz_name}}</span>
+                                                <span class="course-separator">•</span>
+                                                <span class="course-name">{{course_fullname}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="submission-arrow">
+                                            <i class="fa fa-chevron-right"></i>
+                                        </div>
+                                    </a>
+                                    {{/completions}}
+                                </div>
+                                {{/recent_quiz_completions}}
+                                {{^recent_quiz_completions}}
+                                <div class="empty-state">
+                                    <i class="fa fa-inbox"></i>
+                                    <p>No recent quiz completions</p>
+                                </div>
+                                {{/recent_quiz_completions}}
+                            </div>
+                        </div>
+
+                        <!-- Top Performing Students in Quizzes -->
+                        {{#top_quiz_students.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Top Performing Students in Quizzes</h2>
+                                <small>Students with the best overall quiz grades in this course</small>
+                            </div>
+                            <div class="best-students-list">
+                                {{#top_quiz_students.students}}
+                                <a href="{{profile_url}}" class="student-performance-row {{#rank_is_1}}leader-row{{/rank_is_1}}">
+                                    <div class="rank-badge">
+                                        <span class="rank-badge-number">{{rank}}</span>
+                                    </div>
+                                    <div class="student-info-compact">
+                                        <div class="student-avatar-small">
+                                            <img src="{{avatar_url}}" alt="{{fullname}}" onerror="this.src='{{config.wwwroot}}/user/pix.php/1/f1.jpg'">
+                                        </div>
+                                        <div class="student-details-compact">
+                                            <h3 class="student-name-compact">{{fullname}}</h3>
+                                            <div class="student-email-compact">{{email}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="student-metrics-simple">
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Avg Grade</span>
+                                            <span class="metric-simple-value">{{avg_grade}}%</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Graded</span>
+                                            <span class="metric-simple-value">{{graded_count}}/{{total_quizzes}}</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Completed</span>
+                                            <span class="metric-simple-value">{{completed_count}}/{{total_quizzes}}</span>
+                                        </div>
+                                        <div class="metric-simple">
+                                            <span class="metric-simple-label">Completion</span>
+                                            <span class="metric-simple-value">{{completion_rate}}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <span class="score-pill-value">{{avg_grade}}</span>
+                                        <span class="score-pill-label">Avg</span>
+                                    </div>
+                                </a>
+                                {{/top_quiz_students.students}}
+                            </div>
+                        </div>
+                        {{/top_quiz_students.has_data}}
+                        {{^top_quiz_students.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Top Performing Students in Quizzes</h2>
+                                <small>Students with the best overall quiz grades in this course</small>
+                            </div>
+                            <div class="empty-state">
+                                <i class="fa fa-user-graduate"></i>
+                                <p>No quiz grades available yet</p>
+                            </div>
+                        </div>
+                        {{/top_quiz_students.has_data}}
+
+                        <!-- Quiz Details Table -->
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Quiz Details</h2>
+                                <small>Comprehensive breakdown of each quiz</small>
+                            </div>
+                            <div class="assignment-details-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Quiz</th>
+                                            <th>Avg Grade</th>
+                                            <th>Completions</th>
+                                            <th>On-Time</th>
+                                            <th>Late</th>
+                                            <th>Graded</th>
+                                            <th>Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#quiz_data.quizzes}}
+                                        <tr>
+                                            <td class="assignment-name-cell">
+                                                <strong>{{name}}</strong>
+                                                {{#has_timeclose}}
+                                                <small>Closes: {{timeclose}}</small>
+                                                {{/has_timeclose}}
+                                            </td>
+                                            <td>
+                                                <span class="grade-badge">{{avg_grade}}%</span>
+                                            </td>
+                                            <td>
+                                                <span class="submission-count">{{completion_count}}/{{enrolled_students}}</span>
+                                                <small class="submission-rate">({{completion_rate}}%)</small>
+                                            </td>
+                                            <td>
+                                                <span class="on-time-badge">{{on_time_completions}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="late-badge">{{late_completions}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="graded-count">{{graded_count}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="submission-rate">{{completion_rate}}%</span>
+                                            </td>
+                                        </tr>
+                                        {{/quiz_data.quizzes}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/quiz_data.has_data}}
+                        {{^quiz_data.has_data}}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Quiz Reports</h2>
+                                <small>Analyze quiz performance and completion rates</small>
+                            </div>
+                            <div class="empty-state">
+                                <p>No quizzes found in this course.</p>
+                            </div>
+                        </div>
+                        {{/quiz_data.has_data}}
+                    </div>
+
+                    <!-- Competencies Tab -->
+                    <div id="competencies-tab" class="reports-tab-panel">
+                <div class="section-card">
+                    <div class="section-header mastery-header">
+                        <h2>Competency Mastery Overview</h2>
+                        <small>Visual snapshot of mastery across linked frameworks Docs &amp; Pages</small>
+                    </div>
+                    {{#has_framework_options}}
+                    <div class="mastery-controls">
+                        <div class="framework-filter">
+                            <label for="frameworkSelect">Competency framework</label>
+                            <select id="frameworkSelect">
+                                {{#framework_options}}
+                                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                                {{/framework_options}}
+                            </select>
+                        </div>
+                    </div>
+                    {{/has_framework_options}}
+                    <div class="framework-chart-card">
+                        <canvas id="frameworkCompetencyChart"></canvas>
+                        <p class="chart-empty-state" id="frameworkChartEmpty">Select a framework to view progress.</p>
+                    </div>
+                    {{^report.competencies}}
+                    <div class="empty-state">
+                        <p>No competencies are mapped to this course yet. Add competencies to start tracking mastery.</p>
+                    </div>
+                    {{/report.competencies}}
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card chart-card-radar">
+                        <h3>Competency radar</h3>
+                        <canvas id="competencyRadarChart"></canvas>
+                        <p class="chart-empty-state" id="competencyRadarEmpty">Select a framework to view radar data.</p>
+                    </div>
+                    <div class="chart-card chart-card-students">
+                        <h3>Top students vs class avg</h3>
+                        <canvas id="studentBarChart"></canvas>
+                        <p class="chart-empty-state" id="studentChartEmpty">Select a framework to view student performance.</p>
+                    </div>
+                    <div class="chart-card chart-card-activities">
+                        <h3>Activities in Each competency</h3>
+                        <canvas id="activitiesPerCompetencyChart"></canvas>
+                        <p class="chart-empty-state" id="activitiesPerCompetencyEmpty">Select a framework to view activities per competency.</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Competency Breakdown by Student</h2>
+                        <small>Spot who is thriving and who needs attention</small>
+                    </div>
+                    {{#has_students}}
+                    <div class="table-wrapper">
+                        <table class="student-breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Competent</th>
+                                    <th>In Progress</th>
+                                    <th>Not Started</th>
+                                    <th>Evidence</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#report.students}}
+                                <tr>
+                                    <td>
+                                        <div class="student-info-cell">
+                                            <img src="{{avatar}}" alt="{{fullname}}" class="student-avatar-img" onerror="this.style.display='none'">
+                                            <span class="student-name">{{fullname}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                                <span class="report-metric-value">{{competent_percent}}%</span>
+                                                <span class="report-metric-detail">({{competent_display}})</span>
+                                    </td>
+                                    <td>
+                                                <span class="report-metric-value">{{inprogress_percent}}%</span>
+                                                <span class="report-metric-detail">({{inprogress_display}})</span>
+                                    </td>
+                                    <td>
+                                                <span class="report-metric-value">{{notattempted}}</span>
+                                                <span class="report-metric-detail">({{notattempted_display}})</span>
+                                    </td>
+                                    <td>
+                                                <span class="report-metric-value">{{evidence_count}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{status_tag}}">{{status_label}}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{report_url}}" class="btn-report-link">
+                                            <i class="fa fa-chart-line"></i> View Report
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/report.students}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/has_students}}
+                    {{^has_students}}
+                    <div class="empty-state">
+                        <p>No students are enrolled yet.</p>
+                    </div>
+                    {{/has_students}}
+                </div>
+
+                {{/has_course_selected}}
+
+                {{^has_course_selected}}
+                <div class="empty-state">
+                    <p>Select a course to unlock reports.</p>
+                </div>
+                {{/has_course_selected}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart === 'undefined') {
+        return;
+    }
+
+    const assignmentTrendData = {{#report.recent_assignment_performance_json}}{{{.}}}{{/report.recent_assignment_performance_json}}{{^report.recent_assignment_performance_json}}null{{/report.recent_assignment_performance_json}};
+    const quizTrendData = {{#report.recent_quiz_performance_json}}{{{.}}}{{/report.recent_quiz_performance_json}}{{^report.recent_quiz_performance_json}}null{{/report.recent_quiz_performance_json}};
+
+    function buildPerformanceChart(canvasId, dataset, color) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas || !dataset || !dataset.has_data) {
+            return;
+        }
+        const ctx = canvas.getContext('2d');
+        const fullLabels = dataset.full_labels || dataset.labels || [];
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dataset.labels,
+                datasets: [{
+                    label: 'Average score',
+                    data: dataset.values,
+                    backgroundColor: '#94a3b8',
+                    borderWidth: 1,
+                    borderRadius: 12,
+                    barThickness: 55,
+                    maxBarThickness: 62
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.2)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: true,
+                            font: {
+                                size: 9,
+                                weight: '500'
+                            }
+                        },
+                        offset: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = fullLabels[context.dataIndex] || context.label;
+                                return label + ': ' + context.parsed.y + '% average';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    if (assignmentTrendData && assignmentTrendData.has_data) {
+        buildPerformanceChart('assignmentTrendChart', assignmentTrendData);
+    }
+    if (quizTrendData && quizTrendData.has_data) {
+        buildPerformanceChart('quizTrendChart', quizTrendData);
+    }
+});
+</script>
+<script>
+// Tab Switching Functionality
+function showReportsTab(tabName) {
+    // Hide all tab panels
+    const tabPanels = document.querySelectorAll(".reports-tab-content .reports-tab-panel");
+    tabPanels.forEach(panel => {
+        panel.classList.remove("active");
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll(".reports-tabs .reports-tab-button");
+    tabButtons.forEach(button => {
+        button.classList.remove("active");
+    });
+    
+    // Show selected tab panel
+    const selectedPanel = document.getElementById(tabName + "-tab");
+    if (selectedPanel) {
+        selectedPanel.classList.add("active");
+    }
+    
+    // Add active class to clicked tab button
+    const clickedButton = event.target.closest(".reports-tab-button");
+    if (clickedButton) {
+        clickedButton.classList.add("active");
+    }
+    
+    // Initialize charts when competencies tab becomes active
+    if (tabName === "competencies") {
+        setTimeout(function() {
+            if (typeof window.initFrameworkChart === 'function') {
+                console.log('Calling initFrameworkChart from tab switch');
+                window.initFrameworkChart();
+            } else if (typeof initFrameworkChart === 'function') {
+                console.log('Calling initFrameworkChart (local scope) from tab switch');
+                initFrameworkChart();
+            } else {
+                console.error('initFrameworkChart function not available');
+            }
+        }, 200);
+    }
+    
+    // Initialize charts when assignments tab becomes active
+    if (tabName === "assignments") {
+        setTimeout(function() {
+            if (typeof window.initAssignmentCharts === 'function') {
+                console.log('Calling initAssignmentCharts from tab switch');
+                window.initAssignmentCharts();
+            } else {
+                console.error('initAssignmentCharts function not available');
+            }
+        }, 200);
+    }
+    
+    // Initialize charts when quizzes tab becomes active
+    if (tabName === "quizzes") {
+        setTimeout(function() {
+            if (typeof window.initQuizCharts === 'function') {
+                console.log('Calling initQuizCharts from tab switch');
+                window.initQuizCharts();
+            } else {
+                console.error('initQuizCharts function not available');
+            }
+        }, 200);
+    }
+}
+
+(function() {
+    if (typeof Chart === 'undefined') {
+        return;
+    }
+
+    const frameworkCompetencyData = {{{framework_competency_json}}} || [];
+    const frameworkStudentChartData = {{{framework_student_chart_json}}} || [];
+    const competencyMap = {};
+    frameworkCompetencyData.forEach(entry => {
+        competencyMap[String(entry.id)] = entry;
+    });
+    const studentChartMap = {};
+    frameworkStudentChartData.forEach(entry => {
+        studentChartMap[String(entry.id)] = entry;
+    });
+
+    let frameworkBarChartInstance = null;
+    let frameworkRadarChartInstance = null;
+    let topStudentsChartInstance = null;
+    let activitiesPerCompetencyChartInstance = null;
+
+    const frameworkActivitiesChartsData = {{{framework_activities_charts_json}}} || [];
+    const activitiesChartMap = {};
+    frameworkActivitiesChartsData.forEach(entry => {
+        activitiesChartMap[String(entry.id)] = entry;
+    });
+
+    function updateCompetencyBarChart(frameworkId) {
+        console.log('updateCompetencyBarChart called with frameworkId:', frameworkId);
+        const canvas = document.getElementById('frameworkCompetencyChart');
+        const emptyState = document.getElementById('frameworkChartEmpty');
+        if (!canvas) {
+            console.error('frameworkCompetencyChart canvas not found');
+            return;
+        }
+        const dataset = competencyMap[String(frameworkId)];
+        if (!dataset || !dataset.competencies || dataset.competencies.length === 0) {
+            console.warn('No dataset or competencies for frameworkId:', frameworkId, dataset);
+            if (frameworkBarChartInstance) {
+                frameworkBarChartInstance.destroy();
+                frameworkBarChartInstance = null;
+            }
+            canvas.style.display = 'none';
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'No competencies available for this framework.';
+            }
+            return;
+        }
+
+        const labels = dataset.competencies.map(comp => comp.name);
+        const values = dataset.competencies.map(comp => comp.percent);
+        const ctx = canvas.getContext('2d');
+        if (frameworkBarChartInstance) {
+            frameworkBarChartInstance.destroy();
+        }
+        canvas.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+        frameworkBarChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Competency mastery (%)',
+                    data: values,
+                    backgroundColor: '#0ea5e9',
+                    borderRadius: 6,
+                    maxBarThickness: 32
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateCompetencyRadar(frameworkId) {
+        const canvas = document.getElementById('competencyRadarChart');
+        const emptyState = document.getElementById('competencyRadarEmpty');
+        if (!canvas) {
+            return;
+        }
+        const dataset = competencyMap[String(frameworkId)];
+        if (!dataset || !dataset.competencies || dataset.competencies.length === 0) {
+            if (frameworkRadarChartInstance) {
+                frameworkRadarChartInstance.destroy();
+                frameworkRadarChartInstance = null;
+            }
+            canvas.style.display = 'none';
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'No competencies available for this framework.';
+            }
+            return;
+        }
+
+        const labels = dataset.competencies.map(comp => comp.name);
+        const values = dataset.competencies.map(comp => comp.percent);
+        const ctx = canvas.getContext('2d');
+        if (frameworkRadarChartInstance) {
+            frameworkRadarChartInstance.destroy();
+        }
+        canvas.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+        frameworkRadarChartInstance = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Competency mastery',
+                    data: values,
+                    borderColor: '#0ea5e9',
+                    backgroundColor: 'rgba(14,165,233,0.2)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#0ea5e9',
+                    pointBorderColor: '#fff',
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            display: true,
+                            showLabelBackdrop: false,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    function updateTopStudentsChart(frameworkId) {
+        const canvas = document.getElementById('studentBarChart');
+        const emptyState = document.getElementById('studentChartEmpty');
+        if (!canvas) {
+            return;
+        }
+        const dataset = studentChartMap[String(frameworkId)];
+        if (!dataset || !dataset.labels || dataset.labels.length === 0) {
+            if (topStudentsChartInstance) {
+                topStudentsChartInstance.destroy();
+                topStudentsChartInstance = null;
+            }
+            canvas.style.display = 'none';
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'No student performance data for this framework.';
+            }
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (topStudentsChartInstance) {
+            topStudentsChartInstance.destroy();
+        }
+        canvas.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+
+        topStudentsChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dataset.labels,
+                datasets: [{
+                    label: 'Student',
+                    data: dataset.student_values || [],
+                    backgroundColor: '#0f172a',
+                    borderRadius: 6,
+                    maxBarThickness: 32
+                }, {
+                    label: 'Class avg',
+                    data: dataset.class_values || [],
+                    backgroundColor: '#14b8a6',
+                    borderRadius: 6,
+                    maxBarThickness: 32
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderActivitiesPerCompetencyChart(frameworkId) {
+        const canvas = document.getElementById('activitiesPerCompetencyChart');
+        const emptyState = document.getElementById('activitiesPerCompetencyEmpty');
+        if (!canvas) {
+            return;
+        }
+
+        const dataset = activitiesChartMap[String(frameworkId)];
+        if (!dataset || !dataset.competencies || dataset.competencies.length === 0) {
+            if (activitiesPerCompetencyChartInstance) {
+                activitiesPerCompetencyChartInstance.destroy();
+                activitiesPerCompetencyChartInstance = null;
+            }
+            canvas.style.display = 'none';
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'Select a framework to view activities per competency.';
+            }
+            return;
+        }
+
+        const labels = dataset.competencies.map(item => item.name);
+        const activityCounts = dataset.competencies.map(item => item.activity_count || 0);
+
+        const ctx = canvas.getContext('2d');
+        if (activitiesPerCompetencyChartInstance) {
+            activitiesPerCompetencyChartInstance.destroy();
+        }
+        canvas.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+
+        activitiesPerCompetencyChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Activities',
+                    data: activityCounts,
+                    backgroundColor: function(context) {
+                        const value = context.parsed.x;
+                        if (value >= 10) return 'rgba(16, 185, 129, 0.85)';
+                        if (value >= 5) return 'rgba(59, 130, 246, 0.85)';
+                        if (value >= 1) return 'rgba(245, 158, 11, 0.85)';
+                        return 'rgba(148, 163, 184, 0.75)';
+                    },
+                    borderColor: function(context) {
+                        const value = context.parsed.x;
+                        if (value >= 10) return 'rgba(16, 185, 129, 1)';
+                        if (value >= 5) return 'rgba(59, 130, 246, 1)';
+                        if (value >= 1) return 'rgba(245, 158, 11, 1)';
+                        return 'rgba(148, 163, 184, 1)';
+                    },
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0,
+                            font: {
+                                size: 11
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.04)',
+                            drawBorder: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            },
+                            color: '#475569',
+                            autoSkip: false
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: {
+                            size: 13,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const count = context.parsed.x;
+                                return count + ' activit' + (count !== 1 ? 'ies' : 'y');
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 20,
+                        top: 10,
+                        bottom: 10
+                    }
+                }
+            }
+        });
+    }
+
+    function renderFrameworkCharts(frameworkId) {
+        updateCompetencyBarChart(frameworkId);
+        updateCompetencyRadar(frameworkId);
+        updateTopStudentsChart(frameworkId);
+        renderActivitiesPerCompetencyChart(frameworkId);
+    }
+
+    function initFrameworkChart() {
+        console.log('initFrameworkChart called', { 
+            hasSelect: !!document.getElementById('frameworkSelect'),
+            dataLength: frameworkCompetencyData.length,
+            data: frameworkCompetencyData 
+        });
+        
+        const select = document.getElementById('frameworkSelect');
+        if (!select) {
+            console.warn('frameworkSelect element not found');
+            const emptyState = document.getElementById('frameworkChartEmpty');
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'Map competencies to frameworks to view mastery.';
+            }
+            return;
+        }
+        
+        if (!frameworkCompetencyData || frameworkCompetencyData.length === 0) {
+            console.warn('No framework competency data available');
+            const emptyState = document.getElementById('frameworkChartEmpty');
+            if (emptyState) {
+                emptyState.style.display = 'block';
+                emptyState.textContent = 'Map competencies to frameworks to view mastery.';
+            }
+            return;
+        }
+        
+        // Remove existing event listeners by cloning the select
+        const newSelect = select.cloneNode(true);
+        select.parentNode.replaceChild(newSelect, select);
+        
+        const initialValue = newSelect.value || frameworkCompetencyData[0].id;
+        console.log('Rendering framework charts with frameworkId:', initialValue);
+        renderFrameworkCharts(initialValue);
+        
+        newSelect.addEventListener('change', (e) => {
+            console.log('Framework select changed to:', e.target.value);
+            renderFrameworkCharts(e.target.value);
+        });
+    }
+
+    // Make function globally available for tab switching
+    window.initFrameworkChart = initFrameworkChart;
+    
+    // Initialize charts when competencies tab is active (or on page load if it's the default)
+    const competenciesTab = document.getElementById('competencies-tab');
+    if (competenciesTab && competenciesTab.classList.contains('active')) {
+        initFrameworkChart();
+    }
+    
+    // Also initialize if no tab is active (fallback)
+    const activeTab = document.querySelector('.reports-tab-panel.active');
+    if (!activeTab && competenciesTab) {
+        competenciesTab.classList.add('active');
+        initFrameworkChart();
+    }
+})();
+</script>
+
+<script>
+// Assignment Charts Initialization
+(function() {
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded, assignment charts will not render');
+        return;
+    }
+
+    const assignmentData = {{{assignment_data_json}}} || { assignments: [], has_data: false };
+    
+    if (!assignmentData.has_data || !assignmentData.assignments || assignmentData.assignments.length === 0) {
+        console.log('No assignment data available');
+        return;
+    }
+
+    const assignments = assignmentData.assignments;
+    let assignmentGradeChart = null;
+    let assignmentTimelinessChart = null;
+
+    function initAssignmentCharts() {
+        console.log('Initializing assignment charts...', assignmentData);
+        const labels = assignmentData.labels || [];
+        const avgGrades = assignmentData.avg_grades || [];
+        
+        console.log('Chart data:', { labels, avgGrades, pieData: assignmentData.timeliness_pie });
+
+        // Average Grade Chart
+        const gradeCanvas = document.getElementById('assignmentGradeChart');
+        if (!gradeCanvas) {
+            console.error('assignmentGradeChart canvas not found');
+        } else if (labels.length === 0) {
+            console.warn('No labels for assignment grade chart');
+        } else {
+            const gradeCtx = gradeCanvas.getContext('2d');
+            if (assignmentGradeChart) {
+                assignmentGradeChart.destroy();
+            }
+            console.log('Creating assignment grade chart with', labels.length, 'labels');
+            assignmentGradeChart = new Chart(gradeCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Grade',
+                        data: avgGrades,
+                        backgroundColor: '#5b6cff',
+                        borderRadius: 6,
+                        barThickness: 55,
+                        maxBarThickness: 62
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 0,
+                                minRotation: 0,
+                                font: { size: 9, weight: '500' },
+                                offset: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const fullName = assignments[context.dataIndex]?.name || context.label;
+                                    return fullName + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // On-Time vs Late Pie Chart
+        const timelinessCanvas = document.getElementById('assignmentTimelinessChart');
+        const pieData = assignmentData.timeliness_pie || {};
+        if (!timelinessCanvas) {
+            console.error('assignmentTimelinessChart canvas not found');
+        } else if (!pieData.has_data || pieData.total_submissions === 0) {
+            console.warn('No timeliness data for pie chart');
+        } else {
+            const timelinessCtx = timelinessCanvas.getContext('2d');
+            if (assignmentTimelinessChart) {
+                assignmentTimelinessChart.destroy();
+            }
+            console.log('Creating assignment timeliness doughnut chart', pieData);
+            assignmentTimelinessChart = new Chart(timelinessCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['On-Time', 'Late'],
+                    datasets: [{
+                        label: 'Submissions',
+                        data: [pieData.on_time_count, pieData.late_count],
+                        backgroundColor: [
+                            '#10b981',
+                            '#ef4444'
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = pieData.total_submissions;
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        console.log('Assignment charts initialization complete');
+    }
+
+    // Make function globally available for tab switching
+    window.initAssignmentCharts = initAssignmentCharts;
+    
+    // Initialize on page load if assignments tab is active
+    setTimeout(function() {
+        const assignmentsTab = document.getElementById('assignments-tab');
+        if (assignmentsTab && assignmentsTab.classList.contains('active')) {
+            console.log('Assignments tab is active on load, initializing charts');
+            initAssignmentCharts();
+        }
+    }, 300);
+})();
+</script>
+
+<script>
+// Quiz Charts Initialization
+(function() {
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded, quiz charts will not render');
+        return;
+    }
+
+    const quizData = {{{quiz_data_json}}} || { quizzes: [], has_data: false };
+    
+    if (!quizData.has_data || !quizData.quizzes || quizData.quizzes.length === 0) {
+        console.log('No quiz data available');
+        return;
+    }
+
+    const quizzes = quizData.quizzes;
+    let quizGradeChart = null;
+
+    function initQuizCharts() {
+        console.log('Initializing quiz charts...', quizData);
+        const labels = quizData.labels || [];
+        const avgGrades = quizData.avg_grades || [];
+        
+        console.log('Quiz chart data:', { labels, avgGrades });
+
+        // Average Grade Chart
+        const gradeCanvas = document.getElementById('quizGradeChart');
+        if (!gradeCanvas) {
+            console.error('quizGradeChart canvas not found');
+        } else if (labels.length === 0) {
+            console.warn('No labels for quiz grade chart');
+        } else {
+            const gradeCtx = gradeCanvas.getContext('2d');
+            if (quizGradeChart) {
+                quizGradeChart.destroy();
+            }
+            console.log('Creating quiz grade chart with', labels.length, 'labels');
+            quizGradeChart = new Chart(gradeCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Grade',
+                        data: avgGrades,
+                        backgroundColor: '#5b6cff',
+                        borderRadius: 6,
+                        barThickness: 55,
+                        maxBarThickness: 62
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 0,
+                                minRotation: 0,
+                                font: { size: 9, weight: '500' },
+                                offset: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const fullName = quizzes[context.dataIndex]?.name || context.label;
+                                    return fullName + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        console.log('Quiz charts initialization complete');
+    }
+
+    // Make function globally available for tab switching
+    window.initQuizCharts = initQuizCharts;
+    
+    // Initialize on page load if quizzes tab is active
+    setTimeout(function() {
+        const quizzesTab = document.getElementById('quizzes-tab');
+        if (quizzesTab && quizzesTab.classList.contains('active')) {
+            console.log('Quizzes tab is active on load, initializing charts');
+            initQuizCharts();
+        }
+    }, 300);
+})();
+</script>
+

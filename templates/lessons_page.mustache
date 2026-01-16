@@ -1,0 +1,1135 @@
+{{!
+    Custom Lessons Page Template for remui_kids theme
+    
+    This template displays student lessons in a beautiful card format.
+}}
+
+{{> theme_remui/head }}
+
+<body {{{ bodyattributes }}}>
+
+<div id='page-loader-wrapper' style='background:#ffffff;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;z-index: 9999;overflow:hidden;'>
+    {{#loaderimage}}<img src='{{{loaderimage}}}' alt='loader image' style='width: 50px;height: 50px;'>{{/loaderimage}}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function() {
+            document.querySelector('#page-loader-wrapper').style.display = 'none';
+        }, 100);
+    });
+    if (localStorage.getItem("nighteyewState") == "1") {
+        document.querySelector("#page-loader-wrapper").style.background = "#090909";
+    }
+</script>
+
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper" class="d-print-block">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{#focusdata.enabled}} {{> theme_remui/navbar_fm }} {{/focusdata.enabled}}
+
+    {{^hide_default_navbar}}
+    {{> theme_remui/navbar }}
+    {{/hide_default_navbar}}
+
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers drag-container">
+        {{#sitenotification}}{{{sitenotification}}}{{/sitenotification}}
+        
+        <div id="topofscroll" class="main-inner">
+            {{#notification}}{{> theme_remui/product_notification}}{{/notification}}
+
+<style>
+/* Inline CSS for Lessons Page */
+/* Hide default navbar completely */
+.navbar {
+    display: none !important;
+}
+
+.navbar-expand-lg {
+    display: none !important;
+}
+
+.navbar-nav {
+    display: none !important;
+}
+
+/* Adjust page layout when navbar is hidden */
+.custom-lessons-page {
+    margin-left: 280px !important;
+    min-height: 100vh;
+    background: #f8f9fa !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 0 !important;
+}
+
+/* Ensure page content starts from top */
+#page-wrapper {
+    padding-top: 0 !important;
+}
+
+#page {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.main-inner {
+    padding-top: 0 !important;
+}
+
+.custom-lessons-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 2rem 0 !important;
+    margin-bottom: 2rem !important;
+}
+
+.lessons-greeting {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    color: white !important;
+}
+
+.lessons-subtitle {
+    font-size: 1.1rem !important;
+    opacity: 0.9 !important;
+    margin: 0 !important;
+    color: white !important;
+}
+
+.lessons-badge {
+    width: 60px !important;
+    height: 60px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+}
+
+.lessons-badge i {
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+/* Enhanced Elementary Sidebar */
+.student-sidebar.enhanced-elementary-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    z-index: 1040 !important;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1) !important;
+    border-right: 2px solid #e8eaf0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.sidebar-nav {
+    padding: 1.5rem 0 !important;
+}
+
+.nav-section {
+    margin-bottom: 2rem !important;
+}
+
+.section-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #666666 !important;
+    margin-bottom: 1rem !important;
+    padding: 0 1.5rem !important;
+}
+
+.section-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+}
+
+.section-bullet.blue { background: #3b82f6 !important; }
+.section-bullet.green { background: #10b981 !important; }
+.section-bullet.orange { background: #f59e0b !important; }
+.section-bullet.purple { background: #8b5cf6 !important; }
+
+.nav-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.nav-item {
+    margin: 0 !important;
+}
+
+.nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.875rem 1.5rem !important;
+    color: #333333 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    font-weight: 500 !important;
+    margin: 0.125rem 1rem !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+}
+
+.nav-link i {
+    font-size: 1.1rem !important;
+    width: 20px !important;
+    text-align: center !important;
+    transition: all 0.2s ease !important;
+    color: #666666 !important;
+}
+
+.nav-link span {
+    transition: all 0.2s ease !important;
+}
+
+.nav-link:hover {
+    background: #f8f9fa !important;
+    color: #333333 !important;
+}
+
+.nav-link:hover i {
+    color: #666666 !important;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+.nav-link.active i,
+.nav-link.active span {
+    color: #ffffff !important;
+}
+
+.nav-link.active span {
+    font-weight: 600 !important;
+}
+
+/* Quick Actions */
+.quick-actions-container {
+    padding: 0 1rem !important;
+}
+
+.quick-action-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.quick-action-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.quick-action-icon i {
+    font-size: 1.2rem !important;
+    color: #ffffff !important;
+}
+
+.quick-action-content {
+    flex: 1 !important;
+}
+
+.quick-action-content h4 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+
+.quick-action-content p {
+    margin: 0 !important;
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    line-height: 1.3 !important;
+}
+
+.quick-action-arrow {
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.quick-action-arrow i {
+    font-size: 0.8rem !important;
+    color: #ffffff !important;
+}
+
+/* Quick Action Card Colors */
+.ebooks-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+}
+
+.ask-teacher-card {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.code-editor-card {
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%) !important;
+}
+
+.share-class-card {
+    background: linear-gradient(135deg, #ec4899 0%, #dc2626 100%) !important;
+}
+
+.scratch-editor-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+}
+
+/* Lessons Content */
+.lessons-content {
+    padding: 0 2rem 2rem 2rem !important;
+}
+
+.lessons-page-header {
+    text-align: center !important;
+    margin-bottom: 3rem !important;
+}
+
+.lessons-page-title {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.lessons-page-title i {
+    color: #667eea !important;
+    margin-right: 0.5rem !important;
+}
+
+.lessons-page-subtitle {
+    font-size: 1.1rem !important;
+    color: #666666 !important;
+    margin: 0 !important;
+}
+
+/* Lesson Statistics */
+.lessons-stats-container {
+    display: flex !important;
+    gap: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    flex-wrap: wrap !important;
+}
+
+.lesson-stat-card {
+    flex: 1 !important;
+    min-width: 200px !important;
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.lesson-stat-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-icon-container {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.stat-icon {
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+.stat-content .stat-number {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    line-height: 1 !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.stat-content .stat-label {
+    font-size: 0.9rem !important;
+    color: #666666 !important;
+    margin: 0 !important;
+}
+
+/* Lessons Grid */
+.lessons-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    gap: 2rem !important;
+}
+
+.lessons-card {
+    background: white !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.lessons-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.lesson-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 1.5rem !important;
+    position: relative !important;
+}
+
+.lesson-title {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    margin: 0 0 0.5rem 0 !important;
+    color: white !important;
+}
+
+.lesson-course {
+    font-size: 0.9rem !important;
+    opacity: 0.9 !important;
+    margin: 0 !important;
+    color: white !important;
+}
+
+.lesson-status-indicator {
+    position: absolute !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.lesson-status-indicator.completed { background: #27ae60 !important; }
+.lesson-status-indicator.in-progress { background: #f39c12 !important; }
+.lesson-status-indicator.not-started { background: #95a5a6 !important; }
+
+.lesson-status-indicator i {
+    color: white !important;
+    font-size: 1.2rem !important;
+}
+
+.lesson-content {
+    padding: 1.5rem !important;
+}
+
+.lesson-description {
+    color: #666666 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.5rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.lesson-progress-section {
+    margin-bottom: 1.5rem !important;
+}
+
+.progress-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.progress-label {
+    font-size: 0.9rem !important;
+    color: #666666 !important;
+    font-weight: 600 !important;
+}
+
+.progress-percentage {
+    font-size: 0.9rem !important;
+    color: #667eea !important;
+    font-weight: 700 !important;
+}
+
+.progress-bar-container .progress-bar {
+    height: 8px !important;
+    background: #e9ecef !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+
+.progress-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 4px !important;
+    transition: width 0.3s ease !important;
+}
+
+.lesson-stats-grid {
+    margin-bottom: 1.5rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+}
+
+.lesson-stat-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+    font-size: 0.85rem !important;
+    color: #666666 !important;
+    text-align: center !important;
+}
+
+.lesson-stat-item i {
+    font-size: 1.2rem !important;
+    color: #667eea !important;
+}
+
+.lesson-stat-value {
+    font-weight: 700 !important;
+    color: #333333 !important;
+}
+
+.lesson-action-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 25px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    width: 100% !important;
+    justify-content: center !important;
+}
+
+.lesson-action-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.lesson-action-button i {
+    font-size: 0.8rem !important;
+}
+
+/* No Lessons Message */
+.no-lessons-message {
+    text-align: center !important;
+    background: white !important;
+    border-radius: 15px !important;
+    padding: 3rem !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.no-lessons-icon {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 2rem !important;
+}
+
+.no-lessons-icon i {
+    font-size: 2.5rem !important;
+    color: white !important;
+}
+
+.no-lessons-message h3 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    margin-bottom: 1rem !important;
+}
+
+.no-lessons-message p {
+    font-size: 1.1rem !important;
+    color: #666666 !important;
+    margin-bottom: 2rem !important;
+}
+
+.no-lessons-message .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 2rem !important;
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+}
+
+.no-lessons-message .btn i {
+    font-size: 0.9rem !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .custom-lessons-page {
+        margin-left: 0 !important;
+    }
+    
+    .student-sidebar.enhanced-elementary-sidebar {
+        display: none !important;
+    }
+    
+    .lessons-stats-container {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+    
+    .lesson-stat-card {
+        min-width: auto !important;
+    }
+    
+    .lessons-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .lesson-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{{#custom_lessons}}
+
+<div class="custom-lessons-page">
+    <!-- Custom Lessons Header -->
+    <div class="custom-lessons-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="lessons-greeting mb-2">
+                        My Lessons
+                    </h1>
+                    <p class="lessons-subtitle mb-0">
+                        {{#user_cohort_name}}
+                            Your {{user_cohort_name}} learning adventure awaits!
+                        {{/user_cohort_name}}
+                        {{^user_cohort_name}}
+                            Explore your lessons and continue learning!
+                        {{/user_cohort_name}}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="lessons-badge">
+                        <i class="fa fa-play-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cohort-specific content -->
+    {{#dashboard_type}}
+        {{#elementary}}
+            <!-- Enhanced Student Sidebar -->
+            <div class="student-sidebar enhanced-elementary-sidebar">
+                <nav class="sidebar-nav">
+                    
+                    <!-- DASHBOARD Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet blue"></span>
+                            DASHBOARD
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{dashboardurl}}}" class="nav-link">
+                                    <i class="fa fa-th-large"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{mycoursesurl}}}" class="nav-link">
+                                    <i class="fa fa-book-open"></i>
+                                    <span>My Courses</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{lessonsurl}}}" class="nav-link active lessons-link">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Lessons</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{activitiesurl}}}" class="nav-link">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>Activities</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{achievementsurl}}}" class="nav-link">
+                                    <i class="fa fa-trophy"></i>
+                                    <span>Achievements</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{competenciesurl}}}" class="nav-link">
+                                    <i class="fa fa-bullseye"></i>
+                                    <span>Competencies</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{{scheduleurl}}}" class="nav-link">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Schedule</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- TOOLS & RESOURCES Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet green"></span>
+                            TOOLS & RESOURCES
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{treeviewurl}}}" class="nav-link">
+                                    <i class="fa fa-sitemap"></i>
+                                    <span>Tree View</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- SETTINGS & PROFILE Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet orange"></span>
+                            SETTINGS & PROFILE
+                        </div>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="{{{settingsurl}}}" class="nav-link">
+                                    <i class="fa fa-cog"></i>
+                                    <span>Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- QUICK ACTIONS Section -->
+                    <div class="nav-section">
+                        <div class="section-title">
+                            <span class="section-bullet purple"></span>
+                            QUICK ACTIONS
+                        </div>
+                        <div class="quick-actions-container">
+                            <div class="quick-action-card ebooks-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>E-books</h4>
+                                    <p>Access digital learning materials</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card ask-teacher-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Ask Teacher</h4>
+                                    <p>Get help from your instructor</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card code-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-desktop"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Code Editor</h4>
+                                    <p>Write and run JavaScript code</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card share-class-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-share-alt"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Share with Class</h4>
+                                    <p>Collaborate with classmates</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-action-card scratch-editor-card">
+                                <div class="quick-action-icon">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h4>Scratch Editor</h4>
+                                    <p>Create interactive projects</p>
+                                </div>
+                                <div class="quick-action-arrow">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Lessons Content -->
+            <div class="lessons-content">
+                <div class="container-fluid">
+                    <!-- Page Header -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="lessons-page-header">
+                                <h2 class="lessons-page-title">
+                                    <i class="fa fa-play-circle"></i>
+                                    My Learning Journey
+                                </h2>
+                                <p class="lessons-page-subtitle">
+                                    Explore your lessons and track your progress!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lessons Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="lessons-stats-container">
+                                <div class="lesson-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-play-circle stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number">{{total_lessons_count}}</div>
+                                        <div class="stat-label">Total Lessons</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-clock-o stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="in-progress-lessons-count">0</div>
+                                        <div class="stat-label">In Progress</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-check-circle stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="completed-lessons-count">0</div>
+                                        <div class="stat-label">Completed</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-stat-card">
+                                    <div class="stat-icon-container">
+                                        <i class="fa fa-circle-o stat-icon"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="not-started-lessons-count">0</div>
+                                        <div class="stat-label">Not Started</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lessons Grid -->
+                    {{#has_student_lessons}}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="lessons-grid">
+                                {{#student_lessons}}
+                                <div class="lessons-card enhanced" data-lesson-id="{{id}}">
+                                    <!-- Lesson Header -->
+                                    <div class="lesson-header">
+                                        <h3 class="lesson-title">{{name}}</h3>
+                                        <p class="lesson-course">{{coursename}}</p>
+                                        
+                                        <!-- Lesson Status Indicator -->
+                                        <div class="lesson-status-indicator {{#completed}}completed{{/completed}}{{^completed}}{{#in_progress}}in-progress{{/in_progress}}{{^in_progress}}not-started{{/in_progress}}{{/completed}}">
+                                            <i class="fa {{#completed}}fa-check-circle{{/completed}}{{^completed}}{{#in_progress}}fa-play-circle{{/in_progress}}{{^in_progress}}fa-circle-o{{/in_progress}}{{/completed}}"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Lesson Content -->
+                                    <div class="lesson-content">
+                                        <!-- Lesson Description -->
+                                        <p class="lesson-description">{{intro}}</p>
+                                        
+                                        <!-- Progress Section -->
+                                        <div class="lesson-progress-section">
+                                            <div class="progress-header">
+                                                <span class="progress-label">Your Progress</span>
+                                                <span class="progress-percentage">{{progress_percentage}}%</span>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: {{progress_percentage}}%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Lesson Statistics -->
+                                        <div class="lesson-stats-grid">
+                                            <div class="lesson-stat-item">
+                                                <i class="fa fa-clock-o"></i>
+                                                <div class="lesson-stat-value">{{estimated_time}}</div>
+                                                <div>Time Limit</div>
+                                            </div>
+                                            <div class="lesson-stat-item">
+                                                <i class="fa fa-repeat"></i>
+                                                <div class="lesson-stat-value">{{completed_attempts}}/{{attempts}}</div>
+                                                <div>Attempts</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Lesson Action Button -->
+                                        <a href="{{lessonurl}}" class="lesson-action-button">
+                                            <i class="fa {{#completed}}fa-check{{/completed}}{{^completed}}fa-play{{/completed}}"></i>
+                                            {{#completed}}Review Lesson{{/completed}}{{^completed}}Start Learning{{/completed}}
+                                        </a>
+                                    </div>
+                                </div>
+                                {{/student_lessons}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/has_student_lessons}}
+                    
+                    {{^has_student_lessons}}
+                    <!-- No Lessons Message -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="no-lessons-message">
+                                <div class="no-lessons-icon">
+                                    <i class="fa fa-play-circle"></i>
+                                </div>
+                                <h3>No Lessons Yet</h3>
+                                <p>You don't have any lessons assigned yet. Check back later or contact your teacher!</p>
+                                <a href="{{{dashboardurl}}}" class="btn btn-primary">
+                                    <i class="fa fa-arrow-left"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/has_student_lessons}}
+                </div>
+            </div>
+        {{/elementary}}
+    {{/dashboard_type}}
+</div>
+
+<script>
+$(document).ready(function() {
+    // Add body class for content shifting
+    $('body').addClass('has-student-sidebar');
+    
+    // Count lessons by status
+    let inProgressCount = 0;
+    let completedCount = 0;
+    let notStartedCount = 0;
+    
+    $('.lessons-card').each(function() {
+        const card = $(this);
+        if (card.hasClass('completed')) {
+            completedCount++;
+        } else if (card.hasClass('in-progress')) {
+            inProgressCount++;
+        } else if (card.hasClass('not-started')) {
+            notStartedCount++;
+        }
+    });
+    
+    // Update statistics
+    $('#in-progress-lessons-count').text(inProgressCount);
+    $('#completed-lessons-count').text(completedCount);
+    $('#not-started-lessons-count').text(notStartedCount);
+    
+    // Handle sidebar navigation clicks
+    $('.student-sidebar .nav-link').on('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        $('.student-sidebar .nav-link').removeClass('active');
+        
+        // Add active class to clicked link
+        $(this).addClass('active');
+        
+        // Get the link text to determine action
+        var linkText = $(this).find('span').text().trim();
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different navigation items
+        switch(linkText) {
+            case 'Dashboard':
+                window.location.href = baseUrl + '/my/';
+                break;
+            case 'My Courses':
+                window.location.href = baseUrl + '/theme/remui_kids/mycourses.php';
+                break;
+            case 'Lessons':
+                // Already on lessons page
+                break;
+            case 'Activities':
+                window.location.href = baseUrl + '/mod/quiz/index.php';
+                break;
+            case 'Achievements':
+                window.location.href = baseUrl + '/badges/mybadges.php';
+                break;
+            case 'Competencies':
+                window.location.href = baseUrl + '/theme/remui_kids/elementary_competencies.php';
+                break;
+            case 'Schedule':
+                window.location.href = baseUrl + '/calendar/view.php';
+                break;
+            case 'Tree View':
+                window.location.href = baseUrl + '/course/view.php';
+                break;
+            case 'Settings':
+                window.location.href = baseUrl + '/user/preferences.php';
+                break;
+            default:
+                console.log('Navigation to:', linkText);
+        }
+    });
+    
+    // Handle Quick Action Cards
+    $('.quick-action-card').on('click', function(e) {
+        e.preventDefault();
+        
+        var cardType = $(this).attr('class').split(' ')[1]; // Get the card type class
+        
+        // Get the current base URL
+        var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
+        
+        // Handle different quick action cards
+        switch(cardType) {
+            case 'ebooks-card':
+                window.location.href = baseUrl + '/mod/book/index.php';
+                break;
+            case 'ask-teacher-card':
+                window.location.href = baseUrl + '/message/index.php';
+                break;
+            case 'code-editor-card':
+                window.open(baseUrl + '/mod/codeeditor/view.php', '_blank');
+                break;
+            case 'share-class-card':
+                window.location.href = baseUrl + '/mod/forum/index.php';
+                break;
+            case 'scratch-editor-card':
+                window.open(baseUrl + '/mod/scratch/view.php', '_blank');
+                break;
+            default:
+                console.log('Quick action clicked:', cardType);
+        }
+    });
+    
+    // Add hover effects to lesson cards
+    $('.lessons-card').hover(
+        function() {
+            $(this).css('transform', 'translateY(-5px)');
+            $(this).css('box-shadow', '0 10px 30px rgba(0, 0, 0, 0.15)');
+        },
+        function() {
+            $(this).css('transform', 'translateY(0)');
+            $(this).css('box-shadow', '0 5px 20px rgba(0, 0, 0, 0.1)');
+        }
+    );
+});
+</script>
+
+{{/custom_lessons}}
+
+        </div> <!-- end main-inner -->
+    </div> <!-- end page -->
+</div> <!-- end page-wrapper -->
+
+{{> theme_remui/footer}}
+
+
+
+
+

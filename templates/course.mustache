@@ -1,0 +1,1241 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    RemUI Kids - Child theme of RemUI
+    @package theme_remui_kids
+    @copyright (c) 2025 Kodeit
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template theme_remui_kids/course
+
+    Kids-friendly course template with horizontal card-based sections.
+
+    Context variables required for this template:
+    * sitename - The name of the site
+    * output - The core renderer for the page
+    * bodyattributes - attributes for the body tag as a string of html attributes
+    * sidepreblocks - HTML for the blocks
+    * hasblocks - true if there are blocks on this page
+    * courseindexopen - true if the nav drawer should be open on page load
+    * regionmainsettingsmenu - HTML for the region main settings menu
+    * hasregionmainsettingsmenu - There is a region main settings menu on this page.
+    * custom_course_cards - true if we should show custom course cards
+    * course_sections - array of course section data
+}}
+{{> theme_remui_kids/common_start}}
+
+<!-- Modern Course UI Styles -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/modern-course-ui.css">
+<!-- Course Sidebar Styles -->
+<link rel="stylesheet" href="{{{config.wwwroot}}}/theme/remui_kids/style/course-sidebar.css">
+<!-- Sidebar Active Item Tracker -->
+<script src="{{{config.wwwroot}}}/theme/remui_kids/javascript/sidebar_active_tracker.js"></script>
+<!-- Course Sidebar Enhancements -->
+<script src="{{{config.wwwroot}}}/theme/remui_kids/javascript/course-sidebar-enhancements.js"></script>
+
+{{#show_course_header}}
+<!-- Refreshed Course Hero -->
+<style>
+/* Main Layout Container */
+.course-header-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Banner Section */
+.course-hero {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
+    border-radius: 16px;
+    overflow: visible;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+    margin-bottom: 0;
+    background: #0f172a;
+}
+.course-hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{{course_header_data.courseimage}}}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 16px;
+}
+.course-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.72) 100%);
+    backdrop-filter: blur(1px);
+    border-radius: 16px;
+}
+.course-hero__content {
+    position: relative;
+    z-index: 2;
+    padding: 2.5rem 2rem 2rem;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 360px;
+}
+.course-hero__meta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+.course-hero__title {
+    margin: 0;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+.course-hero__author-date {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    color: #ffffff;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.course-hero__author {
+    font-weight: 700;
+    color: #c7f9cc;
+}
+.course-hero__separator {
+    color: #ffffff;
+    font-weight: 600;
+}
+.course-hero__date {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Content Area - Two Column Layout */
+.course-content-area {
+    position: relative;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+/* Left Column - Description */
+.course-description-wrapper {
+    flex: 1;
+    max-width: calc(75% - 1rem);
+    padding-right: 2rem;
+}
+
+/* Right Column - Video Card */
+.course-hero__video-card-wrapper {
+    flex: 0 0 25%;
+    position: relative;
+    min-height: 400px;
+}
+
+/* Floating Video Card - 25% on banner, 75% below */
+.course-hero__video-card {
+    position: absolute;
+    top: -180px;
+    right: 100px;
+    z-index: 10;
+    background: #ffffff;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 320px;
+    overflow: hidden;
+}
+.course-hero__video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background: #000000;
+    overflow: hidden;
+}
+.course-hero__video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+.course-hero__video-details {
+    padding: 1rem 1.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+.course-hero__detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+.course-hero__detail-item:last-child {
+    margin-bottom: 0;
+}
+.course-hero__detail-item i {
+    color: #10b981;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.course-hero__detail-item .detail-label {
+    color: #64748b;
+    font-weight: 500;
+}
+.course-hero__detail-item .detail-value {
+    color: #10b981;
+    font-weight: 600;
+}
+.course-hero__start-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: #d1fae5;
+    color: #1e293b;
+    border: none;
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+}
+.course-hero__start-btn:hover {
+    background: #a7f3d0;
+}
+
+/* Teacher Avatars - Stacked in bottom right corner */
+.course-hero__teachers-avatars {
+    position: absolute;
+    bottom: 4.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    z-index: 20;
+}
+
+.teacher-avatar-item {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    overflow: hidden;
+    background: #e5e7eb;
+    margin-left: -12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, z-index 0.2s ease;
+}
+
+.teacher-avatar-item:last-child {
+    margin-left: 0;
+}
+
+.teacher-avatar-item:hover {
+    transform: translateY(-2px);
+    z-index: 25;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.teacher-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.teacher-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #10b981, #14b8a6);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 1024px) {
+    .course-content-area {
+        flex-direction: column;
+    }
+    .course-description-wrapper {
+        max-width: 100%;
+        padding-right: 0;
+    }
+    .course-hero__video-card-wrapper {
+        flex: 0 0 100%;
+        position: relative;
+    }
+    .course-hero__video-card {
+        position: relative;
+        top: 0;
+        right: auto;
+        max-width: 500px;
+        margin: 2rem auto 0;
+    }
+}
+@media (max-width: 768px) {
+    .course-hero {
+        min-height: 280px;
+        border-radius: 10px;
+    }
+    .course-hero__content {
+        padding: 1.5rem;
+        min-height: 280px;
+    }
+    .course-hero__title {
+        font-size: 1.8rem;
+    }
+    .course-hero__author-date {
+        font-size: 0.9rem;
+    }
+    .course-hero__video-card {
+        width: 100%;
+        max-width: 100%;
+    }
+    .course-description-section {
+        padding: 1.5rem;
+    }
+}
+</style>
+<div class="course-header-wrapper">
+    <!-- Banner Section -->
+    <div class="course-hero">
+        <div class="course-hero__bg"></div>
+        <div class="course-hero__overlay"></div>
+        <div class="course-hero__content container-fluid">
+            <div class="course-hero__meta-row">
+                <h1 class="course-hero__title">{{{course_header_data.course.fullname}}}</h1>
+                <div class="course-hero__author-date">
+                    <span>By</span>
+                    {{#course_header_data.teachers.0}}
+                        {{#is_kodeit_admin}}
+                            {{#course_header_data.teachers.1}}
+                            <span class="course-hero__author">{{{fullname}}}</span>
+                            {{/course_header_data.teachers.1}}
+                            {{^course_header_data.teachers.1}}
+                            <span class="course-hero__author">{{{fullname}}}</span>
+                            {{/course_header_data.teachers.1}}
+                        {{/is_kodeit_admin}}
+                        {{^is_kodeit_admin}}
+                        <span class="course-hero__author">{{{fullname}}}</span>
+                        {{/is_kodeit_admin}}
+                    {{/course_header_data.teachers.0}}
+                    <span class="course-hero__separator">|</span>
+                    <span class="course-hero__date">
+                        {{#course_header_data.startdateformatted}}{{{course_header_data.startdateformatted}}}{{/course_header_data.startdateformatted}}
+                        {{^course_header_data.startdateformatted}}{{{course_header_data.startdate}}}{{/course_header_data.startdateformatted}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content Area - Two Column Layout -->
+    <div class="container-fluid">
+        <div class="course-content-area">
+            <!-- Left Column - Description -->
+            <div class="course-description-wrapper">
+                {{#course_header_data.course.summary}}
+                <div class="course-description-section">
+                    <h2 class="course-description-title">Course Description</h2>
+                    <div class="course-description-content" id="courseDescriptionContent">{{{course_header_data.course.summary}}}</div>
+                </div>
+                {{/course_header_data.course.summary}}
+            </div>
+            
+            <!-- Right Column - Video Card -->
+            {{#course_header_data.firstvideourl}}
+            <div class="course-hero__video-card-wrapper">
+                <div class="course-hero__video-card">
+                    <div class="course-hero__video-container">
+                        <video class="course-hero__video-player" 
+                               src="{{{course_header_data.firstvideourl}}}" 
+                               controls>
+                        </video>
+                    </div>
+                    <div class="course-hero__video-details">
+                        <div class="course-hero__detail-item">
+                            <i class="fa fa-folder" aria-hidden="true"></i>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">{{{course_header_data.categoryname}}}</span>
+                        </div>
+                        <div class="course-hero__detail-item">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <span class="detail-label">Participants:</span>
+                            <span class="detail-value">{{{course_header_data.enrolledstudentscount}}}</span>
+                        </div>
+                        <div class="course-hero__detail-item">
+                            <i class="fa fa-book" aria-hidden="true"></i>
+                            <span class="detail-label">Lessons:</span>
+                            <span class="detail-value">{{{course_header_data.lessonscount}}}</span>
+                        </div>
+                        <!-- Teacher Avatars - Stacked in bottom right corner -->
+                        {{#course_header_data.has_teachers}}
+                        <div class="course-hero__teachers-avatars">
+                            {{#course_header_data.teachers}}
+                            {{^is_kodeit_admin}}
+                            <div class="teacher-avatar-item">
+                                <img src="{{{profileimageurl}}}" alt="{{{fullname}}}" class="teacher-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="teacher-avatar-placeholder" style="display: none;">
+                                    <span>{{firstname_initial}}{{lastname_initial}}</span>
+                                </div>
+                            </div>
+                            {{/is_kodeit_admin}}
+                            {{/course_header_data.teachers}}
+                        </div>
+                        {{/course_header_data.has_teachers}}
+                        <button class="course-hero__start-btn" onclick="scrollToCourseSections(); return false;">
+                            Start Course
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{/course_header_data.firstvideourl}}
+        </div>
+    </div>
+</div>
+{{/show_course_header}}
+
+{{#show_course_header}}
+<!-- Course Description Styles -->
+<style>
+/* Course Description Section - Responsive with Limited Width */
+.course-description-section {
+    width: 100%;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 0;
+}
+
+.course-description-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #10b981;
+    display: inline-block;
+}
+
+.course-description-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #475569;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.course-description-content p {
+    margin-bottom: 1rem;
+}
+
+.course-description-content p:last-child {
+    margin-bottom: 0;
+}
+
+.course-description-short {
+    display: inline;
+}
+
+.course-description-full {
+    display: none;
+}
+
+.read-more-link {
+    display: inline;
+    color: #3b82f6;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    margin-left: 0.25rem;
+}
+
+.read-more-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.course-description-content.expanded .course-description-short {
+    display: none;
+}
+
+.course-description-content.expanded .course-description-full {
+    display: inline;
+}
+
+/* Course Video Player */
+.course-video-container {
+    width: 100%;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #000000;
+}
+
+.course-video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+}
+
+.course-video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .course-description-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .course-description-title {
+        font-size: 1.25rem;
+    }
+    
+    .course-description-content {
+        font-size: 0.9375rem;
+    }
+    
+    .course-video-container {
+        margin-bottom: 1.5rem;
+    }
+}
+</style>
+
+
+{{#secondarymoremenu}}
+<div class="secondary-navigation edw-tabs-navigation d-print-none">
+    {{> core/moremenu}}
+</div>
+{{/secondarymoremenu}}
+{{/show_course_header}}
+
+{{#overflow}}
+<div class="container-fluid tertiary-navigation">
+    <div class="navitem">
+        {{> core/url_select}}
+    </div>
+</div>
+{{/overflow}}
+
+<div id="page-content" class="pb-4 d-print-block">
+    <div id="region-main-box">
+        {{#hasregionmainsettingsmenu}}
+        <div id="region-main-settings-menu" class="d-print-none">
+            <div> {{{ regionmainsettingsmenu }}} </div>
+        </div>
+        {{/hasregionmainsettingsmenu}}
+        <section id="region-main" aria-label="{{#str}}content{{/str}}">
+            {{#hasregionmainsettingsmenu}}
+                <div class="region_main_settings_menu_proxy"></div>
+            {{/hasregionmainsettingsmenu}}
+            
+            {{#headercontent}}
+                {{> core/activity_header }}
+            {{/headercontent}}
+
+            {{#custom_course_cards}}
+            <style>
+            .modern-course-sections .sections-header-top {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .modern-course-sections .sections-header-top .back-dashboard-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .modern-course-sections .sections-header-right {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-left: auto;
+            }
+
+            .modern-course-sections .study-partner-btn,
+            .modern-course-sections .pacing-guide-assistant-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.6rem 1.2rem;
+                color: #ffffff;
+                border-radius: 999px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .modern-course-sections .study-partner-btn {
+                background: linear-gradient(135deg, #10b981, #14b8a6);
+                box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);
+            }
+
+            .modern-course-sections .study-partner-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 36px rgba(16, 185, 129, 0.35);
+                color: #ffffff;
+                text-decoration: none;
+            }
+
+            .modern-course-sections .pacing-guide-assistant-btn {
+                background: linear-gradient(135deg, #06b6d4, #3b82f6);
+                box-shadow: 0 10px 30px rgba(6, 182, 212, 0.25);
+            }
+
+            .modern-course-sections .pacing-guide-assistant-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 36px rgba(6, 182, 212, 0.35);
+            }
+            
+            .modern-course-sections .back-dashboard-btn {
+                background: linear-gradient(135deg, #10b981, #06b6d4);
+                box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);
+                color: #ffffff;
+                padding: 0.75rem 1.5rem;
+                border-radius: 999px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                text-decoration: none;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            .modern-course-sections .back-dashboard-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 16px 36px rgba(16, 185, 129, 0.4);
+                background: linear-gradient(135deg, #059669, #0891b2);
+                color: #ffffff;
+                text-decoration: none;
+            }
+            
+            .modern-course-sections .sections-title {
+                background: linear-gradient(135deg, #10b981, #06b6d4);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            </style>
+            <!-- Modern Course Sections Grid -->
+            <div class="modern-course-sections" id="courseSections">
+                <div class="container-fluid">
+                    <!-- Course Sections Header -->
+                    <div class="sections-header">
+                        <div class="sections-header-top">
+                            {{#dashboard_url}}
+                            <a href="{{{dashboard_url}}}" class="back-dashboard-btn">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                <span>Back to courses</span>
+                            </a>
+                            {{/dashboard_url}}
+                        </div>
+                        <div class="sections-header-right">
+                            {{#show_study_partner}}
+                            <a href="{{{study_partner_url}}}" class="study-partner-btn">
+                                <i class="fa fa-robot" aria-hidden="true"></i>
+                                <span>Study Partner</span>
+                            </a>
+                            {{/show_study_partner}}
+                            {{#show_pacing_guide_assistant}}
+                            <a href="{{{pacing_guide_assistant_url}}}" class="pacing-guide-assistant-btn">
+                                <i class="fa fa-magic" aria-hidden="true"></i>
+                                <span>Pacing Guide Assistant</span>
+                            </a>
+                            {{/show_pacing_guide_assistant}}
+                        </div>
+                    </div>
+                    <div class="sections-grid">
+                        {{#course_sections}}
+                        {{#uservisible}}
+                        <div class="section-card-wrapper">
+                            <a href="{{{url}}}" class="modern-section-card">
+                                <!-- Top Section: Image -->
+                                <div class="card-image-section">
+                                    <img src="{{section_image}}" alt="{{name}}" class="card-image">
+                                </div>
+                                <!-- Bottom Section: Content -->
+                                <div class="card-content-section">
+                                    <h3 class="card-title">{{name}}</h3>
+                                    {{#summary}}
+                                    <p class="card-description">{{{summary}}}</p>
+                                    {{/summary}}
+                                    {{^summary}}
+                                    <p class="card-description">Explore this section to learn new concepts and skills.</p>
+                                    {{/summary}}
+                                    <div class="card-activities">
+                                        <i class="fas fa-tasks card-checklist-icon"></i>
+                                        <span>{{total_activities}} Activities</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-bar">
+                                            <div class="card-progress-fill" style="width: {{progress}}%"></div>
+                                        </div>
+                                        <span class="card-progress-text">{{progress}}% Complete</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {{/uservisible}}
+                        {{/course_sections}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original RemUI Course Content (hidden when custom cards are shown) -->
+            <div class="original-course-content" {{#custom_course_cards}}style="display: none;"{{/custom_course_cards}}>
+                {{{ output.main_content }}}
+            </div>
+            {{/custom_course_cards}}
+
+            {{#custom_section_view}}
+            <style>
+            .section-activities-view .study-partner-header-btn {
+                background: linear-gradient(135deg, #818cf8, #c084fc);
+                border: none;
+                color: #ffffff;
+                padding: 0.6rem 1.2rem;
+                border-radius: 8px;
+                font-weight: 600;
+                text-decoration: none;
+                box-shadow: 0 4px 12px rgba(129, 140, 248, 0.25);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .section-activities-view .study-partner-header-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(129, 140, 248, 0.35);
+                color: #ffffff;
+                text-decoration: none;
+            }
+            </style>
+            <!-- Custom Section Activities View -->
+            <div class="section-activities-view">
+                <div class="container-fluid">
+                    <!-- Back to Course Button and Study Partner Button -->
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <a href="{{{course_url}}}" class="btn btn-outline-primary">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Course
+                        </a>
+                        {{#show_study_partner}}
+                        <a href="{{{study_partner_url}}}" class="btn btn-primary study-partner-header-btn">
+                            <i class="fa fa-robot" aria-hidden="true"></i> Study Partner
+                        </a>
+                        {{/show_study_partner}}
+                    </div>
+                    
+                    <!-- Section Header -->
+                    <div class="section-header mb-4">
+                        <h1 class="section-title">{{section_activities.section_name}}</h1>
+                        {{#section_activities.section_summary}}
+                        <p class="section-description">{{{section_activities.section_summary}}}</p>
+                        {{/section_activities.section_summary}}
+                    </div>
+                    
+                    <!-- Activities List -->
+                    <div class="activities-list">
+                        {{#section_activities.activities}}
+                        {{#modname_subsection}}
+                        {{#url}}
+                        <a href="{{{url}}}" class="subsection-card-link">
+                        {{/url}}
+                        <div class="subsection-card {{#progress_percentage}}{{#100}}completed{{/100}}{{^100}}in-progress{{/100}}{{/progress_percentage}}{{^progress_percentage}}in-progress{{/progress_percentage}}">
+                            <div class="subsection-card-content">
+                                <!-- Icon -->
+                                <div class="subsection-icon-wrapper">
+                                    {{#progress_percentage}}
+                                    {{#100}}
+                                    <div class="subsection-icon completed">
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    {{/100}}
+                                    {{^100}}
+                                    <div class="subsection-icon in-progress">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                    </div>
+                                    {{/100}}
+                                    {{/progress_percentage}}
+                                    {{^progress_percentage}}
+                                    <div class="subsection-icon in-progress">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                    </div>
+                                    {{/progress_percentage}}
+                                </div>
+
+                                <!-- Content -->
+                                <div class="subsection-content">
+                                    <div class="subsection-header">
+                                        <div class="subsection-title-section">
+                                            <h3 class="subsection-title">{{name}}</h3>
+                                            <div class="subsection-meta-row">
+                                                <div class="subsection-meta-item">
+                                                    <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                                    <span>{{total_activities}} {{#total_activities}}{{#1}}activity{{/1}}{{^1}}activities{{/1}}{{/total_activities}}{{^total_activities}}activities{{/total_activities}}</span>
+                                                </div>
+                                                <div class="subsection-meta-item">
+                                                    <i class="fa fa-clock" aria-hidden="true"></i>
+                                                    <span>1h 30min</span>
+                                                </div>
+                                                <div class="subsection-meta-item">
+                                                    <i class="fa fa-trophy" aria-hidden="true"></i>
+                                                    <span>{{#total_points}}{{total_points}}{{/total_points}}{{^total_points}}0{{/total_points}} points</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="subsection-chevron">
+                                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Progress -->
+                                    <div class="subsection-progress-section">
+                                        <div class="subsection-progress-header">
+                                            <span class="subsection-progress-label">
+                                                {{completed_activities}} of {{total_activities}} completed
+                                            </span>
+                                            <span class="subsection-progress-percentage">
+                                                {{progress_percentage}}%
+                                            </span>
+                                        </div>
+                                        <div class="subsection-progress-bar">
+                                            <div class="subsection-progress-fill {{#is_completed}}completed{{/is_completed}}{{^is_completed}}in-progress{{/is_completed}}" style="width: {{progress_percentage}}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Label -->
+                                    {{#progress_percentage}}
+                                    {{#100}}
+                                    <div class="subsection-status-badge completed">
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        <span>Completed</span>
+                                    </div>
+                                    {{/100}}
+                                    {{^100}}
+                                    <div class="subsection-status-badge in-progress">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                        <span>
+                                            {{#completed_activities}}
+                                                {{#total_activities}}
+                                                    {{remaining_activities}} {{#remaining_activities}}{{#1}}activity{{/1}}{{^1}}activities{{/1}}{{/remaining_activities}} left
+                                                {{/total_activities}}
+                                                {{^total_activities}}In Progress{{/total_activities}}
+                                            {{/completed_activities}}
+                                            {{^completed_activities}}
+                                                Start Module
+                                            {{/completed_activities}}
+                                        </span>
+                                    </div>
+                                    {{/100}}
+                                    {{/progress_percentage}}
+                                    {{^progress_percentage}}
+                                    <div class="subsection-status-badge in-progress">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                        <span>Start Module</span>
+                                    </div>
+                                    {{/progress_percentage}}
+                                </div>
+                            </div>
+                        </div>
+                        {{#url}}
+                        </a>
+                        {{/url}}
+                        {{/modname_subsection}}
+                        {{^modname_subsection}}
+                        <!-- Redesigned Activity Cards - Simple and Clean -->
+                        {{#url}}
+                        <a href="{{{url}}}" class="activity-card-link">
+                        {{/url}}
+                        <div class="activity-card {{#is_completed}}completed{{/is_completed}}{{^is_completed}}{{#has_started}}in-progress{{/has_started}}{{^has_started}}not-started{{/has_started}}{{/is_completed}}" style="background: linear-gradient(145deg, #ffffff00, #ffffff00, {{icon_color}});">
+                            <!-- Left Icon Section -->
+                            <div class="activity-card-icon-section">
+                                <div class="activity-card-icon-wrapper {{#is_completed}}completed{{/is_completed}}{{^is_completed}}{{#has_started}}in-progress{{/has_started}}{{^has_started}}not-started{{/has_started}}{{/is_completed}}">
+                                    <img src="{{{custom_icon}}}" alt="{{modname}}" class="activity-card-icon" onerror="this.src='{{{icon}}}';">
+                                    {{#is_completed}}
+                                    <div class="activity-card-status-badge">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </div>
+                                    {{/is_completed}}
+                                </div>
+                            </div>
+                            
+                            <!-- Main Content Section -->
+                            <div class="activity-card-content">
+                                <div class="activity-card-header">
+                                    <h4 class="activity-card-title">{{name}}</h4>
+                                    {{#url}}
+                                    <div class="activity-card-chevron">
+                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                    </div>
+                                    {{/url}}
+                                </div>
+                                <p class="activity-card-description">{{{description}}}</p>
+                                <div class="activity-card-footer">
+                                    {{#due_date_formatted}}
+                                    <div class="activity-card-duration">
+                                        <i class="fa fa-clock" aria-hidden="true"></i>
+                                        <span>Due {{due_date_formatted}}</span>
+                                    </div>
+                                    {{/due_date_formatted}}
+                                    {{^is_completed}}
+                                        {{#submission_status}}
+                                        <div class="activity-card-submission-status">
+                                            <span>{{submission_status}}</span>
+                                        </div>
+                                        {{/submission_status}}
+                                    {{/is_completed}}
+                                    {{#question_count_display}}
+                                    <div class="activity-card-questions">
+                                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                        <span>{{question_count_display}}</span>
+                                    </div>
+                                    {{/question_count_display}}
+                                    {{#points_display}}
+                                    <div class="activity-card-points">
+                                        <i class="fa fa-trophy" aria-hidden="true"></i>
+                                        <span>{{points_display}}</span>
+                                    </div>
+                                    {{/points_display}}
+                                </div>
+                                {{#is_completed}}
+                                <div class="activity-card-action-btn completed">
+                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    <span>Review</span>
+                                </div>
+                                {{/is_completed}}
+                                {{^is_completed}}
+                                    {{#has_started}}
+                                    <div class="activity-card-action-btn in-progress">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                        <span>Continue</span>
+                                    </div>
+                                    {{/has_started}}
+                                    {{^has_started}}
+                                    <div class="activity-card-action-btn not-started">
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                        <span>Start</span>
+                                    </div>
+                                    {{/has_started}}
+                                {{/is_completed}}
+                            </div>
+                        </div>
+                        {{#url}}
+                        </a>
+                        {{/url}}
+                        {{/modname_subsection}}
+                        {{/section_activities.activities}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original RemUI Course Content (hidden when custom section view is shown) -->
+            <div class="original-course-content" style="display: none;">
+                {{{ output.main_content }}}
+            </div>
+            {{/custom_section_view}}
+
+            {{^custom_course_cards}}
+            {{^custom_section_view}}
+            <!-- Original RemUI Course Content -->
+            {{{ output.main_content }}}
+            {{/custom_section_view}}
+            {{/custom_course_cards}}
+
+            {{{ output.activity_navigation }}}
+            {{{ output.course_content_footer }}}
+
+        </section>
+    </div>
+</div>
+
+{{#ai_chatbot_html}}
+{{{ai_chatbot_html}}}
+{{/ai_chatbot_html}}
+
+{{> theme_remui/common_end}}
+
+{{#js}}
+// Scroll to course sections function - defined globally so it can be called from onclick
+window.scrollToCourseSections = function() {
+    const sectionsElement = document.getElementById('courseSections');
+    if (sectionsElement) {
+        sectionsElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    } else {
+        // Fallback: try scrolling to the first section card or use the sections grid
+        const sectionsGrid = document.querySelector('.sections-grid');
+        if (sectionsGrid) {
+            sectionsGrid.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Video player is now directly embedded, no JavaScript needed
+    
+    // Course Description - Read More/Less functionality
+    const descriptionContent = document.getElementById('courseDescriptionContent');
+    
+    if (descriptionContent) {
+        // Get HTML content
+        const fullHTML = descriptionContent.innerHTML;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = fullHTML;
+        const fullText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        // Split into words
+        const words = fullText.trim().split(/\s+/).filter(w => w.length > 0);
+        const wordCount = words.length;
+        
+        console.log('Course Description Word Count:', wordCount);
+        
+        // Only truncate if more than 50 words
+        if (wordCount > 50) {
+            // Get first 50 words
+            const shortWords = words.slice(0, 50).join(' ');
+            const remainingWords = words.slice(50).join(' ');
+            
+            // Create new HTML with truncation
+            descriptionContent.innerHTML = `
+                <span class="course-description-short">${shortWords}...</span>
+                <span class="course-description-full">${fullHTML}</span>
+                <a href="javascript:void(0)" class="read-more-link" id="readMoreLink">Read More</a>
+            `;
+            
+            // Add click handler
+            const readMoreLink = document.getElementById('readMoreLink');
+            if (readMoreLink) {
+                readMoreLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isExpanded = descriptionContent.classList.contains('expanded');
+                    
+                    if (!isExpanded) {
+                        // Expand
+                        descriptionContent.classList.add('expanded');
+                        this.textContent = 'Read Less';
+                    } else {
+                        // Collapse
+                        descriptionContent.classList.remove('expanded');
+                        this.textContent = 'Read More';
+                        
+                        // Scroll to description
+                        const descSection = document.querySelector('.course-description-section');
+                        if (descSection) {
+                            descSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            }
+        }
+    }
+    
+    // Animate progress bars on load
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 100);
+    });
+
+    // Add hover effects to course section cards
+    const cards = document.querySelectorAll('.course-section-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.querySelector('.card-image-wrapper img').style.transform = 'scale(1.05)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.querySelector('.card-image-wrapper img').style.transform = 'scale(1)';
+        });
+    });
+
+    // Sidebar toggle behavior for full width adjustment
+    function handleSidebarToggle() {
+        const drawers = document.querySelector('.drawers');
+        const sidebar = document.querySelector('.theme_remui-drawers-courseindex');
+        
+        // Try multiple selectors for the toggle button
+        const sidebarToggle = document.querySelector('[data-target="theme_remui-drawers-courseindex"]') ||
+                             document.querySelector('.drawer-left-toggle button') || 
+                             document.querySelector('.drawer-toggler button') ||
+                             document.querySelector('.drawer-left-toggle') ||
+                             document.querySelector('.drawer-toggler');
+        
+        console.log('Drawers element:', drawers);
+        console.log('Sidebar element:', sidebar);
+        console.log('Toggle button:', sidebarToggle);
+        
+        // Ensure sidebar exists and is properly styled
+        if (sidebar) {
+            sidebar.style.display = 'block';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+        }
+        
+        // Create backdrop for sidebar
+        let backdrop = document.querySelector('.drawer-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'drawer-backdrop';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Handle backdrop clicks to close sidebar
+        backdrop.addEventListener('click', function() {
+            if (drawers) {
+                drawers.classList.remove('show-drawer-left');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Hide ALL existing toggle buttons
+        const allToggleButtons = document.querySelectorAll(`
+            [data-target="theme_remui-drawers-courseindex"],
+            .drawer-toggles,
+            .drawer-toggles button,
+            .drawer-toggles div,
+            button[data-original-title="Open course index"],
+            button[title="Open course index"],
+            .drawer-left-toggle,
+            .drawer-toggler
+        `);
+        
+        allToggleButtons.forEach(button => {
+            button.style.display = 'none';
+            button.style.visibility = 'hidden';
+            button.style.opacity = '0';
+        });
+        
+        // Remove any existing custom toggle
+        const existingCustomToggle = document.querySelector('.custom-sidebar-toggle');
+        if (existingCustomToggle) {
+            existingCustomToggle.remove();
+        }
+        
+        // Create a new custom toggle button
+        const customToggle = document.createElement('button');
+        customToggle.innerHTML = '<i class="fa fa-bars" aria-hidden="true"></i>';
+        customToggle.className = 'custom-sidebar-toggle';
+        customToggle.style.cssText = `
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 20px !important;
+            z-index: 1060 !important;
+            background: #3b82f6 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4) !important;
+            cursor: pointer !important;
+            font-size: 20px !important;
+            width: 60px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        `;
+        document.body.appendChild(customToggle);
+        
+        customToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (drawers) {
+                drawers.classList.toggle('show-drawer-left');
+                console.log('Custom toggle clicked, sidebar state:', drawers.classList.contains('show-drawer-left'));
+                
+                // Handle body overflow
+                if (drawers.classList.contains('show-drawer-left')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+        
+        // Handle close button in sidebar
+        const closeButton = document.querySelector('.theme_remui-drawers-courseindex .close') ||
+                           document.querySelector('.drawer-left .close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                if (drawers) {
+                    drawers.classList.remove('show-drawer-left');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+    }
+
+    // Initialize sidebar toggle behavior
+    handleSidebarToggle();
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const drawers = document.querySelector('.drawers');
+        if (window.innerWidth <= 768) {
+            // On mobile, always use full width
+            drawers.classList.remove('show-drawer-left');
+        }
+    });
+});
+{{/js}}

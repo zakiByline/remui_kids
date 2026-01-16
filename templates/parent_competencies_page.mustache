@@ -1,0 +1,1460 @@
+{{!
+    Parent Competencies Page Template
+    Context variables:
+    * is_parent_view - boolean
+    * child_name - string
+    * child_firstname - string
+    * child_cohort - string  
+    * child_selector - array of child options
+    * has_multiple_children - boolean
+    * analytics_summary - array
+    * competencies - array of framework groups
+    * has_competencies - boolean
+    * wwwroot - string
+    * parent_dashboard_url - string
+}}
+
+<style>
+    /* Parent Competencies Specific Styles */
+    .parent-competencies-wrapper {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Sidebar Styles */
+    .parent-sidebar {
+        width: 280px;
+        background: white;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .sidebar-header {
+        padding: 2rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .sidebar-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .sidebar-subtitle {
+        margin: 0.25rem 0 0;
+        font-size: 0.875rem;
+        opacity: 0.9;
+    }
+
+    .sidebar-nav {
+        flex: 1;
+        padding: 1rem 0;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 0.875rem 1.5rem;
+        color: #4a5568;
+        text-decoration: none;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+    }
+
+    .sidebar-link:hover {
+        background: #f7fafc;
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .sidebar-link.active {
+        background: #ebf4ff;
+        color: #667eea;
+        border-left-color: #667eea;
+        font-weight: 600;
+    }
+
+    .sidebar-link i {
+        width: 24px;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+    .sidebar-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .sidebar-logout {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: #fed7d7;
+        color: #742a2a;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .sidebar-logout:hover {
+        background: #fc8181;
+        color: white;
+        text-decoration: none;
+    }
+
+    .sidebar-logout i {
+        margin-right: 0.5rem;
+    }
+
+    /* Main Content with Sidebar */
+    .parent-main-content {
+        margin-left: 280px;
+        flex: 1;
+        padding: 2rem 1rem;
+        width: calc(100% - 280px);
+    }
+
+    /* Mobile Toggle */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1001;
+        background: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .parent-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .parent-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .parent-main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .sidebar-toggle {
+            display: block;
+        }
+    }
+
+    .parent-header {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .parent-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .child-info-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .child-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .child-details h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        color: #2d3748;
+        font-weight: 700;
+    }
+
+    .child-cohort-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .child-selector-wrapper {
+        position: relative;
+    }
+
+    .child-selector {
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        font-size: 1rem;
+        color: #2d3748;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        min-width: 200px;
+    }
+
+    .child-selector:hover {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .back-to-dashboard {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .back-to-dashboard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Analytics Summary Cards */
+    .analytics-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .analytics-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .analytics-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .analytics-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .analytics-card.competent::before {
+        background: linear-gradient(90deg, #48bb78, #38a169);
+    }
+
+    .analytics-card.inprogress::before {
+        background: linear-gradient(90deg, #4299e1, #3182ce);
+    }
+
+    .analytics-card.notcompetent::before {
+        background: linear-gradient(90deg, #ed8936, #dd6b20);
+    }
+
+    .analytics-card-header {
+        color: #718096;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .analytics-card-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2d3748;
+        line-height: 1;
+    }
+
+    .analytics-card-percentage {
+        display: inline-block;
+        font-size: 1.25rem;
+        color: #718096;
+        margin-left: 0.5rem;
+    }
+
+    .analytics-card-description {
+        color: #a0aec0;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Competency Framework Sections */
+    .competency-frameworks {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .framework-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    }
+
+    .framework-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f7fafc;
+    }
+
+    .framework-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .framework-icon.blue { background: linear-gradient(135deg, #4299e1, #3182ce); }
+    .framework-icon.green { background: linear-gradient(135deg, #48bb78, #38a169); }
+    .framework-icon.purple { background: linear-gradient(135deg, #9f7aea, #805ad5); }
+    .framework-icon.orange { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+
+    .framework-title {
+        flex: 1;
+    }
+
+    .framework-title h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #2d3748;
+        font-weight: 700;
+    }
+
+    .framework-subtitle {
+        color: #718096;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Framework Stats */
+    .framework-stats {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .framework-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .stat-dot.competent { background: #48bb78; }
+    .stat-dot.inprogress { background: #4299e1; }
+    .stat-dot.notcompetent { background: #ed8936; }
+
+    .stat-label {
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
+    .stat-value {
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 1.125rem;
+    }
+
+    /* Competency Cards Grid */
+    .competency-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .competency-card {
+        background: #f7fafc;
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .competency-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #667eea;
+    }
+
+    .competency-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .competency-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .competency-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .competency-badge.competent {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+
+    .competency-badge.inprogress {
+        background: #bee3f8;
+        color: #2c5282;
+    }
+
+    .competency-badge.notcompetent {
+        background: #fed7d7;
+        color: #742a2a;
+    }
+
+    .competency-description {
+        color: #718096;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
+    /* Progress Bar */
+    .progress-section {
+        margin-bottom: 1rem;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: #4a5568;
+        font-weight: 600;
+    }
+
+    .progress-bar-container {
+        height: 10px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+    }
+
+    .progress-bar-fill.competent {
+        background: linear-gradient(90deg, #48bb78, #38a169);
+    }
+
+    .progress-bar-fill.inprogress {
+        background: linear-gradient(90deg, #4299e1, #3182ce);
+    }
+
+    .progress-bar-fill.notcompetent {
+        background: linear-gradient(90deg, #ed8936, #dd6b20);
+    }
+
+    /* Feedback Preview */
+    .feedback-preview {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-left: 4px solid #667eea;
+    }
+
+    .feedback-rating {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .feedback-rating.rating-mastery {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+
+    .feedback-rating.rating-proficient {
+        background: #bee3f8;
+        color: #2c5282;
+    }
+
+    .feedback-rating.rating-developing {
+        background: #faf089;
+        color: #744210;
+    }
+
+    .feedback-rating.rating-emerging {
+        background: #fed7d7;
+        color: #742a2a;
+    }
+
+    .feedback-comment {
+        color: #4a5568;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin: 0.5rem 0;
+    }
+
+    .feedback-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-size: 0.75rem;
+        color: #718096;
+    }
+
+    .feedback-teacher {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .feedback-time {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Course List */
+    .competency-courses {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .course-count-label {
+        font-size: 0.75rem;
+        color: #718096;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .course-tag {
+        display: inline-block;
+        background: white;
+        border: 1px solid #e2e8f0;
+        padding: 0.375rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        color: #4a5568;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-description {
+        color: #718096;
+        font-size: 1rem;
+    }
+
+    /* Parent Insights Wrapper - Strong, Weak, Improvement Areas */
+    .parent-insights-wrapper {
+        margin: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .insight-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .insight-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+    }
+
+    .strong-section::before {
+        background: linear-gradient(90deg, #48bb78, #38a169);
+    }
+
+    .improvement-section::before {
+        background: linear-gradient(90deg, #4299e1, #3182ce);
+    }
+
+    .weak-section::before {
+        background: linear-gradient(90deg, #ed8936, #dd6b20);
+    }
+
+    .insight-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #f7fafc;
+    }
+
+    .insight-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .strong-icon {
+        background: linear-gradient(135deg, #48bb78, #38a169);
+    }
+
+    .improvement-icon {
+        background: linear-gradient(135deg, #4299e1, #3182ce);
+    }
+
+    .weak-icon {
+        background: linear-gradient(135deg, #ed8936, #dd6b20);
+    }
+
+    .insight-title-group {
+        flex: 1;
+    }
+
+    .insight-title {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #2d3748;
+        line-height: 1.2;
+    }
+
+    .insight-subtitle {
+        margin: 0.5rem 0 0;
+        font-size: 1rem;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .insight-card {
+        background: #f7fafc;
+        border-radius: 16px;
+        padding: 1.75rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+    }
+
+    .insight-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .strong-card:hover {
+        border-color: #48bb78;
+        background: #f0fff4;
+    }
+
+    .improvement-card:hover {
+        border-color: #4299e1;
+        background: #ebf8ff;
+    }
+
+    .weak-card:hover {
+        border-color: #ed8936;
+        background: #fffaf0;
+    }
+
+    .insight-card-header {
+        margin-bottom: 1rem;
+    }
+
+    .framework-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .insight-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0 0 0.75rem;
+        line-height: 1.3;
+    }
+
+    .insight-card-description {
+        color: #718096;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+    }
+
+    .insight-progress-wrapper {
+        margin: 1.25rem 0;
+    }
+
+    .insight-progress-bar {
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .insight-progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.8s ease;
+    }
+
+    .strong-progress {
+        background: linear-gradient(90deg, #48bb78, #38a169);
+    }
+
+    .improvement-progress {
+        background: linear-gradient(90deg, #4299e1, #3182ce);
+    }
+
+    .weak-progress {
+        background: linear-gradient(90deg, #ed8936, #dd6b20);
+    }
+
+    .insight-progress-text {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    .insight-feedback {
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-top: 1.25rem;
+        border-left: 4px solid #667eea;
+    }
+
+    .feedback-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .strong-badge {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+
+    .improvement-badge {
+        background: #bee3f8;
+        color: #2c5282;
+    }
+
+    .weak-badge {
+        background: #fed7d7;
+        color: #742a2a;
+    }
+
+    .feedback-text {
+        color: #4a5568;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0.5rem 0;
+        font-style: italic;
+    }
+
+    .feedback-teacher-name {
+        color: #718096;
+        font-size: 0.85rem;
+        margin: 0.5rem 0 0;
+        font-weight: 600;
+    }
+
+    .improvement-suggestions {
+        background: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1.25rem;
+    }
+
+    .improvement-suggestions h5 {
+        margin: 0 0 0.75rem;
+        font-size: 0.95rem;
+        color: #92400e;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .improvement-suggestions ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        color: #78350f;
+        font-size: 0.875rem;
+        line-height: 1.7;
+    }
+
+    .improvement-suggestions li {
+        margin-bottom: 0.25rem;
+    }
+
+    .insight-courses {
+        background: white;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        color: #4a5568;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .insight-courses i {
+        color: #667eea;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .parent-competencies-wrapper {
+            padding: 1rem 0.5rem;
+        }
+
+        .parent-header {
+            padding: 1.5rem;
+        }
+
+        .child-info-section {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .child-selector {
+            width: 100%;
+            min-width: auto;
+        }
+
+        .analytics-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .competency-cards-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .framework-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .insight-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .insight-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .insight-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<!-- Mobile Sidebar Toggle -->
+<button class="sidebar-toggle" onclick="document.querySelector('.parent-sidebar').classList.toggle('active')">
+    <i class="fa fa-bars"></i>
+</button>
+
+<div class="parent-competencies-wrapper">
+    <!-- Parent Sidebar -->
+    {{#has_sidebar}}
+    <aside class="parent-sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">{{#parent_name}}{{parent_name}}{{/parent_name}}{{^parent_name}}Parent Portal{{/parent_name}}</h2>
+            <p class="sidebar-subtitle">Viewing: {{child_firstname}}</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            {{#sidebar_links}}
+            <a href="{{url}}" class="sidebar-link {{#active}}active{{/active}}">
+                <i class="fa {{icon}}"></i>
+                <span>{{label}}</span>
+            </a>
+            {{/sidebar_links}}
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{{logouturl}}" class="sidebar-logout">
+                <i class="fa fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </aside>
+    {{/has_sidebar}}
+
+    <!-- Main Content -->
+    <div class="parent-main-content">
+        <div class="container">
+        <!-- Parent Header -->
+        <div class="parent-header">
+            <div class="parent-header-top">
+                <div class="child-info-section">
+                    <div class="child-avatar">
+                        {{#child_firstname}}{{child_firstname}}{{/child_firstname}}{{^child_firstname}}?{{/child_firstname}}
+                    </div>
+                    <div class="child-details">
+                        <h1>{{{child_name}}}'s Competencies</h1>
+                        {{#child_cohort}}
+                        <span class="child-cohort-badge">
+                            <i class="fa fa-graduation-cap"></i> {{child_cohort}}
+                        </span>
+                        {{/child_cohort}}
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    {{#has_multiple_children}}
+                    <div class="child-selector-wrapper">
+                        <select class="child-selector" id="childSelector" onchange="window.location.href='{{wwwroot}}/theme/remui_kids/parent/parent_competencies.php?child=' + this.value">
+                            {{#child_selector}}
+                            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                            {{/child_selector}}
+                        </select>
+                    </div>
+                    {{/has_multiple_children}}
+
+                    <a href="{{parent_dashboard_url}}" class="back-to-dashboard">
+                        <i class="fa fa-arrow-left"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Summary -->
+        {{#has_analytics_summary}}
+        <div class="analytics-summary">
+            {{#analytics_summary}}
+            <div class="analytics-card {{badge_class}}">
+                <div class="analytics-card-header">{{label}}</div>
+                <div class="analytics-card-value">
+                    {{value_display}}
+                    {{#percentage}}
+                    <span class="analytics-card-percentage">{{percentage}}%</span>
+                    {{/percentage}}
+                </div>
+                {{#description}}
+                <div class="analytics-card-description">{{description}}</div>
+                {{/description}}
+            </div>
+            {{/analytics_summary}}
+        </div>
+        {{/has_analytics_summary}}
+
+        <!-- Parent-Focused: Strong, Weak, and Improvement Areas -->
+        <div class="parent-insights-wrapper">
+            <!-- Strong Areas (Green) -->
+            {{#has_strong_areas}}
+            <div class="insight-section strong-section">
+                <div class="insight-header">
+                    <div class="insight-icon strong-icon">
+                        <i class="fa fa-trophy"></i>
+                    </div>
+                    <div class="insight-title-group">
+                        <h3 class="insight-title">💪 Strong Areas</h3>
+                        <p class="insight-subtitle">Skills where {{child_firstname}} excels ({{strong_areas_count}} competencies)</p>
+                    </div>
+                </div>
+                <div class="insight-grid">
+                    {{#strong_areas}}
+                    <div class="insight-card strong-card">
+                        <div class="insight-card-header">
+                            <span class="framework-badge" style="background: linear-gradient(135deg, #48bb78, #38a169);">
+                                <i class="fa {{framework_icon}}"></i> {{framework}}
+                            </span>
+                        </div>
+                        <h4 class="insight-card-title">{{name}}</h4>
+                        {{#description}}
+                        <p class="insight-card-description">{{description}}</p>
+                        {{/description}}
+                        <div class="insight-progress-wrapper">
+                            <div class="insight-progress-bar">
+                                <div class="insight-progress-fill strong-progress" style="width: {{progress}}%"></div>
+                            </div>
+                            <span class="insight-progress-text">{{progress}}% Complete</span>
+                        </div>
+                        {{#has_feedback}}
+                        <div class="insight-feedback">
+                            {{#feedback_preview_rating}}
+                            <div class="feedback-badge strong-badge">
+                                <i class="fa fa-star"></i> {{feedback_preview_rating}}
+                            </div>
+                            {{/feedback_preview_rating}}
+                            {{#feedback_preview_comment}}
+                            <p class="feedback-text">{{feedback_preview_comment}}</p>
+                            {{/feedback_preview_comment}}
+                            {{#feedback_preview_teacher}}
+                            <p class="feedback-teacher-name">— {{feedback_preview_teacher}}</p>
+                            {{/feedback_preview_teacher}}
+                        </div>
+                        {{/has_feedback}}
+                    </div>
+                    {{/strong_areas}}
+                </div>
+            </div>
+            {{/has_strong_areas}}
+
+            <!-- Areas Needing Improvement (Blue/Yellow) -->
+            {{#has_improvement_areas}}
+            <div class="insight-section improvement-section">
+                <div class="insight-header">
+                    <div class="insight-icon improvement-icon">
+                        <i class="fa fa-chart-line"></i>
+                    </div>
+                    <div class="insight-title-group">
+                        <h3 class="insight-title">📈 Areas for Improvement</h3>
+                        <p class="insight-subtitle">Skills in progress that need attention ({{improvement_areas_count}} competencies)</p>
+                    </div>
+                </div>
+                <div class="insight-grid">
+                    {{#improvement_areas}}
+                    <div class="insight-card improvement-card">
+                        <div class="insight-card-header">
+                            <span class="framework-badge" style="background: linear-gradient(135deg, #4299e1, #3182ce);">
+                                <i class="fa {{framework_icon}}"></i> {{framework}}
+                            </span>
+                        </div>
+                        <h4 class="insight-card-title">{{name}}</h4>
+                        {{#description}}
+                        <p class="insight-card-description">{{description}}</p>
+                        {{/description}}
+                        <div class="insight-progress-wrapper">
+                            <div class="insight-progress-bar">
+                                <div class="insight-progress-fill improvement-progress" style="width: {{progress}}%"></div>
+                            </div>
+                            <span class="insight-progress-text">{{progress}}% Complete</span>
+                        </div>
+                        {{#has_feedback}}
+                        <div class="insight-feedback">
+                            {{#feedback_preview_rating}}
+                            <div class="feedback-badge improvement-badge">
+                                <i class="fa fa-info-circle"></i> {{feedback_preview_rating}}
+                            </div>
+                            {{/feedback_preview_rating}}
+                            {{#feedback_preview_comment}}
+                            <p class="feedback-text">{{feedback_preview_comment}}</p>
+                            {{/feedback_preview_comment}}
+                            {{#feedback_preview_teacher}}
+                            <p class="feedback-teacher-name">— {{feedback_preview_teacher}}</p>
+                            {{/feedback_preview_teacher}}
+                        </div>
+                        {{/has_feedback}}
+                        {{#course_names_display}}
+                        <div class="insight-courses">
+                            <i class="fa fa-book"></i> {{course_names_display}}
+                        </div>
+                        {{/course_names_display}}
+                    </div>
+                    {{/improvement_areas}}
+                </div>
+            </div>
+            {{/has_improvement_areas}}
+
+            <!-- Weak Areas (Red/Orange) -->
+            {{#has_weak_areas}}
+            <div class="insight-section weak-section">
+                <div class="insight-header">
+                    <div class="insight-icon weak-icon">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="insight-title-group">
+                        <h3 class="insight-title">🎯 Areas Needing Focus</h3>
+                        <p class="insight-subtitle">Skills requiring extra support ({{weak_areas_count}} competencies)</p>
+                    </div>
+                </div>
+                <div class="insight-grid">
+                    {{#weak_areas}}
+                    <div class="insight-card weak-card">
+                        <div class="insight-card-header">
+                            <span class="framework-badge" style="background: linear-gradient(135deg, #ed8936, #dd6b20);">
+                                <i class="fa {{framework_icon}}"></i> {{framework}}
+                            </span>
+                        </div>
+                        <h4 class="insight-card-title">{{name}}</h4>
+                        {{#description}}
+                        <p class="insight-card-description">{{description}}</p>
+                        {{/description}}
+                        <div class="insight-progress-wrapper">
+                            <div class="insight-progress-bar">
+                                <div class="insight-progress-fill weak-progress" style="width: {{progress}}%"></div>
+                            </div>
+                            <span class="insight-progress-text">{{progress}}% Complete</span>
+                        </div>
+                        <div class="improvement-suggestions">
+                            <h5><i class="fa fa-lightbulb"></i> What can help:</h5>
+                            <ul>
+                                <li>Practice exercises regularly</li>
+                                <li>Review course materials</li>
+                                <li>Ask teacher for extra support</li>
+                            </ul>
+                        </div>
+                        {{#has_feedback}}
+                        <div class="insight-feedback">
+                            {{#feedback_preview_rating}}
+                            <div class="feedback-badge weak-badge">
+                                <i class="fa fa-flag"></i> {{feedback_preview_rating}}
+                            </div>
+                            {{/feedback_preview_rating}}
+                            {{#feedback_preview_comment}}
+                            <p class="feedback-text">{{feedback_preview_comment}}</p>
+                            {{/feedback_preview_comment}}
+                            {{#feedback_preview_teacher}}
+                            <p class="feedback-teacher-name">— {{feedback_preview_teacher}}</p>
+                            {{/feedback_preview_teacher}}
+                        </div>
+                        {{/has_feedback}}
+                        {{#course_names_display}}
+                        <div class="insight-courses">
+                            <i class="fa fa-book"></i> {{course_names_display}}
+                        </div>
+                        {{/course_names_display}}
+                    </div>
+                    {{/weak_areas}}
+                </div>
+            </div>
+            {{/has_weak_areas}}
+        </div>
+
+        <!-- Competency Frameworks -->
+        {{#has_competencies}}
+        <div class="competency-frameworks">
+            {{#competencies}}
+            <div class="framework-section">
+                <div class="framework-header">
+                    <div class="framework-icon {{color}}">
+                        <i class="fa {{icon}}"></i>
+                    </div>
+                    <div class="framework-title">
+                        <h2>{{name}}</h2>
+                        <div class="framework-subtitle">
+                            {{competency_count}} {{competency_count_label}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Framework Stats -->
+                {{#stats}}
+                <div class="framework-stats">
+                    <div class="framework-stat">
+                        <div class="stat-dot competent"></div>
+                        <div>
+                            <span class="stat-value">{{competent_count}}</span>
+                            <span class="stat-label">Competent</span>
+                        </div>
+                    </div>
+                    <div class="framework-stat">
+                        <div class="stat-dot inprogress"></div>
+                        <div>
+                            <span class="stat-value">{{inprogress_count}}</span>
+                            <span class="stat-label">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="framework-stat">
+                        <div class="stat-dot notcompetent"></div>
+                        <div>
+                            <span class="stat-value">{{notcompetent_count}}</span>
+                            <span class="stat-label">Not Yet</span>
+                        </div>
+                    </div>
+                    {{#avg_progress}}
+                    <div class="framework-stat">
+                        <div>
+                            <span class="stat-value">{{avg_progress}}%</span>
+                            <span class="stat-label">Avg Progress</span>
+                        </div>
+                    </div>
+                    {{/avg_progress}}
+                </div>
+                {{/stats}}
+
+                <!-- Competency Cards -->
+                {{#has_cards}}
+                <div class="competency-cards-grid">
+                    {{#cards}}
+                    <div class="competency-card">
+                        <div class="competency-card-header">
+                            <div>
+                                <div class="competency-name">{{name}}</div>
+                                {{#description}}
+                                <div class="competency-description">{{description}}</div>
+                                {{/description}}
+                            </div>
+                            <span class="competency-badge {{badge_class}}">{{status_label}}</span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-section">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>{{progress}}%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill {{progress_class}}" style="width: {{progress}}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Preview -->
+                        {{#has_feedback_preview}}
+                        <div class="feedback-preview">
+                            {{#feedback_preview_rating}}
+                            <div class="feedback-rating {{feedback_preview_class}}">
+                                <i class="fa fa-star"></i> {{feedback_preview_rating}}
+                            </div>
+                            {{/feedback_preview_rating}}
+                            {{#feedback_preview_comment}}
+                            <div class="feedback-comment">{{feedback_preview_comment}}</div>
+                            {{/feedback_preview_comment}}
+                            <div class="feedback-meta">
+                                {{#feedback_preview_teacher}}
+                                <div class="feedback-teacher">
+                                    <i class="fa fa-user"></i>
+                                    <span>{{feedback_preview_teacher}}</span>
+                                </div>
+                                {{/feedback_preview_teacher}}
+                                {{#feedback_preview_time}}
+                                <div class="feedback-time">
+                                    <i class="fa fa-clock"></i>
+                                    <span>{{feedback_preview_time}}</span>
+                                </div>
+                                {{/feedback_preview_time}}
+                            </div>
+                        </div>
+                        {{/has_feedback_preview}}
+
+                        <!-- Courses -->
+                        {{#has_courses}}
+                        <div class="competency-courses">
+                            <div class="course-count-label">
+                                {{course_count}} {{course_count_label}}
+                            </div>
+                            {{#course_names_display}}
+                            <span class="course-tag">
+                                <i class="fa fa-book"></i> {{course_names_display}}
+                            </span>
+                            {{/course_names_display}}
+                        </div>
+                        {{/has_courses}}
+                    </div>
+                    {{/cards}}
+                </div>
+                {{/has_cards}}
+            </div>
+            {{/competencies}}
+        </div>
+        {{/has_competencies}}
+
+        <!-- Empty State -->
+        {{^has_any_data}}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fa fa-info-circle"></i>
+            </div>
+            <h3 class="empty-state-title">No Competency Data Available</h3>
+            <p class="empty-state-description">
+                {{#no_data_message}}
+                {{no_data_message}}
+                {{/no_data_message}}
+                {{^no_data_message}}
+                No competency data found for {{child_firstname}}. This child may not be enrolled in any courses with competency frameworks set up yet.
+                {{/no_data_message}}
+            </p>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #e3f2fd; border-radius: 12px; text-align: left;">
+                <h4 style="margin: 0 0 1rem; color: #1976d2; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa fa-lightbulb"></i> How to Get Started with Competencies
+                </h4>
+                <ul style="margin: 0; padding-left: 1.5rem; color: #1565c0;">
+                    <li>Ensure {{child_firstname}} is enrolled in courses</li>
+                    <li>Teachers need to set up competency frameworks for their courses</li>
+                    <li>Competencies are linked to course activities and assignments</li>
+                    <li>As {{child_firstname}} completes activities, progress will appear here</li>
+                </ul>
+            </div>
+            {{#child_enrolled_courses_count}}
+            <div style="margin-top: 1rem; padding: 1rem; background: #fff3e0; border-radius: 8px;">
+                <p style="margin: 0; color: #e65100;">
+                    <i class="fa fa-book"></i> <strong>{{child_firstname}} is enrolled in {{child_enrolled_courses_count}} course(s)</strong> but no competencies are assigned yet.
+                </p>
+            </div>
+            {{/child_enrolled_courses_count}}
+        </div>
+        {{/has_any_data}}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add animation on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.competency-card, .analytics-card, .framework-section');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 50);
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.parent-sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+            
+            if (sidebar && toggle) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            }
+        });
+
+        // Close sidebar when a link is clicked on mobile
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.parent-sidebar').classList.remove('active');
+                }
+            });
+        });
+    });
+</script>
+

@@ -1,0 +1,577 @@
+{{!
+    Course Index Page Template
+    Custom hierarchical course structure with categories and grades
+}}
+
+<div class="course-index-page">
+    <div class="course-index-container">
+        <!-- Header Section -->
+        <div class="course-index-header">
+            <h1>{{#str}}allcourses{{/str}}</h1>
+            <p>Browse all available courses organized by category and grade level</p>
+        </div>
+
+        <!-- Enhanced Controls Section -->
+        <div class="course-index-controls">
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fa fa-search search-icon"></i>
+                    <input type="text" id="course-search" placeholder="Search courses, categories, grades, or students..." />
+                    <button class="search-clear-btn" onclick="clearSearch()" style="display: none;">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="search-filters">
+                    <select id="category-filter" onchange="filterByCategory()">
+                        <option value="">All Categories</option>
+                        {{#categories}}
+                        <option value="{{name}}">{{name}}</option>
+                        {{/categories}}
+                    </select>
+                    
+                    <select id="grade-filter" onchange="filterByGrade()">
+                        <option value="">All Grades</option>
+                        <option value="Foundation">Foundation</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Grade 1">Grade 1</option>
+                        <option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option>
+                        <option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 6">Grade 6</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Grade 9">Grade 9</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Grade 11">Grade 11</option>
+                        <option value="Grade 12">Grade 12</option>
+                    </select>
+                    
+                    <select id="sort-filter" onchange="sortCourses()">
+                        <option value="name">Sort by Name</option>
+                        <option value="students">Sort by Students</option>
+                        <option value="activities">Sort by Activities</option>
+                        <option value="completion">Sort by Completion</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="view-controls">
+                <button class="collapse-all-btn" onclick="toggleAllCategories()">
+                    <i class="fa fa-chevron-up"></i>
+                    Collapse all
+                </button>
+                
+                <button class="expand-all-btn" onclick="expandAllCategories()">
+                    <i class="fa fa-chevron-down"></i>
+                    Expand all
+                </button>
+                
+                <div class="view-toggle">
+                    <button class="active" onclick="setViewMode('hierarchical')">
+                        <i class="fa fa-sitemap"></i>
+                        Hierarchical
+                    </button>
+                    <button onclick="setViewMode('list')">
+                        <i class="fa fa-list"></i>
+                        List
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Results Summary -->
+        <div class="search-results-summary" id="search-results-summary" style="display: none;">
+            <div class="results-info">
+                <span id="results-count">0</span> results found
+                <button class="clear-filters-btn" onclick="clearAllFilters()">
+                    <i class="fa fa-times"></i>
+                    Clear all filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Course Categories Container -->
+        <div class="course-categories-container" id="course-categories">
+            {{#categories}}
+            <div class="course-category" data-category-id="{{id}}">
+                <!-- Category Header -->
+                <div class="category-header" onclick="toggleCategory({{id}})">
+                    <div class="category-info">
+                        <div class="category-icon">
+                            <i class="fa fa-graduation-cap"></i>
+                        </div>
+                        <div class="category-details">
+                            <h3>{{name}}</h3>
+                            <div class="category-stats">
+                                <div class="stat">
+                                    <i class="fa fa-book"></i>
+                                    <span>{{total_courses}} courses</span>
+                                </div>
+                                <div class="stat">
+                                    <i class="fa fa-users"></i>
+                                    <span>{{total_students}} students</span>
+                                </div>
+                                <div class="stat">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>{{completion_rate}}% completion</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-toggle">
+                        <i class="fa fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- Category Content -->
+                <div class="category-content" id="category-{{id}}">
+                    <div class="grades-container">
+                        {{#flat_courses}}
+                        <!-- If we have flat courses, show them directly without a grade header -->
+                        <div class="courses-list expanded">
+                            {{#.}}
+                            <div class="course-item" data-course-id="{{id}}">
+                                <div class="course-info">
+                                    <div class="course-icon">
+                                        <i class="fa fa-book-open"></i>
+                                    </div>
+                                    <div class="course-details">
+                                        <h4>{{fullname}}</h4>
+                                        <div class="course-meta">
+                                            <div class="meta-item">
+                                                <i class="fa fa-users"></i>
+                                                <span>{{student_count}} students</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fa fa-tasks"></i>
+                                                <span>{{activity_count}} activities</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fa fa-chart-line"></i>
+                                                <span>{{completion_rate}}% completion</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fa fa-calendar"></i>
+                                                <span>{{startdate}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="course-actions">
+                                    <button class="btn btn-primary" onclick="viewCourse({{id}})">
+                                        <i class="fa fa-eye"></i>
+                                        View
+                                    </button>
+                                    <button class="btn btn-outline" onclick="editCourse({{id}})">
+                                        <i class="fa fa-edit"></i>
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                            {{/.}}
+                        </div>
+                        {{/flat_courses}}
+                        
+                        {{^flat_courses}}
+                        {{#grades}}
+                        <div class="grade-section" data-grade="{{grade_name}}">
+                            <!-- Grade Header -->
+                            <div class="grade-header" onclick="toggleGrade({{id}}, '{{grade_name}}')">
+                                <div class="grade-info">
+                                    <div class="grade-badge">{{grade_name}}</div>
+                                    <div class="grade-stats">
+                                        <div class="stat">
+                                            <i class="fa fa-book"></i>
+                                            <span>{{courses|length}} courses</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fa fa-users"></i>
+                                            <span>{{total_students}} students</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fa fa-clock"></i>
+                                            <span>{{total_activities}} activities</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grade-toggle">
+                                    <i class="fa fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+                            <!-- Courses List -->
+                            <div class="courses-list" id="grade-{{id}}-{{grade_name}}">
+                                {{#courses}}
+                                <div class="course-item" data-course-id="{{id}}">
+                                    <div class="course-info">
+                                        <div class="course-icon">
+                                            <i class="fa fa-book-open"></i>
+                                        </div>
+                                        <div class="course-details">
+                                            <h4>{{fullname}}</h4>
+                                            <div class="course-meta">
+                                                <div class="meta-item">
+                                                    <i class="fa fa-users"></i>
+                                                    <span>{{student_count}} students</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fa fa-tasks"></i>
+                                                    <span>{{activity_count}} activities</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fa fa-chart-line"></i>
+                                                    <span>{{completion_rate}}% completion</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span>{{startdate}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="course-actions">
+                                        <button class="btn btn-primary" onclick="viewCourse({{id}})">
+                                            <i class="fa fa-eye"></i>
+                                            View
+                                        </button>
+                                        <button class="btn btn-outline" onclick="editCourse({{id}})">
+                                            <i class="fa fa-edit"></i>
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+                                {{/courses}}
+                                {{^courses}}
+                                <div class="course-index-empty">
+                                    <div class="empty-icon">
+                                        <i class="fa fa-book"></i>
+                                    </div>
+                                    <h3>No courses in this grade</h3>
+                                    <p>No courses are currently available for {{grade_name}}</p>
+                                </div>
+                                {{/courses}}
+                            </div>
+                        </div>
+                        {{/grades}}
+                        {{/flat_courses}}
+                        {{^grades}}
+                        <div class="course-index-empty">
+                            <div class="empty-icon">
+                                <i class="fa fa-graduation-cap"></i>
+                            </div>
+                            <h3>No grades available</h3>
+                            <p>No grade levels are currently available in this category</p>
+                        </div>
+                        {{/grades}}
+                    </div>
+                </div>
+            </div>
+            {{/categories}}
+            {{^categories}}
+            <div class="course-index-empty">
+                <div class="empty-icon">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+                <h3>No courses available</h3>
+                <p>No courses are currently available in the system</p>
+            </div>
+            {{/categories}}
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced Course Index JavaScript Functions
+let expandedCategories = new Set();
+let expandedGrades = new Set();
+let currentViewMode = 'hierarchical';
+let searchTimeout;
+let allCourses = [];
+let filteredCourses = [];
+
+// Initialize all courses data
+function initializeCoursesData() {
+    allCourses = [];
+    document.querySelectorAll('.course-item').forEach(item => {
+        const courseData = {
+            element: item,
+            name: item.querySelector('h4').textContent.toLowerCase(),
+            meta: item.querySelector('.course-meta').textContent.toLowerCase(),
+            category: item.closest('.course-category').querySelector('.category-details h3').textContent.toLowerCase(),
+            grade: item.closest('.grade-section').querySelector('.grade-badge').textContent.toLowerCase(),
+            students: parseInt(item.querySelector('.meta-item').textContent) || 0,
+            activities: parseInt(item.querySelectorAll('.meta-item')[1].textContent) || 0,
+            completion: parseFloat(item.querySelectorAll('.meta-item')[2].textContent) || 0
+        };
+        allCourses.push(courseData);
+    });
+    filteredCourses = [...allCourses];
+}
+
+// Enhanced search functionality
+function performSearch() {
+    const searchTerm = document.getElementById('course-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value.toLowerCase();
+    const gradeFilter = document.getElementById('grade-filter').value.toLowerCase();
+    const sortBy = document.getElementById('sort-filter').value;
+    
+    // Clear previous timeout
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    
+    // Debounce search
+    searchTimeout = setTimeout(() => {
+        filteredCourses = allCourses.filter(course => {
+            const matchesSearch = !searchTerm || 
+                course.name.includes(searchTerm) || 
+                course.meta.includes(searchTerm) ||
+                course.category.includes(searchTerm) ||
+                course.grade.includes(searchTerm);
+            
+            const matchesCategory = !categoryFilter || course.category.includes(categoryFilter);
+            const matchesGrade = !gradeFilter || course.grade.includes(gradeFilter);
+            
+            return matchesSearch && matchesCategory && matchesGrade;
+        });
+        
+        // Sort results
+        sortCourses(sortBy);
+        
+        // Update display
+        updateCourseDisplay();
+        updateSearchResults();
+    }, 300);
+}
+
+// Sort courses
+function sortCourses(sortBy = null) {
+    if (sortBy) {
+        document.getElementById('sort-filter').value = sortBy;
+    } else {
+        sortBy = document.getElementById('sort-filter').value;
+    }
+    
+    filteredCourses.sort((a, b) => {
+        switch (sortBy) {
+            case 'students':
+                return b.students - a.students;
+            case 'activities':
+                return b.activities - a.activities;
+            case 'completion':
+                return b.completion - a.completion;
+            case 'name':
+            default:
+                return a.name.localeCompare(b.name);
+        }
+    });
+}
+
+// Update course display
+function updateCourseDisplay() {
+    // Hide all courses first
+    allCourses.forEach(course => {
+        course.element.style.display = 'none';
+        course.element.closest('.courses-list').style.display = 'none';
+        course.element.closest('.grade-section').style.display = 'none';
+        course.element.closest('.course-category').style.display = 'none';
+    });
+    
+    // Show filtered courses
+    filteredCourses.forEach(course => {
+        course.element.style.display = 'flex';
+        course.element.closest('.courses-list').style.display = 'block';
+        course.element.closest('.grade-section').style.display = 'block';
+        course.element.closest('.course-category').style.display = 'block';
+    });
+    
+    // Show parent containers
+    filteredCourses.forEach(course => {
+        const gradeSection = course.element.closest('.grade-section');
+        const category = course.element.closest('.course-category');
+        
+        if (gradeSection) {
+            gradeSection.style.display = 'block';
+        }
+        if (category) {
+            category.style.display = 'block';
+        }
+    });
+}
+
+// Update search results summary
+function updateSearchResults() {
+    const resultsCount = filteredCourses.length;
+    const summary = document.getElementById('search-results-summary');
+    const countElement = document.getElementById('results-count');
+    
+    if (resultsCount < allCourses.length) {
+        summary.style.display = 'block';
+        countElement.textContent = resultsCount;
+    } else {
+        summary.style.display = 'none';
+    }
+}
+
+// Clear search
+function clearSearch() {
+    document.getElementById('course-search').value = '';
+    document.getElementById('course-search').focus();
+    performSearch();
+}
+
+// Clear all filters
+function clearAllFilters() {
+    document.getElementById('course-search').value = '';
+    document.getElementById('category-filter').value = '';
+    document.getElementById('grade-filter').value = '';
+    document.getElementById('sort-filter').value = 'name';
+    performSearch();
+}
+
+// Filter by category
+function filterByCategory() {
+    performSearch();
+}
+
+// Filter by grade
+function filterByGrade() {
+    performSearch();
+}
+
+// Toggle category expansion
+function toggleCategory(categoryId) {
+    const category = document.querySelector(`[data-category-id="${categoryId}"]`);
+    const content = document.getElementById(`category-${categoryId}`);
+    const toggle = category.querySelector('.category-toggle i');
+    
+    if (expandedCategories.has(categoryId)) {
+        content.classList.remove('expanded');
+        toggle.classList.remove('expanded');
+        expandedCategories.delete(categoryId);
+    } else {
+        content.classList.add('expanded');
+        toggle.classList.add('expanded');
+        expandedCategories.add(categoryId);
+    }
+}
+
+// Toggle grade expansion
+function toggleGrade(categoryId, gradeName) {
+    const gradeId = `${categoryId}-${gradeName}`;
+    const gradeSection = document.querySelector(`[data-grade="${gradeName}"]`);
+    const coursesList = document.getElementById(`grade-${categoryId}-${gradeName}`);
+    const toggle = gradeSection.querySelector('.grade-toggle i');
+    
+    if (expandedGrades.has(gradeId)) {
+        coursesList.classList.remove('expanded');
+        toggle.classList.remove('expanded');
+        expandedGrades.delete(gradeId);
+    } else {
+        coursesList.classList.add('expanded');
+        toggle.classList.add('expanded');
+        expandedGrades.add(gradeId);
+    }
+}
+
+// Toggle all categories
+function toggleAllCategories() {
+    const allCategories = document.querySelectorAll('.course-category');
+    const isExpanded = expandedCategories.size > 0;
+    
+    allCategories.forEach(category => {
+        const categoryId = category.dataset.categoryId;
+        const content = document.getElementById(`category-${categoryId}`);
+        const toggle = category.querySelector('.category-toggle i');
+        
+        if (isExpanded) {
+            content.classList.remove('expanded');
+            toggle.classList.remove('expanded');
+            expandedCategories.clear();
+            expandedGrades.clear();
+        } else {
+            content.classList.add('expanded');
+            toggle.classList.add('expanded');
+            expandedCategories.add(categoryId);
+        }
+    });
+}
+
+// Expand all categories
+function expandAllCategories() {
+    const allCategories = document.querySelectorAll('.course-category');
+    
+    allCategories.forEach(category => {
+        const categoryId = category.dataset.categoryId;
+        const content = document.getElementById(`category-${categoryId}`);
+        const toggle = category.querySelector('.category-toggle i');
+        
+        content.classList.add('expanded');
+        toggle.classList.add('expanded');
+        expandedCategories.add(categoryId);
+    });
+}
+
+// Set view mode
+function setViewMode(mode) {
+    currentViewMode = mode;
+    const buttons = document.querySelectorAll('.view-toggle button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Apply view mode styles
+    const container = document.getElementById('course-categories');
+    if (mode === 'list') {
+        container.classList.add('list-view');
+    } else {
+        container.classList.remove('list-view');
+    }
+}
+
+// Course actions
+function viewCourse(courseId) {
+    window.location.href = `{{config.wwwroot}}/course/view.php?id=${courseId}`;
+}
+
+function editCourse(courseId) {
+    window.location.href = `{{config.wwwroot}}/course/edit.php?id=${courseId}`;
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Enhanced Course Index page loaded');
+    
+    // Initialize courses data
+    initializeCoursesData();
+    
+    // Set up search event listeners
+    document.getElementById('course-search').addEventListener('input', performSearch);
+    document.getElementById('category-filter').addEventListener('change', performSearch);
+    document.getElementById('grade-filter').addEventListener('change', performSearch);
+    document.getElementById('sort-filter').addEventListener('change', performSearch);
+    
+    // Add smooth scrolling
+    document.querySelectorAll('.category-header, .grade-header').forEach(header => {
+        header.addEventListener('click', function() {
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        });
+    });
+    
+    // Show clear button when typing
+    document.getElementById('course-search').addEventListener('input', function(e) {
+        const clearBtn = document.querySelector('.search-clear-btn');
+        if (e.target.value.length > 0) {
+            clearBtn.style.display = 'block';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    });
+    
+    console.log(`Initialized with ${allCourses.length} courses`);
+});
+</script>

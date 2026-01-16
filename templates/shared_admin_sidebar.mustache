@@ -1,0 +1,15 @@
+{{!
+    Shared Admin Sidebar Template for remui_kids theme
+    
+    This template now includes the centralized PHP sidebar for consistency.
+    The PHP file (admin/includes/admin_sidebar.php) handles all navigation
+    and automatically detects active menu items.
+    
+    Usage in PHP controller:
+    ob_start();
+    require_once($CFG->dirroot . '/theme/remui_kids/admin/includes/admin_sidebar.php');
+    $context['admin_sidebar_html'] = ob_get_clean();
+}}
+
+<!-- Global Admin Sidebar Navigation - Include from PHP -->
+{{{admin_sidebar_html}}}

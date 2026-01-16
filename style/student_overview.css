@@ -1,0 +1,444 @@
+/* ========================================
+   STUDENT OVERVIEW PAGE STYLES
+   ======================================== */
+
+.student-overview-wrapper {
+    min-height: 100vh;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 20px 1rem;
+}
+
+/* When rendered inside the teacher dashboard layout */
+.teacher-main-content .student-overview-wrapper {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Neutralize the default main container */
+.path-theme-remui_kids-pages-student_overview #region-main,
+.path-theme-remui_kids-pages-student_overview [role="main"] {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+
+.overview-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.student-id-block {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.student-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e2e8f0;
+}
+
+.student-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-name {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: #2d3748;
+}
+
+.student-submeta {
+    color: #718096;
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   STATISTICS GRID
+   ======================================== */
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card.simple {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.card.simple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+.card-title i {
+    color: #6366f1;
+}
+
+.card-body.overall {
+    text-align: center;
+}
+
+.overall-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 0.25rem;
+}
+
+.overall-label {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.card-body.stat {
+    text-align: center;
+}
+
+.card-body.stat span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.card-body.small {
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.6;
+}
+
+/* ========================================
+   MAIN LAYOUT GRID
+   ======================================== */
+
+.layout-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 992px) {
+    .layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+/* ========================================
+   LISTS
+   ======================================== */
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.li-main {
+    flex: 1;
+    min-width: 150px;
+}
+
+.li-title {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+}
+
+.li-sub {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.li-meta {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   TABLE
+   ======================================== */
+
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.thead {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.trow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    align-items: center;
+}
+
+.tcol.name a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tcol.name a:hover {
+    text-decoration: underline;
+}
+
+.tcol.progress {
+    display: flex;
+    align-items: center;
+}
+
+.tcol.progress .bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tcol.progress .bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.3s ease;
+}
+
+.tcol.score {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.tcol.status .badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge.completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge.inprogress {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge.notstarted {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+}
+
+.btn-outline {
+    background: white;
+    color: #6366f1;
+    border: 1px solid #6366f1;
+}
+
+.btn-outline:hover {
+    background: #6366f1;
+    color: white;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .overview-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .student-id-block {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .student-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .student-name {
+        font-size: 1.5rem;
+    }
+
+    .overview-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .thead, .trow {
+        grid-template-columns: 1fr;
+    }
+
+    .thead {
+        display: none;
+    }
+
+    .trow {
+        padding: 0.75rem;
+    }
+
+    .tcol {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+    }
+
+    .tcol::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+
+    .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+
+
+
+
+
+
+

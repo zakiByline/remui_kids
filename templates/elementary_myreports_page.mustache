@@ -1,0 +1,4232 @@
+{{!
+    Elementary My Reports Page - Redesigned with Pastel Light Purple Theme
+    Professional, kid-friendly reports interface for Grades 1-3
+}}
+
+{{> theme_remui_kids/dashboard/elementary_sidebar}}
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<style>
+/* Force body scroll lock */
+html, body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide default containers */
+.page-header,
+.context-header,
+#page-header {
+    display: none !important;
+}
+
+.container,
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#page {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Color Palette - Matching Competencies Page */
+:root {
+    /* Competencies Page Colors - Exact Match */
+    --color-blue-primary: #667eea;
+    --color-blue-secondary: #764ba2;
+    --color-green-primary: #10B981;
+    --color-green-secondary: #059669;
+    --color-purple-primary: #8B5CF6;
+    --color-purple-secondary: #7C3AED;
+    --color-orange-primary: #F59E0B;
+    --color-orange-secondary: #D97706;
+    --color-gray-primary: #94A3B8;
+    --color-gray-secondary: #64748B;
+    
+    /* Summary Card Colors (matching competencies page) */
+    --card-total-primary: #667eea;
+    --card-total-secondary: #764ba2;
+    --card-completed-primary: #10B981;
+    --card-completed-secondary: #059669;
+    --card-progress-primary: #F59E0B;
+    --card-progress-secondary: #D97706;
+    --card-notstarted-primary: #94A3B8;
+    --card-notstarted-secondary: #64748B;
+    
+    /* Replace all pastel purple with competencies colors */
+    --pastel-purple-light: #E5E7EB;
+    --pastel-purple: #667eea;
+    --pastel-purple-medium: #764ba2;
+    --pastel-purple-dark: #667eea;
+    --pastel-lavender: #F8FAFC;
+    --pastel-lilac: #F1F5F9;
+    --pastel-violet: #E5E7EB;
+    --accent-purple: #667eea;
+    --text-dark: #1F2937;
+    --text-medium: #64748B;
+    --text-light: #94A3B8;
+    --white: #FFFFFF;
+    --bg-light: #FAFBFC;
+    --bg-medium: #F8FAFC;
+}
+
+/* Main Container */
+.elementary-reports-page {
+    position: fixed;
+    top: 80px;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    padding: 30px;
+    background: linear-gradient(135deg,rgb(255, 255, 255) 0%,rgb(255, 255, 255) 50%,rgb(255, 255, 255) 100%);
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100vh - 80px);
+}
+
+.elementary-reports-content {
+    max-width: 1700px;
+}
+
+/* Welcome Header with Pastel Purple Theme */
+.welcome-header {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #E5E7EB;
+}
+
+.welcome-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+}
+
+.welcome-header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.welcome-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-title i {
+    color: var(--card-total-primary);
+    font-size: 2.8rem;
+}
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-medium);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Animated Bubbles - Pastel Purple */
+.welcome-bubbles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-bubbles-left {
+    left: -50px;
+}
+
+.welcome-bubbles-right {
+    right: -50px;
+}
+
+.welcome-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(102, 126, 234, 0.15);
+    backdrop-filter: blur(10px);
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.welcome-bubble-1 { width: 80px; height: 80px; top: 10%; left: 20%; animation-delay: 0s; }
+.welcome-bubble-2 { width: 60px; height: 60px; top: 50%; left: 10%; animation-delay: 1.5s; }
+.welcome-bubble-3 { width: 100px; height: 100px; top: 70%; left: 30%; animation-delay: 3s; }
+.welcome-bubble-4 { width: 50px; height: 50px; top: 30%; left: 50%; animation-delay: 0.5s; }
+.welcome-bubble-5 { width: 90px; height: 90px; top: 15%; right: 15%; animation-delay: 2s; }
+.welcome-bubble-6 { width: 70px; height: 70px; top: 45%; right: 25%; animation-delay: 0.8s; }
+.welcome-bubble-7 { width: 55px; height: 55px; top: 65%; right: 10%; animation-delay: 2.5s; }
+.welcome-bubble-8 { width: 85px; height: 85px; top: 25%; right: 40%; animation-delay: 1.2s; }
+
+@keyframes floatBubble {
+    0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.6; }
+    25% { transform: translateY(-8px) translateX(4px) scale(1.03); opacity: 0.7; }
+    50% { transform: translateY(-4px) translateX(-2px) scale(0.98); opacity: 0.65; }
+    75% { transform: translateY(-10px) translateX(6px) scale(1.02); opacity: 0.72; }
+}
+
+/* Dashboard Stats Grid - Pastel Purple Cards */
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid #E5E7EB;
+    border-bottom: 5px solid;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    opacity: 0.6;
+}
+
+/* Competencies Color Palette - Matching Competencies Page */
+.stat-card.total-courses { 
+    border-bottom-color: var(--card-total-primary); 
+}
+.stat-card.total-courses::before { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+
+.stat-card.completed-courses { 
+    border-bottom-color: var(--card-completed-primary); 
+}
+.stat-card.completed-courses::before { 
+    background: linear-gradient(90deg, var(--card-completed-primary) 0%, var(--card-completed-secondary) 100%); 
+}
+
+.stat-card.activities { 
+    border-bottom-color: var(--card-total-primary); 
+}
+.stat-card.activities::before { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+
+.stat-card.average-grade { 
+    border-bottom-color: var(--card-progress-primary); 
+}
+.stat-card.average-grade::before { 
+    background: linear-gradient(90deg, var(--card-progress-primary) 0%, var(--card-progress-secondary) 100%); 
+}
+
+.stat-card.assignments { 
+    border-bottom-color: var(--card-completed-primary); 
+}
+.stat-card.assignments::before { 
+    background: linear-gradient(90deg, var(--card-completed-primary) 0%, var(--card-completed-secondary) 100%); 
+}
+
+.stat-card.quizzes { 
+    border-bottom-color: var(--card-total-primary); 
+}
+.stat-card.quizzes::before { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-icon-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    opacity: 0.25;
+}
+
+/* Icon colors matching competencies page */
+.stat-card.total-courses .stat-icon { color: var(--card-total-primary); }
+.stat-card.completed-courses .stat-icon { color: var(--card-completed-primary); }
+.stat-card.activities .stat-icon { color: var(--card-total-primary); }
+.stat-card.average-grade .stat-icon { color: var(--card-progress-primary); }
+.stat-card.assignments .stat-icon { color: var(--card-completed-primary); }
+.stat-card.quizzes .stat-icon { color: var(--card-total-primary); }
+
+.stat-label {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 10px 0 5px 0;
+    line-height: 1;
+}
+
+/* Value colors matching competencies page */
+.stat-card.total-courses .stat-value { color: var(--card-total-primary); }
+.stat-card.completed-courses .stat-value { color: var(--card-completed-primary); }
+.stat-card.activities .stat-value { color: var(--card-total-primary); }
+.stat-card.average-grade .stat-value { color: var(--card-progress-primary); }
+.stat-card.assignments .stat-value { color: var(--card-completed-primary); }
+.stat-card.quizzes .stat-value { color: var(--card-total-primary); }
+
+.stat-sublabel {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Progress Bar */
+.progress-container {
+    margin-top: 15px;
+    background: #E5E7EB;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* Progress bar colors matching competencies page */
+.stat-card.total-courses .progress-bar { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+.stat-card.completed-courses .progress-bar { 
+    background: linear-gradient(90deg, var(--card-completed-primary) 0%, var(--card-completed-secondary) 100%); 
+}
+.stat-card.activities .progress-bar { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+.stat-card.average-grade .progress-bar { 
+    background: linear-gradient(90deg, var(--card-progress-primary) 0%, var(--card-progress-secondary) 100%); 
+}
+.stat-card.assignments .progress-bar { 
+    background: linear-gradient(90deg, var(--card-completed-primary) 0%, var(--card-completed-secondary) 100%); 
+}
+.stat-card.quizzes .progress-bar { 
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%); 
+}
+
+/* Section Headers */
+.section-header {
+    background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-light) 100%);
+    border-radius: 16px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title i {
+    color: var(--card-total-primary);
+    font-size: 1.8rem;
+}
+
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    border-color: var(--card-total-primary);
+}
+
+.course-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.course-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+}
+
+.course-shortname {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.course-grade {
+    background: linear-gradient(135deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.course-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.course-stat-item {
+    text-align: center;
+    padding: 15px;
+    background: #F1F5F9;
+    border-radius: 12px;
+}
+
+.course-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+    margin-bottom: 5px;
+}
+
+.course-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Activity Types */
+.activity-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.activity-type-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.activity-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.activity-type-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-color: var(--card-total-primary);
+}
+
+.activity-type-card:hover::before {
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    height: 4px;
+}
+
+.activity-type-card.active {
+    border-color: var(--card-total-primary);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, #F8FAFC 0%, var(--white) 100%);
+}
+
+.activity-type-card.active::before {
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    height: 4px;
+}
+
+.activity-type-icon {
+    font-size: 2.8rem;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    transition: all 0.3s ease;
+}
+
+.activity-type-card:hover .activity-type-icon {
+    transform: scale(1.1);
+    color: var(--card-total-primary);
+}
+
+.activity-type-card.active .activity-type-icon {
+    color: var(--card-total-primary);
+    transform: scale(1.05);
+}
+
+.activity-type-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    text-transform: capitalize;
+    line-height: 1.3;
+}
+
+.activity-type-stats {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    line-height: 1.2;
+}
+
+.activity-type-card.active .activity-type-stats {
+    color: var(--card-total-primary);
+}
+
+.activity-type-percentage {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+    font-weight: 600;
+    padding: 4px 10px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.activity-type-card.active .activity-type-percentage {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    color: var(--card-total-primary);
+}
+
+.activity-type-details {
+    margin-top: 25px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    padding: 20px 25px;
+}
+
+.activity-type-details-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.activity-type-details {
+    margin-top: 25px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    padding: 20px 25px;
+}
+
+.activity-type-details-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.activity-type-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.activity-item-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    position: relative;
+    overflow: hidden;
+}
+
+.activity-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    transition: height 0.3s ease;
+}
+
+.activity-item-card:hover {
+    border-color: var(--card-total-primary);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+    transform: translateY(-4px);
+}
+
+.activity-item-card:hover::before {
+    height: 6px;
+}
+
+.activity-item-card.completed-card {
+    border-left: 4px solid #10B981;
+}
+
+.activity-item-card.completed-card::before {
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+}
+
+.activity-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.activity-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.activity-item-card.completed-card .activity-item-icon {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.activity-item-info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.activity-item-name {
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.activity-item-course {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    margin-bottom: 8px;
+}
+
+.activity-item-status {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #F1F5F9;
+    color: var(--text-medium);
+}
+
+.activity-item-status.completed {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+.activity-item-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.activity-item-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.activity-item-link:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.activity-item-link i {
+    font-size: 0.75rem;
+}
+
+.empty-activity-type {
+    text-align: center;
+    color: var(--text-medium);
+    font-weight: 600;
+    padding: 20px;
+}
+
+.kid-analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.kid-analytics-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 20px;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.kid-analytics-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.kid-analytics-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+}
+
+.kid-analytics-note {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+.gauge {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    background:
+        radial-gradient(circle at center, var(--white) 60%, transparent 61%),
+        conic-gradient(var(--card-total-primary) var(--gauge-fill, 0%), #E5E7EB 0);
+}
+
+.gauge::after {
+    content: attr(data-value) '%';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.grade-stars {
+    display: flex;
+    gap: 4px;
+    font-size: 1.4rem;
+    color: #d1d5db;
+}
+
+.grade-stars .filled {
+    color: #fbbf24;
+}
+
+.activity-donut-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.activity-donut-chart {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: conic-gradient(var(--card-total-primary) 0 100%);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.activity-donut-chart::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 130px;
+    height: 130px;
+    background: var(--white);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.activity-donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.activity-donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.activity-donut-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    background: var(--white);
+    border-radius: 20px;
+    border: 2px dashed #E5E7EB;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--card-total-primary);
+    margin-bottom: 20px;
+}
+
+.empty-state-text {
+    font-size: 1.2rem;
+    color: var(--text-medium);
+    font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.elementary-reports-page::-webkit-scrollbar {
+    width: 10px;
+}
+
+.elementary-reports-page::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 5px;
+}
+
+.elementary-reports-page::-webkit-scrollbar-thumb {
+    background: var(--card-total-primary);
+    border-radius: 5px;
+}
+
+.elementary-reports-page::-webkit-scrollbar-thumb:hover {
+    background: var(--card-total-primary);
+}
+
+/* Tabs Navigation */
+.reports-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    background: var(--white);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #E5E7EB;
+}
+
+.report-tab {
+    padding: 12px 24px;
+    background: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.report-tab:hover {
+    background: var(--card-total-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.report-tab.active {
+    background: transparent;
+    color: var(--text-dark);
+    border-color: var(--card-total-primary);
+    box-shadow: none;
+}
+
+.report-tab i {
+    margin-right: 8px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Badges Grid */
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.badge-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.badge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.badge-icon {
+    font-size: 3rem;
+    color: var(--card-total-primary);
+    margin-bottom: 15px;
+}
+
+.badge-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.badge-date {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+/* Attendance Table */
+.attendance-table {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+}
+
+.attendance-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th {
+    background: #F1F5F9;
+    padding: 15px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--card-total-primary);
+}
+
+.attendance-table td {
+    padding: 15px;
+    border-bottom: 1px solid #E5E7EB;
+    color: var(--text-medium);
+}
+
+.attendance-table tr:hover {
+    background: #F1F5F9;
+}
+
+/* Competencies Grid */
+.competency-course-selector {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--white);
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.course-dropdown-select {
+    flex: 1;
+    max-width: 400px;
+    padding: 10px 15px;
+    border: 2px solid #E5E7EB;
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.course-dropdown-select:hover {
+    border-color: var(--card-total-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.course-dropdown-select:focus {
+    outline: none;
+    border-color: var(--card-total-primary);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.competency-course-section {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.competencies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.competencies-hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.competency-tree-item {
+    position: relative;
+}
+
+.competency-children {
+    position: relative;
+}
+
+.competency-children::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #F1F5F9;
+}
+
+.competency-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.competency-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.competencies-hierarchy {
+    margin-bottom: 35px;
+}
+
+/* Tree structure styles matching teacher's competencies page */
+.comp-tree {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tree-framework {
+    margin-bottom: 20px;
+}
+
+.tree-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    padding: 12px 16px;
+    background: #F1F5F9;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tree-header:hover {
+    background: var(--card-total-primary);
+}
+
+.tree-header .caret {
+    display: inline-block;
+    width: 12px;
+    font-size: 0.9rem;
+    color: var(--card-total-primary);
+    transition: transform 0.2s ease;
+}
+
+.tree-level {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+}
+
+.tree-item {
+    list-style: none;
+    margin: 4px 0;
+}
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.tree-row:hover {
+    background: #F1F5F9;
+}
+
+.tree-row .caret {
+    display: inline-block;
+    width: 12px;
+    font-size: 0.85rem;
+    color: var(--card-total-primary);
+    margin-right: 4px;
+}
+
+.tree-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.tree-meta {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    white-space: nowrap;
+}
+
+.tree-meta .activities-link {
+    transition: all 0.2s ease;
+}
+
+.tree-meta .activities-link:hover {
+    text-decoration: none !important;
+}
+
+/* Activities Dropdown Styles */
+.activities-dropdown {
+    animation: fadeInDropdown 0.2s ease;
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.activity-dropdown-item:last-child {
+    border-bottom: none !important;
+    border-radius: 0 0 10px 10px;
+}
+
+.activity-dropdown-item:hover {
+    background: #F1F5F9 !important;
+}
+
+/* Linked Activities Styles */
+.linked-activities-container {
+    padding: 0 16px 8px 16px;
+}
+
+.toggle-activities-btn {
+    transition: all 0.2s ease;
+}
+
+.toggle-activities-btn:hover {
+    color: var(--card-total-primary);
+}
+
+.toggle-activities-btn i {
+    transition: transform 0.3s ease;
+}
+
+.toggle-activities-btn.expanded i {
+    transform: rotate(180deg);
+}
+
+.linked-activities-list {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 300px;
+    }
+}
+
+.linked-activity-item {
+    transition: all 0.2s ease;
+}
+
+.linked-activity-item:hover {
+    background: var(--card-total-primary) !important;
+    transform: translateX(4px);
+}
+
+.activity-link-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.activity-link-btn:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+}
+
+.competency-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.competency-course {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-bottom: 15px;
+}
+
+.competency-proficiency {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.competency-proficiency.proficient {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.achieved-filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.achieved-filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.achieved-filter-btn.active:hover {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Highlight achieved competencies in tree */
+.tree-item[data-is-proficient="true"] .tree-row {
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+    border-left: 4px solid #10B981;
+    padding-left: 12px;
+    margin-left: -12px;
+    border-radius: 6px;
+}
+
+.tree-item[data-is-proficient="true"] .tree-name {
+    font-weight: 700;
+    color: #059669;
+    position: relative;
+}
+
+.tree-item[data-is-proficient="true"] .tree-name::before {
+    content: "✓ ";
+    color: #10B981;
+    font-weight: 900;
+    margin-right: 4px;
+}
+
+.tree-item.hidden-by-filter {
+    display: none !important;
+}
+
+/* Achievement Badge Animation */
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(245, 158, 11, 0.5);
+    }
+}
+
+/* Enhanced styling for fully achieved parent competencies */
+.tree-item[data-fully-achieved="true"] .tree-row {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(16, 185, 129, 0.1) 50%, transparent 100%);
+    border-left: 5px solid #F59E0B;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-left: -12px;
+    margin-bottom: 10px;
+}
+
+.tree-item[data-fully-achieved="true"] .tree-name {
+    font-weight: 800;
+    color: #D97706;
+    font-size: 1.05em;
+}
+
+.competency-proficiency.in-progress {
+    background: #FFF4E6;
+    color: #F59E0B;
+}
+
+.competency-proficiency.not-rated {
+    background: #F3F4F6;
+    color: var(--text-medium);
+}
+
+/* Grade Reports */
+.grade-reports-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+}
+
+.grade-item {
+    padding: 20px;
+    border-bottom: 2px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grade-item:last-child {
+    border-bottom: none;
+}
+
+.grade-item-info {
+    flex: 1;
+}
+
+.grade-item-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.grade-item-course {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+.grade-item-score {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+}
+
+.grade-subtabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.grade-subtab {
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: #F1F5F9;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+}
+
+.grade-subtab.active {
+    background: var(--card-total-primary);
+    color: var(--white);
+    border-color: var(--card-total-primary);
+    box-shadow: 0 6px 18px rgba(155, 126, 222, 0.3);
+}
+
+.grade-subtab-content {
+    display: none;
+}
+
+.grade-subtab-content.active {
+    display: block;
+}
+
+.grade-subheading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 10px 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.grade-subheading i {
+    color: var(--card-total-primary);
+}
+
+/* Rubric Assessments */
+.rubric-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.rubric-summary-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.rubric-summary-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+    margin-bottom: 8px;
+}
+
+.rubric-summary-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-medium);
+}
+
+.rubric-assessments-grid {
+    display: grid;
+        grid-template-columns: 1fr;
+    gap: 25px;
+    width: 100%;
+    max-width: 100%;
+    }
+    
+@media (min-width: 768px) {
+    .rubric-assessments-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.rubric-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 25px;
+    border: 2px solid #E5E7EB;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.rubric-card-header {
+    background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-light) 100%);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+    border-bottom: 2px solid #E5E7EB;
+    margin-bottom: 0;
+}
+
+.rubric-header-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rubric-header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    min-width: 200px;
+}
+
+.rubric-course {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.grade-item-name {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 3px;
+}
+
+.rubric-score {
+    background: linear-gradient(135deg, var(--card-total-primary), var(--card-total-secondary));
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-weight: 800;
+    color: var(--white);
+    font-size: 1.3rem;
+    min-width: 80px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rubric-score-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 0;
+    margin-top: 0;
+    width: 100%;
+}
+
+.rubric-score-section .kid-analytics-note {
+    margin: 0;
+}
+
+.rubric-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #F1F5F9;
+    border: 2px solid var(--card-total-primary);
+    border-radius: 10px;
+    color: var(--card-total-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-end;
+}
+
+.rubric-toggle-btn:hover {
+    background: var(--card-total-primary);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rubric-toggle-btn i {
+    transition: transform 0.3s ease;
+}
+
+.rubric-toggle-btn.expanded i {
+    transform: rotate(180deg);
+}
+
+.kid-analytics-note {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 10px 15px;
+    background: #F1F5F9;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.rubric-criteria-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin: 0;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s ease 0.1s, 
+                padding 0.4s ease, 
+                margin 0.4s ease;
+}
+
+.rubric-criteria-list.expanded {
+    max-height: 2000px;
+    opacity: 1;
+    padding: 20px 0 0 0;
+    margin-top: 20px;
+    border-top: 2px solid #E5E7EB;
+}
+
+@media (min-width: 1200px) {
+    .rubric-criteria-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .rubric-criteria-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.rubric-criterion {
+    background: var(--white);
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rubric-criterion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: var(--card-total-primary);
+}
+
+.rubric-criterion > div {
+    flex: 1;
+}
+
+.rubric-criterion strong {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.rubric-criterion-remark {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-style: italic;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid var(--pastel-purple-light);
+}
+
+.rubric-criterion > span {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+    background: #F1F5F9;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Time Spent */
+.time-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.time-stat-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+}
+
+.time-stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--card-total-primary);
+    margin-bottom: 10px;
+}
+
+.time-stat-label {
+    font-size: 1rem;
+    color: var(--text-medium);
+    font-weight: 600;
+}
+.time-progress-list {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.time-progress-item {
+    background: var(--white);
+    border: 2px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.time-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.time-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #F1F5F9;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.time-progress-bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--card-total-primary), var(--card-total-secondary));
+    width: 0%;
+}
+
+.time-progress-actions-toggle {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #F1F5F9;
+    border: none;
+    border-radius: 8px;
+    color: var(--card-total-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-progress-actions-toggle:hover {
+    background: var(--card-total-primary);
+    color: var(--white);
+}
+
+.time-progress-actions {
+    margin-top: 12px;
+    padding: 15px;
+    background: #F8FAFC;
+    border-radius: 10px;
+    display: none;
+}
+
+.time-progress-actions.expanded {
+    display: block;
+}
+
+.time-progress-actions-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.time-progress-action-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--white);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+}
+
+.time-progress-action-name {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.time-progress-action-count {
+    color: var(--card-total-primary);
+    font-weight: 700;
+    background: #F1F5F9;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+/* Weekly Activity */
+.weekly-activity-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.weekly-day {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.weekly-day:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    border-color: var(--card-total-primary);
+}
+
+.weekly-day.active {
+    /* Active state - no background color change */
+}
+
+.weekly-day.today {
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    color: #0369A1;
+    border: 3px solid #7DD3FC;
+    box-shadow: 0 6px 25px rgba(56, 189, 248, 0.3);
+    transform: translateY(-3px);
+}
+
+.weekly-day.today .weekly-day-name,
+.weekly-day.today .weekly-day-date,
+.weekly-day.today .weekly-day-actions,
+.weekly-day.today .weekly-day-engagement {
+    color: #0369A1;
+}
+
+.weekly-day.today:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(56, 189, 248, 0.4);
+    border-color: #38BDF8;
+}
+
+.weekly-day-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weekly-day-date {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.weekly-day-actions {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.weekly-day-engagement {
+    margin-top: 8px;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.weekly-day-checklist {
+    display: none; /* Hide checklist on card - show only in modal */
+}
+
+.weekly-day-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    background: var(--white);
+    border-radius: 8px;
+    border-left: 3px solid var(--card-total-primary);
+    transition: all 0.2s ease;
+}
+
+.weekly-day-detail:hover {
+    background: #F8FAFC;
+    transform: translateX(3px);
+}
+
+.weekly-day-detail:last-child {
+    margin-bottom: 0;
+}
+
+.weekly-day-detail .icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.weekly-day-detail.empty {
+    color: var(--text-medium);
+    font-weight: 500;
+    background: transparent;
+    border-left: 3px solid #CBD5E1;
+    font-style: italic;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Weekly Day Modal */
+.weekly-day-modal-overlay {
+    display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99999;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.weekly-day-modal-overlay.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 1;
+}
+
+.weekly-day-modal {
+    background: var(--white);
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    position: relative;
+}
+
+.weekly-day-modal-header {
+    background: linear-gradient(135deg, var(--card-total-primary) 0%, var(--card-total-secondary) 100%);
+    color: var(--white);
+    padding: 25px 30px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weekly-day-modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weekly-day-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.weekly-day-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.weekly-day-modal-body {
+    padding: 30px;
+}
+
+.weekly-day-modal-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.weekly-day-modal-info-item {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    border-radius: 10px;
+}
+
+.weekly-day-modal-info-label {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.weekly-day-modal-info-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--card-total-primary);
+}
+
+.weekly-day-modal-checklist {
+    margin-top: 20px;
+}
+
+.weekly-day-modal-checklist-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weekly-day-modal-checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.weekly-day-modal-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid #E5E7EB;
+    border-left: 4px solid var(--card-total-primary);
+    transition: all 0.2s ease;
+}
+
+.weekly-day-modal-detail:hover {
+    background: #F8FAFC;
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.weekly-day-modal-detail .icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.weekly-day-modal-detail-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.weekly-day-modal-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-medium);
+    font-style: italic;
+}
+
+.weekly-day-modal-empty .icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+    .weekly-day-modal {
+        max-width: 95%;
+        max-height: 90vh;
+    }
+    
+    .weekly-day-modal-header {
+        padding: 20px;
+    }
+    
+    .weekly-day-modal-title {
+        font-size: 1.2rem;
+    }
+    
+    .weekly-day-modal-body {
+        padding: 20px;
+    }
+    
+    .weekly-day-modal-info {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .elementary-reports-page {
+        left: 0;
+        padding: 20px;
+    }
+    
+    .dashboard-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    
+    .reports-tabs {
+        flex-direction: column;
+    }
+    
+    .report-tab {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .weekly-activity-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<div class="elementary-reports-page">
+    <div class="elementary-reports-content">
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+            <div class="welcome-bubbles welcome-bubbles-left">
+                <div class="welcome-bubble welcome-bubble-1"></div>
+                <div class="welcome-bubble welcome-bubble-2"></div>
+                <div class="welcome-bubble welcome-bubble-3"></div>
+                <div class="welcome-bubble welcome-bubble-4"></div>
+                </div>
+            
+            <div class="welcome-header-content">
+                <h1 class="welcome-title">
+                    <i class="fa fa-chart-line"></i>
+                    My Reports
+                </h1>
+                <p class="welcome-subtitle">
+                    Track your learning progress and achievements!
+                </p>
+            </div>
+            
+            <div class="welcome-bubbles welcome-bubbles-right">
+                <div class="welcome-bubble welcome-bubble-5"></div>
+                <div class="welcome-bubble welcome-bubble-6"></div>
+                <div class="welcome-bubble welcome-bubble-7"></div>
+                <div class="welcome-bubble welcome-bubble-8"></div>
+                </div>
+            </div>
+            
+        <!-- Tabs Navigation -->
+        <div class="reports-tabs">
+            <div class="report-tab active" onclick="switchTab('overview')">
+                <i class="fa fa-dashboard"></i> Overview
+                </div>
+            <div class="report-tab" onclick="switchTab('courses')">
+                <i class="fa fa-graduation-cap"></i> Courses
+                </div>
+            <div class="report-tab" onclick="switchTab('grades')">
+                <i class="fa fa-star"></i> Grades
+            </div>
+            <div class="report-tab" onclick="switchTab('activities')">
+                <i class="fa fa-puzzle-piece"></i> Activities
+                </div>
+            {{#has_attendance}}
+            <div class="report-tab" onclick="switchTab('attendance')">
+                <i class="fa fa-calendar-check"></i> Attendance
+                </div>
+            {{/has_attendance}}
+            {{#has_badges}}
+            <div class="report-tab" onclick="switchTab('badges')">
+                <i class="fa fa-trophy"></i> Badges
+            </div>
+            {{/has_badges}}
+            {{#has_competencies}}
+            <div class="report-tab" onclick="switchTab('competencies')">
+                <i class="fa fa-certificate"></i> Competencies
+                </div>
+            {{/has_competencies}}
+            {{#has_time_spent}}
+            <div class="report-tab" onclick="switchTab('time')">
+                <i class="fa fa-clock"></i> Time Spent
+                </div>
+            {{/has_time_spent}}
+            {{#has_forum_activity}}
+            <div class="report-tab" onclick="switchTab('forum')">
+                <i class="fa fa-comments"></i> Forum
+            </div>
+            {{/has_forum_activity}}
+            {{#has_weekly_activity}}
+            <div class="report-tab" onclick="switchTab('weekly')">
+                <i class="fa fa-calendar-week"></i> Weekly Activity
+                </div>
+            {{/has_weekly_activity}}
+                </div>
+
+        <!-- Tab Content: Overview -->
+        <div id="tab-overview" class="tab-content active">
+        <!-- Dashboard Statistics -->
+        {{#has_dashboard_stats}}
+        <div class="dashboard-stats-grid">
+            <div class="stat-card total-courses">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-book stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Total Courses</div>
+                        <div class="stat-value">{{dashboard_stats.total_courses}}</div>
+                        <div class="stat-sublabel">{{dashboard_stats.completed_courses}} completed</div>
+                </div>
+            </div>
+        </div>
+        
+            <div class="stat-card activities">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-tasks stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Activities</div>
+                        <div class="stat-value">{{dashboard_stats.completed_activities}}/{{dashboard_stats.total_activities}}</div>
+                        <div class="stat-sublabel">{{dashboard_stats.completion_rate}}% complete</div>
+                        </div>
+                    </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{dashboard_stats.completion_rate}}%;"></div>
+                </div>
+            </div>
+            
+            <div class="stat-card average-grade">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-star stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Average Grade</div>
+                        <div class="stat-value">{{dashboard_stats.average_grade}}%</div>
+                        <div class="stat-sublabel">{{dashboard_stats.performance_rating}}</div>
+                </div>
+            </div>
+            </div>
+            
+            {{#dashboard_stats.total_assignments}}
+            <div class="stat-card assignments">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-file-alt stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Assignments</div>
+                        <div class="stat-value">{{dashboard_stats.completed_assignments}}/{{dashboard_stats.total_assignments}}</div>
+                        <div class="stat-sublabel">{{dashboard_stats.assignment_completion_rate}}% complete</div>
+                </div>
+            </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{dashboard_stats.assignment_completion_rate}}%;"></div>
+                                    </div>
+                                </div>
+            {{/dashboard_stats.total_assignments}}
+
+            {{#dashboard_stats.total_quizzes}}
+            <div class="stat-card quizzes">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-question-circle stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Quizzes</div>
+                        <div class="stat-value">{{dashboard_stats.completed_quizzes}}/{{dashboard_stats.total_quizzes}}</div>
+                        <div class="stat-sublabel">{{dashboard_stats.quiz_completion_rate}}% complete</div>
+                </div>
+            </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{dashboard_stats.quiz_completion_rate}}%;"></div>
+                </div>
+                </div>
+            {{/dashboard_stats.total_quizzes}}
+            </div>
+        {{/has_dashboard_stats}}
+
+        <div class="kid-analytics-grid">
+            <div class="kid-analytics-card">
+                <div class="kid-analytics-title"><i class="fa fa-bullseye"></i> Overall Progress</div>
+                <div class="gauge" style="--gauge-fill: {{dashboard_stats.completion_rate}}%;" data-value="{{dashboard_stats.completion_rate}}"></div>
+                <div class="kid-analytics-note">You're {{dashboard_stats.completion_rate}}% through your learning path!</div>
+                </div>
+            <div class="kid-analytics-card">
+                <div class="kid-analytics-title"><i class="fa fa-star"></i> Grade Stars</div>
+                <div class="grade-stars">
+                    {{#grade_stars}}<i class="fa fa-star {{#filled}}filled{{/filled}}"></i>{{/grade_stars}}
+                        </div>
+                <div class="kid-analytics-note">Average grade: {{dashboard_stats.average_grade}}%</div>
+                    </div>
+            <div class="kid-analytics-card">
+                <div class="kid-analytics-title"><i class="fa fa-fire"></i> Learning Streak</div>
+                <div class="kid-analytics-value">{{learning_streak}} days</div>
+                <div class="kid-analytics-note">{{#last_access_date}}Last active on {{last_access_date}}{{/last_access_date}}{{^last_access_date}}Keep logging in daily!{{/last_access_date}}</div>
+                </div>
+            <div class="kid-analytics-card">
+                <div class="kid-analytics-title"><i class="fa fa-calendar-check"></i> Attendance</div>
+                <div class="kid-analytics-value">{{attendance_stats.percentage}}%</div>
+                <div class="kid-analytics-note">{{attendance_stats.attended}} / {{attendance_stats.total_sessions}} sessions joined</div>
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        {{^has_dashboard_stats}}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fa fa-chart-line"></i>
+                            </div>
+            <div class="empty-state-text">No reports data available yet. Start learning to see your progress!</div>
+                        </div>
+                        {{/has_dashboard_stats}}
+            </div>
+            
+        <!-- Tab Content: Courses -->
+        <div id="tab-courses" class="tab-content">
+        {{#has_course_performance}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-graduation-cap"></i>
+                Course Performance
+            </h2>
+                        </div>
+        
+        <!-- Course Dropdown and Chart Section -->
+        <div style="background: white; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); border: 2px solid #E5E7EB;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                <label for="course-performance-dropdown" style="font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 10px; font-size: 1.1rem;">
+                    <i class="fa fa-book"></i> Select Course:
+                </label>
+                <select id="course-performance-dropdown" class="course-dropdown-select" style="min-width: 300px; padding: 12px 20px; border-radius: 10px; border: 2px solid #E5E7EB; font-size: 1rem; font-weight: 600; background: white; color: var(--text-dark); cursor: pointer;" onchange="updateCoursePerformanceChart(this.value)">
+                    <option value="">-- Select a Course --</option>
+                    {{#course_performance}}
+                    <option value="{{course_id}}" data-course-data-json="{{course_data_json}}">{{course_name}}</option>
+                    {{/course_performance}}
+                </select>
+                            </div>
+            
+            <!-- Chart Container -->
+            <div id="course-performance-chart-container" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
+                    <!-- Donut Chart -->
+                    <div style="text-align: center;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 20px;">
+                            <i class="fa fa-chart-pie"></i> Course Overview
+                        </h3>
+                        <div style="position: relative; max-width: 400px; margin: 0 auto;">
+                            <canvas id="course-performance-donut-chart" style="max-width: 100%;"></canvas>
+                            <div id="chart-center-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none;">
+                                <div style="font-size: 2rem; font-weight: 800; color: var(--card-total-primary);" id="chart-percentage">0%</div>
+                                <div style="font-size: 0.9rem; color: var(--text-medium); font-weight: 600;">Complete</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Statistics Panel -->
+                    <div id="course-performance-stats" style="background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%); border-radius: 16px; padding: 25px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 20px;">
+                            <i class="fa fa-info-circle"></i> Course Statistics
+                        </h3>
+                        <div id="course-stats-content">
+                            <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="course-performance-empty" style="text-align: center; padding: 60px 20px; color: var(--text-medium);">
+                <i class="fa fa-chart-pie" style="font-size: 4rem; color: #CBD5E1; margin-bottom: 20px;"></i>
+                <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Select a course to view detailed statistics</div>
+                <div style="font-size: 0.95rem;">Choose a course from the dropdown above to see lessons, activities, and progress breakdown</div>
+            </div>
+        </div>
+                {{/has_course_performance}}
+                    </div>
+                    
+        <!-- Tab Content: Grades -->
+        <div id="tab-grades" class="tab-content">
+        <div class="grade-subtabs">
+            <div class="grade-subtab active" data-grade-tab="simple" onclick="switchGradeSubtab('simple')">
+                <i class="fa fa-check-circle"></i> Simple Grading
+                                    </div>
+            <div class="grade-subtab" data-grade-tab="rubrics" onclick="switchGradeSubtab('rubrics')">
+                <i class="fa fa-table"></i> Rubrics
+                                </div>
+                                    </div>
+            
+        <div id="grade-subtab-simple" class="grade-subtab-content active">
+            {{#has_grade_reports}}
+            <div class="grade-subheading">
+                <i class="fa fa-check-circle"></i> Simple Grading (Points)
+                                </div>
+                {{#has_assignment_grades}}
+            <div class="grade-subheading" style="margin-top: 25px;">
+                <i class="fa fa-file-alt"></i> Assignment Grades
+                                    </div>
+            <div class="grade-reports-container">
+                            {{#grade_reports.assignments}}
+                <div class="grade-item">
+                    <div class="grade-item-info">
+                        <div class="grade-item-name">{{itemname}}</div>
+                        <div class="grade-item-course">{{course_name}}</div>
+                                </div>
+                    <div class="grade-item-score">{{percentage}}%</div>
+                                    </div>
+                            {{/grade_reports.assignments}}
+                                </div>
+                {{/has_assignment_grades}}
+            
+            {{#has_quiz_grades}}
+            <div class="grade-subheading" style="margin-top: 25px;">
+                <i class="fa fa-question-circle"></i> Quiz Grades
+                                    </div>
+            <div class="grade-reports-container">
+                {{#grade_reports.quizzes}}
+                <div class="grade-item">
+                    <div class="grade-item-info">
+                        <div class="grade-item-name">{{itemname}}</div>
+                        <div class="grade-item-course">{{course_name}}</div>
+                                </div>
+                    <div class="grade-item-score">{{percentage}}%</div>
+                            </div>
+                {{/grade_reports.quizzes}}
+                        </div>
+            {{/has_quiz_grades}}
+            {{/has_grade_reports}}
+            {{^has_grade_reports}}
+            <div class="empty-state" style="margin-top: 20px;">
+                <div class="empty-state-icon"><i class="fa fa-check-circle"></i></div>
+                <div class="empty-state-text">No points-based grades available yet.</div>
+                        </div>
+            {{/has_grade_reports}}
+                    </div>
+                    
+        <div id="grade-subtab-rubrics" class="grade-subtab-content">
+            <div class="grade-subheading">
+                <i class="fa fa-table"></i> Rubric Assessments
+                                </div>
+
+                {{#has_rubric_assessments}}
+            <div class="rubric-summary-grid">
+                    <div class="rubric-summary-card">
+                            <div class="rubric-summary-value">{{rubric_stats.total}}</div>
+                    <div class="rubric-summary-label">Total Rubrics</div>
+                                </div>
+                    <div class="rubric-summary-card">
+                            <div class="rubric-summary-value">{{rubric_stats.average_score}}%</div>
+                            <div class="rubric-summary-label">Average Score</div>
+                            </div>
+                    <div class="rubric-summary-card">
+                            <div class="rubric-summary-value">{{rubric_stats.criteria_count}}</div>
+                    <div class="rubric-summary-label">Criteria Reviewed</div>
+                        </div>
+                    </div>
+                    
+            <div class="rubric-assessments-grid">
+                    {{#rubric_assessments}}
+                <div class="rubric-card">
+                        <div class="rubric-card-header">
+                            <div class="rubric-header-left">
+                                <div class="course-name" style="font-size: 1.3rem; font-weight: 800; color: var(--accent-purple); margin-bottom: 8px;">{{rubric_name}}</div>
+                                <div class="rubric-course">{{course}}</div>
+                                <div class="grade-item-name">{{item_name}}</div>
+                            </div>
+                            <div class="rubric-header-right">
+                                <div class="rubric-score">{{percentage}}%</div>
+                                <div class="rubric-score-section">
+                                    <div class="kid-analytics-note">Score: {{score}} / {{max_score}}</div>
+                                    {{#criteria.0}}
+                                    <button class="rubric-toggle-btn" onclick="toggleRubricCriteria(this)" type="button">
+                                        <i class="fa fa-chevron-down"></i>
+                                        <span>View Criteria Details</span>
+                                    </button>
+                                    {{/criteria.0}}
+                        </div>
+                            </div>
+                        </div>
+                    <div class="rubric-criteria-list">
+                        {{#criteria}}
+                        <div class="rubric-criterion">
+                            <div>
+                                <strong>{{criterion}}</strong>
+                                    {{#remark}}
+                                <div class="rubric-criterion-remark">{{remark}}</div>
+                                    {{/remark}}
+                            </div>
+                            <span>{{score}}</span>
+                        </div>
+                                {{/criteria}}
+                        {{^criteria}}
+                        <div class="rubric-criterion">
+                            <div>
+                                <strong>No detailed criteria feedback yet.</strong>
+                            </div>
+                        </div>
+                        {{/criteria}}
+                    </div>
+                </div>
+                    {{/rubric_assessments}}
+            </div>
+                {{/has_rubric_assessments}}
+                {{^has_rubric_assessments}}
+            <div class="empty-state" style="margin-top: 20px;">
+                <div class="empty-state-icon"><i class="fa fa-table"></i></div>
+                <div class="empty-state-text">No rubric-based grades recorded yet.</div>
+                                    </div>
+            {{/has_rubric_assessments}}
+            </div>
+                </div>
+                
+        <!-- Tab Content: Activities -->
+        <div id="tab-activities" class="tab-content">
+        {{#has_activity_types}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-puzzle-piece"></i>
+                Activity Types
+            </h2>
+                    </div>
+                
+        <div class="activity-donut-wrapper">
+            <div class="activity-donut-chart" style="background: conic-gradient({{activity_donut_style}});"></div>
+            <div class="activity-donut-legend">
+                {{#activity_donut_legend}}
+                <div class="activity-donut-legend-item">
+                    <span class="activity-donut-color" style="background: {{color}};"></span>
+                    <span>{{name}} - {{percentage}}%</span>
+                    </div>
+                {{/activity_donut_legend}}
+                {{^activity_donut_legend}}
+                <div class="empty-activity-type">Complete more activities to see the breakdown.</div>
+                {{/activity_donut_legend}}
+                        </div>
+                    </div>
+                    
+        <div class="activity-types-grid">
+            {{#activity_types}}
+            <div class="activity-type-card" data-modname="{{modname}}" onclick="showActivityType('{{modname}}', this)">
+                <div class="activity-type-icon">
+                    <i class="fa fa-puzzle-piece" data-icon-default></i>
+                        </div>
+                <div class="activity-type-name">{{name}}</div>
+                <div class="activity-type-stats">{{completed}}/{{count}}</div>
+                <div class="activity-type-percentage">{{percentage}}% Complete</div>
+                        </div>
+            {{/activity_types}}
+                    </div>
+                    
+        <div class="activity-type-details" id="activity-type-details">
+            <div class="activity-type-details-header">
+                <h3 id="activity-type-details-title">Select an activity type to view its activities</h3>
+                        </div>
+            <div id="activity-type-items-grid" class="activity-type-items-grid">
+                <div class="empty-activity-type">Pick a card above to see the related activities.</div>
+                        </div>
+                        </div>
+        {{/has_activity_types}}
+                        </div>
+
+        <!-- Tab Content: Attendance -->
+        <div id="tab-attendance" class="tab-content">
+        {{#has_attendance}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-calendar-check"></i>
+                Attendance
+                </h2>
+                        </div>
+                
+        <div class="stat-card" style="margin-bottom: 25px;">
+            <div class="stat-card-header">
+                <div class="stat-icon-container">
+                    <i class="fa fa-check-circle stat-icon"></i>
+                    </div>
+                <div>
+                    <div class="stat-label">Attendance Rate</div>
+                    <div class="stat-value">{{attendance_stats.attended}}/{{attendance_stats.total_sessions}}</div>
+                    <div class="stat-sublabel">{{attendance_stats.percentage}}%</div>
+                </div>
+            </div>
+        </div>
+                
+                {{#has_detailed_attendance}}
+        <div class="attendance-table">
+            <table>
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#detailed_attendance}}
+                            <tr>
+                                <td>{{course}}</td>
+                        <td>{{date}}</td>
+                        <td>{{time}}</td>
+                        <td><span class="competency-proficiency {{status_class}}">{{status}}</span></td>
+                            </tr>
+                            {{/detailed_attendance}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/has_detailed_attendance}}
+        {{/has_attendance}}
+                </div>
+            
+        <!-- Tab Content: Badges -->
+        <div id="tab-badges" class="tab-content">
+        {{#has_badges}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-trophy"></i>
+                Badges Earned
+                </h2>
+                </div>
+                
+        <div class="stat-card" style="margin-bottom: 25px;">
+            <div class="stat-card-header">
+                <div class="stat-icon-container">
+                    <i class="fa fa-trophy stat-icon"></i>
+                                    </div>
+                <div>
+                    <div class="stat-label">Total Badges</div>
+                    <div class="stat-value">{{total_badges}}</div>
+                </div>
+                </div>
+                </div>
+
+        <div class="badges-grid">
+            {{#badges_data}}
+            <div class="badge-card">
+                <div class="badge-icon">
+                        <i class="fa fa-trophy"></i>
+            </div>
+                <div class="badge-name">{{name}}</div>
+                <div class="badge-date">{{issued_date}}</div>
+                                </div>
+            {{/badges_data}}
+                            </div>
+        {{/has_badges}}
+            </div>
+            
+        <!-- Tab Content: Competencies -->
+        <div id="tab-competencies" class="tab-content">
+        {{#has_competencies_by_course}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-certificate"></i>
+                Competencies
+                </h2>
+        </div>
+
+        <!-- Achieved Competencies Summary Section -->
+        <div id="achieved-competencies-summary" style="margin-bottom: 30px; display: none;">
+            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); border-radius: 16px; padding: 25px; border: 2px solid rgba(245, 158, 11, 0.2);">
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa fa-trophy" style="color: #F59E0B;"></i>
+                    Your Achieved Competencies
+                </h3>
+                <div id="achieved-competencies-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+                </div>
+                
+        <!-- Course Dropdown and Filter -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
+            <div class="competency-course-selector" style="flex: 1; min-width: 250px;">
+                <label for="competency-course-dropdown" style="font-weight: 600; color: var(--text-dark); margin-right: 12px;">
+                    <i class="fa fa-book"></i> Select Course:
+                </label>
+                <select id="competency-course-dropdown" class="course-dropdown-select" onchange="filterCompetenciesByCourse(this.value)">
+                    <option value="all">All Courses</option>
+                    {{#competencies_by_course}}
+                    <option value="{{course_id}}">{{course_name}}</option>
+                    {{/competencies_by_course}}
+                </select>
+                        </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="filter-achieved-btn" onclick="toggleAchievedFilter()" class="achieved-filter-btn" style="padding: 10px 20px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa fa-filter" id="filter-icon"></i>
+                    <span id="filter-text">Show Achieved Only</span>
+                </button>
+                            </div>
+                            </div>
+                
+        <!-- Competencies by Course -->
+        {{#competencies_by_course}}
+        <div class="competency-course-section" data-course-id="{{course_id}}" style="display: none; margin-bottom: 30px;">
+            <!-- Course Summary Header -->
+            <div class="competency-course-header" style="background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-light) 100%); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 2px solid #E5E7EB;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--card-total-primary); margin: 0 0 8px 0;">
+                            <i class="fa fa-book"></i> {{course_name}}
+                        </h3>
+                        <div style="color: var(--text-medium); font-weight: 600;">
+                            {{#frameworks}}
+                            <span style="display: inline-block; padding: 4px 10px; background: rgba(102, 126, 234, 0.1); border-radius: 6px; margin-right: 8px; margin-bottom: 4px;">
+                                <i class="fa fa-sitemap"></i> {{framework_name}}
+                            </span>
+                            {{/frameworks}}
+                            </div>
+                        </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.9rem; color: var(--text-medium); margin-bottom: 4px;">Total Proficient</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-purple);">
+                            {{proficient_count}}/{{competencies_count}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Frameworks within Course -->
+            {{#frameworks}}
+            <div class="competency-framework-section" style="margin-bottom: 25px;">
+                <!-- Competencies Hierarchical List -->
+                {{#competencies_json}}
+                <div class="competencies-hierarchy" data-competencies-json="{{competencies_json}}" data-course-id="{{../course_id}}" data-framework-name="{{framework_name}}">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                {{/competencies_json}}
+                {{^competencies_json}}
+                <div class="competencies-hierarchy">
+                    <div class="empty-state">
+                        <div class="empty-state-text">No competencies data available for this framework.</div>
+                </div>
+            </div>
+                {{/competencies_json}}
+                </div>
+            {{/frameworks}}
+                </div>
+        {{/competencies_by_course}}
+        {{^has_competencies_by_course}}
+        <div class="empty-state" style="padding: 60px 20px; text-align: center;">
+            <div class="empty-state-icon" style="font-size: 4rem; color: var(--card-total-primary); margin-bottom: 20px;">
+                <i class="fa fa-certificate"></i>
+                        </div>
+            <div class="empty-state-title" style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px;">
+                No Competencies Found
+                    </div>
+            <div class="empty-state-text" style="font-size: 1rem; color: var(--text-medium);">
+                You don't have any competencies assigned to your courses yet.
+                        </div>
+                    </div>
+        {{/has_competencies_by_course}}
+
+        <!-- Show first course by default -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCourse = document.querySelector('.competency-course-section');
+            if (firstCourse) {
+                firstCourse.style.display = 'block';
+                const courseId = firstCourse.dataset.courseId;
+                const dropdown = document.getElementById('competency-course-dropdown');
+                if (dropdown) {
+                    dropdown.value = courseId;
+                }
+            }
+        });
+        </script>
+        {{/has_competencies_by_course}}
+        
+        {{^has_competencies_by_course}}
+        {{#has_competencies}}
+        <!-- Fallback to old display if new structure not available -->
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-certificate"></i>
+                Competencies
+                </h2>
+                        </div>
+
+        <div class="stat-card" style="margin-bottom: 25px;">
+            <div class="stat-card-header">
+                <div class="stat-icon-container">
+                    <i class="fa fa-certificate stat-icon"></i>
+                    </div>
+                <div>
+                    <div class="stat-label">Proficient</div>
+                    <div class="stat-value">{{competency_stats.proficient}}/{{competency_stats.total}}</div>
+                    <div class="stat-sublabel">{{competency_stats.percentage}}%</div>
+                        </div>
+                    </div>
+                </div>
+                
+        <div class="competencies-grid">
+                            {{#competencies_data}}
+            <div class="competency-card">
+                <div class="competency-name">{{name}}</div>
+                <div class="competency-course">{{course}}</div>
+                <div>
+                    <span class="competency-proficiency {{proficiency_class}}">{{proficiency}}</span>
+                                </div>
+                            </div>
+                            {{/competencies_data}}
+                </div>
+                {{/has_competencies}}
+        {{/has_competencies_by_course}}
+                </div>
+            
+        <!-- Tab Content: Time Spent -->
+        <div id="tab-time" class="tab-content">
+        {{#has_time_spent}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-clock"></i>
+                Time Spent
+                </h2>
+            </div>
+            
+        <div class="time-stats-grid">
+            <div class="time-stat-card">
+                <div class="time-stat-value">{{time_stats.total_hours}}</div>
+                <div class="time-stat-label">Total Hours</div>
+                        </div>
+            <div class="time-stat-card">
+                <div class="time-stat-value">{{time_stats.total_actions}}</div>
+                <div class="time-stat-label">Total Actions</div>
+                    </div>
+            <div class="time-stat-card">
+                <div class="time-stat-value">{{time_stats.most_active_course}}</div>
+                <div class="time-stat-label">Most Active Course</div>
+                        </div>
+                    </div>
+        
+        {{#has_time_spent_progress}}
+        <div class="time-progress-list">
+            {{#time_spent_progress}}
+            <div class="time-progress-item">
+                <div class="time-progress-header">
+                    <span>{{course}}</span>
+                    <span>{{minutes}} min</span>
+                        </div>
+                <div class="time-progress-bar">
+                    <span style="width: {{percent}}%;"></span>
+                    </div>
+                {{#action_details.0}}
+                <button class="time-progress-actions-toggle" onclick="toggleActions(this)">
+                    <i class="fa fa-chevron-down"></i>
+                    <span>View Actions Performed</span>
+                    </button>
+                <div class="time-progress-actions">
+                    <div class="time-progress-actions-title">Actions in this course:</div>
+                    {{#action_details}}
+                    <div class="time-progress-action-item">
+                        <span class="time-progress-action-name">{{name}}</span>
+                        <span class="time-progress-action-count">{{count}}x</span>
+                </div>
+                    {{/action_details}}
+                        </div>
+                {{/action_details.0}}
+                        </div>
+            {{/time_spent_progress}}
+                                </div>
+        {{/has_time_spent_progress}}
+        {{/has_time_spent}}
+                            </div>
+        
+        <!-- Tab Content: Forum -->
+        <div id="tab-forum" class="tab-content">
+        {{#has_forum_activity}}
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa fa-comments"></i>
+                Forum Activity
+            </h2>
+                                    </div>
+
+        <div class="dashboard-stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-comments stat-icon"></i>
+                </div>
+                    <div>
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-value">{{forum_stats.total_posts}}</div>
+            </div>
+            </div>
+                        </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-comments stat-icon"></i>
+                    </div>
+                    <div>
+                        <div class="stat-label">Discussions</div>
+                        <div class="stat-value">{{forum_stats.total_discussions}}</div>
+                        </div>
+                    </div>
+                        </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon-container">
+                        <i class="fa fa-reply stat-icon"></i>
+                    </div>
+                    <div>
+                        <div class="stat-label">Replies</div>
+                        <div class="stat-value">{{forum_stats.total_replies}}</div>
+                </div>
+                </div>
+                </div>
+                    </div>
+        {{/has_forum_activity}}
+            </div>
+            
+        <!-- Tab Content: Weekly Activity -->
+        <div id="tab-weekly" class="tab-content">
+                {{#has_weekly_activity}}
+        <div class="section-header">
+            <h2 class="section-title">
+                        <i class="fa fa-calendar-week"></i>
+                Weekly Activity
+            </h2>
+                            </div>
+        
+        <div class="weekly-activity-grid" id="weekly-activity-grid">
+            {{#weekly_activity}}
+            <div class="weekly-day {{#active}}active{{/active}} {{#today}}today{{/today}}" data-day-index="{{index}}">
+                <div class="weekly-day-name">{{day}}</div>
+                <div class="weekly-day-date">{{date}}</div>
+                <div class="weekly-day-actions">{{actions}}</div>
+                <div class="weekly-day-engagement">{{engagement_emoji}} {{engagement_label}}</div>
+                <div class="weekly-day-checklist">
+                    {{#has_details}}
+                    {{#details}}
+                    <div class="weekly-day-detail">
+                        <span class="icon">✔️</span>
+                        <span>{{text}}</span>
+                            </div>
+                    {{/details}}
+                    {{/has_details}}
+                    {{^has_details}}
+                    <div class="weekly-day-detail empty">
+                        <span class="icon">⌛</span>
+                        <span>No activities logged yet.</span>
+                                </div>
+                    {{/has_details}}
+                            </div>
+                            </div>
+            {{/weekly_activity}}
+                        </div>
+        {{/has_weekly_activity}}
+                    </div>
+
+        <!-- Weekly Day Modal -->
+        <div id="weekly-day-modal-overlay" class="weekly-day-modal-overlay" onclick="closeWeeklyDayModal(event)">
+            <div class="weekly-day-modal" onclick="event.stopPropagation()">
+                <div class="weekly-day-modal-header">
+                    <h3 class="weekly-day-modal-title">
+                        <i class="fa fa-calendar-day"></i>
+                        <span id="weekly-day-modal-title-text">Daily Activities</span>
+                    </h3>
+                    <button type="button" class="weekly-day-modal-close" onclick="closeWeeklyDayModal(event)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                                </div>
+                <div class="weekly-day-modal-body">
+                    <div class="weekly-day-modal-info">
+                        <div class="weekly-day-modal-info-item">
+                            <div class="weekly-day-modal-info-label">Date</div>
+                            <div class="weekly-day-modal-info-value" id="weekly-day-modal-date">-</div>
+                            </div>
+                        <div class="weekly-day-modal-info-item">
+                            <div class="weekly-day-modal-info-label">Actions</div>
+                            <div class="weekly-day-modal-info-value" id="weekly-day-modal-actions">-</div>
+                        </div>
+                        <div class="weekly-day-modal-info-item">
+                            <div class="weekly-day-modal-info-label">Engagement</div>
+                            <div class="weekly-day-modal-info-value" id="weekly-day-modal-engagement">-</div>
+                    </div>
+                </div>
+                    <div class="weekly-day-modal-checklist">
+                        <h4 class="weekly-day-modal-checklist-title">
+                            <i class="fa fa-tasks"></i>
+                            Activity Checklist
+                        </h4>
+                        <div class="weekly-day-modal-checklist-items" id="weekly-day-modal-checklist-items">
+                            <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script>
+const activityTypeItems = {{{activity_type_items_json}}} || {};
+const weeklyActivityData = {{{weekly_activity_json}}} || [];
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.report-tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    event.target.closest('.report-tab').classList.add('active');
+}
+
+function switchGradeSubtab(type) {
+    const tabs = document.querySelectorAll('#tab-grades .grade-subtab');
+    const contents = document.querySelectorAll('#tab-grades .grade-subtab-content');
+    
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active'));
+    
+    const targetTab = document.querySelector(`#tab-grades .grade-subtab[data-grade-tab="${type}"]`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    const targetContent = document.getElementById(`grade-subtab-${type}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+}
+
+function showActivityType(modname, card) {
+    const titleEl = document.getElementById('activity-type-details-title');
+    const gridEl = document.getElementById('activity-type-items-grid');
+    const items = activityTypeItems[modname] || [];
+    
+    document.querySelectorAll('.activity-type-card').forEach(cardEl => cardEl.classList.remove('active'));
+    card.classList.add('active');
+    
+    if (!items.length) {
+        titleEl.textContent = 'No activities found for this type';
+        gridEl.innerHTML = '<div class="empty-activity-type">No activities available for this type.</div>';
+            return;
+        }
+        
+    titleEl.textContent = `Activities for ${card.querySelector('.activity-type-name').textContent}`;
+    gridEl.innerHTML = items.map(item => {
+        // Determine icon based on activity type
+        let icon = 'fa-puzzle-piece';
+        if (item.modname) {
+            const modname = item.modname.toLowerCase();
+            if (modname.includes('quiz')) icon = 'fa-question-circle';
+            else if (modname.includes('assign')) icon = 'fa-file-text';
+            else if (modname.includes('lesson')) icon = 'fa-book';
+            else if (modname.includes('forum')) icon = 'fa-comments';
+            else if (modname.includes('page')) icon = 'fa-file';
+            else if (modname.includes('resource')) icon = 'fa-file-o';
+        }
+        
+        return `
+        <div class="activity-item-card ${item.completed ? 'completed-card' : ''}">
+            <div class="activity-item-header">
+                <div class="activity-item-icon">
+                    <i class="fa ${icon}"></i>
+                </div>
+                <div class="activity-item-info">
+                    <div class="activity-item-name">${item.name || 'Activity'}</div>
+                    <div class="activity-item-course">${item.course || ''}</div>
+                    <div class="activity-item-status ${item.completed ? 'completed' : ''}">
+                        ${item.completed ? '✓ Completed' : (item.status || 'In Progress')}
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item-footer">
+                <a class="activity-item-link" href="${item.url || '#'}">
+                    View Activity
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    `;
+    }).join('');
+}
+
+function toggleActions(button) {
+    const actionsDiv = button.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (actionsDiv.classList.contains('expanded')) {
+        actionsDiv.classList.remove('expanded');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+        button.querySelector('span').textContent = 'View Actions Performed';
+    } else {
+        actionsDiv.classList.add('expanded');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+        button.querySelector('span').textContent = 'Hide Actions';
+    }
+}
+
+function toggleRubricCriteria(button) {
+    const card = button.closest('.rubric-card');
+    const criteriaList = card.querySelector('.rubric-criteria-list');
+    const icon = button.querySelector('i');
+    const span = button.querySelector('span');
+    
+    if (criteriaList.classList.contains('expanded')) {
+        criteriaList.classList.remove('expanded');
+        button.classList.remove('expanded');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+        span.textContent = 'View Criteria Details';
+    } else {
+        criteriaList.classList.add('expanded');
+        button.classList.add('expanded');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+        span.textContent = 'Hide Criteria Details';
+    }
+}
+
+function filterCompetenciesByCourse(courseId) {
+    const allSections = document.querySelectorAll('.competency-course-section');
+    
+    if (courseId === 'all') {
+        // Show all courses
+        allSections.forEach(section => {
+            section.style.display = 'block';
+        });
+    } else {
+        // Show only selected course
+        allSections.forEach(section => {
+            if (section.dataset.courseId === courseId) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+        }
+    });
+}
+
+    // Re-render competencies after filter
+    setTimeout(() => {
+        renderCompetenciesHierarchy();
+        // Re-apply achieved filter after rendering
+        if (typeof window.showAchievedOnly !== 'undefined' && window.showAchievedOnly && typeof filterAchievedCompetencies === 'function') {
+            setTimeout(() => {
+                filterAchievedCompetencies();
+                updateAchievedCompetenciesSummary();
+            }, 150);
+        } else {
+            // Update summary even if filter is not active
+            setTimeout(updateAchievedCompetenciesSummary, 150);
+        }
+    }, 50);
+}
+
+// Global variable to track filter state - explicitly attach to window for global access
+window.showAchievedOnly = false;
+
+function toggleAchievedFilter() {
+    window.showAchievedOnly = !window.showAchievedOnly;
+    const btn = document.getElementById('filter-achieved-btn');
+    const icon = document.getElementById('filter-icon');
+    const text = document.getElementById('filter-text');
+    
+    if (!btn || !icon || !text) return;
+    
+    if (window.showAchievedOnly) {
+        btn.classList.add('active');
+        icon.className = 'fa fa-check-circle';
+        text.textContent = 'Show All Competencies';
+    } else {
+        btn.classList.remove('active');
+        icon.className = 'fa fa-filter';
+        text.textContent = 'Show Achieved Only';
+    }
+    
+    filterAchievedCompetencies();
+}
+
+function filterAchievedCompetencies() {
+    if (typeof window.showAchievedOnly === 'undefined') {
+        window.showAchievedOnly = false;
+    }
+    
+    const allTreeItems = document.querySelectorAll('.tree-item');
+    
+    allTreeItems.forEach(item => {
+        // Check if achieved - can be marked via data attribute or proficiency class
+        const isProficient = item.dataset.isProficient === 'true' || item.dataset.isAchieved === 'true';
+        
+        if (window.showAchievedOnly) {
+            // Check if item or any parent/child is proficient
+            let shouldShow = isProficient;
+            
+            if (!shouldShow) {
+                // Check if any child is proficient
+                const children = item.querySelectorAll('.tree-item[data-is-proficient="true"]');
+                if (children.length > 0) {
+                    shouldShow = true;
+                }
+            }
+            
+            if (!shouldShow) {
+                // Check if parent is proficient (walk up the tree)
+                let parent = item.parentElement;
+                while (parent && parent.classList.contains('tree-level')) {
+                    const parentItem = parent.previousElementSibling ? parent.previousElementSibling.closest('.tree-item') : null;
+                    if (parentItem && parentItem.dataset.isProficient === 'true') {
+                        shouldShow = true;
+                        break;
+                    }
+                    parent = parent.parentElement;
+                    if (parent && parent.classList.contains('tree-item')) {
+                        parent = parent.parentElement;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            if (shouldShow) {
+                item.classList.remove('hidden-by-filter');
+                // Also ensure parent containers are visible
+                let parent = item.parentElement;
+                while (parent && (parent.classList.contains('tree-level') || parent.classList.contains('comp-tree'))) {
+                    parent.style.display = '';
+                    if (parent.classList.contains('tree-level')) {
+                        // Expand parent level if needed
+                        const parentRow = parent.previousElementSibling;
+                        if (parentRow && parentRow.classList.contains('tree-row')) {
+                            const caret = parentRow.querySelector('.caret');
+                            if (caret && caret.textContent === '▶') {
+                                parent.style.display = 'block';
+                                caret.textContent = '▼';
+                            }
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
+            } else {
+                item.classList.add('hidden-by-filter');
+            }
+        } else {
+            // Show all
+            item.classList.remove('hidden-by-filter');
+        }
+    });
+    
+    // Update empty state visibility
+    updateEmptyStateVisibility();
+}
+
+function updateEmptyStateVisibility() {
+    const allHierarchies = document.querySelectorAll('.competencies-hierarchy');
+    allHierarchies.forEach(container => {
+        const visibleItems = container.querySelectorAll('.tree-item:not(.hidden-by-filter)');
+        const emptyState = container.querySelector('.empty-state');
+        
+        if (visibleItems.length === 0 && window.showAchievedOnly) {
+            if (!emptyState) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty-state';
+                emptyDiv.innerHTML = '<div class="empty-state-text">No achieved competencies found. Keep working to achieve more!</div>';
+                container.appendChild(emptyDiv);
+            } else {
+                emptyState.style.display = 'block';
+            }
+        } else if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+    });
+}
+
+// Helper function to check if all children are achieved
+function allChildrenProficient(children) {
+    if (!children || !Array.isArray(children) || children.length === 0) {
+        return true; // No children means all are "achieved" (none to check)
+    }
+    
+    // Recursively check all children and their descendants
+    return children.every(child => {
+        // Check if child is achieved using is_achieved flag or proficiency_class
+        const childAchieved = (child.is_achieved === true) || (child.proficiency_class === 'proficient');
+        const childHasChildren = child.children && Array.isArray(child.children) && child.children.length > 0;
+        
+        // If child is achieved, check if all its children are also achieved
+        if (childAchieved && childHasChildren) {
+            return allChildrenProficient(child.children);
+        }
+        
+        // Child must be achieved to count
+        return childAchieved;
+    });
+}
+
+function renderCompetencyTreeItem(comp, level = 0) {
+    if (!comp || !comp.name) {
+        return '';
+    }
+    
+    const compName = comp.name || 'Unnamed Competency';
+    const compProficiency = comp.proficiency || 'Not Rated';
+    const proficiencyClass = comp.proficiency_class || 'not-rated';
+    // Check if achieved using is_achieved flag or proficiency_class
+    const isProficient = (comp.is_achieved === true) || (proficiencyClass === 'proficient');
+    const hasChildren = comp.children && Array.isArray(comp.children) && comp.children.length > 0;
+    const linkedActivitiesCount = comp.linked_count || ((comp.linked_activities && Array.isArray(comp.linked_activities)) ? comp.linked_activities.length : 0);
+    const hasLinkedActivities = linkedActivitiesCount > 0 && comp.linked_activities && Array.isArray(comp.linked_activities) && comp.linked_activities.length > 0;
+    
+    // Check if parent and all children are achieved
+    const allChildrenAchieved = hasChildren ? allChildrenProficient(comp.children) : true;
+    // If it has children: must have all children achieved. If no children: just needs to be achieved itself
+    const fullyAchieved = isProficient && allChildrenAchieved;
+    
+    // No expandable activities list - direct redirect via tree-meta link instead
+    
+    let childrenHtml = '';
+    if (hasChildren) {
+        childrenHtml = `<ul class="tree-level" style="display:none">${comp.children.map(child => renderCompetencyTreeItem(child, level + 1)).filter(html => html !== '').join('')}</ul>`;
+    }
+    
+    const competencyIdAttr = comp.id ? `data-competency-id="${comp.id}"` : '';
+    const proficientAttr = isProficient ? `data-is-proficient="true"` : '';
+    const achievedAttr = comp.is_achieved ? `data-is-achieved="true"` : '';
+    const fullyAchievedAttr = fullyAchieved ? `data-fully-achieved="true"` : '';
+    const ratingLabelAttr = comp.rating_label ? `data-rating-label="${comp.rating_label}"` : '';
+    
+    // Generate achievement badge HTML if fully achieved
+    // Extract a clean name for the badge (remove numbers/prefixes if present)
+    const cleanName = compName.replace(/^\d+\.\d+\s*/, '').replace(/^[0-9.-]+\s*/, '').trim();
+    const displayName = cleanName || compName;
+    
+    return `
+        <li class="tree-item" ${competencyIdAttr} ${proficientAttr} ${achievedAttr} ${fullyAchievedAttr} ${ratingLabelAttr} data-comp-name="${compName}" data-display-name="${displayName}">
+            <div class="tree-row"${hasChildren ? ' onclick="toggleCompetencyNode(this)"' : ''}>
+                ${hasChildren ? '<span class="caret">▶</span> ' : ''}
+                <span class="tree-name">${compName}</span>
+                <span class="tree-meta">
+                    ${hasLinkedActivities ? (() => {
+                        // Get activities with URLs
+                        const activitiesWithUrls = comp.linked_activities.filter(act => act.url && act.has_url);
+                        
+                        if (activitiesWithUrls.length === 0) {
+                            // No URLs available, show as text
+                            return `<span>${linkedActivitiesCount} activities</span>`;
+                        } else if (activitiesWithUrls.length === 1) {
+                            // Single activity - redirect directly
+                            const activity = activitiesWithUrls[0];
+                            return `<a href="${activity.url}" target="_blank" class="activities-link" onclick="event.stopPropagation();" style="color: var(--card-total-primary); cursor: pointer; font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--card-total-primary);" onmouseover="this.style.color='var(--card-total-secondary)'; this.style.borderBottomColor='var(--card-total-secondary)'" onmouseout="this.style.color='var(--card-total-primary)'; this.style.borderBottomColor='var(--card-total-primary)'" title="Open activity">${linkedActivitiesCount} activities</a>`;
+                        } else {
+                            // Multiple activities - show dropdown
+                            const uniqueId = 'activities-' + (comp.id || Math.random().toString(36).substr(2, 9));
+                            const activitiesListHtml = activitiesWithUrls.map((act, idx) => `
+                                <a href="${act.url}" target="_blank" class="activity-dropdown-item" onclick="event.stopPropagation(); closeActivitiesDropdown();" style="display: block; padding: 10px 15px; color: var(--text-dark); text-decoration: none; border-bottom: 1px solid #E5E7EB; transition: all 0.2s ease;" onmouseover="this.style.background='#F1F5F9'; this.style.paddingLeft='20px'" onmouseout="this.style.background='transparent'; this.style.paddingLeft='15px'">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fa ${act.type_icon || 'fa-circle'}" style="color: var(--accent-purple); font-size: 0.9rem;"></i>
+                                        <span style="font-weight: 500; font-size: 0.9rem;">${act.name || 'Unnamed Activity'}</span>
+                                        <i class="fa fa-external-link-alt" style="margin-left: auto; color: var(--text-medium); font-size: 0.8rem;"></i>
+                                    </div>
+                                </a>
+                            `).join('');
+                            
+                            return `
+                                <span style="position: relative; display: inline-block;">
+                                    <a href="javascript:void(0);" class="activities-link" onclick="event.stopPropagation(); toggleActivitiesDropdown('${uniqueId}');" style="color: var(--card-total-primary); cursor: pointer; font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--card-total-primary);" onmouseover="this.style.color='var(--card-total-secondary)'; this.style.borderBottomColor='var(--card-total-secondary)'" onmouseout="this.style.color='var(--card-total-primary)'; this.style.borderBottomColor='var(--card-total-primary)'" title="View all ${linkedActivitiesCount} activities">${linkedActivitiesCount} activities</a>
+                                    <div id="${uniqueId}" class="activities-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: white; border: 2px solid #E5E7EB; border-radius: 12px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); min-width: 300px; max-width: 400px; max-height: 400px; overflow-y: auto; z-index: 1000;">
+                                        <div style="padding: 12px 15px; background: #F1F5F9; border-bottom: 2px solid var(--card-total-primary); border-radius: 10px 10px 0 0; font-weight: 700; color: var(--card-total-primary); font-size: 0.9rem;">
+                                            <i class="fa fa-link"></i> Linked Activities (${activitiesWithUrls.length})
+                                        </div>
+                                        ${activitiesListHtml}
+                                    </div>
+                                </span>
+                            `;
+                        }
+                    })() : `<span>${linkedActivitiesCount} activities</span>`} • <span class="competency-proficiency ${proficiencyClass}">${compProficiency}</span>
+                </span>
+            </div>
+            ${childrenHtml}
+        </li>
+    `;
+}
+
+
+function toggleCompetencyNode(el) {
+    const list = el.nextElementSibling;
+    if (!list || !list.classList.contains('tree-level')) return;
+    const caret = el.querySelector('.caret');
+    const isOpen = list.style.display !== 'none';
+    list.style.display = isOpen ? 'none' : 'block';
+    if (caret) caret.textContent = isOpen ? '▶' : '▼';
+}
+
+function renderCompetenciesHierarchy() {
+    document.querySelectorAll('.competencies-hierarchy[data-competencies-json]').forEach(container => {
+        // Only render if parent section is visible
+        const parentSection = container.closest('.competency-course-section');
+        if (parentSection && parentSection.style.display === 'none') {
+            return;
+        }
+        
+        try {
+            const jsonData = container.dataset.competenciesJson;
+            if (!jsonData || jsonData === 'null' || jsonData === '' || jsonData === '[]') {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No competencies found for this course.</div></div>';
+        return;
+    }
+            
+            // Parse JSON directly (it's already HTML-escaped, so we can parse it directly)
+            let competenciesData;
+            try {
+                competenciesData = JSON.parse(jsonData);
+            } catch (parseError) {
+                // Try decoding HTML entities first
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = jsonData;
+                const decodedJson = tempDiv.textContent || tempDiv.innerText || jsonData;
+                competenciesData = JSON.parse(decodedJson);
+            }
+            
+            if (Array.isArray(competenciesData) && competenciesData.length > 0) {
+                // Get framework name from data attribute
+                const frameworkName = container.dataset.frameworkName || 'Competencies';
+                
+                const treeHtml = `
+                    <div class="comp-tree">
+                        <div class="tree-framework">
+                            <div class="tree-header" onclick="toggleCompetencyFramework(this)">
+                                <span class="caret">▶</span> ${frameworkName.replace(/^\s*▼\s*/, '').replace(/^\s*▶\s*/, '').trim()}
+                            </div>
+                            <ul class="tree-level" style="display:none">
+                                ${competenciesData.map(comp => {
+                                    try {
+                                        return renderCompetencyTreeItem(comp, 0);
+                                    } catch (itemError) {
+                                        console.error('Error rendering competency item:', itemError, comp);
+                                        return '';
+                                    }
+                                }).filter(html => html !== '').join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = treeHtml;
+                
+                if (container.innerHTML.trim() === '') {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No competencies could be rendered.</div></div>';
+                } else {
+                    // Apply filter if active
+                    if (typeof window.showAchievedOnly !== 'undefined' && window.showAchievedOnly && typeof filterAchievedCompetencies === 'function') {
+                        setTimeout(() => filterAchievedCompetencies(), 50);
+                    }
+                }
+            } else {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No competencies found for this course.</div></div>';
+            }
+        } catch (e) {
+            console.error('Error rendering competencies:', e);
+            console.error('Error message:', e.message);
+            console.error('JSON data length:', container.dataset.competenciesJson ? container.dataset.competenciesJson.length : 0);
+            console.error('JSON data preview:', container.dataset.competenciesJson ? container.dataset.competenciesJson.substring(0, 200) : 'null');
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Error loading competencies. Please check the browser console for details.</div></div>';
+        }
+    });
+    
+    // After rendering all competencies, update the achieved competencies summary
+    setTimeout(updateAchievedCompetenciesSummary, 100);
+}
+
+function updateAchievedCompetenciesSummary() {
+    const summaryContainer = document.getElementById('achieved-competencies-summary');
+    const gridContainer = document.getElementById('achieved-competencies-grid');
+    
+    if (!summaryContainer || !gridContainer) return;
+    
+    // Find all fully achieved competencies in visible course sections only
+    const visibleSections = document.querySelectorAll('.competency-course-section[style*="block"], .competency-course-section:not([style*="none"])');
+    const fullyAchievedItems = [];
+    
+    visibleSections.forEach(section => {
+        if (section.style.display !== 'none') {
+            const items = section.querySelectorAll('.tree-item[data-fully-achieved="true"]');
+            items.forEach(item => fullyAchievedItems.push(item));
+        }
+    });
+    
+    // If no visible sections, check all (for "All Courses" view)
+    if (visibleSections.length === 0) {
+        document.querySelectorAll('.tree-item[data-fully-achieved="true"]').forEach(item => {
+            const section = item.closest('.competency-course-section');
+            if (section && section.style.display !== 'none') {
+                fullyAchievedItems.push(item);
+            }
+        });
+    }
+    
+    if (fullyAchievedItems.length === 0) {
+        summaryContainer.style.display = 'none';
+        return;
+    }
+    
+    // Collect unique achieved competencies with their rating labels
+    const achievedCompetencies = [];
+    fullyAchievedItems.forEach(item => {
+        const displayName = item.dataset.displayName || item.dataset.compName || 'Achieved Competency';
+        const compName = item.dataset.compName || displayName;
+        
+        // Get rating label from data attribute or proficiency text
+        let ratingLabel = item.dataset.ratingLabel || '';
+        if (!ratingLabel) {
+            // Fallback: try to get from proficiency text in the tree
+            const treeRow = item.querySelector('.tree-row');
+            if (treeRow) {
+                const proficiencySpan = treeRow.querySelector('.competency-proficiency');
+                if (proficiencySpan) {
+                    // Extract rating from text like "Component ✓" or "Developing ✓"
+                    const proficiencyText = proficiencySpan.textContent || '';
+                    ratingLabel = proficiencyText.replace(' ✓', '').trim();
+                }
+            }
+        }
+        
+        // Check if we already have this competency (avoid duplicates)
+        if (!achievedCompetencies.find(c => c.name === compName && c.rating === ratingLabel)) {
+            achievedCompetencies.push({
+                name: compName,
+                displayName: displayName,
+                rating: ratingLabel
+            });
+        }
+    });
+    
+    if (achievedCompetencies.length === 0) {
+        summaryContainer.style.display = 'none';
+        return;
+    }
+    
+    // Display the summary
+    summaryContainer.style.display = 'block';
+    gridContainer.innerHTML = achievedCompetencies.map(comp => {
+        const cleanDisplayName = comp.displayName || comp.name;
+        const ratingText = comp.rating ? ` (${comp.rating})` : '';
+        return `
+            <div class="achieved-competency-badge" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); display: flex; align-items: center; gap: 12px; border: 2px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 16px rgba(245, 158, 11, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(245, 158, 11, 0.3)'">
+                <div style="background: rgba(255, 255, 255, 0.2); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa fa-trophy" style="font-size: 1.4rem; color: white;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 800; color: white; font-size: 1.05rem; line-height: 1.4; letter-spacing: 0.3px;">
+                        🎉 You are an <span style="text-decoration: underline; font-style: italic;">${cleanDisplayName}</span>${ratingText}!
+                    </div>
+                    <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.95); margin-top: 4px; font-weight: 500;">
+                        ✨ All competencies achieved
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleCompetencyFramework(el) {
+    const list = el.nextElementSibling;
+    if (!list || !list.classList.contains('tree-level')) return;
+    const caret = el.querySelector('.caret');
+    const isOpen = list.style.display !== 'none';
+    list.style.display = isOpen ? 'none' : 'block';
+    if (caret) caret.textContent = isOpen ? '▶' : '▼';
+}
+
+function toggleActivitiesDropdown(dropdownId) {
+    // Close all other dropdowns first
+    document.querySelectorAll('.activities-dropdown').forEach(dropdown => {
+        if (dropdown.id !== dropdownId) {
+            dropdown.style.display = 'none';
+        }
+    });
+    
+    // Toggle the requested dropdown
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        const isOpen = dropdown.style.display !== 'none';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+    }
+}
+
+function closeActivitiesDropdown() {
+    document.querySelectorAll('.activities-dropdown').forEach(dropdown => {
+        dropdown.style.display = 'none';
+    });
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.activities-link') && !event.target.closest('.activities-dropdown')) {
+        closeActivitiesDropdown();
+    }
+});
+
+// Function to get icon class based on modname
+function getActivityIcon(modname) {
+    if (!modname) return 'fa-puzzle-piece';
+    
+    const mod = modname.toLowerCase();
+    const iconMap = {
+        'forum': 'fa-comments',
+        'quiz': 'fa-question-circle',
+        'assign': 'fa-file-text',
+        'lesson': 'fa-book',
+        'page': 'fa-file',
+        'resource': 'fa-file-o',
+        'scorm': 'fa-graduation-cap',
+        'edwiservideoactivity': 'fa-video-camera',
+        'sql': 'fa-database',
+        'scratch': 'fa-code',
+        'mix': 'fa-cube',
+        'webdev': 'fa-globe',
+        'photopea': 'fa-image',
+        'url': 'fa-link',
+        'blocky': 'fa-puzzle-piece',
+        'webhosting': 'fa-server',
+        'wokwi': 'fa-microchip',
+        'codeeditor': 'fa-code'
+    };
+    
+    return iconMap[mod] || 'fa-puzzle-piece';
+}
+
+// Update activity type card icons on page load
+function updateActivityTypeIcons() {
+    document.querySelectorAll('.activity-type-card').forEach(card => {
+        const modname = card.dataset.modname;
+        const iconEl = card.querySelector('.activity-type-icon i');
+        if (iconEl && modname) {
+            const iconClass = getActivityIcon(modname);
+            iconEl.className = `fa ${iconClass}`;
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Update icons for activity type cards
+    updateActivityTypeIcons();
+    
+    const firstCard = document.querySelector('#tab-activities .activity-type-card');
+    if (firstCard) {
+        showActivityType(firstCard.dataset.modname, firstCard);
+    }
+    
+    // Render competencies hierarchy
+    renderCompetenciesHierarchy();
+    
+    // Apply filter after initial render
+    setTimeout(() => {
+        if (typeof window.showAchievedOnly !== 'undefined' && window.showAchievedOnly && typeof filterAchievedCompetencies === 'function') {
+            filterAchievedCompetencies();
+        }
+        // Update achieved competencies summary
+        updateAchievedCompetenciesSummary();
+    }, 300);
+    
+    // Re-render when course filter changes
+    const courseDropdown = document.getElementById('competency-course-dropdown');
+    if (courseDropdown) {
+        const originalHandler = courseDropdown.onchange;
+        courseDropdown.addEventListener('change', function() {
+            if (originalHandler) originalHandler.call(this);
+            setTimeout(() => {
+                renderCompetenciesHierarchy();
+                // Re-apply achieved filter after rendering
+                if (typeof window.showAchievedOnly !== 'undefined' && window.showAchievedOnly && typeof filterAchievedCompetencies === 'function') {
+                    setTimeout(() => {
+                        filterAchievedCompetencies();
+                        updateAchievedCompetenciesSummary();
+                    }, 150);
+                } else {
+                    // Update summary even if filter is not active
+                    setTimeout(updateAchievedCompetenciesSummary, 150);
+                }
+            }, 100);
+        });
+    }
+    
+    // Add click event listeners to weekly day cards
+    const weeklyActivityGrid = document.getElementById('weekly-activity-grid');
+    if (weeklyActivityGrid) {
+        // Remove any existing listeners first
+        const newGrid = weeklyActivityGrid.cloneNode(true);
+        weeklyActivityGrid.parentNode.replaceChild(newGrid, weeklyActivityGrid);
+        
+        // Add fresh event listener
+        document.getElementById('weekly-activity-grid').addEventListener('click', function(e) {
+            const weeklyDayCard = e.target.closest('.weekly-day');
+            if (weeklyDayCard) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close any open modal first
+                const overlay = document.getElementById('weekly-day-modal-overlay');
+                if (overlay && overlay.classList.contains('show')) {
+                    closeWeeklyDayModal(e);
+                    // Wait a bit before opening new modal
+                    setTimeout(() => {
+                        const dayIndex = parseInt(weeklyDayCard.getAttribute('data-day-index'), 10);
+                        if (!isNaN(dayIndex) && dayIndex >= 0) {
+                            openWeeklyDayModal(dayIndex);
+                        }
+                    }, 350);
+                } else {
+                    const dayIndex = parseInt(weeklyDayCard.getAttribute('data-day-index'), 10);
+                    console.log('Weekly day clicked, index:', dayIndex);
+                    if (!isNaN(dayIndex) && dayIndex >= 0) {
+                        openWeeklyDayModal(dayIndex);
+                    } else {
+                        console.error('Invalid day index:', dayIndex);
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn('Weekly activity grid not found');
+    }
+});
+
+// Weekly Day Modal Functions
+function openWeeklyDayModal(index) {
+    console.log('openWeeklyDayModal called with index:', index);
+    console.log('weeklyActivityData:', weeklyActivityData);
+    console.log('weeklyActivityData length:', weeklyActivityData ? weeklyActivityData.length : 'null');
+    
+    if (!weeklyActivityData || weeklyActivityData.length === 0) {
+        console.error('weeklyActivityData is empty or not defined');
+        alert('Weekly activity data is not available. Please refresh the page.');
+        return;
+    }
+    
+    const dayData = weeklyActivityData[index];
+    if (!dayData) {
+        console.error('Day data not found for index:', index, 'Available indices:', weeklyActivityData.map((d, i) => i));
+        alert('Day data not found. Please try clicking another day.');
+        return;
+    }
+    
+    console.log('Day data found:', dayData);
+    
+    // Set modal title
+    const titleEl = document.getElementById('weekly-day-modal-title-text');
+    if (titleEl) {
+        titleEl.textContent = dayData.day + ' Activities';
+    }
+    
+    // Set modal info
+    const dateEl = document.getElementById('weekly-day-modal-date');
+    const actionsEl = document.getElementById('weekly-day-modal-actions');
+    const engagementEl = document.getElementById('weekly-day-modal-engagement');
+    
+    if (dateEl) dateEl.textContent = dayData.date || '-';
+    if (actionsEl) actionsEl.textContent = dayData.actions || '0';
+    if (engagementEl) engagementEl.textContent = (dayData.engagement_emoji || '') + ' ' + (dayData.engagement_label || '');
+    
+    // Populate checklist
+    const checklistContainer = document.getElementById('weekly-day-modal-checklist-items');
+    if (checklistContainer) {
+        if (dayData.has_details && dayData.details && dayData.details.length > 0) {
+            checklistContainer.innerHTML = dayData.details.map(detail => `
+                <div class="weekly-day-modal-detail">
+                    <span class="icon">✔️</span>
+                    <span class="weekly-day-modal-detail-text">${detail.text || 'Activity'}</span>
+                </div>
+            `).join('');
+        } else {
+            checklistContainer.innerHTML = `
+                <div class="weekly-day-modal-empty">
+                    <div class="icon">⌛</div>
+                    <div>No activities logged yet for this day.</div>
+                </div>
+            `;
+        }
+    }
+    
+    // Show modal
+    const overlay = document.getElementById('weekly-day-modal-overlay');
+    if (!overlay) {
+        console.error('Modal overlay element not found');
+        return;
+    }
+    
+    console.log('Showing modal overlay');
+    
+    // Clear any existing timeout that might set display:none
+    if (overlay._closeTimeout) {
+        clearTimeout(overlay._closeTimeout);
+        overlay._closeTimeout = null;
+    }
+    
+    // Reset overlay state completely before showing
+    overlay.style.display = 'flex';
+    overlay.style.opacity = '0';
+    overlay.classList.remove('show');
+    
+    // Force a reflow to ensure display change is applied
+    void overlay.offsetHeight;
+    
+    // Use requestAnimationFrame to ensure the display is set before adding show class
+    requestAnimationFrame(() => {
+        overlay.classList.add('show');
+        overlay.style.opacity = '1';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+function closeWeeklyDayModal(event) {
+    // Prevent event bubbling if called from button click
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    const overlay = document.getElementById('weekly-day-modal-overlay');
+    if (overlay) {
+        // Remove show class first
+        overlay.classList.remove('show');
+        overlay.style.opacity = '0';
+        document.body.style.overflow = '';
+        
+        // Hide after transition completes - but don't set display:none immediately
+        // This allows it to be reopened properly
+        overlay._closeTimeout = setTimeout(() => {
+            if (!overlay.classList.contains('show')) {
+                overlay.style.display = 'none';
+            }
+            overlay._closeTimeout = null;
+        }, 350); // Slightly longer than transition duration
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const overlay = document.getElementById('weekly-day-modal-overlay');
+        if (overlay && overlay.classList.contains('show')) {
+            closeWeeklyDayModal(event);
+            }
+        }
+    });
+
+// Course Performance Chart Variables
+let coursePerformanceChart = null;
+
+// Function to update course performance chart
+function updateCoursePerformanceChart(courseId) {
+    const dropdown = document.getElementById('course-performance-dropdown');
+    const chartContainer = document.getElementById('course-performance-chart-container');
+    const emptyState = document.getElementById('course-performance-empty');
+    const statsContent = document.getElementById('course-performance-stats');
+    const chartCanvas = document.getElementById('course-performance-donut-chart');
+    
+    if (!courseId || !dropdown || !chartContainer) {
+        return;
+    }
+    
+    // Get selected option
+    const selectedOption = dropdown.options[dropdown.selectedIndex];
+    if (!selectedOption || !selectedOption.dataset.courseDataJson) {
+        chartContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    // Parse course data (decode HTML entities first)
+    let courseData;
+    try {
+        let jsonString = selectedOption.dataset.courseDataJson;
+        // Decode HTML entities if needed
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = jsonString;
+        jsonString = tempDiv.textContent || tempDiv.innerText || jsonString;
+        courseData = JSON.parse(jsonString);
+    } catch (e) {
+        console.error('Error parsing course data:', e);
+        chartContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    // Show chart container, hide empty state
+    chartContainer.style.display = 'block';
+    emptyState.style.display = 'none';
+    
+    // Update center percentage
+    const centerPercentage = document.getElementById('chart-percentage');
+    if (centerPercentage) {
+        centerPercentage.textContent = courseData.completion_percentage + '%';
+    }
+    
+    // Prepare chart data
+    const completed = courseData.completed_activities || 0;
+    const inProgress = courseData.in_progress_activities || 0;
+    const pending = courseData.pending_activities || 0;
+    
+    const chartData = {
+        labels: ['Completed', 'In Progress', 'Pending'],
+            datasets: [{
+            data: [completed, inProgress, pending],
+            backgroundColor: [
+                '#10B981',  // Green for completed
+                '#F59E0B',  // Orange for in progress
+                '#94A3B8'   // Gray for pending
+            ],
+            borderWidth: 3,
+            borderColor: '#ffffff'
+        }]
+    };
+    
+    // Destroy existing chart if it exists
+    if (coursePerformanceChart) {
+        coursePerformanceChart.destroy();
+    }
+    
+    // Create new donut chart
+    if (typeof Chart !== 'undefined' && chartCanvas) {
+        coursePerformanceChart = new Chart(chartCanvas, {
+            type: 'doughnut',
+            data: chartData,
+        options: {
+            responsive: true,
+                maintainAspectRatio: true,
+                cutout: '70%',
+            plugins: {
+                legend: {
+                        position: 'bottom',
+                    labels: {
+                        padding: 15,
+                            font: {
+                                size: 13,
+                                weight: '600'
+                            },
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                            return data.labels.map((label, i) => {
+                                const value = data.datasets[0].data[i];
+                                return {
+                                            text: label + ': ' + value,
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    hidden: false,
+                                    index: i
+                                };
+                            });
+                                }
+                                return [];
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    }
+    
+    // Update statistics panel
+    if (statsContent) {
+        const breakdown = courseData.activity_type_breakdown || {};
+        const activityTypes = Object.keys(breakdown).map(key => ({
+            name: key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' '),
+            modname: key,
+            total: breakdown[key].total || 0,
+            completed: breakdown[key].completed || 0,
+            in_progress: breakdown[key].in_progress || 0,
+            pending: breakdown[key].pending || 0
+        })).filter(type => type.total > 0);
+        
+        statsContent.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <div style="font-weight: 700; color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">
+                    <i class="fa fa-book"></i> Lessons
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">Total Lessons</span>
+                    <span style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">${courseData.total_sections || 0}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">Completed</span>
+                    <span style="font-weight: 700; color: #10B981; font-size: 1.1rem;">${courseData.completed_sections || 0}</span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="font-weight: 700; color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">
+                    <i class="fa fa-tasks"></i> Activities
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">Total Activities</span>
+                    <span style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">${courseData.total_activities || 0}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">Completed</span>
+                    <span style="font-weight: 700; color: #10B981; font-size: 1.1rem;">${completed}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">In Progress</span>
+                    <span style="font-weight: 700; color: #F59E0B; font-size: 1.1rem;">${inProgress}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px;">
+                    <span style="color: var(--text-medium); font-weight: 600;">Pending</span>
+                    <span style="font-weight: 700; color: #94A3B8; font-size: 1.1rem;">${pending}</span>
+                </div>
+            </div>
+            
+            ${activityTypes.length > 0 ? `
+            <div>
+                <div style="font-weight: 700; color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">
+                    <i class="fa fa-list"></i> Activity Types
+                </div>
+                ${activityTypes.map(type => `
+                    <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                        <div style="font-weight: 700; color: var(--text-dark); margin-bottom: 8px; font-size: 0.95rem;">${type.name}</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 0.85rem;">
+                            <div style="text-align: center;">
+                                <div style="color: #10B981; font-weight: 700;">${type.completed}</div>
+                                <div style="color: var(--text-medium); font-size: 0.75rem;">Done</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="color: #F59E0B; font-weight: 700;">${type.in_progress}</div>
+                                <div style="color: var(--text-medium); font-size: 0.75rem;">Progress</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="color: #94A3B8; font-weight: 700;">${type.pending}</div>
+                                <div style="color: var(--text-medium); font-size: 0.75rem;">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+        `;
+    }
+}
+
+// Fix for invalid sandbox attribute: 'allow-fullscreen' is not a valid sandbox flag
+// This script corrects any iframes that incorrectly include 'allow-fullscreen' in their sandbox attribute
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix existing iframes
+    const iframes = document.querySelectorAll('iframe[sandbox]');
+    iframes.forEach(function(iframe) {
+        const sandbox = iframe.getAttribute('sandbox');
+        if (sandbox && sandbox.includes('allow-fullscreen')) {
+            // Remove 'allow-fullscreen' from sandbox attribute
+            const correctedSandbox = sandbox.replace(/\s*allow-fullscreen\s*/g, ' ').trim();
+            iframe.setAttribute('sandbox', correctedSandbox);
+            // Add allowfullscreen as a separate boolean attribute
+            iframe.setAttribute('allowfullscreen', '');
+        }
+    });
+    
+    // Monitor for dynamically created iframes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element node
+                    if (node.tagName === 'IFRAME' && node.hasAttribute('sandbox')) {
+                        const sandbox = node.getAttribute('sandbox');
+                        if (sandbox && sandbox.includes('allow-fullscreen')) {
+                            const correctedSandbox = sandbox.replace(/\s*allow-fullscreen\s*/g, ' ').trim();
+                            node.setAttribute('sandbox', correctedSandbox);
+                            node.setAttribute('allowfullscreen', '');
+                        }
+                    }
+                    // Also check child iframes
+                    const childIframes = node.querySelectorAll && node.querySelectorAll('iframe[sandbox]');
+                    if (childIframes) {
+                        childIframes.forEach(function(iframe) {
+                            const sandbox = iframe.getAttribute('sandbox');
+                            if (sandbox && sandbox.includes('allow-fullscreen')) {
+                                const correctedSandbox = sandbox.replace(/\s*allow-fullscreen\s*/g, ' ').trim();
+                                iframe.setAttribute('sandbox', correctedSandbox);
+                                iframe.setAttribute('allowfullscreen', '');
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+</script>
