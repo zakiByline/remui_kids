@@ -2887,67 +2887,36 @@ echo $OUTPUT->header();
     margin-bottom: 2rem;
 }
 
-/* Course cards use same styling as category cards */
+/* Course cards - Light blue theme with dotted border */
 .course-card {
     position: relative;
-    background: #ffffff;
-    border: 3px dotted #e8e5f3;
-    border-radius: 0 25px 0 25px;
-    padding: 1.5rem;
-    min-height: 100px;
-    min-width: 280px;
+    background: #e0f2fe;
+    border: 2px dotted #3b82f6;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    min-height: 60px;
+    min-width: 200px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(184, 169, 217, 0.06);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     user-select: none;
     -webkit-user-select: none;
-    overflow: hidden;
+    overflow: visible;
 }
 
-.course-card::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    width: 50px;
-    height: 50px;
-    border-right: 5px solid #dbeafe;
-    border-top: 5px solid #dbeafe;
-    border-radius: 0 25px 0 0;
-    transition: all 0.3s ease;
-    z-index: 1;
-    background: #ffffff;
-}
-
+/* Remove corner brackets for course cards */
+.course-card::before,
 .course-card::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: -3px;
-    width: 50px;
-    height: 50px;
-    border-left: 5px solid #dbeafe;
-    border-bottom: 5px solid #dbeafe;
-    border-radius: 0 0 0 25px;
-    transition: all 0.3s ease;
-    z-index: 1;
-    background: #ffffff;
+    display: none;
 }
 
 .course-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(184, 169, 217, 0.12);
-    border-color: #3b82f6;
-}
-
-.course-card:hover::before,
-.course-card:hover::after {
-    width: 60px;
-    height: 60px;
-    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+    border-color: #2563eb;
 }
 
 .course-card .category-card-label {
@@ -2955,21 +2924,58 @@ echo $OUTPUT->header();
     z-index: 10;
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.course-card .category-card-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* Course card checkbox - Blue theme instead of purple */
+.course-card .category-card-checkbox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid #cbd5e1;
+    background: #ffffff;
+    cursor: pointer;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+}
+
+.course-card .category-card-checkbox:checked {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+.course-card .category-card-checkbox:checked::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
 }
 
 .course-card.checked {
     border-color: #3b82f6;
-    background: #eff6ff;
-}
-
-.course-card.checked::before {
-    border-color: #3b82f6;
-    background: #eff6ff;
-}
-
-.course-card.checked::after {
-    border-color: #3b82f6;
-    background: #eff6ff;
+    background: #dbeafe;
 }
 
 /* Course Category Header */
