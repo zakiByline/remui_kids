@@ -106,25 +106,21 @@ if (isset($_GET['subjects'])) {
     $selected_subjects = [$selected_subject];
 }
 
-// Get books based on filters
+// Get books based on filters - only fetch if at least one filter is selected
 $books = [];
 $sql_params = [];
 $sql_conditions = [];
+$has_filters = false;
 
-if ($selected_category) {
-    // Map category to book_type: PLAN -> Teacher Book, TEACH -> Student Book, ASSESS -> Practice Book
-    $category_map = [
-        'plan' => 'Teacher Book',
-        'teach' => 'Student Book',
-        'assess' => 'Practice Book'
-    ];
-    if (isset($category_map[strtolower($selected_category)])) {
-        $sql_conditions[] = "book_type = :book_type";
-        $sql_params['book_type'] = $category_map[strtolower($selected_category)];
-    }
+// Check if any filter is selected
+if ($selected_book_type) {
+    $has_filters = true;
+    $sql_conditions[] = "book_type = :book_type";
+    $sql_params['book_type'] = $selected_book_type;
 }
 
 if (!empty($selected_levels)) {
+    $has_filters = true;
     $level_placeholders = [];
     foreach ($selected_levels as $idx => $level) {
         $param_name = 'level_' . $idx;
@@ -135,11 +131,13 @@ if (!empty($selected_levels)) {
         $sql_conditions[] = "level IN (" . implode(',', $level_placeholders) . ")";
     }
 } elseif ($selected_level) {
+    $has_filters = true;
     $sql_conditions[] = "level = :level";
     $sql_params['level'] = $selected_level;
 }
 
 if (!empty($selected_subjects)) {
+    $has_filters = true;
     $subject_placeholders = [];
     foreach ($selected_subjects as $idx => $subject) {
         $param_name = 'subject_' . $idx;
@@ -150,22 +148,25 @@ if (!empty($selected_subjects)) {
         $sql_conditions[] = "subject IN (" . implode(',', $subject_placeholders) . ")";
     }
 } elseif ($selected_subject) {
+    $has_filters = true;
     $sql_conditions[] = "subject = :subject";
     $sql_params['subject'] = $selected_subject;
 }
 
-if ($selected_book_type && !$selected_category) {
-    $sql_conditions[] = "book_type = :book_type";
-    $sql_params['book_type'] = $selected_book_type;
-}
 
-$sql = "SELECT * FROM {theme_remui_kids_books}";
-if (!empty($sql_conditions)) {
+if ($has_filters && !empty($sql_conditions)) {
+    $sql = "SELECT * FROM {theme_remui_kids_books}";
     $sql .= " WHERE " . implode(" AND ", $sql_conditions);
+    $sql .= " ORDER BY timecreated DESC";
+    
+    // Execute query to get books matching all selected filters
+    $books = $DB->get_records_sql($sql, $sql_params);
+    
+    // Ensure $books is an array even if empty
+    if (!$books) {
+        $books = [];
+    }
 }
-$sql .= " ORDER BY timecreated DESC";
-
-$books = $DB->get_records_sql($sql, $sql_params);
 
 echo $OUTPUT->header();
 ?>
@@ -179,51 +180,8 @@ echo $OUTPUT->header();
             <div class="main-content">
                 <!-- Filter Cards Section -->
                 <div class="ebooks-filter-section">
-                    <!-- SELECT CATEGORY (Single Selection) -->
-                    <h3 class="filter-section-header">1 SELECT CATEGORY</h3>
-                    <div class="filter-cards-container" id="categoryFilterCards">
-                        <label class="filter-card category-plan <?php echo strtolower($selected_category) == 'plan' ? 'selected' : ''; ?>" data-category="plan">
-                            <input type="radio" name="ebook_category" value="plan" class="filter-category-input" <?php echo strtolower($selected_category) == 'plan' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
-                                <i class="fa fa-lightbulb-o"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">PLAN</h4>
-                                <p class="filter-card-description">Organize your lesson plans and curriculum to create engaging educational content.</p>
-                                <span class="filter-card-badge" style="background: #f3e8ff; color: #a855f7;">6 resources</span>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
-                        
-                        <label class="filter-card category-teach <?php echo strtolower($selected_category) == 'teach' ? 'selected' : ''; ?>" data-category="teach">
-                            <input type="radio" name="ebook_category" value="teach" class="filter-category-input" <?php echo strtolower($selected_category) == 'teach' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
-                                <i class="fa fa-desktop"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">TEACH</h4>
-                                <p class="filter-card-description">Deliver lessons and share activities that help students learn confidently.</p>
-                                <span class="filter-card-badge" style="background: #d1fae5; color: #10b981;">14 resources</span>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
-                        
-                        <label class="filter-card category-assess <?php echo strtolower($selected_category) == 'assess' ? 'selected' : ''; ?>" data-category="assess">
-                            <input type="radio" name="ebook_category" value="assess" class="filter-category-input" <?php echo strtolower($selected_category) == 'assess' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
-                                <i class="fa fa-clipboard-check"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">ASSESS</h4>
-                                <p class="filter-card-description">Manage assignments and quizzes to track progress and provide feedback.</p>
-                                <span class="filter-card-badge" style="background: #fef3c7; color: #f59e0b;">0 resources</span>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
-                    </div>
-
                     <!-- SELECT LEVELS (Multiple Selection) -->
-                    <h3 class="filter-section-header">2 SELECT LEVELS (multiple)</h3>
+                    <h3 class="filter-section-header">1 SELECT LEVELS (multiple)</h3>
                     <div class="filter-cards-container" id="levelFilterCards">
                         <label class="filter-card level-1 <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'selected' : ''; ?>" data-level="KG Level 1">
                             <input type="checkbox" name="ebook_levels[]" value="KG Level 1" class="filter-level-input" <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'checked' : ''; ?>>
@@ -262,9 +220,10 @@ echo $OUTPUT->header();
                         </label>
                     </div>
 
-                    <!-- SELECT SUBJECTS (Multiple Selection) -->
-                    <h3 class="filter-section-header">3 SELECT SUBJECTS (multiple)</h3>
-                    <div class="filter-cards-container" id="subjectFilterCards">
+                    <!-- SELECT SUBJECTS (Multiple Selection) - Only shown when level is selected -->
+                    <div class="filter-section-wrapper" id="subjectSectionWrapper" style="<?php echo (empty($selected_levels) && !$selected_level) ? 'display: none;' : ''; ?>">
+                        <h3 class="filter-section-header">2 SELECT SUBJECTS (multiple)</h3>
+                        <div class="filter-cards-container" id="subjectFilterCards">
                         <label class="filter-card subject-english <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'selected' : ''; ?>" data-subject="English">
                             <input type="checkbox" name="ebook_subjects[]" value="English" class="filter-subject-input" <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'checked' : ''; ?>>
                             <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
@@ -300,12 +259,55 @@ echo $OUTPUT->header();
                             </div>
                             <div class="filter-card-checkbox"></div>
                         </label>
+                        </div>
+                    </div>
+
+                    <!-- SELECT BOOK TYPE (Single Selection) - Only shown when subject is selected -->
+                    <div class="filter-section-wrapper" id="bookTypeSectionWrapper" style="<?php echo (empty($selected_subjects) && !$selected_subject) ? 'display: none;' : ''; ?>">
+                        <h3 class="filter-section-header">3 SELECT BOOK TYPE</h3>
+                        <div class="filter-cards-container" id="bookTypeFilterCards">
+                        <label class="filter-card book-type-student <?php echo strtolower($selected_book_type) == 'student book' ? 'selected' : ''; ?>" data-book-type="Student Book">
+                            <input type="radio" name="ebook_book_type" value="Student Book" class="filter-book-type-input" <?php echo strtolower($selected_book_type) == 'student book' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                                <i class="fa fa-book"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">Student Book</h4>
+                                <p class="filter-card-description">Primary learning materials for students</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card book-type-teacher <?php echo strtolower($selected_book_type) == 'teacher book' ? 'selected' : ''; ?>" data-book-type="Teacher Book">
+                            <input type="radio" name="ebook_book_type" value="Teacher Book" class="filter-book-type-input" <?php echo strtolower($selected_book_type) == 'teacher book' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
+                                <i class="fa fa-graduation-cap"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">Teacher Book</h4>
+                                <p class="filter-card-description">Teaching guides and resources for educators</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card book-type-practice <?php echo strtolower($selected_book_type) == 'practice book' ? 'selected' : ''; ?>" data-book-type="Practice Book">
+                            <input type="radio" name="ebook_book_type" value="Practice Book" class="filter-book-type-input" <?php echo strtolower($selected_book_type) == 'practice book' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
+                                <i class="fa fa-pencil"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">Practice Book</h4>
+                                <p class="filter-card-description">Exercises and practice materials for skill development</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        </div>
                     </div>
                 </div>
 
 
-                <!-- Books Display Grid -->
-                <?php if (!empty($books) || ($selected_category || !empty($selected_levels) || !empty($selected_subjects))): ?>
+                <!-- Books Display Grid - Only show when filters are applied -->
+                <?php if ($has_filters): ?>
                 <div class="books-grid-section">
                     <h3 class="section-title">Books Available</h3>
                     <div class="books-grid" id="booksGrid">
@@ -318,28 +320,30 @@ echo $OUTPUT->header();
                             <?php foreach ($books as $book): ?>
                             <div class="book-card" data-book-id="<?php echo $book->id; ?>">
                                 <div class="book-cover">
-                                    <?php if ($book->cover_image): ?>
-                                        <img src="<?php echo $book->cover_image; ?>" alt="<?php echo htmlspecialchars($book->title); ?>">
+                                    <?php if ($book->cover_image && !empty(trim($book->cover_image))): ?>
+                                        <img src="<?php echo htmlspecialchars($book->cover_image); ?>" alt="<?php echo htmlspecialchars($book->title); ?>" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="default-cover" style="display: none;">
+                                            <i class="fa fa-book fa-3x"></i>
+                                        </div>
                                     <?php else: ?>
                                         <div class="default-cover">
                                             <i class="fa fa-book fa-3x"></i>
                                         </div>
                                     <?php endif; ?>
-                                    <div class="book-overlay">
-                                        <a href="<?php echo htmlspecialchars($book->book_link); ?>" target="_blank" class="btn-view-book">
-                                            <i class="fa fa-eye"></i> View Book
-                                        </a>
+                                    <div class="book-gradient-overlay"></div>
+                                    <div class="book-content-overlay">
+                                        <h4 class="book-title"><?php echo htmlspecialchars($book->title); ?></h4>
+                                        <p class="book-description"><?php echo htmlspecialchars($book->description ?: 'No description'); ?></p>
+                                        <div class="book-meta">
+                                            <span class="book-pill"><?php echo htmlspecialchars($book->level); ?></span>
+                                            <span class="book-pill"><?php echo htmlspecialchars($book->subject); ?></span>
+                                            <span class="book-pill"><?php echo htmlspecialchars($book->book_type); ?></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="book-info">
-                                    <h4 class="book-title"><?php echo htmlspecialchars($book->title); ?></h4>
-                                    <p class="book-description"><?php echo htmlspecialchars($book->description ?: 'No description'); ?></p>
-                                    <div class="book-meta">
-                                        <span class="book-level"><?php echo htmlspecialchars($book->level); ?></span>
-                                        <span class="book-subject"><?php echo htmlspecialchars($book->subject); ?></span>
-                                        <span class="book-type"><?php echo htmlspecialchars($book->book_type); ?></span>
-                                    </div>
-                                </div>
+                                <a href="<?php echo htmlspecialchars($book->book_link); ?>" target="_blank" class="btn-view-book-cta">
+                                    <i class="fa fa-eye"></i> View Book
+                                </a>
                             </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -634,39 +638,44 @@ body {
 /* Filter Cards Section */
 .ebooks-filter-section {
     background: white;
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 30px;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .filter-section-header {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+.filter-section-wrapper {
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
 }
 
 .filter-cards-container {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .filter-card {
     flex: 1;
-    min-width: 280px;
+    min-width: 220px;
     background: white;
     border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: 12px;
 }
 
 .filter-card:hover {
@@ -680,13 +689,13 @@ body {
 }
 
 .filter-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 20px;
     flex-shrink: 0;
     color: #64748b;
 }
@@ -701,10 +710,10 @@ body {
 }
 
 .filter-card-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: #1e293b;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
 }
 
 .filter-card.selected .filter-card-title {
@@ -712,10 +721,10 @@ body {
 }
 
 .filter-card-description {
-    font-size: 14px;
+    font-size: 12px;
     color: #64748b;
-    line-height: 1.5;
-    margin: 0 0 8px 0;
+    line-height: 1.4;
+    margin: 0 0 6px 0;
 }
 
 .filter-card-badge {
@@ -729,10 +738,10 @@ body {
 
 .filter-card-checkbox {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 24px;
-    height: 24px;
+    top: 12px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
     border: 2px solid #cbd5e1;
     border-radius: 4px;
     display: flex;
@@ -744,7 +753,10 @@ body {
 
 .filter-card input[type="checkbox"],
 .filter-card input[type="radio"] {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    opacity: 0 !important;
 }
 
 .filter-card.selected .filter-card-checkbox {
@@ -755,7 +767,7 @@ body {
 .filter-card.selected .filter-card-checkbox::after {
     content: '\2713';
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -858,6 +870,34 @@ body {
     background: #10b981;
 }
 
+/* Book type card colors */
+.filter-card.book-type-student.selected {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filter-card.book-type-student.selected .filter-card-icon {
+    background: #3b82f6;
+}
+
+.filter-card.book-type-teacher.selected {
+    border-color: #a855f7;
+    color: #a855f7;
+}
+
+.filter-card.book-type-teacher.selected .filter-card-icon {
+    background: #a855f7;
+}
+
+.filter-card.book-type-practice.selected {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.filter-card.book-type-practice.selected .filter-card-icon {
+    background: #f59e0b;
+}
+
 .filter-section {
     margin-bottom: 30px;
     padding: 20px;
@@ -908,28 +948,33 @@ body {
 
 .books-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
 
 .book-card {
     background: white;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .book-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .book-cover {
     position: relative;
-    height: 300px;
+    width: 100%;
+    height: 240px;
     overflow: hidden;
-    background: #f0f0f0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .book-cover img {
@@ -939,69 +984,46 @@ body {
 }
 
 .default-cover {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.book-overlay {
+.book-gradient-overlay {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
+    height: 55%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+    pointer-events: none;
+}
+
+.book-content-overlay {
+    position: absolute;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.book-card:hover .book-overlay {
-    opacity: 1;
-}
-
-.btn-view-book, .btn-edit-book, .btn-delete-book {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-    font-size: 14px;
-}
-
-.btn-view-book {
-    background: #4facfe;
-}
-
-.btn-edit-book {
-    background: #28a745;
-}
-
-.btn-delete-book {
-    background: #dc3545;
-}
-
-.book-info {
-    padding: 20px;
+    left: 0;
+    right: 0;
+    padding: 16px 14px;
+    z-index: 2;
 }
 
 .book-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #333;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
 }
 
 .book-description {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0 0 12px 0;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1011,16 +1033,47 @@ body {
 
 .book-meta {
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
+    gap: 8px;
 }
 
-.book-meta span {
-    padding: 5px 10px;
-    background: #f0f0f0;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    color: #667eea;
+.book-pill {
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+}
+
+.btn-view-book-cta {
+    width: 100%;
+    padding: 10px 16px;
+    background: white;
+    color: #1e293b;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-view-book-cta:hover {
+    background: #f8f9fa;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.btn-view-book-cta i {
+    font-size: 0.9rem;
 }
 
 .no-books {
@@ -1185,37 +1238,6 @@ body {
 <script>
 // Filter Cards Interaction
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle category filter cards (single selection - radio)
-    const categoryCards = document.querySelectorAll('#categoryFilterCards .filter-card');
-    categoryCards.forEach(card => {
-        const radio = card.querySelector('input[type="radio"]');
-        
-        card.addEventListener('click', function(e) {
-            if (e.target.tagName === 'INPUT') return;
-            
-            // Uncheck all category cards
-            categoryCards.forEach(c => {
-                c.classList.remove('selected');
-                const r = c.querySelector('input[type="radio"]');
-                if (r) r.checked = false;
-            });
-            
-            // Check clicked card
-            card.classList.add('selected');
-            if (radio) radio.checked = true;
-            
-            // Update URL
-            const url = new URL(window.location.href);
-            if (radio && radio.value) {
-                url.searchParams.set('category', radio.value);
-            } else {
-                url.searchParams.delete('category');
-            }
-            url.searchParams.delete('book_type'); // Clear book_type when category changes
-            window.location.href = url.toString();
-        });
-    });
-    
     // Handle level filter cards (multiple selection - checkbox)
     const levelCards = document.querySelectorAll('#levelFilterCards .filter-card');
     levelCards.forEach(card => {
@@ -1249,6 +1271,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     url.searchParams.delete('level');
                     url.searchParams.delete('levels[]');
+                    // Clear dependent filters when levels are cleared
+                    url.searchParams.delete('subject');
+                    url.searchParams.delete('subjects[]');
+                    url.searchParams.delete('book_type');
                 }
                 
                 window.location.href = url.toString();
@@ -1289,12 +1315,107 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     url.searchParams.delete('subject');
                     url.searchParams.delete('subjects[]');
+                    // Clear dependent filter when subjects are cleared
+                    url.searchParams.delete('book_type');
                 }
                 
                 window.location.href = url.toString();
             }
         });
     });
+    
+    // Handle book type filter cards (single selection - radio with deselection)
+    const bookTypeCards = document.querySelectorAll('#bookTypeFilterCards .filter-card');
+    bookTypeCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
+        
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            
+            const url = new URL(window.location.href);
+            const isCurrentlySelected = card.classList.contains('selected');
+            
+            // If clicking the same card that's already selected, deselect it
+            if (isCurrentlySelected && radio && radio.checked) {
+                card.classList.remove('selected');
+                if (radio) radio.checked = false;
+                url.searchParams.delete('book_type');
+            } else {
+                // Uncheck all book type cards
+                bookTypeCards.forEach(c => {
+                    c.classList.remove('selected');
+                    const r = c.querySelector('input[type="radio"]');
+                    if (r) r.checked = false;
+                });
+                
+                // Check clicked card
+                card.classList.add('selected');
+                if (radio) radio.checked = true;
+                url.searchParams.set('book_type', radio.value);
+            }
+            
+            window.location.href = url.toString();
+        });
+    });
+    
+    // Handle cascading filter logic
+    function updateFilterVisibility() {
+        const selectedLevels = document.querySelectorAll('#levelFilterCards input[type="checkbox"]:checked');
+        const selectedSubjects = document.querySelectorAll('#subjectFilterCards input[type="checkbox"]:checked');
+        const subjectSection = document.getElementById('subjectSectionWrapper');
+        const bookTypeSection = document.getElementById('bookTypeSectionWrapper');
+        
+        // Show/hide subject section based on level selection
+        if (selectedLevels.length > 0) {
+            if (subjectSection) subjectSection.style.display = 'block';
+        } else {
+            if (subjectSection) subjectSection.style.display = 'none';
+            // Clear subject selections when levels are cleared
+            document.querySelectorAll('#subjectFilterCards input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.querySelectorAll('#subjectFilterCards .filter-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+        }
+        
+        // Show/hide book type section based on subject selection
+        if (selectedSubjects.length > 0) {
+            if (bookTypeSection) bookTypeSection.style.display = 'block';
+        } else {
+            if (bookTypeSection) bookTypeSection.style.display = 'none';
+            // Clear book type selection when subjects are cleared
+            document.querySelectorAll('#bookTypeFilterCards input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelectorAll('#bookTypeFilterCards .filter-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+        }
+    }
+    
+    // Update visibility on level changes
+    levelCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                updateFilterVisibility();
+            });
+        }
+    });
+    
+    // Update visibility on subject changes
+    subjectCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                updateFilterVisibility();
+            });
+        }
+    });
+    
+    // Initial visibility update
+    updateFilterVisibility();
     
     // Prevent label from triggering input twice
     document.querySelectorAll('.filter-card input').forEach(input => {
