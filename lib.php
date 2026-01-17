@@ -168,12 +168,112 @@ function theme_remui_kids_render_parent_dashboard(): void {
 }
 
 /**
+ * Redirect teachers to Resources page after login
+ *
+ * @param moodle_page $page
+ */
+function theme_remui_kids_maybe_redirect_teacher(moodle_page $page): void {
+    global $CFG, $USER, $DB;
+
+    if (CLI_SCRIPT || AJAX_SCRIPT) {
+        return;
+    }
+
+    if (!isloggedin() || isguestuser()) {
+        return;
+    }
+
+    // Don't redirect admins
+    if (is_siteadmin()) {
+        return;
+    }
+
+    // Check if user is a teacher (in course context or system context)
+    $isteacher = false;
+    $teacherroles = $DB->get_records_select('role', "shortname IN ('editingteacher','teacher','manager')");
+    $roleids = array_keys($teacherroles);
+
+    if (!empty($roleids)) {
+        $systemcontext = context_system::instance();
+        
+        // Check system context first
+        list($insql, $params) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED, 'r');
+        $params['userid'] = $USER->id;
+        $params['systemcontextid'] = $systemcontext->id;
+        
+        $has_system_role = $DB->record_exists_sql(
+            "SELECT ra.id
+             FROM {role_assignments} ra
+             WHERE ra.userid = :userid 
+             AND ra.contextid = :systemcontextid 
+             AND ra.roleid {$insql}",
+            $params
+        );
+        
+        if ($has_system_role) {
+            $isteacher = true;
+        } else {
+            // Check course context
+            $params['ctxlevel'] = CONTEXT_COURSE;
+            $teacher_courses = $DB->get_records_sql(
+                "SELECT DISTINCT ctx.instanceid as courseid
+                 FROM {role_assignments} ra
+                 JOIN {context} ctx ON ra.contextid = ctx.id
+                 WHERE ra.userid = :userid AND ctx.contextlevel = :ctxlevel AND ra.roleid {$insql}
+                 LIMIT 1",
+                $params
+            );
+
+            if (!empty($teacher_courses)) {
+                $isteacher = true;
+            }
+        }
+    }
+
+    if (!$isteacher) {
+        return;
+    }
+
+    $path = $page->url->get_path();
+    $fullurl = $page->url->out(false);
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $sitepath = trim(parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '', '/');
+    $baseprefix = $sitepath === '' ? '' : '/' . $sitepath;
+
+    // Check if user is accessing /my/ or home page
+    $myregex = '#^' . preg_quote($baseprefix . '/my', '#') . '(/index\.php)?$#';
+    $rootregex = $baseprefix === ''
+        ? '#^/(index\.php)?$#'
+        : '#^' . preg_quote($baseprefix, '#') . '(/index\.php)?$#';
+
+    // Do not interfere if already on teacher pages, login, logout, or admin pages
+    if (preg_match('#/theme/remui_kids/teacher/#', $path) || 
+        preg_match('#/theme/remui_kids/teacher/#', $script) ||
+        preg_match('#/login/#', $path) ||
+        preg_match('#/logout/#', $path) ||
+        preg_match('#/admin/#', $path) ||
+        preg_match('#/theme/remui_kids/admin/#', $path) ||
+        stripos($fullurl, '/theme/remui_kids/teacher/') !== false ||
+        stripos($fullurl, '/admin/') !== false) {
+        return;
+    }
+
+    // Redirect to Resources page if accessing /my/ or home
+    if (preg_match($myregex, $path) || preg_match($rootregex, $path)) {
+        redirect(new moodle_url('/theme/remui_kids/teacher/view_course.php'));
+    }
+}
+
+/**
  * Inject additional CSS and JS into admin pages
  *
  * @param theme_config $theme The theme config object.
  */
 function theme_remui_kids_page_init($page) {
     global $PAGE, $OUTPUT, $USER, $CFG;
+    
+    // Redirect teachers to Resources page after login
+    theme_remui_kids_maybe_redirect_teacher($page);
     
     // ========================================
     // THEME VALIDATION - Fix invalid theme references
@@ -441,6 +541,7 @@ function theme_remui_kids_before_standard_html_head($page = null, $output = null
 function theme_remui_kids_before_http_headers() {
     global $PAGE;
     theme_remui_kids_maybe_redirect_parent($PAGE);
+    theme_remui_kids_maybe_redirect_teacher($PAGE);
 }
 
 /**

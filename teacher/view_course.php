@@ -440,6 +440,7 @@ echo $OUTPUT->header();
     border: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
+    overflow: visible !important;
 }
 
 /* Remove ALL gaps and spacing from page wrapper */
@@ -480,11 +481,115 @@ echo $OUTPUT->header();
     display: none !important;
 }
 
+/* Ensure navbar and user menu dropdown are visible and clickable */
+.navbar,
+.navbar.fixed-top,
+.navbar .navbar-nav,
+.navbar .navbar-nav .nav-item,
+.navbar .dropdown-menu,
+.navbar .usermenu,
+.navbar .usermenu .dropdown-menu,
+.navbar .usermenu .dropdown-toggle,
+[data-region="usermenu"],
+[data-region="usermenu"] .dropdown-menu,
+[data-region="usermenu"] .dropdown-toggle,
+.usermenu,
+.usermenu .dropdown-menu,
+.usermenu .dropdown-toggle,
+.navbar-nav .usermenu,
+.navbar-nav .usermenu .dropdown-menu,
+.primary-navigation .usermenu,
+.primary-navigation .usermenu .dropdown-menu {
+    z-index: 1050 !important;
+    position: relative !important;
+}
+
+.navbar .usermenu .dropdown-menu,
+[data-region="usermenu"] .dropdown-menu,
+.usermenu .dropdown-menu,
+.navbar-nav .usermenu .dropdown-menu,
+.primary-navigation .usermenu .dropdown-menu {
+    z-index: 1060 !important;
+    position: absolute !important;
+    overflow: visible !important;
+}
+
+.navbar .usermenu .dropdown-toggle::after,
+[data-region="usermenu"] .dropdown-toggle::after,
+.usermenu .dropdown-toggle::after {
+    display: inline-block !important;
+}
+
+/* Ensure no parent containers block the dropdown */
+#page,
+#page-wrapper,
+.teacher-course-view-wrapper,
+.teacher-dashboard-wrapper,
+[role="navigation"],
+.navbar-container {
+    overflow: visible !important;
+    position: relative !important;
+}
+
+/* Ensure user menu dropdown is clickable */
+.navbar .usermenu,
+[data-region="usermenu"],
+.usermenu,
+.navbar-nav .usermenu {
+    position: relative !important;
+    z-index: 1050 !important;
+}
+
+.navbar .usermenu .dropdown-menu,
+[data-region="usermenu"] .dropdown-menu,
+.usermenu .dropdown-menu {
+    pointer-events: auto !important;
+}
+
+/* Ensure dropdown only shows when Bootstrap adds .show class */
+.navbar .usermenu .dropdown-menu:not(.show),
+[data-region="usermenu"] .dropdown-menu:not(.show),
+.usermenu .dropdown-menu:not(.show) {
+    display: none !important;
+}
+
+/* Ensure dropdown shows when Bootstrap adds .show class */
+.navbar .usermenu .dropdown-menu.show,
+[data-region="usermenu"] .dropdown-menu.show,
+.usermenu .dropdown-menu.show,
+#user-action-menu.show {
+    display: block !important;
+}
+
+/* Ensure #user-action-menu dropdown is properly styled */
+#user-action-menu,
+.dropdown-menu#user-action-menu {
+    z-index: 1060 !important;
+    position: absolute !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+}
+
+#user-action-menu:not(.show) {
+    display: none !important;
+}
+
+/* Ensure user menu toggle button is clickable */
+#user-menu-toggle,
+#user-menu-toggle.btn,
+#user-menu-toggle.dropdown-toggle {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 1051 !important;
+}
+
 /* Teacher Course View Wrapper */
 .teacher-course-view-wrapper {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
     min-height: 100vh;
+    overflow: visible !important;
 }
 
 .teacher-dashboard-wrapper {
@@ -6469,6 +6574,90 @@ function initializeResourcePreviews() {
         // If image fails to load, onerror handler in HTML will handle it
     });
 }
+
+// Initialize profile dropdown on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize user menu dropdown
+    function initUserMenuDropdown() {
+        // Find all user menu dropdown toggles
+        const userMenuToggles = document.querySelectorAll('#user-menu-toggle, .dropdown-toggle[data-toggle="dropdown"], [data-region="usermenu"] .dropdown-toggle, .usermenu .dropdown-toggle, .navbar .usermenu .dropdown-toggle');
+        
+        userMenuToggles.forEach(toggle => {
+            // Remove any existing event listeners by cloning
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            
+            const dropdown = newToggle.closest('.dropdown');
+            if (!dropdown) return;
+            
+            const menu = dropdown.querySelector('.dropdown-menu, #user-action-menu');
+            if (!menu) return;
+            
+            // Add click event to toggle dropdown
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-menu.show, #user-action-menu.show').forEach(openMenu => {
+                    if (openMenu !== menu) {
+                        openMenu.classList.remove('show');
+                        openMenu.style.display = 'none';
+                        const parentDropdown = openMenu.closest('.dropdown');
+                        if (parentDropdown) {
+                            const otherToggle = parentDropdown.querySelector('.dropdown-toggle, #user-menu-toggle');
+                            if (otherToggle) {
+                                otherToggle.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    }
+                });
+                
+                // Toggle current dropdown
+                const isOpen = menu.classList.contains('show');
+                
+                if (isOpen) {
+                    menu.classList.remove('show');
+                    menu.style.display = 'none';
+                    newToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    menu.classList.add('show');
+                    menu.style.display = 'block';
+                    newToggle.setAttribute('aria-expanded', 'true');
+                    
+                    // Position dropdown properly
+                    menu.style.position = 'absolute';
+                    menu.style.zIndex = '1060';
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menu.style.display = 'none';
+                    newToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+        
+        // Also try Bootstrap dropdown initialization if available
+        if (typeof jQuery !== 'undefined' && jQuery.fn.dropdown) {
+            jQuery('#user-menu-toggle, [data-toggle="dropdown"]').dropdown();
+        } else if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+            const dropdownElementList = [].slice.call(document.querySelectorAll('#user-menu-toggle, [data-toggle="dropdown"]'));
+            dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        }
+    }
+    
+    // Initialize immediately
+    initUserMenuDropdown();
+    
+    // Also initialize after a short delay to catch dynamically loaded elements
+    setTimeout(initUserMenuDropdown, 500);
+});
 </script>
 
 <!-- Teacher Help/Support Video Modal -->
