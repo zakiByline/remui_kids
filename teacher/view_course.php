@@ -205,30 +205,26 @@ require_login();
 $context = context_system::instance();
 
 /**
- * Get folder tag (Plan/Teach/Assess) from course module tags
- * @param int $cmid Course module ID
- * @return string|null Tag name (plan, teach, assess) or null if not found
+ * Get section type (Plan/Teach/Assess) from section name
+ * @param string $section_name Section name (e.g., "Plan", "Plan > Unit 1", "Teach", "Assess")
+ * @return string|null Section type (plan, teach, assess) or null if not found
  */
-function get_folder_tag($cmid) {
-    global $DB;
+function get_section_type($section_name) {
+    if (empty($section_name)) {
+        return null;
+    }
     
-    // Get tags for this course module
-    // Tags are stored in tag_instance table where itemid = cmid, itemtype = 'course_modules', component = 'core'
-    $tags = $DB->get_records_sql(
-        "SELECT t.name, t.rawname 
-         FROM {tag_instance} ti
-         JOIN {tag} t ON t.id = ti.tagid
-         WHERE ti.itemid = ?
-         AND ti.itemtype = 'course_modules'
-         AND ti.component = 'core'
-         AND t.name IN ('Plan', 'Teach', 'Assess', 'plan', 'teach', 'assess')",
-        [$cmid]
-    );
+    // Extract the main section name (before " > " if it exists)
+    $main_section = explode(' > ', $section_name)[0];
+    $main_section_lower = strtolower(trim($main_section));
     
-    if (!empty($tags)) {
-        // Get the first matching tag (should only be one)
-        $tag = reset($tags);
-        return strtolower($tag->name);
+    // Check if section name starts with Plan, Teach, or Assess
+    if ($main_section_lower === 'plan') {
+        return 'plan';
+    } else if ($main_section_lower === 'teach') {
+        return 'teach';
+    } else if ($main_section_lower === 'assess') {
+        return 'assess';
     }
     
     return null;
@@ -595,71 +591,7 @@ echo $OUTPUT->header();
     letter-spacing: 0.5px;
 }
 
-/* Resource Type Tabs */
-.resource-type-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 0;
-}
-
-.resource-type-tab {
-    background: transparent;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    transition: all 0.2s ease;
-    position: relative;
-    margin-bottom: -1px;
-}
-
-.resource-type-tab i {
-    font-size: 16px;
-}
-
-.resource-type-tab:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-}
-
-.resource-type-tab.active {
-    background: #ffffff;
-    color: #1e293b;
-    border-bottom: 2px solid #3b82f6;
-    font-weight: 600;
-}
-
-.resource-type-tab.active i {
-    color: #3b82f6;
-}
-
-.resource-tab-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 8px;
-    background-color: #e2e8f0;
-    color: #64748b;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: 6px;
-}
-
-.resource-type-tab.active .resource-tab-count {
-    background-color: #3b82f6;
-    color: #ffffff;
-}
+/* Resource Type Tabs - Removed (using tier cards instead) */
 
 /* Search and Filters Section inside Header */
 .dashboard-hero-search-filters {
@@ -2793,6 +2725,819 @@ echo $OUTPUT->header();
         flex-shrink: 0;
     }
 }
+
+/* Tier Cards Styles - Plan, Teach, Assess */
+.tier-cards-container {
+    margin-bottom: 2rem;
+    width: 100%;
+    padding: 1.5rem 1rem 2rem 1rem;
+    position: relative;
+    min-height: 180px;
+    background: linear-gradient(135deg, #faf8ff 0%, #f0f4ff 50%, #fef7f0 100%);
+    border: 1px solid #e8e5f3;
+    border-radius: 16px;
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.tier-cards-container.expanded {
+    padding-bottom: 2rem;
+}
+
+.tier-cards-expanded-section {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+    margin-top: 1.5rem;
+    border-top: 2px solid #f0e8f7;
+}
+
+.tier-cards-container.expanded .tier-cards-expanded-section {
+    max-height: 1000px;
+    opacity: 1;
+    padding: 1.5rem 0 0 0;
+}
+
+.category-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.category-card {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    position: relative;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 120px;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: visible;
+}
+
+/* Remove corner brackets */
+.category-card::before,
+.category-card::after {
+    display: none;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Category Card Icon */
+.category-card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+/* Category Card Content */
+.category-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-card-checkbox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid #cbd5e1;
+    background: #ffffff;
+    cursor: pointer;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+}
+
+.category-card-checkbox:checked {
+    background: #9333ea;
+    border-color: #9333ea;
+}
+
+.category-card-checkbox:checked::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    line-height: 1;
+    display: block;
+}
+
+.category-card-label {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    gap: 1rem;
+}
+
+.category-card-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.category-card-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+    display: block;
+}
+
+/* Course Cards Grid - Same format as category cards */
+.course-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Course cards use same styling as category cards */
+.course-card {
+    position: relative;
+    background: #ffffff;
+    border: 3px dotted #e8e5f3;
+    border-radius: 0 25px 0 25px;
+    padding: 1.5rem;
+    min-height: 100px;
+    min-width: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 169, 217, 0.06);
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+.course-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 50px;
+    height: 50px;
+    border-right: 5px solid #dbeafe;
+    border-top: 5px solid #dbeafe;
+    border-radius: 0 25px 0 0;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.course-card::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: -3px;
+    width: 50px;
+    height: 50px;
+    border-left: 5px solid #dbeafe;
+    border-bottom: 5px solid #dbeafe;
+    border-radius: 0 0 0 25px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(184, 169, 217, 0.12);
+    border-color: #3b82f6;
+}
+
+.course-card:hover::before,
+.course-card:hover::after {
+    width: 60px;
+    height: 60px;
+    border-color: #3b82f6;
+}
+
+.course-card .category-card-label {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+}
+
+.course-card.checked {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.course-card.checked::before {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.course-card.checked::after {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+/* Course Category Header */
+.course-category-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.course-category-header:first-child {
+    margin-top: 0;
+}
+
+/* Course Category Separator */
+.course-category-separator {
+    height: 1px;
+    background: #e5e7eb;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+/* Resource Category Course Container */
+.resource-category-course-container {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.resource-category-course-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.resource-category-courses-empty {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.95rem;
+    padding: 2rem;
+}
+
+/* KG Level 1 - Teal/Blue-Green Theme */
+.category-card[data-category-name*="Level 1"],
+.category-card[data-category-name*="level 1"] {
+    border-color: #14b8a6;
+}
+
+.category-card[data-category-name*="Level 1"] .category-card-icon,
+.category-card[data-category-name*="level 1"] .category-card-icon {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+
+.category-card[data-category-name*="Level 1"].checked,
+.category-card[data-category-name*="level 1"].checked {
+    border: 3px solid #14b8a6;
+    background: #f0fdfa;
+}
+
+.category-card[data-category-name*="Level 1"].checked .category-card-checkbox,
+.category-card[data-category-name*="level 1"].checked .category-card-checkbox {
+    background: #14b8a6 !important;
+    border-color: #14b8a6 !important;
+}
+
+.category-card[data-category-name*="Level 1"].checked .category-card-checkbox::after,
+.category-card[data-category-name*="level 1"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* KG Level 2 - Purple Theme */
+.category-card[data-category-name*="Level 2"],
+.category-card[data-category-name*="level 2"] {
+    border-color: #9333ea;
+}
+
+.category-card[data-category-name*="Level 2"] .category-card-icon,
+.category-card[data-category-name*="level 2"] .category-card-icon {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+
+.category-card[data-category-name*="Level 2"].checked,
+.category-card[data-category-name*="level 2"].checked {
+    border: 3px solid #9333ea;
+    background: #faf5ff;
+}
+
+.category-card[data-category-name*="Level 2"].checked .category-card-checkbox,
+.category-card[data-category-name*="level 2"].checked .category-card-checkbox {
+    background: #9333ea !important;
+    border-color: #9333ea !important;
+}
+
+.category-card[data-category-name*="Level 2"].checked .category-card-checkbox::after,
+.category-card[data-category-name*="level 2"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* KG Level 3 - Pink Theme */
+.category-card[data-category-name*="Level 3"],
+.category-card[data-category-name*="level 3"] {
+    border-color: #ec4899;
+}
+
+.category-card[data-category-name*="Level 3"] .category-card-icon,
+.category-card[data-category-name*="level 3"] .category-card-icon {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+.category-card[data-category-name*="Level 3"].checked,
+.category-card[data-category-name*="level 3"].checked {
+    border: 3px solid #ec4899;
+    background: #fdf2f8;
+}
+
+.category-card[data-category-name*="Level 3"].checked .category-card-checkbox,
+.category-card[data-category-name*="level 3"].checked .category-card-checkbox {
+    background: #ec4899 !important;
+    border-color: #ec4899 !important;
+}
+
+.category-card[data-category-name*="Level 3"].checked .category-card-checkbox::after,
+.category-card[data-category-name*="level 3"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+.tier-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-items: center;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Flow Arrow Between Cards */
+.tier-card-arrow-between {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 100%;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #e8e5f3 0%, #d4c5e8 50%, #e8e5f3 100%);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.flow-arrow::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid #d4c5e8;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.flow-arrow:hover {
+    background: linear-gradient(90deg, #b8a9d9 0%, #a599d1 50%, #b8a9d9 100%);
+}
+
+.flow-arrow:hover::after {
+    border-left-color: #a599d1;
+    right: -10px;
+}
+
+/* Tier Card Base Styles */
+.tier-card {
+    background: #ffffff;
+    border: 2px solid #e8e5f3;
+    border-radius: 12px;
+    position: relative;
+    padding: 1.5rem;
+    transition: all 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    min-width: 280px;
+    max-width: 320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: visible;
+}
+
+/* Remove corner brackets - using simple rounded corners */
+.tier-card::before,
+.tier-card::after {
+    display: none;
+}
+
+/* All Resources Card - Pink theme */
+.tier-card-all {
+    border-color: #fbcfe8;
+}
+
+.tier-card-all .tier-card-icon {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+.tier-card-all .tier-card-count-badge {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+/* Planning Card - Purple theme */
+.tier-card-planning {
+    border-color: #e0d4f7;
+}
+
+.tier-card-planning .tier-card-icon {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+
+.tier-card-planning .tier-card-count-badge {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+
+/* Resources/Teach Card - Teal theme */
+.tier-card-resources {
+    border-color: #b2f5ea;
+}
+
+.tier-card-resources .tier-card-icon {
+    background: #e0f2f1;
+    color: #0d9488;
+}
+
+.tier-card-resources .tier-card-count-badge {
+    background: #e0f2f1;
+    color: #0d9488;
+}
+
+/* Assessments Card - Orange theme */
+.tier-card-assessments {
+    border-color: #fed7aa;
+}
+
+.tier-card-assessments .tier-card-icon {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.tier-card-assessments .tier-card-count-badge {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+/* Hover Effects */
+.tier-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Active State - Default (for Plan) - Purple theme */
+.tier-card.active {
+    border: 3px solid #9333ea !important;
+    background: #faf5ff !important;
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+    z-index: 10;
+    position: relative;
+}
+
+.tier-card.active .tier-card-icon {
+    background: #e9d5ff !important;
+    color: #9333ea !important;
+}
+
+.tier-card.active .tier-card-count-badge {
+    background: #e9d5ff !important;
+    color: #9333ea !important;
+}
+
+.tier-card.active .tier-card-checkmark {
+    background: #9333ea !important;
+}
+
+/* All Resources - Pink theme when active */
+.tier-card-all.active {
+    border: 3px solid #ec4899 !important;
+    background: #fdf2f8 !important;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
+}
+
+.tier-card-all.active .tier-card-icon {
+    background: #fce7f3 !important;
+    color: #ec4899 !important;
+}
+
+.tier-card-all.active .tier-card-count-badge {
+    background: #fce7f3 !important;
+    color: #ec4899 !important;
+}
+
+.tier-card-all.active .tier-card-checkmark {
+    background: #ec4899 !important;
+}
+
+/* Teach/Resources - Green theme when active */
+.tier-card-resources.active {
+    border: 3px solid #059669 !important;
+    background: #ecfdf5 !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+}
+
+.tier-card-resources.active .tier-card-icon {
+    background: #d1fae5 !important;
+    color: #059669 !important;
+}
+
+.tier-card-resources.active .tier-card-count-badge {
+    background: #d1fae5 !important;
+    color: #059669 !important;
+}
+
+.tier-card-resources.active .tier-card-checkmark {
+    background: #059669 !important;
+}
+
+/* Assess - Yellow/Orange theme when active */
+.tier-card-assessments.active {
+    border: 3px solid #f59e0b !important;
+    background: #fffbeb !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.tier-card-assessments.active .tier-card-icon {
+    background: #fef3c7 !important;
+    color: #f59e0b !important;
+}
+
+.tier-card-assessments.active .tier-card-count-badge {
+    background: #fef3c7 !important;
+    color: #f59e0b !important;
+}
+
+.tier-card-assessments.active .tier-card-checkmark {
+    background: #f59e0b !important;
+}
+
+
+/* Card Content Layout */
+.tier-card-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 0;
+    min-height: auto;
+    background: transparent;
+    border-radius: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Icon Section */
+.tier-card-icon-section {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0;
+}
+
+/* Remove divider line */
+.tier-card-divider {
+    display: none;
+}
+
+/* Icon - Square with rounded corners */
+.tier-card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    transition: all 0.3s ease;
+    border: none;
+    background: #e9d5ff;
+    color: #9333ea;
+    box-shadow: none;
+}
+
+.tier-card-0 .tier-card-icon {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.tier-card-1 .tier-card-icon {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+
+.tier-card-2 .tier-card-icon {
+    background: #e0f2f1;
+    color: #0d9488;
+}
+
+.tier-card-3 .tier-card-icon {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.tier-card:hover .tier-card-icon {
+    transform: scale(1.05);
+}
+
+/* Content Section */
+.tier-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0;
+}
+
+.tier-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tier-card-description {
+    display: block;
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.tier-card-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    width: fit-content;
+}
+
+/* Checkmark - Only visible when card is active */
+.tier-card-checkmark {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #9333ea;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(147, 51, 234, 0.2);
+}
+
+.tier-card-checkmark i {
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.tier-card.active .tier-card-checkmark {
+    display: flex;
+}
+
+.tier-card-count {
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .tier-cards-grid {
+        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+        gap: 0.75rem;
+    }
+    
+    .tier-card {
+        min-width: 180px;
+        max-width: 220px;
+        padding: 1rem 1rem 1rem 0.75rem;
+    }
+    
+    .tier-card-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .tier-cards-grid {
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        gap: 0.75rem;
+    }
+    
+    .tier-card {
+        min-width: 200px;
+        max-width: 240px;
+    }
+}
+
+@media (max-width: 968px) {
+    .tier-cards-container {
+        padding: 1.5rem 1rem 2rem 1rem;
+    }
+    
+    .tier-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .tier-card-arrow-between {
+        display: none;
+    }
+    
+    .tier-card {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
 </style>
 
 <div class="teacher-course-view-wrapper">
@@ -2823,28 +3568,149 @@ echo $OUTPUT->header();
                     </div>
                 </div>
                 
-                <!-- Resource Type Tabs -->
-                <div class="resource-type-tabs">
-                    <button class="resource-type-tab active" data-resource-type="all" onclick="filterByResourceType('all')">
-                        <i class="fa fa-th"></i>
-                        <span>All Resources</span>
-                        <span class="resource-tab-count" id="countAllResources">0</span>
-                    </button>
-                    <button class="resource-type-tab" data-resource-type="plan" onclick="filterByResourceType('plan')">
-                        <i class="fa fa-book"></i>
-                        <span>Plan</span>
-                        <span class="resource-tab-count" id="countPlanResources">0</span>
-                    </button>
-                    <button class="resource-type-tab" data-resource-type="teach" onclick="filterByResourceType('teach')">
-                        <i class="fa fa-graduation-cap"></i>
-                        <span>Teach</span>
-                        <span class="resource-tab-count" id="countTeachResources">0</span>
-                    </button>
-                    <button class="resource-type-tab" data-resource-type="assess" onclick="filterByResourceType('assess')">
-                        <i class="fa fa-clipboard-check"></i>
-                        <span>Assess</span>
-                        <span class="resource-tab-count" id="countAssessResources">0</span>
-                    </button>
+                <!-- Navigation Tier Cards - All Resources, Plan, Teach, Assess -->
+                <div class="tier-cards-container">
+                    <div class="tier-cards-grid">
+                        <!-- Step 0 Card - All Resources -->
+                        <div class="tier-card tier-card-0 tier-card-all" data-tab="all" onclick="filterByResourceType('all')">
+                            <div class="tier-card-content">
+                                <!-- Icon on Left -->
+                                <div class="tier-card-icon-section">
+                                    <div class="tier-card-icon icon-all">
+                                        <i class="fa fa-th"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vertical Divider Line -->
+                                <div class="tier-card-divider"></div>
+                                
+                                <!-- Content Section -->
+                                <div class="tier-card-body">
+                                    <h3 class="tier-card-title">All Resources</h3>
+                                    <p class="tier-card-description">Browse all available teaching resources across all curriculum levels and themes.</p>
+                                    <div class="tier-card-count-badge">
+                                        <span class="tier-card-count" id="tierCardCountAll">0</span> <span>resources</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Checkmark for active state -->
+                            <div class="tier-card-checkmark">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+
+                        <!-- Arrow Between Cards -->
+                        <div class="tier-card-arrow-between">
+                            <div class="flow-arrow"></div>
+                        </div>
+
+                        <!-- Step 1 Card - Planning -->
+                        <div class="tier-card tier-card-1 tier-card-planning" data-tab="planning" onclick="filterByResourceType('plan')">
+                            <div class="tier-card-content">
+                                <!-- Icon on Left -->
+                                <div class="tier-card-icon-section">
+                                    <div class="tier-card-icon icon-planning">
+                                        <i class="fa fa-lightbulb"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vertical Divider Line -->
+                                <div class="tier-card-divider"></div>
+                                
+                                <!-- Content Section -->
+                                <div class="tier-card-body">
+                                    <h3 class="tier-card-title">Plan</h3>
+                                    <p class="tier-card-description">Organize your lesson plans and curriculum to create engaging educational content.</p>
+                                    <div class="tier-card-count-badge">
+                                        <span class="tier-card-count" id="tierCardCountPlan">0</span> <span>resources</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Checkmark for active state -->
+                            <div class="tier-card-checkmark">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+
+                        <!-- Arrow Between Cards -->
+                        <div class="tier-card-arrow-between">
+                            <div class="flow-arrow"></div>
+                        </div>
+
+                        <!-- Step 2 Card - Teaching -->
+                        <div class="tier-card tier-card-2 tier-card-resources" data-tab="resources" onclick="filterByResourceType('teach')">
+                            <div class="tier-card-content">
+                                <!-- Icon on Left -->
+                                <div class="tier-card-icon-section">
+                                    <div class="tier-card-icon icon-resources">
+                                        <i class="fa fa-chalkboard-user"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vertical Divider Line -->
+                                <div class="tier-card-divider"></div>
+                                
+                                <!-- Content Section -->
+                                <div class="tier-card-body">
+                                    <h3 class="tier-card-title">Teach</h3>
+                                    <p class="tier-card-description">Deliver lessons and share activities that help students learn confidently.</p>
+                                    <div class="tier-card-count-badge">
+                                        <span class="tier-card-count" id="tierCardCountTeach">0</span><span>resources</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Checkmark for active state -->
+                            <div class="tier-card-checkmark">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+
+                        <!-- Arrow Between Cards -->
+                        <div class="tier-card-arrow-between">
+                            <div class="flow-arrow"></div>
+                        </div>
+
+                        <!-- Step 3 Card - Assessments -->
+                        <div class="tier-card tier-card-3 tier-card-assessments" data-tab="assessments" onclick="filterByResourceType('assess')">
+                            <div class="tier-card-content">
+                                <!-- Icon on Left -->
+                                <div class="tier-card-icon-section">
+                                    <div class="tier-card-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vertical Divider Line -->
+                                <div class="tier-card-divider"></div>
+                                
+                                <!-- Content Section -->
+                                <div class="tier-card-body">
+                                    <h3 class="tier-card-title">Assess</h3>
+                                    <p class="tier-card-description">Manage assignments and quizzes to track progress and provide feedback.</p>
+                                    <div class="tier-card-count-badge">
+                                        <span class="tier-card-count" id="tierCardCountAssess">0</span><span>resources</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Checkmark for active state -->
+                            <div class="tier-card-checkmark">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expanded Categories Section - Shows when any tier card is active -->
+                    <div class="tier-cards-expanded-section" id="tier-cards-expanded">
+                        <div class="category-cards-grid" id="categoryCardsGrid">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <!-- Courses Container - Shows courses for selected categories -->
+                        <div class="resource-category-course-container" id="tierCoursesContainer" style="display: none;">
+                            <div class="resource-category-course-items" id="tierCoursesItems">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Search and Filters inside Header -->
@@ -2902,8 +3768,8 @@ echo $OUTPUT->header();
                                 <a href="#" class="clear-filters-link" onclick="resetAllFilters(); return false;">Clear all filters</a>
                             </div>
                             
-                            <!-- Resource Type Filters -->
-                            <div class="filter-section">
+                            <!-- Resource Type Filters (Hidden from frontend, functionality preserved) -->
+                            <div class="filter-section" style="display: none;">
                                 <h4 class="filter-section-title" onclick="toggleFilterSection(this)">
                                     <span>Resource Type</span>
                                     <i class="fa fa-chevron-down"></i>
@@ -2913,14 +3779,25 @@ echo $OUTPUT->header();
                                 </ul>
                             </div>
                             
-                            <!-- Category Filters (from folders) -->
-                            <div class="filter-section">
+                            <!-- Category Filters (Hidden from frontend, functionality preserved) -->
+                            <div class="filter-section" style="display: none;">
                                 <h4 class="filter-section-title" onclick="toggleFilterSection(this)">
                                     <span>Category</span>
                                     <i class="fa fa-chevron-down"></i>
                                 </h4>
                                 <ul class="filter-checkbox-list" id="categoryFilters">
                                     <!-- Will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                            
+                            <!-- Sections Filter (only active when courses are selected) -->
+                            <div class="filter-section" id="sectionsFilterCheckboxSection" style="display: none;">
+                                <h4 class="filter-section-title" onclick="toggleFilterSection(this)">
+                                    <span>Sections</span>
+                                    <i class="fa fa-chevron-down"></i>
+                                </h4>
+                                <ul class="filter-checkbox-list" id="sectionsFilters">
+                                    <!-- Will be populated by JavaScript based on selected courses -->
                                 </ul>
                             </div>
                         </aside>
@@ -3019,8 +3896,8 @@ echo $OUTPUT->header();
                                     
                                     // Add file to all resources with category info
                                     $folder_name = format_string($cm->name); // Get folder name
-                                    // Get folder tag (Plan/Teach/Assess)
-                                    $folder_tag = get_folder_tag($cm->id);
+                                    // Get section type (Plan/Teach/Assess) from section name
+                                    $section_type = get_section_type($resource['section_name']);
                                     $all_resources[] = [
                                         'type' => 'file',
                                         'file' => $file,
@@ -3030,8 +3907,8 @@ echo $OUTPUT->header();
                                         'direct_category_id' => $cat_info['direct_id'],
                                         'section' => $resource['section_name'],
                                         'folder_name' => $folder_name,
-                                        'folder_tag' => $folder_tag, // Store folder tag
-                                        'folder_cmid' => $cm->id, // Store folder cmid for tag lookup
+                                        'folder_tag' => $section_type, // Store section type instead of tag
+                                        'folder_cmid' => $cm->id,
                                         'course' => $course
                                     ];
                                 }
@@ -3052,8 +3929,8 @@ echo $OUTPUT->header();
                                 
                                 // Add standalone resource with category info
                                 $folder_name = ($cm->modname === 'folder') ? format_string($cm->name) : '';
-                                // Get folder tag for standalone resources (they are the folder themselves)
-                                $folder_tag = ($cm->modname === 'folder') ? get_folder_tag($cm->id) : null;
+                                // Get section type (Plan/Teach/Assess) from section name
+                                $section_type = get_section_type($resource['section_name']);
                                 $all_resources[] = [
                                     'type' => 'resource',
                                     'cm' => $cm,
@@ -3063,7 +3940,7 @@ echo $OUTPUT->header();
                                     'direct_category_id' => $cat_info['direct_id'],
                                     'section' => $resource['section_name'],
                                     'folder_name' => $folder_name,
-                                    'folder_tag' => $folder_tag, // Store folder tag
+                                    'folder_tag' => $section_type, // Store section type instead of tag
                                     'folder_cmid' => ($cm->modname === 'folder') ? $cm->id : null,
                                     'course' => $course
                                 ];
@@ -3654,15 +4531,19 @@ echo $OUTPUT->header();
                                 echo 'window.courseMainSectionFoldersData = ' . json_encode($course_main_section_folders_data) . ';';
                                 echo 'window.courseFilesData = ' . json_encode($course_files_data) . ';';
                                 
-                                // Initialize sections and folders filters on page load
-                                echo 'if (typeof updateSectionsAndFoldersFilters === "function") {';
-                                echo '    updateSectionsAndFoldersFilters();';
-                                echo '}';
+                                // Initialize sections and folders filters on page load (after tab is set)
+                                echo 'setTimeout(function() {';
+                                echo '    if (typeof updateSectionsAndFoldersFilters === "function") {';
+                                echo '        updateSectionsAndFoldersFilters();';
+                                echo '    }';
+                                echo '}, 150);';
                                 
-                                // Update resource tab counts on page load
-                                echo 'if (typeof updateResourceTabCounts === "function") {';
-                                echo '    updateResourceTabCounts();';
-                                echo '}';
+                                // Update resource tab counts on page load (after cards are rendered)
+                                echo 'setTimeout(function() {';
+                                echo '    if (typeof updateResourceTabCounts === "function") {';
+                                echo '        updateResourceTabCounts();';
+                                echo '    }';
+                                echo '}, 800);';
                                 
                                 // Populate resource type filter checkboxes
                                 echo 'const resourceTypeFilters = document.getElementById("resourceTypeFilters");';
@@ -3743,6 +4624,27 @@ echo $OUTPUT->header();
                                     }
                                 }
                                 echo '}';
+                                
+                                // Pass main categories data to JavaScript for tier card expansion (with courses)
+                                $main_categories_array = [];
+                                foreach ($main_categories as $main_cat_id => $main_cat_info) {
+                                    $courses_array = [];
+                                    // Get courses for this category from category_tree
+                                    if (isset($category_tree[$main_cat_id]) && !empty($category_tree[$main_cat_id])) {
+                                        foreach ($category_tree[$main_cat_id] as $course_id => $course_name) {
+                                            $courses_array[] = [
+                                                'id' => (int)$course_id,
+                                                'name' => $course_name
+                                            ];
+                                        }
+                                    }
+                                    $main_categories_array[] = [
+                                        'id' => (int)$main_cat_id,
+                                        'name' => $main_cat_info['name'],
+                                        'courses' => $courses_array
+                                    ];
+                                }
+                                echo 'window.mainCategoriesData = ' . json_encode($main_categories_array, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';';
 
                                 echo '    const urlSearchParams = new URLSearchParams(window.location.search);';
                                 echo '    const collectParamValues = function(paramNames) {';
@@ -4375,6 +5277,7 @@ $officeviewer_enabled = true;
 ?>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/tier_cards_categories.js"></script>
 <script>
 const OFFICE_VIEWER_ENABLED = <?php echo $officeviewer_enabled ? 'true' : 'false'; ?>;
 const PPT_FULLSCREEN_ELEMENT_ID = 'pptPlayerContent';
@@ -4481,13 +5384,20 @@ function updateSectionsAndFoldersFilters() {
         }
     });
     
-    const sectionsFilterSection = document.getElementById('sectionsFilterSection');
+    const sectionsFilterCheckboxSection = document.getElementById('sectionsFilterCheckboxSection');
+    const sectionsFiltersList = document.getElementById('sectionsFilters');
     const foldersFilterSection = document.getElementById('foldersFilterSection');
     const sectionsFilterSelect = document.getElementById('sectionsFilterSelect');
     const foldersFilterSelect = document.getElementById('foldersFilterSelect');
     
-    // If no courses selected, disable dropdowns and clear them
+    // If no courses selected, hide sections filter section and disable dropdowns
     if (selectedCourseIds.length === 0) {
+        if (sectionsFilterCheckboxSection) {
+            sectionsFilterCheckboxSection.style.display = 'none';
+        }
+        if (sectionsFiltersList) {
+            sectionsFiltersList.innerHTML = '';
+        }
         if (sectionsFilterSelect) {
             sectionsFilterSelect.disabled = true;
             sectionsFilterSelect.innerHTML = '<option value="">All Sections</option>';
@@ -4497,6 +5407,11 @@ function updateSectionsAndFoldersFilters() {
             foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
         }
         return;
+    }
+    
+    // Show sections filter section when courses are selected
+    if (sectionsFilterCheckboxSection) {
+        sectionsFilterCheckboxSection.style.display = 'block';
     }
     
     // Enable dropdowns when courses are selected
@@ -4534,13 +5449,10 @@ function updateSectionsAndFoldersFilters() {
                                    window.courseSectionsData[String(courseId)] || 
                                    window.courseSectionsData[parseInt(courseId)] || [];
             
-            // Debug: Log course data
-            if (courseSections.length === 0) {
-                console.log('No sections found for course ID:', courseId, 'Available course IDs:', Object.keys(window.courseSectionsData));
-            }
-            
             courseSections.forEach(section => {
                 const decodedSection = decodeHtmlEntities(section);
+                
+                // Collect ALL sections - we'll filter them later when displaying
                 sectionsSet.add(decodedSection);
                 
                 // Check if this is a main section (doesn't contain " > ")
@@ -4608,7 +5520,10 @@ function updateSectionsAndFoldersFilters() {
         });
     }
     
+    // All sections have been collected - now filter them for display based on active filter
+    
     // Fallback: Also get sections and folders from resource cards (for backward compatibility)
+    // Collect ALL sections from ALL cards - we'll filter them later when displaying
     const allCards = document.querySelectorAll('.resource-card');
     allCards.forEach(card => {
         const cardCourseId = parseInt(card.getAttribute('data-course-id')) || 0;
@@ -4665,6 +5580,114 @@ function updateSectionsAndFoldersFilters() {
         } else {
             // If the previously selected value no longer exists, reset to "All Sections"
             sectionsSelect.value = '';
+        }
+    }
+    
+    // Populate sections checkbox filter - show only subsections, excluding those from active main filter
+    if (sectionsFiltersList) {
+        // Preserve currently checked sections
+        const checkedSections = new Set();
+        sectionsFiltersList.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+            checkedSections.add(checkbox.getAttribute('data-filter-value'));
+        });
+        
+        // Clear existing checkboxes
+        sectionsFiltersList.innerHTML = '';
+        
+        // Get only subsections (sections containing " > ")
+        let filteredSubsections = Array.from(sectionsSet).filter(section => section.indexOf(' > ') !== -1);
+        
+        // Get the current active filter - prioritize the variable (set immediately) over DOM check
+        let activeFilter = 'all';
+        
+        // First, check the currentResourceTypeFilter variable (most reliable, set immediately)
+        if (typeof currentResourceTypeFilter !== 'undefined' && currentResourceTypeFilter && currentResourceTypeFilter !== 'all') {
+            activeFilter = String(currentResourceTypeFilter).toLowerCase().trim();
+        } else {
+            // Fallback: check the active tier card in DOM
+            const activeTierCard = document.querySelector('.tier-card.active');
+            if (activeTierCard) {
+                if (activeTierCard.classList.contains('tier-card-0')) {
+                    activeFilter = 'all';
+                } else if (activeTierCard.classList.contains('tier-card-1')) {
+                    activeFilter = 'plan';
+                } else if (activeTierCard.classList.contains('tier-card-2')) {
+                    activeFilter = 'teach';
+                } else if (activeTierCard.classList.contains('tier-card-3')) {
+                    activeFilter = 'assess';
+                } else {
+                    // Check data-tab attribute as additional fallback
+                    const dataTab = activeTierCard.getAttribute('data-tab');
+                    if (dataTab) {
+                        if (dataTab === 'planning' || dataTab === 'plan') {
+                            activeFilter = 'plan';
+                        } else if (dataTab === 'resources' || dataTab === 'teach') {
+                            activeFilter = 'teach';
+                        } else if (dataTab === 'assessments' || dataTab === 'assess') {
+                            activeFilter = 'assess';
+                        } else if (dataTab === 'all') {
+                            activeFilter = 'all';
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Normalize activeFilter to lowercase and trim
+        activeFilter = String(activeFilter).toLowerCase().trim();
+        
+        // If a main filter is active (plan/teach/assess), show ONLY subsections from that main section
+        // When "Plan" is active, show ONLY "Plan > ..." subsections, exclude "Teach > ..." and "Assess > ..."
+        // When "Teach" is active, show ONLY "Teach > ..." subsections, exclude "Plan > ..." and "Assess > ..."
+        // When "Assess" is active, show ONLY "Assess > ..." subsections, exclude "Plan > ..." and "Teach > ..."
+        if (activeFilter !== 'all' && activeFilter) {
+            filteredSubsections = filteredSubsections.filter(section => {
+                // Extract main section name from subsection (part before " > ")
+                const sectionParts = section.split(' > ');
+                if (sectionParts.length < 2) {
+                    // Not a subsection, exclude it (we only want subsections in this filter)
+                    return false;
+                }
+                
+                const subsectionMainSection = sectionParts[0].trim().toLowerCase();
+                const activeFilterLower = activeFilter.toLowerCase().trim();
+                
+                // Keep ONLY subsections that match the active filter
+                // If Plan is active, keep "Plan > ...", exclude "Teach > ..." and "Assess > ..."
+                // If Teach is active, keep "Teach > ...", exclude "Plan > ..." and "Assess > ..."
+                const matchesActiveFilter = subsectionMainSection === activeFilterLower;
+                return matchesActiveFilter; // Return true to keep (if matches), false to exclude (if doesn't match)
+            });
+        }
+        
+        // Sort the filtered subsections
+        const allSectionsArray = filteredSubsections.sort();
+        
+        if (allSectionsArray.length > 0) {
+            allSectionsArray.forEach((section) => {
+                const li = document.createElement('li');
+                li.className = 'filter-checkbox-item';
+                
+                const label = document.createElement('label');
+                label.className = 'filter-checkbox-label';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'filter-checkbox';
+                checkbox.setAttribute('data-filter-type', 'section');
+                checkbox.setAttribute('data-filter-value', section);
+                checkbox.onchange = function() { filterResources(); };
+                
+                // Restore checked state if it was previously checked
+                if (checkedSections.has(section)) {
+                    checkbox.checked = true;
+                }
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(section));
+                li.appendChild(label);
+                sectionsFiltersList.appendChild(li);
+            });
         }
     }
     
@@ -4856,11 +5879,12 @@ function decodeHtmlEntities(text) {
     return textarea.value;
 }
 
-// Filter by resource type (Plan, Teach, Assess)
+        // Filter by resource type (Plan, Teach, Assess) - based on section names
 let currentResourceTypeFilter = 'all';
 
 // Update resource tab counts based on folder tags
 function updateResourceTabCounts() {
+    // Count all resource cards (not filtered)
     const allCards = document.querySelectorAll('.resource-card');
     
     let allCount = allCards.length;
@@ -4879,30 +5903,122 @@ function updateResourceTabCounts() {
         }
     });
     
-    // Update count displays
-    const countAllEl = document.getElementById('countAllResources');
-    const countPlanEl = document.getElementById('countPlanResources');
-    const countTeachEl = document.getElementById('countTeachResources');
-    const countAssessEl = document.getElementById('countAssessResources');
+    // Update tier card counts
+    const tierCardCountAll = document.getElementById('tierCardCountAll');
+    const tierCardCountPlan = document.getElementById('tierCardCountPlan');
+    const tierCardCountTeach = document.getElementById('tierCardCountTeach');
+    const tierCardCountAssess = document.getElementById('tierCardCountAssess');
     
-    if (countAllEl) countAllEl.textContent = allCount;
-    if (countPlanEl) countPlanEl.textContent = planCount;
-    if (countTeachEl) countTeachEl.textContent = teachCount;
-    if (countAssessEl) countAssessEl.textContent = assessCount;
+    if (tierCardCountAll) tierCardCountAll.textContent = allCount;
+    if (tierCardCountPlan) tierCardCountPlan.textContent = planCount;
+    if (tierCardCountTeach) tierCardCountTeach.textContent = teachCount;
+    if (tierCardCountAssess) tierCardCountAssess.textContent = assessCount;
 }
 
 function filterByResourceType(type) {
     currentResourceTypeFilter = type;
     
-    // Update active tab
-    document.querySelectorAll('.resource-type-tab').forEach(tab => {
-        tab.classList.remove('active');
+    // Update tier cards active state
+    document.querySelectorAll('.tier-card').forEach(card => {
+        card.classList.remove('active');
     });
-    document.querySelector(`.resource-type-tab[data-resource-type="${type}"]`)?.classList.add('active');
+    if (type === 'all') {
+        document.querySelector('.tier-card-0')?.classList.add('active');
+    } else if (type === 'plan') {
+        document.querySelector('.tier-card-1')?.classList.add('active');
+    } else if (type === 'teach') {
+        document.querySelector('.tier-card-2')?.classList.add('active');
+    } else if (type === 'assess') {
+        document.querySelector('.tier-card-3')?.classList.add('active');
+    }
+    
+    // Expand tier cards container and show categories
+    const tierCardsContainer = document.querySelector('.tier-cards-container');
+    if (tierCardsContainer) {
+        tierCardsContainer.classList.add('expanded');
+        // Populate categories when expanded
+        if (typeof populateTierCardCategories === 'function') {
+            populateTierCardCategories();
+            // Render courses after categories are populated
+            setTimeout(function() {
+                if (typeof renderSelectedCourses === 'function') {
+                    renderSelectedCourses();
+                }
+            }, 100);
+        }
+    }
+    
+    // Update sections filter to reflect the new active filter
+    // Use a longer timeout to ensure tier card active state is set
+    if (typeof updateSectionsAndFoldersFilters === 'function') {
+        setTimeout(function() {
+            updateSectionsAndFoldersFilters();
+        }, 50);
+    }
     
     // Trigger filter
     filterResources();
+    
+    // Update counts after filtering
+    setTimeout(function() {
+        if (typeof updateResourceTabCounts === 'function') {
+            updateResourceTabCounts();
+        }
+    }, 200);
 }
+
+// Check URL parameter for filter and activate corresponding tab on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterParam = urlParams.get('filter');
+    
+    if (filterParam) {
+        const filterType = filterParam.toLowerCase();
+        if (filterType === 'plan' || filterType === 'teach' || filterType === 'assess') {
+            // Set the filter immediately and then update sections
+            if (typeof filterByResourceType === 'function') {
+                filterByResourceType(filterType);
+            } else {
+                // If function not available yet, wait a bit
+                setTimeout(function() {
+                    if (typeof filterByResourceType === 'function') {
+                        filterByResourceType(filterType);
+                    }
+                }, 100);
+            }
+        }
+    } else {
+        // If no filter param, set "All" as active and expand to show categories
+        if (typeof filterByResourceType === 'function') {
+            filterByResourceType('all');
+        } else {
+            setTimeout(function() {
+                if (typeof filterByResourceType === 'function') {
+                    filterByResourceType('all');
+                }
+            }, 100);
+        }
+    }
+    
+    // Initialize: Expand container and show categories on page load
+    setTimeout(function() {
+        const tierCardsContainer = document.querySelector('.tier-cards-container');
+        if (tierCardsContainer) {
+            tierCardsContainer.classList.add('expanded');
+            if (typeof populateTierCardCategories === 'function') {
+                populateTierCardCategories();
+                // Render courses after categories are populated (in case categories are pre-selected)
+                setTimeout(function() {
+                    if (typeof renderSelectedCourses === 'function') {
+                        renderSelectedCourses();
+                    }
+                }, 100);
+            } else {
+                console.error('populateTierCardCategories function not found');
+            }
+        }
+    }, 300);
+});
 
 function filterResources() {
     const searchTerm = document.getElementById('resourceSearch')?.value.toLowerCase() || '';
@@ -4935,11 +6051,24 @@ function filterResources() {
         }
     });
     
-    // Get selected section from select dropdown
+    // Get selected sections from checkbox filters (priority) or select dropdown (fallback)
     const selectedSections = [];
-    const sectionSelect = document.getElementById('sectionsFilterSelect');
-    if (sectionSelect && sectionSelect.value) {
-        selectedSections.push(decodeHtmlEntities(sectionSelect.value));
+    
+    // First, check checkbox filters
+    const sectionsCheckboxes = document.querySelectorAll('#sectionsFilters input[type="checkbox"]:checked');
+    if (sectionsCheckboxes.length > 0) {
+        sectionsCheckboxes.forEach(checkbox => {
+            const sectionValue = checkbox.getAttribute('data-filter-value');
+            if (sectionValue) {
+                selectedSections.push(decodeHtmlEntities(sectionValue));
+            }
+        });
+    } else {
+        // Fallback to select dropdown if no checkboxes are checked
+        const sectionSelect = document.getElementById('sectionsFilterSelect');
+        if (sectionSelect && sectionSelect.value) {
+            selectedSections.push(decodeHtmlEntities(sectionSelect.value));
+        }
     }
     
     // Get selected folder from select dropdown
@@ -4978,14 +6107,14 @@ function filterResources() {
                           cardCategory.includes(searchTerm);
         }
         
-        // Resource type tab filter (Plan, Teach, Assess) - based on folder tags
+        // Resource type tab filter (Plan, Teach, Assess) - based on section names
         if (currentResourceTypeFilter !== 'all') {
-            // Get folder tag from data attribute
+            // Get section type from data attribute (extracted from section name)
             const cardFolderTag = (card.getAttribute('data-folder-tag') || '').toLowerCase().trim();
             
-            // Only filter if the resource has a folder tag
+            // Only filter if the resource has a section type
             if (cardFolderTag) {
-                // Match based on folder tag
+                // Match based on section type (Plan, Teach, or Assess)
                 if (currentResourceTypeFilter === 'plan') {
                     matchesResourceTypeTab = cardFolderTag === 'plan';
                 } else if (currentResourceTypeFilter === 'teach') {
@@ -4994,8 +6123,8 @@ function filterResources() {
                     matchesResourceTypeTab = cardFolderTag === 'assess';
                 }
             } else {
-                // If no tag is set, don't show the resource when filtering by Plan/Teach/Assess
-                // (resources without tags are only shown in "All Resources")
+                // If no section type is set, don't show the resource when filtering by Plan/Teach/Assess
+                // (resources without section types are only shown in "All Resources")
                 matchesResourceTypeTab = false;
             }
         }
@@ -5047,15 +6176,27 @@ function filterResources() {
             }
         }
         
-        // Section filter (if a section is selected from the select dropdown)
+        // Section filter (if sections are selected from checkboxes or dropdown)
         if (selectedSections.length > 0) {
             const cardSection = decodeHtmlEntities(card.getAttribute('data-section') || '');
             
-            // Since select dropdown only shows main sections, match main section and all its subsections
+            // Match exact section or if card section starts with selected section (for subsections)
             matchesSection = selectedSections.some(selectedSection => {
-                // Selected section is always a main section - match main section and all its subsections
-                return cardSection.toLowerCase() === selectedSection.toLowerCase() ||
-                       cardSection.toLowerCase().startsWith(selectedSection.toLowerCase() + ' > ');
+                const cardSectionLower = cardSection.toLowerCase();
+                const selectedSectionLower = selectedSection.toLowerCase();
+                
+                // Exact match
+                if (cardSectionLower === selectedSectionLower) {
+                    return true;
+                }
+                
+                // If selected section is a main section (no " > "), match all its subsections
+                if (selectedSection.indexOf(' > ') === -1) {
+                    return cardSectionLower.startsWith(selectedSectionLower + ' > ');
+                }
+                
+                // If selected section is a subsection, only match exact
+                return false;
             });
         }
         
@@ -5088,6 +6229,13 @@ function filterResources() {
     // Update count and pagination controls
     updateResourcesCount(visibleCount);
     updatePagination(visibleCount);
+    
+    // Update tier card counts based on visible/filtered resources
+    if (typeof updateResourceTabCounts === 'function') {
+        setTimeout(function() {
+            updateResourceTabCounts();
+        }, 50);
+    }
 }
 
 // Update resources count display
@@ -5578,6 +6726,9 @@ function resetAllFilters() {
         checkbox.checked = false;
     });
     document.querySelectorAll('#categoryFilters input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.querySelectorAll('#sectionsFilters input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
     });
     
@@ -6234,6 +7385,11 @@ document.addEventListener('DOMContentLoaded', function() {
             updateResourcesCount(totalFiltered);
             applyPagination();
             updatePagination(totalFiltered);
+            
+            // Update tier card counts
+            if (typeof updateResourceTabCounts === 'function') {
+                updateResourceTabCounts();
+            }
             
             // Initialize preview images
             initializeResourcePreviews();
