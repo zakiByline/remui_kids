@@ -48,26 +48,84 @@ $PAGE->set_heading('E-Book Management');
 $PAGE->set_pagelayout('standard');
 
 // Get filter parameters
+$selected_category = optional_param('category', '', PARAM_TEXT);
 $selected_level = optional_param('level', '', PARAM_TEXT);
 $selected_subject = optional_param('subject', '', PARAM_TEXT);
 $selected_book_type = optional_param('book_type', '', PARAM_TEXT);
+
+// Parse multiple levels and subjects if passed as arrays
+$selected_levels = [];
+$selected_subjects = [];
+// Handle array parameters (levels[]=value&levels[]=value) or multiple query params
+if (isset($_GET['levels'])) {
+    if (is_array($_GET['levels'])) {
+        $selected_levels = array_map('trim', $_GET['levels']);
+    } else {
+        $selected_levels = [trim($_GET['levels'])];
+    }
+} elseif ($selected_level) {
+    $selected_levels = [$selected_level];
+}
+
+if (isset($_GET['subjects'])) {
+    if (is_array($_GET['subjects'])) {
+        $selected_subjects = array_map('trim', $_GET['subjects']);
+    } else {
+        $selected_subjects = [trim($_GET['subjects'])];
+    }
+} elseif ($selected_subject) {
+    $selected_subjects = [$selected_subject];
+}
 
 // Get books based on filters
 $books = [];
 $sql_params = [];
 $sql_conditions = [];
 
-if ($selected_level) {
+if ($selected_category) {
+    // Map category to book_type: PLAN -> Teacher Book, TEACH -> Student Book, ASSESS -> Practice Book
+    $category_map = [
+        'plan' => 'Teacher Book',
+        'teach' => 'Student Book',
+        'assess' => 'Practice Book'
+    ];
+    if (isset($category_map[strtolower($selected_category)])) {
+        $sql_conditions[] = "book_type = :book_type";
+        $sql_params['book_type'] = $category_map[strtolower($selected_category)];
+    }
+}
+
+if (!empty($selected_levels)) {
+    $level_placeholders = [];
+    foreach ($selected_levels as $idx => $level) {
+        $param_name = 'level_' . $idx;
+        $level_placeholders[] = ":{$param_name}";
+        $sql_params[$param_name] = $level;
+    }
+    if (!empty($level_placeholders)) {
+        $sql_conditions[] = "level IN (" . implode(',', $level_placeholders) . ")";
+    }
+} elseif ($selected_level) {
     $sql_conditions[] = "level = :level";
     $sql_params['level'] = $selected_level;
 }
 
-if ($selected_subject) {
+if (!empty($selected_subjects)) {
+    $subject_placeholders = [];
+    foreach ($selected_subjects as $idx => $subject) {
+        $param_name = 'subject_' . $idx;
+        $subject_placeholders[] = ":{$param_name}";
+        $sql_params[$param_name] = $subject;
+    }
+    if (!empty($subject_placeholders)) {
+        $sql_conditions[] = "subject IN (" . implode(',', $subject_placeholders) . ")";
+    }
+} elseif ($selected_subject) {
     $sql_conditions[] = "subject = :subject";
     $sql_params['subject'] = $selected_subject;
 }
 
-if ($selected_book_type) {
+if ($selected_book_type && !$selected_category) {
     $sql_conditions[] = "book_type = :book_type";
     $sql_params['book_type'] = $selected_book_type;
 }
@@ -87,69 +145,134 @@ echo $OUTPUT->header();
 <?php include(__DIR__ . '/includes/admin_sidebar.php'); ?>
 
             <div class="main-content">
-                <!-- Filter Section - Level 1 -->
-                <div class="filter-section">
-                    <h3 class="filter-title"><i class="fa fa-filter"></i> Select Level</h3>
-                    <div class="filter-boxes level-filters">
-                        <div class="filter-box <?php echo $selected_level == 'KG Level 1' ? 'active' : ''; ?>" data-filter="level" data-value="KG Level 1">
-                            <i class="fa fa-graduation-cap"></i>
-                            <span>KG Level 1</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_level == 'KG Level 2' ? 'active' : ''; ?>" data-filter="level" data-value="KG Level 2">
-                            <i class="fa fa-graduation-cap"></i>
-                            <span>KG Level 2</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_level == 'KG Level 3' ? 'active' : ''; ?>" data-filter="level" data-value="KG Level 3">
-                            <i class="fa fa-graduation-cap"></i>
-                            <span>KG Level 3</span>
-                        </div>
+                <!-- Filter Cards Section -->
+                <div class="ebooks-filter-section">
+                    <!-- SELECT CATEGORY (Single Selection) -->
+                    <h3 class="filter-section-header">1 SELECT CATEGORY</h3>
+                    <div class="filter-cards-container" id="categoryFilterCards">
+                        <label class="filter-card category-plan <?php echo strtolower($selected_category) == 'plan' ? 'selected' : ''; ?>" data-category="plan">
+                            <input type="radio" name="ebook_category" value="plan" class="filter-category-input" <?php echo strtolower($selected_category) == 'plan' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
+                                <i class="fa fa-lightbulb-o"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">PLAN</h4>
+                                <p class="filter-card-description">Organize your lesson plans and curriculum to create engaging educational content.</p>
+                                <span class="filter-card-badge" style="background: #f3e8ff; color: #a855f7;">6 resources</span>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card category-teach <?php echo strtolower($selected_category) == 'teach' ? 'selected' : ''; ?>" data-category="teach">
+                            <input type="radio" name="ebook_category" value="teach" class="filter-category-input" <?php echo strtolower($selected_category) == 'teach' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
+                                <i class="fa fa-desktop"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">TEACH</h4>
+                                <p class="filter-card-description">Deliver lessons and share activities that help students learn confidently.</p>
+                                <span class="filter-card-badge" style="background: #d1fae5; color: #10b981;">14 resources</span>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card category-assess <?php echo strtolower($selected_category) == 'assess' ? 'selected' : ''; ?>" data-category="assess">
+                            <input type="radio" name="ebook_category" value="assess" class="filter-category-input" <?php echo strtolower($selected_category) == 'assess' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
+                                <i class="fa fa-clipboard-check"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">ASSESS</h4>
+                                <p class="filter-card-description">Manage assignments and quizzes to track progress and provide feedback.</p>
+                                <span class="filter-card-badge" style="background: #fef3c7; color: #f59e0b;">0 resources</span>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                    </div>
+
+                    <!-- SELECT LEVELS (Multiple Selection) -->
+                    <h3 class="filter-section-header">2 SELECT LEVELS (multiple)</h3>
+                    <div class="filter-cards-container" id="levelFilterCards">
+                        <label class="filter-card level-1 <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'selected' : ''; ?>" data-level="KG Level 1">
+                            <input type="checkbox" name="ebook_levels[]" value="KG Level 1" class="filter-level-input" <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                                <i class="fa fa-smile-o"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">KG - Level 1</h4>
+                                <p class="filter-card-description">Foundation skills and early learning concepts</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card level-2 <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'selected' : ''; ?>" data-level="KG Level 2">
+                            <input type="checkbox" name="ebook_levels[]" value="KG Level 2" class="filter-level-input" <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
+                                <i class="fa fa-smile-o"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">KG - Level 2</h4>
+                                <p class="filter-card-description">Building on basics with new challenges</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card level-3 <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'selected' : ''; ?>" data-level="KG Level 3">
+                            <input type="checkbox" name="ebook_levels[]" value="KG Level 3" class="filter-level-input" <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
+                                <i class="fa fa-graduation-cap"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">KG - Level 3</h4>
+                                <p class="filter-card-description">Advanced concepts and school readiness</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                    </div>
+
+                    <!-- SELECT SUBJECTS (Multiple Selection) -->
+                    <h3 class="filter-section-header">3 SELECT SUBJECTS (multiple)</h3>
+                    <div class="filter-cards-container" id="subjectFilterCards">
+                        <label class="filter-card subject-english <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'selected' : ''; ?>" data-subject="English">
+                            <input type="checkbox" name="ebook_subjects[]" value="English" class="filter-subject-input" <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
+                                <i class="fa fa-book"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">English</h4>
+                                <p class="filter-card-description">Reading, writing, phonics, and language arts</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card subject-maths <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'selected' : ''; ?>" data-subject="Maths">
+                            <input type="checkbox" name="ebook_subjects[]" value="Maths" class="filter-subject-input" <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                                <i class="fa fa-calculator"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">Maths</h4>
+                                <p class="filter-card-description">Numbers, counting, shapes, and problem solving</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
+                        
+                        <label class="filter-card subject-science <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'selected' : ''; ?>" data-subject="Science">
+                            <input type="checkbox" name="ebook_subjects[]" value="Science" class="filter-subject-input" <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'checked' : ''; ?>>
+                            <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
+                                <i class="fa fa-flask"></i>
+                            </div>
+                            <div class="filter-card-content">
+                                <h4 class="filter-card-title">Science</h4>
+                                <p class="filter-card-description">Nature, experiments, and exploring the world</p>
+                            </div>
+                            <div class="filter-card-checkbox"></div>
+                        </label>
                     </div>
                 </div>
 
-                <!-- Filter Section - Level 2: Subjects (shown when level is selected) -->
-                <?php if ($selected_level): ?>
-                <div class="filter-section">
-                    <h3 class="filter-title"><i class="fa fa-book"></i> Select Subject</h3>
-                    <div class="filter-boxes subject-filters">
-                        <div class="filter-box <?php echo $selected_subject == 'English' ? 'active' : ''; ?>" data-filter="subject" data-value="English">
-                            <i class="fa fa-font"></i>
-                            <span>English</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_subject == 'Maths' ? 'active' : ''; ?>" data-filter="subject" data-value="Maths">
-                            <i class="fa fa-calculator"></i>
-                            <span>Maths</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_subject == 'Science' ? 'active' : ''; ?>" data-filter="subject" data-value="Science">
-                            <i class="fa fa-flask"></i>
-                            <span>Science</span>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <!-- Filter Section - Level 3: Book Types (shown when subject is selected) -->
-                <?php if ($selected_subject): ?>
-                <div class="filter-section">
-                    <h3 class="filter-title"><i class="fa fa-bookmark"></i> Select Book Type</h3>
-                    <div class="filter-boxes book-type-filters">
-                        <div class="filter-box <?php echo $selected_book_type == 'Student Book' ? 'active' : ''; ?>" data-filter="book_type" data-value="Student Book">
-                            <i class="fa fa-book"></i>
-                            <span>Student Book</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_book_type == 'Teacher Book' ? 'active' : ''; ?>" data-filter="book_type" data-value="Teacher Book">
-                            <i class="fa fa-graduation-cap"></i>
-                            <span>Teacher Book</span>
-                        </div>
-                        <div class="filter-box <?php echo $selected_book_type == 'Practice Book' ? 'active' : ''; ?>" data-filter="book_type" data-value="Practice Book">
-                            <i class="fa fa-pencil"></i>
-                            <span>Practice Book</span>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <!-- Add Book Button (shown when all filters are selected) -->
-                <?php if ($selected_level && $selected_subject && $selected_book_type): ?>
+                <!-- Add Book Button (shown when filters are selected) -->
+                <?php if (!empty($books) || ($selected_category || !empty($selected_levels) || !empty($selected_subjects))): ?>
                 <div class="add-book-section">
                     <button class="btn-add-book" onclick="openAddBookModal()">
                         <i class="fa fa-plus-circle"></i> Add New Book
@@ -158,7 +281,7 @@ echo $OUTPUT->header();
                 <?php endif; ?>
 
                 <!-- Books Display Grid -->
-                <?php if ($selected_level && $selected_subject && $selected_book_type): ?>
+                <?php if (!empty($books) || ($selected_category || !empty($selected_levels) || !empty($selected_subjects))): ?>
                 <div class="books-grid-section">
                     <h3 class="section-title">Books Available</h3>
                     <div class="books-grid" id="booksGrid">
@@ -219,9 +342,16 @@ echo $OUTPUT->header();
         </div>
         <form id="bookForm" enctype="multipart/form-data">
             <input type="hidden" id="bookId" name="book_id">
-            <input type="hidden" id="bookLevel" name="level" value="<?php echo htmlspecialchars($selected_level); ?>">
-            <input type="hidden" id="bookSubject" name="subject" value="<?php echo htmlspecialchars($selected_subject); ?>">
-            <input type="hidden" id="bookType" name="book_type" value="<?php echo htmlspecialchars($selected_book_type); ?>">
+            <input type="hidden" id="bookLevel" name="level" value="<?php echo htmlspecialchars(!empty($selected_levels) ? $selected_levels[0] : $selected_level); ?>">
+            <input type="hidden" id="bookSubject" name="subject" value="<?php echo htmlspecialchars(!empty($selected_subjects) ? $selected_subjects[0] : $selected_subject); ?>">
+            <input type="hidden" id="bookType" name="book_type" value="<?php 
+                if ($selected_category) {
+                    $category_map = ['plan' => 'Teacher Book', 'teach' => 'Student Book', 'assess' => 'Practice Book'];
+                    echo htmlspecialchars($category_map[strtolower($selected_category)] ?? $selected_book_type);
+                } else {
+                    echo htmlspecialchars($selected_book_type);
+                }
+            ?>">
             
             <div class="form-group">
                 <label for="bookTitle">Book Title *</label>
@@ -313,88 +443,246 @@ body {
     line-height: 1.6;
 }
 
+/* Filter Cards Section */
+.ebooks-filter-section {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-section-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.filter-cards-container {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.filter-card {
+    flex: 1;
+    min-width: 280px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.filter-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.filter-card.selected {
+    border-width: 2px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.filter-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    color: #64748b;
+}
+
+.filter-card.selected .filter-card-icon {
+    color: white;
+}
+
+.filter-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.filter-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px 0;
+}
+
+.filter-card.selected .filter-card-title {
+    color: #1e293b;
+}
+
+.filter-card-description {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+}
+
+.filter-card-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.filter-card-checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.filter-card input[type="checkbox"],
+.filter-card input[type="radio"] {
+    display: none;
+}
+
+.filter-card.selected .filter-card-checkbox {
+    background: currentColor;
+    border-color: currentColor;
+}
+
+.filter-card.selected .filter-card-checkbox::after {
+    content: '\2713';
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Category card colors */
+.filter-card.category-plan.selected {
+    border-color: #a855f7;
+    color: #a855f7;
+}
+
+.filter-card.category-plan.selected .filter-card-icon {
+    background: #a855f7;
+}
+
+.filter-card.category-plan.selected .filter-card-badge {
+    background: #f3e8ff;
+    color: #a855f7;
+}
+
+.filter-card.category-teach.selected {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.filter-card.category-teach.selected .filter-card-icon {
+    background: #10b981;
+}
+
+.filter-card.category-teach.selected .filter-card-badge {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.filter-card.category-assess.selected {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.filter-card.category-assess.selected .filter-card-icon {
+    background: #f59e0b;
+}
+
+.filter-card.category-assess.selected .filter-card-badge {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+/* Level card colors */
+.filter-card.level-1.selected {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filter-card.level-1.selected .filter-card-icon {
+    background: #3b82f6;
+}
+
+.filter-card.level-2.selected {
+    border-color: #a855f7;
+    color: #a855f7;
+}
+
+.filter-card.level-2.selected .filter-card-icon {
+    background: #a855f7;
+}
+
+.filter-card.level-3.selected {
+    border-color: #ec4899;
+    color: #ec4899;
+}
+
+.filter-card.level-3.selected .filter-card-icon {
+    background: #ec4899;
+}
+
+/* Subject card colors */
+.filter-card.subject-english.selected {
+    border-color: #ec4899;
+    color: #ec4899;
+}
+
+.filter-card.subject-english.selected .filter-card-icon {
+    background: #ec4899;
+}
+
+.filter-card.subject-maths.selected {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filter-card.subject-maths.selected .filter-card-icon {
+    background: #3b82f6;
+}
+
+.filter-card.subject-science.selected {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.filter-card.subject-science.selected .filter-card-icon {
+    background: #10b981;
+}
+
 .filter-section {
     margin-bottom: 30px;
-    padding: 25px 20px;
+    padding: 20px;
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
 }
 
 .filter-title {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: #333;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filter-boxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    margin: 0;
-    padding: 0;
-    justify-content: flex-start;
-}
-
-.filter-box {
-    flex: 0 0 auto;
-    min-width: 180px;
-    width: calc(33.333% - 10px) !important;
-    max-width: calc(33.333% - 10px) !important;
-    padding: 25px 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 3px solid transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    box-sizing: border-box !important;
-    margin: 0;
-}
-
-.filter-box i {
-    font-size: 2.2rem;
-    color: #667eea;
-    margin-bottom: 8px;
-}
-
-.filter-box span {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-}
-
-.filter-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-    border-color: #667eea;
-}
-
-.filter-box.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-}
-
-.filter-box.active i,
-.filter-box.active span {
-    color: white;
 }
 
 .btn-add-book {
@@ -738,18 +1026,24 @@ body {
         box-sizing: border-box !important;
     }
     
+    .ebooks-filter-section {
+        padding: 20px;
+    }
+    
+    .filter-cards-container {
+        flex-direction: column;
+    }
+    
+    .filter-card {
+        min-width: 100%;
+    }
+    
+    .filter-section-header {
+        font-size: 16px;
+    }
+    
     .filter-section {
         padding: 15px !important;
-    }
-    
-    .filter-boxes {
-        gap: 10px;
-    }
-    
-    .filter-box {
-        min-width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
     }
     
     .books-grid {
@@ -778,26 +1072,124 @@ body {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-// Filter handling
-document.querySelectorAll('.filter-box').forEach(box => {
-    box.addEventListener('click', function() {
-        const filterType = this.getAttribute('data-filter');
-        const filterValue = this.getAttribute('data-value');
+// Filter Cards Interaction
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle category filter cards (single selection - radio)
+    const categoryCards = document.querySelectorAll('#categoryFilterCards .filter-card');
+    categoryCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
         
-        const url = new URL(window.location.href);
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            
+            // Uncheck all category cards
+            categoryCards.forEach(c => {
+                c.classList.remove('selected');
+                const r = c.querySelector('input[type="radio"]');
+                if (r) r.checked = false;
+            });
+            
+            // Check clicked card
+            card.classList.add('selected');
+            if (radio) radio.checked = true;
+            
+            // Update URL
+            const url = new URL(window.location.href);
+            if (radio && radio.value) {
+                url.searchParams.set('category', radio.value);
+            } else {
+                url.searchParams.delete('category');
+            }
+            url.searchParams.delete('book_type'); // Clear book_type when category changes
+            window.location.href = url.toString();
+        });
+    });
+    
+    // Handle level filter cards (multiple selection - checkbox)
+    const levelCards = document.querySelectorAll('#levelFilterCards .filter-card');
+    levelCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
         
-        if (filterType === 'level') {
-            url.searchParams.set('level', filterValue);
-            url.searchParams.delete('subject');
-            url.searchParams.delete('book_type');
-        } else if (filterType === 'subject') {
-            url.searchParams.set('subject', filterValue);
-            url.searchParams.delete('book_type');
-        } else if (filterType === 'book_type') {
-            url.searchParams.set('book_type', filterValue);
-        }
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+                
+                // Update URL with multiple levels
+                const url = new URL(window.location.href);
+                const selectedLevels = [];
+                document.querySelectorAll('#levelFilterCards input[type="checkbox"]:checked').forEach(cb => {
+                    selectedLevels.push(cb.value);
+                });
+                
+                if (selectedLevels.length > 0) {
+                    // Remove old level param if exists
+                    url.searchParams.delete('level');
+                    // Add multiple levels
+                    selectedLevels.forEach(level => {
+                        url.searchParams.append('levels[]', level);
+                    });
+                } else {
+                    url.searchParams.delete('level');
+                    url.searchParams.delete('levels[]');
+                }
+                
+                window.location.href = url.toString();
+            }
+        });
+    });
+    
+    // Handle subject filter cards (multiple selection - checkbox)
+    const subjectCards = document.querySelectorAll('#subjectFilterCards .filter-card');
+    subjectCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
         
-        window.location.href = url.toString();
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+                
+                // Update URL with multiple subjects
+                const url = new URL(window.location.href);
+                const selectedSubjects = [];
+                document.querySelectorAll('#subjectFilterCards input[type="checkbox"]:checked').forEach(cb => {
+                    selectedSubjects.push(cb.value);
+                });
+                
+                if (selectedSubjects.length > 0) {
+                    // Remove old subject param if exists
+                    url.searchParams.delete('subject');
+                    // Add multiple subjects
+                    selectedSubjects.forEach(subject => {
+                        url.searchParams.append('subjects[]', subject);
+                    });
+                } else {
+                    url.searchParams.delete('subject');
+                    url.searchParams.delete('subjects[]');
+                }
+                
+                window.location.href = url.toString();
+            }
+        });
+    });
+    
+    // Prevent label from triggering input twice
+    document.querySelectorAll('.filter-card input').forEach(input => {
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     });
 });
 
