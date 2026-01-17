@@ -501,8 +501,9 @@
     top: calc(100% + 0.5rem);
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
-    width: 95%;
-    max-width: 1600px;
+    width: 70vw;
+    min-width: 70vw;
+    max-width: 90vw;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
@@ -524,19 +525,41 @@
 
 @media (max-width: 768px) {
     .tier-card-subsection {
-        width: calc(100% - 2rem);
+        width: 70vw;
+        min-width: 70vw;
+        max-width: 90vw;
         left: 50% !important;
         transform: translateX(-50%) translateY(-10px);
+    }
+    
+    .tier-card.active .tier-card-subsection {
+        width: 70vw;
+        min-width: 70vw;
+        max-width: 90vw;
+    }
+    
+    .resource-category-card {
+        padding: 1.5rem;
+        min-height: 120px;
+    }
+    
+    .resource-category-card-title {
+        font-size: 1.1rem;
+    }
+    
+    .resource-category-card-count {
+        font-size: 0.85rem;
     }
 }
 
 .tier-card.active .tier-card-subsection {
     max-height: 600px;
-    padding: 1.5rem;
+    padding: 2rem;
     opacity: 1;
     pointer-events: auto;
-    width: 95%;
-    max-width: 1600px;
+    width: 70vw;
+    min-width: 70vw;
+    max-width: 90vw;
     transform: translateX(-50%) translateY(0);
 }
 
@@ -628,9 +651,11 @@
     gap: 2rem;
     width: 100%;
     max-width: 100%;
+    margin: 0;
     margin-bottom: 1.5rem;
     padding: 0;
     box-sizing: border-box;
+    align-items: stretch;
 }
 
 .resource-category-card {
@@ -640,14 +665,17 @@
     background: #ffffff;
     border: 2px solid #2563eb;
     border-radius: 8px;
-    padding: 2rem;
+    padding: 2.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 120px;
+    min-height: 150px;
     align-items: center;
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    user-select: none;
 }
 
 .resource-category-card:hover {
@@ -658,8 +686,15 @@
 
 .resource-category-card-checkbox {
     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     opacity: 0;
-    pointer-events: none;
+    cursor: pointer;
+    z-index: 1;
 }
 
 .resource-category-card-content {
@@ -668,11 +703,14 @@
     align-items: center;
     gap: 0.25rem;
     width: 100%;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .resource-category-card-title {
     display: block;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: #1e293b;
     margin: 0;
@@ -680,10 +718,11 @@
 
 .resource-category-card-count {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     color: #64748b;
     font-style: normal;
     margin: 0;
+    margin-top: 0.5rem;
 }
 
 .resource-category-card-checkbox:checked + .resource-category-card-content {
