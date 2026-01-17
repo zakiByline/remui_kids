@@ -204,6 +204,28 @@
     background: linear-gradient(135deg, #faf8ff 0%, #f0f4ff 50%, #fef7f0 100%);
     border: 1px solid #e8e5f3;
     border-radius: 16px;
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.tier-cards-container.expanded {
+    padding-bottom: 2rem;
+}
+
+.tier-cards-expanded-section {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+    margin-top: 1.5rem;
+    border-top: 2px solid #f0e8f7;
+}
+
+.tier-cards-container.expanded .tier-cards-expanded-section {
+    max-height: 1000px;
+    opacity: 1;
+    padding: 1.5rem 0 0 0;
 }
 
 .tier-cards-grid {
@@ -272,7 +294,7 @@
     border-radius: 0 25px 0 25px;
     position: relative;
     padding: 2rem 2rem 2rem 1.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
     cursor: pointer;
     min-width: 320px;
     max-width: 380px;
@@ -294,7 +316,6 @@
     border-right: 7px solid;
     border-top: 7px solid;
     border-radius: 0 25px 0 0;
-    background: #ffffff;
     transition: all 0.3s ease;
     z-index: 1;
 }
@@ -309,7 +330,6 @@
     border-left: 7px solid;
     border-bottom: 7px solid;
     border-radius: 0 0 0 25px;
-    background: #ffffff;
     transition: all 0.3s ease;
     z-index: 1;
 }
@@ -362,18 +382,22 @@
     box-shadow: 0 12px 32px rgba(184, 169, 217, 0.15);
     z-index: 9999;
     position: relative;
+    background: #ffffff;
 }
 
 .tier-card-1.active {
-    border-color: #dbeafe;
+    border-color: #3b82f6;
+    background: #eff6ff;
 }
 
 .tier-card-2.active {
-    border-color: #e9d5ff;
+    border-color: #a855f7;
+    background: #faf5ff;
 }
 
 .tier-card-3.active {
-    border-color: #dbeafe;
+    border-color: #3b82f6;
+    background: #eff6ff;
 }
 
 /* Card Content Layout - Horizontal with Icon, Divider, and Content */
@@ -486,24 +510,11 @@
 }
 
 /* Subsection Style - Appears Outside Card */
-.tier-cards-container {
-    position: relative;
-    overflow: visible;
-    width: 100%;
-}
-
-.tier-cards-grid {
-    position: relative;
-}
-
 .tier-card-subsection {
     position: absolute;
     top: calc(100% + 0.5rem);
-    left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    width: 70vw;
-    min-width: 70vw;
-    max-width: 90vw;
+    left: 0;
+    right: 0;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
@@ -514,61 +525,22 @@
     opacity: 0;
     z-index: 10000;
     box-shadow: 0 8px 24px rgba(184, 169, 217, 0.12);
+    transform: translateY(-10px);
     pointer-events: none;
-    box-sizing: border-box;
-}
-
-/* Center all subsections at the same position relative to container */
-.tier-cards-container {
-    position: relative;
-}
-
-@media (max-width: 768px) {
-    .tier-card-subsection {
-        width: 70vw;
-        min-width: 70vw;
-        max-width: 90vw;
-        left: 50% !important;
-        transform: translateX(-50%) translateY(-10px);
-    }
-    
-    .tier-card.active .tier-card-subsection {
-        width: 70vw;
-        min-width: 70vw;
-        max-width: 90vw;
-    }
-    
-    .resource-category-card {
-        padding: 1.5rem;
-        min-height: 120px;
-    }
-    
-    .resource-category-card-title {
-        font-size: 1.1rem;
-    }
-    
-    .resource-category-card-count {
-        font-size: 0.85rem;
-    }
 }
 
 .tier-card.active .tier-card-subsection {
     max-height: 600px;
-    padding: 2rem;
+    padding: 1.25rem;
     opacity: 1;
+    transform: translateY(0);
     pointer-events: auto;
-    width: 70vw;
-    min-width: 70vw;
-    max-width: 90vw;
-    transform: translateX(-50%) translateY(0);
 }
 
 .subsection-content {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    width: 100%;
-    max-width: 100%;
 }
 
 .subsection-link {
@@ -644,101 +616,327 @@
     box-shadow: 0 6px 20px rgba(184, 169, 217, 0.12);
 }
 
-/* Resource Category Cards - Horizontal Layout */
-.resource-category-cards-container {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
+/* Category Cards Grid - Horizontal Layout */
+.category-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
     width: 100%;
-    max-width: 100%;
-    margin: 0;
     margin-bottom: 1.5rem;
-    padding: 0;
-    box-sizing: border-box;
-    align-items: stretch;
 }
 
-.resource-category-card {
-    flex: 1;
+/* Course Cards Grid - Same format as category cards */
+.course-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Course cards use same styling as category cards */
+.course-card {
     position: relative;
-    display: flex;
     background: #ffffff;
-    border: 2px solid #2563eb;
-    border-radius: 8px;
-    padding: 2.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 150px;
+    border: none;
+    border-top: 3px dotted #dbeafe;
+    border-bottom: 3px dotted #dbeafe;
+    border-radius: 0 25px 0 25px;
+    padding: 2rem 2.5rem;
+    min-height: 120px;
+    min-width: 280px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    box-sizing: border-box;
-    width: 100%;
-    margin: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
 }
 
-.resource-category-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    border-color: #1d4ed8;
-}
-
-.resource-category-card-checkbox {
+.course-card::before {
+    content: '';
     position: absolute;
     top: 0;
+    right: 0;
+    width: 70px;
+    height: 70px;
+    border-top: 7px solid #dbeafe;
+    border-right: 7px solid #dbeafe;
+    border-radius: 0 25px 0 0;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.course-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
     left: 0;
+    width: 70px;
+    height: 70px;
+    border-left: 7px solid #dbeafe;
+    border-bottom: 7px solid #dbeafe;
+    border-radius: 0 0 0 25px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.course-card:hover {
+    border-top-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+    z-index: 10;
+    position: relative;
+}
+
+.course-card .category-card-label {
+    position: relative;
+    z-index: 10;
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 1;
 }
 
-.resource-category-card-content {
+.course-card:hover::before {
+    border-top-color: #3b82f6;
+    border-right-color: #3b82f6;
+    width: 75px;
+    height: 75px;
+}
+
+.course-card:hover::after {
+    border-left-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    width: 75px;
+    height: 75px;
+}
+
+.course-card.checked {
+    border-top-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.course-card.checked::before {
+    border-top-color: #3b82f6;
+    border-right-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.course-card.checked::after {
+    border-left-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: #eff6ff;
+}
+
+/* Course Category Header */
+.course-category-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.course-category-header:first-child {
+    margin-top: 0;
+}
+
+/* Course Category Separator */
+.course-category-separator {
+    height: 1px;
+    background: #e5e7eb;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+/* Resource Category Course Container */
+.resource-category-course-container {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    width: 100%;
-    position: relative;
-    z-index: 2;
-    pointer-events: none;
+    gap: 1.5rem;
 }
 
-.resource-category-card-title {
-    display: block;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0;
-}
-
-.resource-category-card-count {
-    display: block;
-    font-size: 0.95rem;
-    color: #64748b;
-    font-style: normal;
-    margin: 0;
+/* View Button Wrapper - Right Aligned */
+.resource-category-view-all-wrapper {
+    display: flex;
+    justify-content: flex-end;
     margin-top: 0.5rem;
 }
 
-.resource-category-card-checkbox:checked + .resource-category-card-content {
-    opacity: 0.7;
+/* View Button - Modern Design */
+.resource-category-view-all {
+    background: linear-gradient(135deg, #f8f3ff 0%, #f3f7ff 100%);
+    color: #000000 !important;
+    border: none;
+    padding: 0.75rem 3rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 180px;
+    justify-content: center;
 }
 
-.resource-category-card-checkbox:checked ~ .resource-category-card::before,
-.resource-category-card:has(.resource-category-card-checkbox:checked) {
-    background: #eff6ff;
-    border-color: #1d4ed8;
+.resource-category-view-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #f3f7ff 0%, #f8f3ff 100%);
+    color: #000000 !important;
 }
 
-.resource-category-card:has(.resource-category-card-checkbox:checked) {
+.resource-category-view-all:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    color: #000000 !important;
+}
+
+.category-card {
+    position: relative;
+    background: #ffffff;
+    border: none;
+    border: 3px dotted #dbeafe;
+    border-radius: 0 25px 0 25px;
+    padding: 2rem 1.5rem;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+/* Circular borders on top-right and bottom-left corners */
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 70px;
+    height: 70px;
+    border-top: 7px solid #dbeafe;
+    border-right: 7px solid #dbeafe;
+    border-radius: 0 25px 0 0;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.category-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    border-left: 7px solid #dbeafe;
+    border-bottom: 7px solid #dbeafe;
+    border-radius: 0 0 0 25px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.category-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.category-card:hover::before {
+    border-top-color: #3b82f6;
+    border-right-color: #3b82f6;
+    width: 75px;
+    height: 75px;
+}
+
+.category-card:hover::after {
+    border-left-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    width: 75px;
+    height: 75px;
+}
+
+.category-card-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.category-card-label {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    pointer-events: none;
+    position: relative;
+    z-index: 10;
+}
+
+.category-card-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    text-align: center;
+    pointer-events: none;
+    position: relative;
+    z-index: 10;
+    padding: 0.5rem;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.category-card-checkbox:checked ~ .category-card-label .category-card {
+    border-color: #3b82f6;
     background: #eff6ff;
-    border-color: #1d4ed8;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.category-card-checkbox:checked + .category-card-label {
+    color: #3b82f6;
+}
+
+.category-card-checkbox:checked + .category-card-label .category-card-name {
+    color: #3b82f6;
+    font-weight: 700;
+}
+
+/* Use JavaScript to add class when checked */
+.category-card.checked {
+    border-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.category-card.checked::before {
+    border-top-color: #3b82f6;
+    border-right-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.category-card.checked::after {
+    border-left-color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: #eff6ff;
 }
 
 /* Ensure content below tier cards has lower z-index */
@@ -1831,34 +2029,6 @@
                             <p class="tier-card-description">Organize your lesson plans and curriculum to create engaging educational content.</p>
                         </div>
                     </div>
-                    <!-- Planning Subsection -->
-                    <div class="tier-card-subsection" id="sub-tabs-planning-cards">
-                        <div class="subsection-content">
-                            <div class="resource-category-panel" aria-label="Resource categories">
-                                <div class="resource-category-cards-container">
-                                    {{#resource_categories}}
-                                    <label class="resource-category-card" data-category-id="{{id}}" data-category-name="{{name}}">
-                                        <input type="checkbox" data-category-id="{{id}}" data-courses='{{{courses_json}}}' class="resource-category-card-checkbox">
-                                        <div class="resource-category-card-content">
-                                            <strong class="resource-category-card-title">{{name}}</strong>
-                                            <em class="resource-category-card-count">{{courses_count}} courses</em>
-                                        </div>
-                                    </label>
-                                    {{/resource_categories}}
-                                    {{^resource_categories}}
-                                    <p class="resource-category-empty">No categories available yet. Visit the Teacher Resources page to sync your courses.</p>
-                                    {{/resource_categories}}
-                                </div>
-                                <div class="resource-category-course-container">
-                                    <div class="resource-category-course-header">Courses</div>
-                                    <div class="resource-category-course-items"></div>
-                                </div>
-                                <button type="button" class="resource-category-view-all" data-view-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
-                                    View
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Arrow Between Cards -->
@@ -1883,34 +2053,6 @@
                         <div class="tier-card-body">
                             <h3 class="tier-card-title">Teach</h3>
                             <p class="tier-card-description">Deliver lessons and share activities that help students learn confidently.</p>
-                        </div>
-                    </div>
-                    <!-- Teaching Subsection -->
-                    <div class="tier-card-subsection" id="sub-tabs-resources-cards">
-                        <div class="subsection-content">
-                            <div class="resource-category-panel" aria-label="Resource categories">
-                                <div class="resource-category-cards-container">
-                                    {{#resource_categories}}
-                                    <label class="resource-category-card" data-category-id="{{id}}" data-category-name="{{name}}">
-                                        <input type="checkbox" data-category-id="{{id}}" data-courses='{{{courses_json}}}' class="resource-category-card-checkbox">
-                                        <div class="resource-category-card-content">
-                                            <strong class="resource-category-card-title">{{name}}</strong>
-                                            <em class="resource-category-card-count">{{courses_count}} courses</em>
-                                        </div>
-                                    </label>
-                                    {{/resource_categories}}
-                                    {{^resource_categories}}
-                                    <p class="resource-category-empty">No categories available yet. Visit the Teacher Resources page to sync your courses.</p>
-                                    {{/resource_categories}}
-                                </div>
-                                <div class="resource-category-course-container">
-                                    <div class="resource-category-course-header">Courses</div>
-                                    <div class="resource-category-course-items"></div>
-                                </div>
-                                <button type="button" class="resource-category-view-all" data-view-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
-                                    View
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1939,33 +2081,30 @@
                             <p class="tier-card-description">Manage assignments and quizzes to track progress and provide feedback.</p>
                         </div>
                     </div>
-                    <!-- Assessments Subsection -->
-                    <div class="tier-card-subsection" id="sub-tabs-assessments-cards">
-                        <div class="subsection-content">
-                            <div class="resource-category-panel" aria-label="Resource categories">
-                                <div class="resource-category-cards-container">
-                                    {{#resource_categories}}
-                                    <label class="resource-category-card" data-category-id="{{id}}" data-category-name="{{name}}">
-                                        <input type="checkbox" data-category-id="{{id}}" data-courses='{{{courses_json}}}' class="resource-category-card-checkbox">
-                                        <div class="resource-category-card-content">
-                                            <strong class="resource-category-card-title">{{name}}</strong>
-                                            <em class="resource-category-card-count">{{courses_count}} courses</em>
-                                        </div>
-                                    </label>
-                                    {{/resource_categories}}
-                                    {{^resource_categories}}
-                                    <p class="resource-category-empty">No categories available yet. Visit the Teacher Resources page to sync your courses.</p>
-                                    {{/resource_categories}}
-                                </div>
-                                <div class="resource-category-course-container">
-                                    <div class="resource-category-course-header">Courses</div>
-                                    <div class="resource-category-course-items"></div>
-                                </div>
-                                <button type="button" class="resource-category-view-all" data-view-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
-                                    View
-                                </button>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            
+            <!-- Expanded Categories Section - Shows when any tier card is active -->
+            <div class="tier-cards-expanded-section" id="tier-cards-expanded">
+                <div class="category-cards-grid">
+                    {{#resource_categories}}
+                    <div class="category-card" data-category-id="{{id}}" data-category-name="{{name}}" data-courses='{{{courses_json}}}'>
+                        <input type="checkbox" class="category-card-checkbox" data-category-id="{{id}}" id="category-{{id}}">
+                        <label for="category-{{id}}" class="category-card-label">
+                            <span class="category-card-name">{{name}}</span>
+                        </label>
+                    </div>
+                    {{/resource_categories}}
+                    {{^resource_categories}}
+                    <p class="resource-category-empty">No categories available yet. Visit the Teacher Resources page to sync your courses.</p>
+                    {{/resource_categories}}
+                </div>
+                <div class="resource-category-course-container">
+                    <div class="resource-category-course-items"></div>
+                    <div class="resource-category-view-all-wrapper">
+                        <button type="button" class="resource-category-view-all" data-view-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
+                            View
+                        </button>
                     </div>
                 </div>
             </div>
@@ -5162,15 +5301,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Tier Cards Navigation Functionality - Expand/Collapse Subsections
+// Tier Cards Navigation Functionality - Expand/Collapse Container
 document.addEventListener('DOMContentLoaded', function() {
     const tierCards = document.querySelectorAll('.tier-card');
+    const tierCardsContainer = document.querySelector('.tier-cards-container');
+    const expandedSection = document.getElementById('tier-cards-expanded');
     
-    // Handle tier card clicks to expand/collapse subsections
+    function updateContainerExpansion() {
+        const hasActiveCard = Array.from(tierCards).some(card => card.classList.contains('active'));
+        if (hasActiveCard) {
+            tierCardsContainer.classList.add('expanded');
+        } else {
+            tierCardsContainer.classList.remove('expanded');
+        }
+    }
+    
+    // Handle tier card clicks to expand/collapse container
     tierCards.forEach(card => {
         card.addEventListener('click', function(e) {
-            // Don't toggle if clicking on a subsection link
-            if (e.target.closest('.subsection-link')) {
+            // Don't toggle if clicking inside expanded section
+            if (e.target.closest('.tier-cards-expanded-section')) {
                 return;
             }
             
@@ -5189,32 +5339,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.classList.remove('active');
             } else {
                 card.classList.add('active');
-                // Center the subsection relative to the container
-                setTimeout(() => {
-                    const subsection = card.querySelector('.tier-card-subsection');
-                    const container = document.querySelector('.tier-cards-container');
-                    if (subsection && container) {
-                        const containerRect = container.getBoundingClientRect();
-                        const containerCenter = containerRect.left + (containerRect.width / 2);
-                        const cardRect = card.getBoundingClientRect();
-                        const cardLeft = cardRect.left;
-                        const offsetFromCard = containerCenter - cardLeft;
-                        subsection.style.left = offsetFromCard + 'px';
-                        subsection.style.transform = 'translateX(-50%) translateY(0)';
-                    }
-                }, 10);
             }
+            
+            // Update container expansion
+            updateContainerExpansion();
         });
     });
     
     // Close card when clicking outside
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.tier-card')) {
-            tierCards.forEach(card => {
-                card.classList.remove('active');
-            });
+        // Don't close if clicking on tier cards or expanded section
+        if (e.target.closest('.tier-card') || e.target.closest('.tier-cards-expanded-section')) {
+            return;
         }
+        
+        // Don't close if clicking on category cards
+        if (e.target.closest('.category-card')) {
+            return;
+        }
+        
+        tierCards.forEach(card => {
+            card.classList.remove('active');
+        });
+        updateContainerExpansion();
     });
+    
+    // Prevent clicks inside expanded section from closing (but allow category card clicks)
+    if (expandedSection) {
+        expandedSection.addEventListener('click', function(e) {
+            // Only stop propagation if not clicking on a category card
+            if (!e.target.closest('.category-card')) {
+                e.stopPropagation();
+            }
+        });
+    }
 });
 
 // School Event Modal Functions
@@ -6082,44 +6240,40 @@ function updateReplyLikeUI(replyId, liked, likeCount) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Find all resource category panels in all tier card subsections
-    const resourcePanels = document.querySelectorAll('.resource-category-panel');
+    // Find the expanded section
+    const expandedSection = document.getElementById('tier-cards-expanded');
     
-    console.log('Found resource panels:', resourcePanels.length);
+    console.log('Found expanded section:', !!expandedSection);
     
-    if (resourcePanels.length === 0) {
-        console.warn('No resource category panels found in the page!');
+    if (!expandedSection) {
+        console.warn('No tier cards expanded section found in the page!');
         return;
     }
-    
-    // Prevent clicks inside panels from closing the card
-    resourcePanels.forEach(resourcePanel => {
-        resourcePanel.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
-    });
 
-    // Initialize functionality for each resource panel independently
-    resourcePanels.forEach((resourcePanel, index) => {
-        console.log('Initializing resource panel', index);
-        const courseItemsContainer = resourcePanel.querySelector('.resource-category-course-items');
-        const categoryCheckboxes = resourcePanel.querySelectorAll('.resource-category-card-checkbox');
-        const viewButton = resourcePanel.querySelector('.resource-category-view-all');
+    // Initialize functionality for the expanded section
+    (function() {
+        const subsection = expandedSection;
+        const index = 0;
+        console.log('Initializing subsection', index);
+        const courseItemsContainer = subsection.querySelector('.resource-category-course-items');
+        const categoryCheckboxes = subsection.querySelectorAll('.category-card-checkbox');
+        const viewButton = subsection.querySelector('.resource-category-view-all');
         const fallbackViewCourseUrl = '{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php';
         const viewCourseBaseUrl = (viewButton && viewButton.getAttribute('data-view-url')) || fallbackViewCourseUrl;
         
-        console.log('Panel', index, '- Categories found:', categoryCheckboxes.length, '- Container:', !!courseItemsContainer, '- View button:', !!viewButton);
+        console.log('Subsection', index, '- Categories found:', categoryCheckboxes.length, '- Container:', !!courseItemsContainer, '- View button:', !!viewButton);
 
         function renderSelectedCourses() {
             if (!courseItemsContainer) {
                 return;
             }
-            const selected = [];
+            // Collect categories with their courses
+            const selectedCategories = [];
             categoryCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
-                    const label = checkbox.closest('.resource-category-card');
-                    const name = label ? label.getAttribute('data-category-name') : '';
-                    const coursesData = checkbox.getAttribute('data-courses');
+                    const categoryCard = checkbox.closest('.category-card');
+                    const categoryName = categoryCard ? categoryCard.getAttribute('data-category-name') : '';
+                    const coursesData = categoryCard ? categoryCard.getAttribute('data-courses') : '';
                     let courses = [];
                     try {
                         courses = coursesData ? JSON.parse(coursesData) : [];
@@ -6127,47 +6281,81 @@ document.addEventListener('DOMContentLoaded', function() {
                         courses = [];
                     }
                     if (courses.length) {
-                        selected.push({ name, courses });
+                        selectedCategories.push({ name: categoryName, courses: courses });
                     }
                 }
             });
 
-            if (selected.length === 0) {
+            if (selectedCategories.length === 0) {
                 courseItemsContainer.innerHTML = '<p class="resource-category-courses-empty">Select a category to preview its courses.</p>';
                 return;
             }
 
             courseItemsContainer.innerHTML = '';
-            selected.forEach(category => {
-                const section = document.createElement('div');
-                section.className = 'resource-category-course-section';
-
-                const header = document.createElement('button');
-                header.type = 'button';
-                header.className = 'resource-category-course-section-header';
-                header.textContent = category.name;
-                header.addEventListener('click', () => {
-                    section.classList.toggle('open');
-                });
-                section.appendChild(header);
-
-                const dropdown = document.createElement('div');
-                dropdown.className = 'resource-category-course-dropdown';
+            
+            // Create a section for each selected category
+            selectedCategories.forEach(category => {
+                // Category header
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'course-category-header';
+                categoryHeader.textContent = category.name;
+                courseItemsContainer.appendChild(categoryHeader);
+                
+                // Separator line
+                const separator = document.createElement('div');
+                separator.className = 'course-category-separator';
+                courseItemsContainer.appendChild(separator);
+                
+                // Courses grid for this category
+                const coursesGrid = document.createElement('div');
+                coursesGrid.className = 'category-cards-grid course-cards-grid';
+                
                 category.courses.forEach(course => {
-                    const label = document.createElement('label');
-                    label.className = 'resource-course-select';
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'category-card course-card';
+                    courseCard.setAttribute('data-course-id', course.id);
+                    
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
+                    checkbox.className = 'category-card-checkbox course-card-checkbox';
                     checkbox.setAttribute('data-course-id', course.id);
-                    const span = document.createElement('span');
-                    span.textContent = course.name;
-                    label.appendChild(checkbox);
-                    label.appendChild(span);
-                    dropdown.appendChild(label);
+                    checkbox.id = 'course-' + course.id + '-' + category.name.replace(/\s+/g, '-');
+                    
+                    const label = document.createElement('label');
+                    label.className = 'category-card-label';
+                    label.setAttribute('for', checkbox.id);
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'category-card-name';
+                    nameSpan.textContent = course.name;
+                    
+                    label.appendChild(nameSpan);
+                    courseCard.appendChild(checkbox);
+                    courseCard.appendChild(label);
+                    coursesGrid.appendChild(courseCard);
+                    
+                    // Add click handler for course card
+                    courseCard.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        checkbox.checked = !checkbox.checked;
+                        if (checkbox.checked) {
+                            courseCard.classList.add('checked');
+                        } else {
+                            courseCard.classList.remove('checked');
+                        }
+                    });
+                    
+                    // Add change handler for checkbox
+                    checkbox.addEventListener('change', function() {
+                        if (checkbox.checked) {
+                            courseCard.classList.add('checked');
+                        } else {
+                            courseCard.classList.remove('checked');
+                        }
+                    });
                 });
-
-                section.appendChild(dropdown);
-                courseItemsContainer.appendChild(section);
+                
+                courseItemsContainer.appendChild(coursesGrid);
             });
         }
 
@@ -6186,10 +6374,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function collectSelectedCourseIds() {
             const ids = new Set();
-            if (!resourcePanel) {
+            if (!subsection) {
                 return [];
             }
-            const courseCheckboxes = resourcePanel.querySelectorAll('.resource-category-course-items input[type="checkbox"][data-course-id]');
+            const courseCheckboxes = subsection.querySelectorAll('.course-card-checkbox[data-course-id]');
             courseCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
                     const courseId = checkbox.getAttribute('data-course-id');
@@ -6209,6 +6397,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const params = new URLSearchParams();
                 selectedCategoryIds.forEach(id => params.append('categories[]', id));
                 selectedCourseIds.forEach(id => params.append('courses[]', id));
+                
+                // Get the active tier card (Plan/Teach/Assess) to pass as filter
+                const activeTierCard = document.querySelector('.tier-card.active');
+                if (activeTierCard) {
+                    const cardTab = activeTierCard.getAttribute('data-tab');
+                    if (cardTab === 'planning') {
+                        params.append('filter', 'plan');
+                    } else if (cardTab === 'resources') {
+                        params.append('filter', 'teach');
+                    } else if (cardTab === 'assessments') {
+                        params.append('filter', 'assess');
+                    }
+                }
+                
                 const query = params.toString();
                 let targetUrl = viewCourseBaseUrl;
                 if (query) {
@@ -6218,14 +6420,40 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Set up checkbox change handlers
+        // Set up checkbox change handlers and initialize checked state
         categoryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', renderSelectedCourses);
+            // Initialize checked state
+            const categoryCard = checkbox.closest('.category-card');
+            if (checkbox.checked) {
+                categoryCard.classList.add('checked');
+            }
+            
+            // Make the entire card clickable
+            categoryCard.addEventListener('click', function(e) {
+                // Prevent event from bubbling up to container
+                e.stopPropagation();
+                
+                // Toggle checkbox
+                checkbox.checked = !checkbox.checked;
+                
+                // Trigger change event
+                checkbox.dispatchEvent(new Event('change'));
+            });
+            
+            checkbox.addEventListener('change', function(e) {
+                e.stopPropagation();
+                if (checkbox.checked) {
+                    categoryCard.classList.add('checked');
+                } else {
+                    categoryCard.classList.remove('checked');
+                }
+                renderSelectedCourses();
+            });
         });
 
         // Initial render
         renderSelectedCourses();
-    });
+    })();
 });
 </script>
 
