@@ -126,9 +126,6 @@ $is_doubts = theme_remui_kids_sidebar_match($current_script, [
     'get_question_bank.php',
     'get_question_categories.php'
 ]);
-$is_community = theme_remui_kids_sidebar_match($current_script, [
-    'community.php'
-]);
 $is_emulators = theme_remui_kids_sidebar_match($current_script, [
     'emulators.php'
 ]);
@@ -157,6 +154,16 @@ $is_certificates = theme_remui_kids_sidebar_match($current_script, [
     'student_dashboard.php',
 ]) || (strpos($current_url, '/local/certificate_approval/') !== false);
 
+$is_ebooks = theme_remui_kids_sidebar_match($current_script, [
+    'ebooks.php',
+    'student_book.php',
+    'teacher_book.php',
+    'practice_book.php'
+]) || (strpos($current_url, '/theme/remui_kids/teacher/ebooks.php') !== false)
+   || (strpos($current_url, '/theme/remui_kids/teacher/student_book.php') !== false)
+   || (strpos($current_url, '/theme/remui_kids/teacher/teacher_book.php') !== false)
+   || (strpos($current_url, '/theme/remui_kids/teacher/practice_book.php') !== false);
+
 ?>
 
 <!-- Mobile Sidebar Toggle Button -->
@@ -174,164 +181,31 @@ $is_certificates = theme_remui_kids_sidebar_match($current_script, [
                 <li class="sidebar-item <?php echo $is_dashboard ? 'active' : ''; ?>">
                     <a href="<?php echo $CFG->wwwroot; ?>/my/" class="sidebar-link">
                         <i class="fa fa-th-large sidebar-icon"></i>
-                        <span class="sidebar-text">Teacher Dashboard</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_courses ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/teacher_courses.php" class="sidebar-link">
-                        <i class="fa fa-book sidebar-icon"></i>
-                        <span class="sidebar-text">My Courses</span>
+                        <span class="sidebar-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-item <?php echo $is_resources ? 'active' : ''; ?>">
                     <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/view_course.php" class="sidebar-link">
                         <i class="fa fa-folder-open sidebar-icon"></i>
-                        <span class="sidebar-text">Teacher Resources</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_lessons ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/lessonplan.php" class="sidebar-link">
-                        <i class="fa fa-file-alt sidebar-icon"></i>
-                        <span class="sidebar-text">Lesson Plan</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_schedule ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/schedule.php" class="sidebar-link">
-                        <i class="fa fa-calendar-alt sidebar-icon"></i>
-                        <span class="sidebar-text">My Schedule</span>
+                        <span class="sidebar-text">Resources</span>
                     </a>
                 </li>
             </ul>
         </div>
 
-        <!-- STUDENTS Section -->
+        <!-- E-BOOKS Section -->
         <div class="sidebar-section">
-            <h3 class="sidebar-category">STUDENTS</h3>
+            <h3 class="sidebar-category">E-BOOKS</h3>
             <ul class="sidebar-menu">
-                <li class="sidebar-item <?php echo $is_students ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/students.php" class="sidebar-link">
-                        <i class="fa fa-users sidebar-icon"></i>
-                        <span class="sidebar-text">All Students</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_doubts ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/pages/teacher_doubts.php" class="sidebar-link">
-                        <i class="fa fa-question-circle sidebar-icon"></i>
-                        <span class="sidebar-text">Student Queries</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_community ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/community.php" class="sidebar-link">
-                        <i class="fa fa-people-group sidebar-icon"></i>
-                        <span class="sidebar-text">Community</span>
+                <li class="sidebar-item <?php echo $is_ebooks ? 'active' : ''; ?>">
+                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/ebooks.php" class="sidebar-link">
+                        <i class="fa fa-book sidebar-icon"></i>
+                        <span class="sidebar-text">E-Books</span>
                     </a>
                 </li>
             </ul>
         </div>
 
-        <!-- ASSESSMENTS Section -->
-        <div class="sidebar-section">
-            <h3 class="sidebar-category">ASSESSMENTS</h3>
-            <ul class="sidebar-menu">
-                <li class="sidebar-item <?php echo $is_assignments ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/assignments.php" class="sidebar-link">
-                        <i class="fa fa-tasks sidebar-icon"></i>
-                        <span class="sidebar-text">Assignments</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_quizzes ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/quizzes.php" class="sidebar-link">
-                        <i class="fa fa-question-circle sidebar-icon"></i>
-                        <span class="sidebar-text">Quizzes</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_competencies ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/competencies.php" class="sidebar-link">
-                        <i class="fa fa-sitemap sidebar-icon"></i>
-                        <span class="sidebar-text">Competencies</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_rubrics ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/rubrics.php" class="sidebar-link">
-                        <i class="fa fa-list-alt sidebar-icon"></i>
-                        <span class="sidebar-text">Grade Rubrics</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_gradebook ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/gradebook.php" class="sidebar-link">
-                        <i class="fa fa-star sidebar-icon"></i>
-                        <span class="sidebar-text">Gradebook</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-         <!-- Tools Section -->
-         <div class="sidebar-section">
-            <h3 class="sidebar-category">TOOLS</h3>
-            <ul class="sidebar-menu">
-                <li class="sidebar-item <?php echo $is_emulators ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/emulators.php" class="sidebar-link">
-                        <i class="fa fa-rocket sidebar-icon"></i>
-                        <span class="sidebar-text">Emulators Hub</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_ebook ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/local/ebook/manage.php" class="sidebar-link">
-                        <i class="fa fa-book-reader sidebar-icon"></i>
-                        <span class="sidebar-text">E-Book Manage</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_certificates ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/local/certificate_approval/pages/teacher_dashboard.php" class="sidebar-link">
-                        <i class="fa fa-certificate sidebar-icon"></i>
-                        <span class="sidebar-text">Certificates</span>
-                    </a>
-                </li>
-                <?php
-                // Check for support videos
-                require_once($CFG->dirroot . '/theme/remui_kids/lib/support_helper.php');
-                $video_check = theme_remui_kids_check_support_videos('teachers');
-                $has_help_videos = $video_check['has_videos'];
-                if ($has_help_videos):
-                ?>
-                <li class="sidebar-item <?php echo $is_need_help ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/need_help.php" class="sidebar-link">
-                        <i class="fa fa-question-circle sidebar-icon"></i>
-                        <span class="sidebar-text">Need Help</span>
-                    </a>
-                </li>
-                <?php endif; ?>
-                <?php if ($role_switch_enabled): ?>
-                <li class="sidebar-item <?php echo $is_switchrole ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/local/teacherviewstudent/" class="sidebar-link <?php echo $is_switchrole ? 'active' : ''; ?>">
-                        <i class="fa fa-user-graduate sidebar-icon"></i>
-                        <span class="sidebar-text">Switch Role</span>
-                    </a>
-                </li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-
-        <!-- REPORTS Section -->
-        <div class="sidebar-section">
-            <h3 class="sidebar-category">REPORTS</h3>
-            <ul class="sidebar-menu">
-                <li class="sidebar-item <?php echo $is_activity_logs ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/activity_logs.php" class="sidebar-link">
-                        <i class="fa fa-chart-bar sidebar-icon"></i>
-                        <span class="sidebar-text">Activity Logs</span>
-                    </a>
-                </li>
-                <li class="sidebar-item <?php echo $is_reports ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/reports.php" class="sidebar-link">
-                        <i class="fa fa-file-alt sidebar-icon"></i>
-                        <span class="sidebar-text">Course and Student Reports</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
 </div>
 
