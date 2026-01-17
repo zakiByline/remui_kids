@@ -178,16 +178,10 @@ $is_ebooks = theme_remui_kids_sidebar_match($current_script, [
         <div class="sidebar-section">
             <h3 class="sidebar-category">DASHBOARD</h3>
             <ul class="sidebar-menu">
-                <li class="sidebar-item <?php echo $is_dashboard ? 'active' : ''; ?>">
-                    <a href="<?php echo $CFG->wwwroot; ?>/my/" class="sidebar-link">
-                        <i class="fa fa-th-large sidebar-icon"></i>
-                        <span class="sidebar-text">Dashboard</span>
-                    </a>
-                </li>
                 <li class="sidebar-item <?php echo $is_resources ? 'active' : ''; ?>">
                     <a href="<?php echo $CFG->wwwroot; ?>/theme/remui_kids/teacher/view_course.php" class="sidebar-link">
-                        <i class="fa fa-folder-open sidebar-icon"></i>
-                        <span class="sidebar-text">Resources</span>
+                    <i class="fa fa-th-large sidebar-icon"></i>
+                        <span class="sidebar-text">Dashboard</span>
                     </a>
                 </li>
             </ul>
