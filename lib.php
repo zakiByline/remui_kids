@@ -7369,6 +7369,102 @@ function theme_remui_kids_get_teacher_profile_data() {
 }
 
 /**
+ * Get the main (top-level) category for the provided course category ID.
+ *
+ * @param int|null $categoryid
+ * @return \stdClass|null
+ */
+function theme_remui_kids_get_main_course_category($categoryid) {
+    global $DB;
+
+    if (empty($categoryid)) {
+        return null;
+    }
+
+    $currentcat = $DB->get_record('course_categories', ['id' => $categoryid], 'id, parent, name', IGNORE_MISSING);
+    if (!$currentcat) {
+        return null;
+    }
+
+    while ($currentcat && $currentcat->parent != 0) {
+        $parentcat = $DB->get_record('course_categories', ['id' => $currentcat->parent], 'id, parent, name', IGNORE_MISSING);
+        if (!$parentcat) {
+            break;
+        }
+        $currentcat = $parentcat;
+    }
+
+    return $currentcat;
+}
+
+/**
+ * Return the teacher-facing categories (main categories plus matching courses) used on the dashboard.
+ *
+ * @return array
+ */
+function theme_remui_kids_get_teacher_resource_categories() {
+    global $USER, $DB;
+
+    $courses = enrol_get_all_users_courses($USER->id, true);
+    if (empty($courses)) {
+        return [];
+    }
+
+    $categorymap = [];
+
+    foreach ($courses as $course) {
+        if (empty($course->category) || $course->id <= 1 || empty($course->visible)) {
+            continue;
+        }
+
+        $hasHiddenSections = $DB->record_exists_select(
+            'course_sections',
+            'course = :course AND section > 0 AND visible = 0',
+            ['course' => $course->id]
+        );
+        if (!$hasHiddenSections) {
+            continue;
+        }
+
+        $maincategory = theme_remui_kids_get_main_course_category($course->category);
+        if (!$maincategory) {
+            continue;
+        }
+
+        $maincatid = $maincategory->id;
+        if (!isset($categorymap[$maincatid])) {
+            $categorymap[$maincatid] = [
+                'id' => $maincatid,
+                'name' => format_string($maincategory->name),
+                'courses' => []
+            ];
+        }
+
+        $categorymap[$maincatid]['courses'][$course->id] = [
+            'id' => $course->id,
+            'name' => format_string($course->fullname),
+            'shortname' => format_string($course->shortname)
+        ];
+    }
+
+    foreach ($categorymap as &$category) {
+        uasort($category['courses'], function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+        $category['courses'] = array_values($category['courses']);
+        $category['courses_count'] = count($category['courses']);
+        $category['courses_json'] = json_encode($category['courses'], JSON_HEX_APOS | JSON_HEX_QUOT);
+    }
+    unset($category);
+
+    uasort($categorymap, function ($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+
+    return array_values($categorymap);
+}
+
+/**
  * Get comprehensive course statistics for teacher dashboard charts
  *
  * @return array Array containing course statistics with chart data

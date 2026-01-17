@@ -700,7 +700,7 @@
     padding: 0.375rem 0.75rem;
     border-radius: 6px;
     background: #e9d5ff; /* Default lavender - will be overridden by inline style */
-    color: #1e293b;
+    color: white;
     white-space: nowrap;
     flex-shrink: 0;
     text-transform: capitalize;
@@ -1720,18 +1720,43 @@
                     </div>
                     <!-- Resources Subsection -->
                     <div class="tier-card-subsection" id="sub-tabs-resources-cards">
-                        <div class="subsection-content">
-                            <a href="{{config.wwwroot}}/theme/remui_kids/teacher/teacher_courses.php" class="subsection-link">
-                                <i class="fa fa-book"></i>
-                                <span>My Courses</span>
-                                <i class="fa fa-chevron-right subsection-arrow"></i>
-                            </a>
-                            <a href="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php" class="subsection-link">
+                    <div class="subsection-content">
+                        <a href="{{config.wwwroot}}/theme/remui_kids/teacher/teacher_courses.php" class="subsection-link">
+                            <i class="fa fa-book"></i>
+                            <span>My Courses</span>
+                            <i class="fa fa-chevron-right subsection-arrow"></i>
+                        </a>
+                        <div class="teacher-resources-link-wrapper" data-view-course-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
+                            <button type="button" class="subsection-link teacher-resources-trigger">
                                 <i class="fa fa-folder-open"></i>
                                 <span>Teacher Resources</span>
                                 <i class="fa fa-chevron-right subsection-arrow"></i>
-                            </a>
+                            </button>
+                            <div class="resource-category-panel" aria-label="Resource categories">
+                                <div class="resource-category-checkboxes">
+                                    {{#resource_categories}}
+                                    <label class="resource-category-checkbox" data-category-id="{{id}}" data-category-name="{{name}}">
+                                        <input type="checkbox" data-category-id="{{id}}" data-courses='{{{courses_json}}}'>
+                                        <span>
+                                            <strong>{{name}}</strong>
+                                            <em>{{courses_count}} courses</em>
+                                        </span>
+                                    </label>
+                                    {{/resource_categories}}
+                                    {{^resource_categories}}
+                                    <p class="resource-category-empty">No categories available yet. Visit the Teacher Resources page to sync your courses.</p>
+                                    {{/resource_categories}}
+                                </div>
+                                <div class="resource-category-course-container">
+                                    <div class="resource-category-course-header">Courses</div>
+                                    <div class="resource-category-course-items"></div>
+                                </div>
+                                <button type="button" class="resource-category-view-all" data-view-url="{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php">
+                                    View
+                                </button>
+                            </div>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -3460,7 +3485,7 @@ function convertColorNameToHex(color) {
     // Color name to hex mapping (matching School Admin dashboard)
     const colorMap = {
         'blue': '#3b82f6',
-        'green': '#10b981',
+        'green': '#3b82f6',
         'red': '#f87171',  // Lighter red shade
         'orange': '#f59e0b',
         'purple': '#8b5cf6',
@@ -3509,13 +3534,15 @@ function displayScheduleListView(events) {
     // Limit to 5 events only
     const limitedEvents = filteredEvents.slice(0, 5);
     
-    limitedEvents.forEach(event => {
+    const lectureColors = ['#3b82f6', '#8b5cf6'];
+    limitedEvents.forEach((event, index) => {
         const isLectureSession = event.lecture_session || event.event_type === 'lecture';
         const isAdminEvent = event.admin_event || event.event_type === 'admin_event' || (event.name && event.name.includes('🏫'));
         
         // Get event color from School Admin dashboard, default to lavender
         // Check multiple possible color property names
-        const colorValue = event.color || event.event_color || event.color_name || '';
+        const lectureColor = lectureColors[index % lectureColors.length];
+        const colorValue = isLectureSession ? lectureColor : (event.color || event.event_color || event.color_name || '');
         let eventColor = convertColorNameToHex(colorValue);
         
         // Check if lecture is marked as not available - use light grey if so
@@ -3872,6 +3899,8 @@ function loadMonthView() {
 function displayMonthView(events, year, month) {
     const calendarGrid = document.querySelector('.calendar-grid');
     if (!calendarGrid) return;
+
+    const lectureColors = ['#3b82f6', '#8b5cf6'];
     
     // Get month name
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -3958,7 +3987,8 @@ function displayMonthView(events, year, month) {
             dayEvents.forEach((event, index) => {
                 const isLectureSession = event.lecture_session || event.eventtype === 'lecture';
                 // Use event.color if available (for lecture sessions and admin events), otherwise use getEventColorByType
-                const colorValue = event.color || event.event_color || event.color_name || '';
+                const lectureColor = lectureColors[index % lectureColors.length];
+                const colorValue = isLectureSession ? lectureColor : (event.color || event.event_color || event.color_name || '');
                 const eventColor = colorValue ? convertColorNameToHex(colorValue) : getEventColorByType(event.eventtype);
                 
                 const eventDot = document.createElement('div');
@@ -4157,7 +4187,8 @@ function displayListView(events) {
             }
             
             // Get color from event.color property first, then fallback to event type
-            const colorValue = event.color || event.event_color || event.color_name || '';
+            const lectureColor = lectureColors[index % lectureColors.length];
+            const colorValue = isLectureSession ? lectureColor : (event.color || event.event_color || event.color_name || '');
             const eventColor = colorValue ? convertColorNameToHex(colorValue) : getEventColorByType(event.eventtype);
             eventItem.style.cssText = `
                 display: flex;
@@ -5875,6 +5906,153 @@ function updateReplyLikeUI(replyId, liked, likeCount) {
         }
     });
 }
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const teacherWrapper = document.querySelector('.teacher-resources-link-wrapper');
+    const teacherTrigger = teacherWrapper ? teacherWrapper.querySelector('.teacher-resources-trigger') : null;
+    const resourcePanel = teacherWrapper ? teacherWrapper.querySelector('.resource-category-panel') : null;
+    const courseItemsContainer = resourcePanel ? resourcePanel.querySelector('.resource-category-course-items') : null;
+    const categoryCheckboxes = resourcePanel ? resourcePanel.querySelectorAll('.resource-category-checkbox input') : [];
+    if (teacherTrigger && teacherWrapper) {
+        teacherTrigger.addEventListener('click', function(event) {
+            event.preventDefault();
+            teacherWrapper.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (teacherWrapper && !teacherWrapper.contains(event.target)) {
+                teacherWrapper.classList.remove('active');
+            }
+        });
+    }
+
+    if (resourcePanel) {
+        resourcePanel.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
+
+    function renderSelectedCourses() {
+        if (!courseItemsContainer) {
+            return;
+        }
+        const selected = [];
+        categoryCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const label = checkbox.closest('.resource-category-checkbox');
+                const name = label ? label.getAttribute('data-category-name') : '';
+                const coursesData = checkbox.getAttribute('data-courses');
+                let courses = [];
+                try {
+                    courses = coursesData ? JSON.parse(coursesData) : [];
+                } catch (error) {
+                    courses = [];
+                }
+                if (courses.length) {
+                    selected.push({ name, courses });
+                }
+            }
+        });
+
+        if (selected.length === 0) {
+            courseItemsContainer.innerHTML = '<p class="resource-category-courses-empty">Select a category to preview its courses.</p>';
+            return;
+        }
+
+        courseItemsContainer.innerHTML = '';
+        selected.forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'resource-category-course-section';
+
+            const header = document.createElement('button');
+            header.type = 'button';
+            header.className = 'resource-category-course-section-header';
+            header.textContent = category.name;
+            header.addEventListener('click', () => {
+                section.classList.toggle('open');
+            });
+            section.appendChild(header);
+
+            const dropdown = document.createElement('div');
+            dropdown.className = 'resource-category-course-dropdown';
+            category.courses.forEach(course => {
+                const label = document.createElement('label');
+                label.className = 'resource-course-select';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.setAttribute('data-course-id', course.id);
+                const span = document.createElement('span');
+                span.textContent = course.name;
+                label.appendChild(checkbox);
+                label.appendChild(span);
+                dropdown.appendChild(label);
+            });
+
+            section.appendChild(dropdown);
+            courseItemsContainer.appendChild(section);
+        });
+    }
+
+    function collectSelectedCategoryIds() {
+        const ids = new Set();
+        categoryCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const categoryId = checkbox.getAttribute('data-category-id');
+                if (categoryId) {
+                    ids.add(categoryId);
+                }
+            }
+        });
+        return Array.from(ids);
+    }
+
+    function collectSelectedCourseIds() {
+        const ids = new Set();
+        if (!resourcePanel) {
+            return [];
+        }
+        const courseCheckboxes = resourcePanel.querySelectorAll('.resource-category-course-items input[type="checkbox"][data-course-id]');
+        courseCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const courseId = checkbox.getAttribute('data-course-id');
+                if (courseId) {
+                    ids.add(courseId);
+                }
+            }
+        });
+        return Array.from(ids);
+    }
+
+    const viewButton = resourcePanel ? resourcePanel.querySelector('.resource-category-view-all') : null;
+    const fallbackViewCourseUrl = '{{config.wwwroot}}/theme/remui_kids/teacher/view_course.php';
+    const viewCourseBaseUrl = viewButton?.getAttribute('data-view-url') ||
+        teacherWrapper?.dataset?.viewCourseUrl ||
+        fallbackViewCourseUrl;
+
+    if (viewButton) {
+        viewButton.addEventListener('click', function() {
+            const selectedCategoryIds = collectSelectedCategoryIds();
+            const selectedCourseIds = collectSelectedCourseIds();
+            const params = new URLSearchParams();
+            selectedCategoryIds.forEach(id => params.append('categories[]', id));
+            selectedCourseIds.forEach(id => params.append('courses[]', id));
+            const query = params.toString();
+            let targetUrl = viewCourseBaseUrl;
+            if (query) {
+                targetUrl += (targetUrl.includes('?') ? '&' : '?') + query;
+            }
+            window.location.href = targetUrl;
+        });
+    }
+
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', renderSelectedCourses);
+    });
+
+    renderSelectedCourses();
+});
 </script>
 
 {{#footer}}

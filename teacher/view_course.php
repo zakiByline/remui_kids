@@ -3743,6 +3743,67 @@ echo $OUTPUT->header();
                                     }
                                 }
                                 echo '}';
+
+                                echo '    const urlSearchParams = new URLSearchParams(window.location.search);';
+                                echo '    const collectParamValues = function(paramNames) {';
+                                echo '        const values = new Set();';
+                                echo '        paramNames.forEach(function(name) {';
+                                echo '            urlSearchParams.getAll(name).forEach(function(value) {';
+                                echo '                if (value !== null && value !== undefined && value !== "") {';
+                                echo '                    values.add(value.toString());';
+                                echo '                }';
+                                echo '            });';
+                                echo '        });';
+                                echo '        return Array.from(values);';
+                                echo '    };';
+                                echo '    const preselectedCategoryIds = collectParamValues(["categories[]","categories","category"]);';
+                                echo '    const preselectedCourseIds = collectParamValues(["courses[]","courses","course"]);';
+                                echo '    if (categoryFilters && (preselectedCategoryIds.length > 0 || preselectedCourseIds.length > 0)) {';
+                                echo '        preselectedCategoryIds.forEach(function(catId) {';
+                                echo '            const trimmedId = catId.toString().trim();';
+                                echo '            if (trimmedId === "") {';
+                                echo '                return;';
+                                echo '            }';
+                                echo '            const checkbox = categoryFilters.querySelector("[data-filter-type=\\"category\\"][data-category-id=\\"" + trimmedId + "\\"]");';
+                                echo '            if (!checkbox) {';
+                                echo '                return;';
+                                echo '            }';
+                                echo '            checkbox.checked = true;';
+                                echo '            if (typeof toggleCategoryChildren === "function") {';
+                                echo '                toggleCategoryChildren(checkbox);';
+                                echo '            } else {';
+                                echo '                const parent = checkbox.closest(".filter-category-parent");';
+                                echo '                if (parent) {';
+                                echo '                    const childList = parent.querySelector(".filter-category-children");';
+                                echo '                    if (childList) {';
+                                echo '                        childList.style.display = "block";';
+                                echo '                    }';
+                                echo '                }';
+                                echo '            }';
+                                echo '        });';
+                                echo '        preselectedCourseIds.forEach(function(courseId) {';
+                                echo '            const trimmedId = courseId.toString().trim();';
+                                echo '            if (trimmedId === "") {';
+                                echo '                return;';
+                                echo '            }';
+                                echo '            const checkbox = categoryFilters.querySelector("[data-filter-type=\\"course\\"][data-course-id=\\"" + trimmedId + "\\"]");';
+                                echo '            if (!checkbox) {';
+                                echo '                return;';
+                                echo '            }';
+                                echo '            checkbox.checked = true;';
+                                echo '            const childList = checkbox.closest(".filter-category-children");';
+                                echo '            if (childList) {';
+                                echo '                childList.style.display = "block";';
+                                echo '            }';
+                                echo '        });';
+                                echo '        if (typeof updateSectionsAndFoldersFilters === "function") {';
+                                echo '            updateSectionsAndFoldersFilters();';
+                                echo '        }';
+                                echo '        if (typeof filterResources === "function") {';
+                                echo '            filterResources();';
+                                echo '        }';
+                                echo '    }';
+
                                 echo '});';
                                 echo '</script>';
                             }
@@ -6157,12 +6218,19 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         const allCards = document.querySelectorAll('.resource-card');
         if (allCards.length > 0) {
-            // Mark all cards as filtered initially
+            let totalFiltered = 0;
             allCards.forEach(card => {
-                card.setAttribute('data-filtered', 'true');
+                const filteredAttr = card.getAttribute('data-filtered');
+                if (filteredAttr === null) {
+                    card.setAttribute('data-filtered', 'true');
+                    totalFiltered++;
+                } else if (filteredAttr === 'true') {
+                    totalFiltered++;
+                }
             });
-            
-            const totalFiltered = allCards.length;
+            if (totalFiltered === 0) {
+                totalFiltered = allCards.length;
+            }
             updateResourcesCount(totalFiltered);
             applyPagination();
             updatePagination(totalFiltered);
