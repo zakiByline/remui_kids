@@ -257,9 +257,9 @@ if (empty($teacher_courses)) {
 // Page setup - use system context since we're showing resources from all courses
 $PAGE->set_context($context);
 $PAGE->set_url('/theme/remui_kids/teacher/teacher_resources.php');
-$PAGE->set_pagelayout('base'); // Use base layout to minimize Moodle UI
+$PAGE->set_pagelayout('base'); // Use base layout like competencies.php
 $PAGE->set_title('Teacher Resources');
-$PAGE->set_heading(''); // Remove default heading
+$PAGE->set_heading(''); // Remove default heading like competencies.php
 
 // Get ALL activities/resources that are hidden from students from ALL teacher courses
 $teacher_resources = []; // Activities hidden from students
@@ -477,15 +477,31 @@ echo $OUTPUT->header();
     display: none !important;
 }
 
-/* Ensure navbar and user menu dropdown are visible and clickable */
+/* Ensure navbar and all navigation elements are visible and clickable */
 .navbar,
 .navbar.fixed-top,
+.navbar .sub-nav {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
 .navbar .navbar-nav,
+.primary-navigation,
+.dashboard-nav-link,
+.mycourses-nav-link {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
 .navbar .navbar-nav .nav-item,
+.navbar .navbar-nav .nav-link,
 .navbar .dropdown-menu,
 .navbar .usermenu,
 .navbar .usermenu .dropdown-menu,
 .navbar .usermenu .dropdown-toggle,
+.primary-navigation .moremenu,
 [data-region="usermenu"],
 [data-region="usermenu"] .dropdown-menu,
 [data-region="usermenu"] .dropdown-toggle,
@@ -496,6 +512,8 @@ echo $OUTPUT->header();
 .navbar-nav .usermenu .dropdown-menu,
 .primary-navigation .usermenu,
 .primary-navigation .usermenu .dropdown-menu {
+    visibility: visible !important;
+    opacity: 1 !important;
     z-index: 1050 !important;
     position: relative !important;
 }
@@ -2986,27 +3004,26 @@ echo $OUTPUT->header();
 /* Course Cards Grid - Same format as category cards */
 .course-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     width: 100%;
     margin-bottom: 2rem;
 }
 
-/* Course cards - Light blue theme with dotted border */
+/* Course cards - Similar to category cards with grey border */
 .course-card {
     position: relative;
-    background: #e0f2fe;
-    border: 2px dotted #3b82f6;
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
-    min-height: 60px;
-    min-width: 200px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-height: 120px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     user-select: none;
     -webkit-user-select: none;
     overflow: visible;
@@ -3018,10 +3035,94 @@ echo $OUTPUT->header();
     display: none;
 }
 
+/* Course Card Icon - Color themes for different subjects */
+.course-card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+/* English - Pink theme */
+.course-card[data-course-name*="English" i] .course-card-icon,
+.course-card[data-course-name*="english" i] .course-card-icon {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+.course-card[data-course-name*="English" i],
+.course-card[data-course-name*="english" i] {
+    border-color: #fbcfe8;
+}
+
+.course-card[data-course-name*="English" i].checked,
+.course-card[data-course-name*="english" i].checked {
+    border: 3px solid #ec4899;
+    background: #fdf2f8;
+}
+
+.course-card[data-course-name*="English" i].checked .course-card-checkbox,
+.course-card[data-course-name*="english" i].checked .course-card-checkbox {
+    background: #ec4899 !important;
+    border-color: #ec4899 !important;
+}
+
+/* Maths - Blue theme */
+.course-card[data-course-name*="Math" i] .course-card-icon,
+.course-card[data-course-name*="math" i] .course-card-icon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.course-card[data-course-name*="Math" i],
+.course-card[data-course-name*="math" i] {
+    border-color: #bfdbfe;
+}
+
+.course-card[data-course-name*="Math" i].checked,
+.course-card[data-course-name*="math" i].checked {
+    border: 3px solid #2563eb;
+    background: #eff6ff;
+}
+
+.course-card[data-course-name*="Math" i].checked .course-card-checkbox,
+.course-card[data-course-name*="math" i].checked .course-card-checkbox {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Science - Green theme */
+.course-card[data-course-name*="Science" i] .course-card-icon,
+.course-card[data-course-name*="science" i] .course-card-icon {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.course-card[data-course-name*="Science" i],
+.course-card[data-course-name*="science" i] {
+    border-color: #a7f3d0;
+}
+
+.course-card[data-course-name*="Science" i].checked,
+.course-card[data-course-name*="science" i].checked {
+    border: 3px solid #059669;
+    background: #ecfdf5;
+}
+
+.course-card[data-course-name*="Science" i].checked .course-card-checkbox,
+.course-card[data-course-name*="science" i].checked .course-card-checkbox {
+    background: #059669 !important;
+    border-color: #059669 !important;
+}
+
 .course-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
-    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .course-card .category-card-label {
@@ -3030,18 +3131,27 @@ echo $OUTPUT->header();
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
 }
 
 .course-card .category-card-name {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.125rem;
+    font-weight: 700;
     color: #1e293b;
     margin: 0;
+    line-height: 1.3;
 }
 
-/* Course card checkbox - Blue theme instead of purple */
+.course-card .category-card-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+    display: block;
+}
+
+/* Course card checkbox - Default grey, changes based on subject when checked */
 .course-card .category-card-checkbox {
     position: absolute;
     top: 12px;
@@ -3065,11 +3175,6 @@ echo $OUTPUT->header();
     margin: 0;
 }
 
-.course-card .category-card-checkbox:checked {
-    background: #3b82f6 !important;
-    border-color: #3b82f6 !important;
-}
-
 .course-card .category-card-checkbox:checked::after {
     content: '\2713';
     color: #ffffff;
@@ -3079,8 +3184,7 @@ echo $OUTPUT->header();
 }
 
 .course-card.checked {
-    border-color: #3b82f6;
-    background: #dbeafe;
+    /* Border and background colors are set per subject above */
 }
 
 /* Course Category Header */
@@ -3835,13 +3939,6 @@ echo $OUTPUT->header();
                             </button>
                         </div>
                         
-                        <!-- Sections Filter Select -->
-                        <div class="sections-filter-wrapper" id="sectionsFilterSection">
-                            <select id="sectionsFilterSelect" class="filter-select-minimal" disabled onchange="handleSectionSelect(this); filterResources()">
-                                <option value="">All Sections</option>
-                                <!-- Will be populated by JavaScript -->
-                            </select>
-                        </div>
                         
                         <!-- Folders and Files Filter Select -->
                         <div class="folders-filter-wrapper" id="foldersFilterSection">
@@ -5517,6 +5614,10 @@ function updateSectionsAndFoldersFilters() {
             foldersFilterSelect.disabled = true;
             foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
         }
+        // Hide folders filter when no courses are selected
+        if (foldersFilterSection) {
+            foldersFilterSection.style.display = 'none';
+        }
         return;
     }
     
@@ -5525,19 +5626,52 @@ function updateSectionsAndFoldersFilters() {
         sectionsFilterCheckboxSection.style.display = 'block';
     }
     
-    // Enable dropdowns when courses are selected
-    if (sectionsFilterSelect) {
-        sectionsFilterSelect.disabled = false;
-    }
-    if (foldersFilterSelect) {
-        foldersFilterSelect.disabled = false;
+    // Get selected subsections from sidebar checkbox filter
+    const selectedSubsections = [];
+    if (sectionsFiltersList) {
+        sectionsFiltersList.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+            const sectionValue = checkbox.getAttribute('data-filter-value');
+            if (sectionValue) {
+                selectedSubsections.push(decodeHtmlEntities(sectionValue));
+            }
+        });
     }
     
-    // Get selected section from select dropdown
+    // Enable/disable folders filter based on subsection selection
+    // Keep it visible but disabled when no subsections are selected
+    if (foldersFilterSelect) {
+        if (selectedSubsections.length > 0) {
+            foldersFilterSelect.disabled = false;
+            if (foldersFilterSection) {
+                foldersFilterSection.style.display = 'block';
+            }
+        } else {
+            foldersFilterSelect.disabled = true;
+            foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
+            // Keep it visible but disabled - don't hide it completely
+            if (foldersFilterSection) {
+                foldersFilterSection.style.display = 'block';
+            }
+        }
+    }
+    
+    // Disable sections select dropdown (no longer used)
+    if (sectionsFilterSelect) {
+        sectionsFilterSelect.disabled = true;
+    }
+    
+    // Get selected section from select dropdown (for backward compatibility)
     const selectedSections = [];
     if (sectionsFilterSelect && sectionsFilterSelect.value) {
         selectedSections.push(sectionsFilterSelect.value);
     }
+    
+    // Also include selected subsections from checkbox filter
+    selectedSubsections.forEach(subsection => {
+        if (!selectedSections.includes(subsection)) {
+            selectedSections.push(subsection);
+        }
+    });
     
     // Collect sections from course structure (from window.courseSectionsData)
     const sectionsSet = new Set();
@@ -5782,12 +5916,25 @@ function updateSectionsAndFoldersFilters() {
                 const label = document.createElement('label');
                 label.className = 'filter-checkbox-label';
                 
+                // Extract only the subsection name (remove "Plan > ", "Teach > ", "Assess > " prefix)
+                let displaySection = section;
+                if (section.indexOf(' > ') !== -1) {
+                    // Get everything after " > " (the subsection name)
+                    const parts = section.split(' > ');
+                    if (parts.length > 1) {
+                        displaySection = parts.slice(1).join(' > '); // Join in case there are multiple " > " separators
+                    }
+                }
+                
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className = 'filter-checkbox';
                 checkbox.setAttribute('data-filter-type', 'section');
-                checkbox.setAttribute('data-filter-value', section);
-                checkbox.onchange = function() { filterResources(); };
+                checkbox.setAttribute('data-filter-value', section); // Keep original value for filtering
+                checkbox.onchange = function() { 
+                    updateSectionsAndFoldersFilters();
+                    filterResources(); 
+                };
                 
                 // Restore checked state if it was previously checked
                 if (checkedSections.has(section)) {
@@ -5795,116 +5942,103 @@ function updateSectionsAndFoldersFilters() {
                 }
                 
                 label.appendChild(checkbox);
-                label.appendChild(document.createTextNode(section));
+                label.appendChild(document.createTextNode(displaySection)); // Display only subsection name
                 li.appendChild(label);
                 sectionsFiltersList.appendChild(li);
             });
         }
     }
     
-    // Populate folders and files filter - show combined folders and files in select dropdown
+    // Populate folders and files filter - show only folders from selected subsections
     if (foldersFilterSelect) {
-        // Preserve the currently selected value
-        const currentSelectedValue = foldersFilterSelect.value;
-        
-        foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
-        const foldersSet = new Set();
-        
-        // Collect folders from selected courses and sections
-        if (selectedSections.length > 0) {
-            // If sections are selected, show folders from those sections
-            selectedSections.forEach(selectedSection => {
-                // Get folders from the selected section
-                if (foldersMap.has(selectedSection)) {
-                    foldersMap.get(selectedSection).forEach(folder => {
-                        foldersSet.add(decodeHtmlEntities(folder));
-                    });
+        // Only enable if subsections are selected from sidebar checkbox filter
+        const selectedSubsectionsFromCheckbox = [];
+        if (sectionsFiltersList) {
+            sectionsFiltersList.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const sectionValue = checkbox.getAttribute('data-filter-value');
+                if (sectionValue) {
+                    selectedSubsectionsFromCheckbox.push(decodeHtmlEntities(sectionValue));
                 }
-                
-                // Get folders from all subsections of the selected main section
-                foldersMap.forEach((folderSet, section) => {
-                    if (section.startsWith(selectedSection + ' > ')) {
-                        folderSet.forEach(folder => {
-                            foldersSet.add(decodeHtmlEntities(folder));
-                        });
-                    }
-                });
-                
-                // Get folders from main section folders map
-                if (mainSectionFoldersMap.has(selectedSection)) {
-                    mainSectionFoldersMap.get(selectedSection).forEach(folder => {
+            });
+        }
+        
+        // If no subsections selected, disable and clear the folders filter
+        if (selectedSubsectionsFromCheckbox.length === 0) {
+            foldersFilterSelect.disabled = true;
+            foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
+            // Keep it visible but disabled
+            if (foldersFilterSection) {
+                foldersFilterSection.style.display = 'block';
+            }
+        } else {
+            // Enable folders filter when subsections are selected
+            foldersFilterSelect.disabled = false;
+            if (foldersFilterSection) {
+                foldersFilterSection.style.display = 'block';
+            }
+            // Preserve the currently selected value
+            const currentSelectedValue = foldersFilterSelect.value;
+            
+            foldersFilterSelect.innerHTML = '<option value="">All Folders</option>';
+            const foldersSet = new Set();
+            
+            // Collect folders ONLY from the selected subsections
+            selectedSubsectionsFromCheckbox.forEach(selectedSubsection => {
+                // Get folders directly from the selected subsection
+                if (foldersMap.has(selectedSubsection)) {
+                    foldersMap.get(selectedSubsection).forEach(folder => {
                         foldersSet.add(decodeHtmlEntities(folder));
                     });
                 }
             });
-        } else {
-            // If no sections selected, show all folders from all sections
-            foldersMap.forEach((folderSet, section) => {
-                folderSet.forEach(folder => {
-                    foldersSet.add(folder);
-                });
+        
+            // Also collect from resource cards - only from selected subsections
+            allCards.forEach(card => {
+                const cardCourseId = parseInt(card.getAttribute('data-course-id')) || 0;
+                if (selectedCourseIds.includes(cardCourseId)) {
+                    const cardSection = decodeHtmlEntities(card.getAttribute('data-section') || '');
+                    const cardFolder = decodeHtmlEntities(card.getAttribute('data-folder-name') || '');
+                    
+                    // Add folder only if it matches one of the selected subsections
+                    if (cardFolder && cardFolder.trim() !== '') {
+                        if (cardSection && selectedSubsectionsFromCheckbox.includes(cardSection)) {
+                            foldersSet.add(cardFolder);
+                        }
+                    }
+                }
             });
             
-            mainSectionFoldersMap.forEach((folderSet, mainSection) => {
-                folderSet.forEach(folder => {
-                    foldersSet.add(folder);
-                });
+            // Sort folders and populate select
+            const foldersArray = Array.from(foldersSet).sort();
+            
+            // Add folders without emoji
+            foldersArray.forEach(folder => {
+                const option = document.createElement('option');
+                option.value = folder;
+                option.textContent = folder;
+                foldersFilterSelect.appendChild(option);
             });
-        }
-        
-        // Also collect from resource cards
-        allCards.forEach(card => {
-            const cardCourseId = parseInt(card.getAttribute('data-course-id')) || 0;
-            if (selectedCourseIds.includes(cardCourseId)) {
-                const cardSection = decodeHtmlEntities(card.getAttribute('data-section') || '');
-                const cardFolder = decodeHtmlEntities(card.getAttribute('data-folder-name') || '');
-                
-                // Add folder if it matches selected sections or no section selected
-                if (cardFolder && cardFolder.trim() !== '') {
-                    if (selectedSections.length === 0 || 
-                        (cardSection && (selectedSections.includes(cardSection) || cardSection.startsWith(selectedSections[0] + ' > ')))) {
-                        foldersSet.add(cardFolder);
-                    }
-                }
+            
+            // Show message if no folders found
+            if (foldersArray.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No folders found...';
+                option.disabled = true;
+                foldersFilterSelect.appendChild(option);
             }
-        });
-        
-        // Sort folders and populate select
-        const foldersArray = Array.from(foldersSet).sort();
-        
-        // Add folders without emoji
-        foldersArray.forEach(folder => {
-            const option = document.createElement('option');
-            option.value = folder;
-            option.textContent = folder;
-            foldersFilterSelect.appendChild(option);
-        });
-        
-        // Show message if no folders found
-        if (foldersArray.length === 0 && selectedCourseIds.length > 0) {
-            const option = document.createElement('option');
-            option.value = '';
-            option.textContent = 'No folders found...';
-            option.disabled = true;
-            foldersFilterSelect.appendChild(option);
-        }
-        
-        // Restore the selected value if it still exists in the new options
-        if (currentSelectedValue && Array.from(foldersFilterSelect.options).some(opt => opt.value === currentSelectedValue)) {
-            foldersFilterSelect.value = currentSelectedValue;
-        } else {
-            // If the previously selected value no longer exists, reset to "All Folders"
-            foldersFilterSelect.value = '';
+            
+            // Restore the selected value if it still exists in the new options
+            if (currentSelectedValue && Array.from(foldersFilterSelect.options).some(opt => opt.value === currentSelectedValue)) {
+                foldersFilterSelect.value = currentSelectedValue;
+            } else {
+                // If the previously selected value no longer exists, reset to "All Folders"
+                foldersFilterSelect.value = '';
+            }
         }
     }
     
-    // Always show filter sections in the new design
-    if (sectionsFilterSection) {
-        sectionsFilterSection.style.display = 'block';
-    }
-    if (foldersFilterSection) {
-        foldersFilterSection.style.display = 'block';
-    }
+    // Folders filter section visibility is already handled above based on subsection selection
 }
 
 // Toggle multi-select dropdown

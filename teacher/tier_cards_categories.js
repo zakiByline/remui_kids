@@ -153,14 +153,13 @@ function renderSelectedCourses() {
         return;
     }
     
-    // Collect categories with their courses
-    const selectedCategories = [];
+    // Collect all courses from all selected categories
+    const allCourses = [];
     const categoryCheckboxes = document.querySelectorAll('#categoryCardsGrid .category-card-checkbox');
     
     categoryCheckboxes.forEach(function(checkbox) {
         if (checkbox.checked) {
             const categoryCard = checkbox.closest('.category-card');
-            const categoryName = categoryCard ? categoryCard.getAttribute('data-category-name') : '';
             const coursesData = categoryCard ? categoryCard.getAttribute('data-courses') : '';
             let courses = [];
             try {
@@ -169,57 +168,146 @@ function renderSelectedCourses() {
                 courses = [];
             }
             if (courses.length > 0) {
-                selectedCategories.push({ name: categoryName, courses: courses });
+                allCourses.push(...courses);
             }
         }
     });
     
-    if (selectedCategories.length === 0) {
+    if (allCourses.length === 0) {
         courseItemsContainer.innerHTML = '<p class="resource-category-courses-empty">Select a category to preview its courses.</p>';
         coursesContainer.style.display = 'none';
         return;
     }
     
+    // Deduplicate courses by name (case-insensitive) but collect all course IDs for each name
+    const uniqueCoursesMap = new Map(); // courseNameLower -> { course, allIds: [...] }
+    allCourses.forEach(function(course) {
+        const courseNameLower = course.name.toLowerCase().trim();
+        if (!uniqueCoursesMap.has(courseNameLower)) {
+            // First time seeing this course name - store the course and its ID
+            uniqueCoursesMap.set(courseNameLower, {
+                course: course,
+                allIds: [course.id]
+            });
+        } else {
+            // Already seen this course name - add this ID to the list
+            const existing = uniqueCoursesMap.get(courseNameLower);
+            if (!existing.allIds.includes(course.id)) {
+                existing.allIds.push(course.id);
+            }
+            // If this course has a higher ID, prefer it as the representative course
+            if (existing.course.id < course.id) {
+                existing.course = course;
+            }
+        }
+    });
+    
+    // Convert map to array of course objects with allIds attached
+    const uniqueCourses = Array.from(uniqueCoursesMap.values()).map(function(item) {
+        return {
+            ...item.course,
+            allCourseIds: item.allIds // Store all course IDs that have this name
+        };
+    });
+    
     courseItemsContainer.innerHTML = '';
     coursesContainer.style.display = 'block';
     
-    // Create a section for each selected category
-    selectedCategories.forEach(function(category) {
-        // Category header
-        const categoryHeader = document.createElement('div');
-        categoryHeader.className = 'course-category-header';
-        categoryHeader.textContent = category.name;
-        courseItemsContainer.appendChild(categoryHeader);
-        
-        // Separator line
-        const separator = document.createElement('div');
-        separator.className = 'course-category-separator';
-        courseItemsContainer.appendChild(separator);
-        
-        // Courses grid for this category
-        const coursesGrid = document.createElement('div');
-        coursesGrid.className = 'category-cards-grid course-cards-grid';
-        
-        category.courses.forEach(function(course) {
+    // Create a single grid for all unique courses (no category grouping)
+    const coursesGrid = document.createElement('div');
+    coursesGrid.className = 'category-cards-grid course-cards-grid';
+    
+    uniqueCourses.forEach(function(course) {
             const courseCard = document.createElement('div');
             courseCard.className = 'category-card course-card';
             courseCard.setAttribute('data-course-id', course.id);
+            courseCard.setAttribute('data-course-name', course.name);
+            // Store all course IDs with the same name for syncing
+            if (course.allCourseIds && course.allCourseIds.length > 0) {
+                courseCard.setAttribute('data-all-course-ids', JSON.stringify(course.allCourseIds));
+            } else {
+                courseCard.setAttribute('data-all-course-ids', JSON.stringify([course.id]));
+            }
             
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.className = 'category-card-checkbox course-card-checkbox';
-            checkbox.setAttribute('data-course-id', course.id);
-            checkbox.id = 'tier-course-' + course.id + '-' + category.name.replace(/\s+/g, '-');
+            // Determine icon and description based on course name
+            let iconClass = 'fa-book';
+            let description = '';
+            const courseNameLower = course.name.toLowerCase();
             
-            const label = document.createElement('label');
-            label.className = 'category-card-label';
-            label.setAttribute('for', checkbox.id);
+            if (courseNameLower.includes('english') || courseNameLower.includes('language')) {
+                iconClass = 'fa-book';
+                description = 'Reading, writing, phonics, and language arts';
+            } else if (courseNameLower.includes('math') || courseNameLower.includes('mathematics')) {
+                iconClass = 'fa-calculator';
+                description = 'Numbers, counting, shapes, and problem solving';
+            } else if (courseNameLower.includes('science')) {
+                iconClass = 'fa-flask';
+                description = 'Nature, experiments, and exploring the world';
+            }
+            
+            // Create icon
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'category-card-icon course-card-icon';
+            const icon = document.createElement('i');
+            icon.className = 'fa ' + iconClass;
+            iconDiv.appendChild(icon);
+            
+            // Create content wrapper
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'category-card-content';
             
             const nameSpan = document.createElement('span');
             nameSpan.className = 'category-card-name';
             nameSpan.textContent = course.name;
             
-            label.appendChild(nameSpan);
+            if (description) {
+                const descSpan = document.createElement('span');
+                descSpan.className = 'category-card-description';
+                descSpan.textContent = description;
+                contentDiv.appendChild(nameSpan);
+                contentDiv.appendChild(descSpan);
+            } else {
+                contentDiv.appendChild(nameSpan);
+            }
+            
+            // Create label
+            const label = document.createElement('label');
+            label.className = 'category-card-label';
+            label.appendChild(iconDiv);
+            label.appendChild(contentDiv);
+            
+            // Create checkbox
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'category-card-checkbox course-card-checkbox';
+            checkbox.setAttribute('data-course-id', course.id);
+            checkbox.id = 'tier-course-' + course.id;
+            
+            // Check if any course with this name is already selected in sidebar
+            const allCourseIds = courseCard.getAttribute('data-all-course-ids');
+            let idsToCheck = [course.id];
+            if (allCourseIds) {
+                try {
+                    idsToCheck = JSON.parse(allCourseIds);
+                } catch (e) {
+                    idsToCheck = [course.id];
+                }
+            }
+            
+            // If any of the courses with this name are checked in sidebar, check this card
+            let isChecked = false;
+            idsToCheck.forEach(function(courseId) {
+                const sidebarCheckbox = document.querySelector('#categoryFilters input[data-course-id="' + courseId + '"]');
+                if (sidebarCheckbox && sidebarCheckbox.checked) {
+                    isChecked = true;
+                }
+            });
+            
+            if (isChecked) {
+                checkbox.checked = true;
+                courseCard.classList.add('checked');
+            }
+            
             courseCard.appendChild(checkbox);
             courseCard.appendChild(label);
             
@@ -233,11 +321,24 @@ function renderSelectedCourses() {
                     courseCard.classList.remove('checked');
                 }
                 
-                // Sync with sidebar course filter
-                const sidebarCheckbox = document.querySelector('#categoryFilters input[data-course-id="' + course.id + '"]');
-                if (sidebarCheckbox) {
-                    sidebarCheckbox.checked = checkbox.checked;
+                // Sync with sidebar course filter - check all checkboxes with the same course name
+                // This ensures that if "English" exists in multiple categories with different IDs, all are synced
+                const allCourseIds = courseCard.getAttribute('data-all-course-ids');
+                let idsToSync = [course.id];
+                if (allCourseIds) {
+                    try {
+                        idsToSync = JSON.parse(allCourseIds);
+                    } catch (e) {
+                        idsToSync = [course.id];
+                    }
                 }
+                
+                // Sync all checkboxes with any of the course IDs that have this name
+                idsToSync.forEach(function(courseId) {
+                    document.querySelectorAll('#categoryFilters input[data-course-id="' + courseId + '"]').forEach(function(sidebarCheckbox) {
+                        sidebarCheckbox.checked = checkbox.checked;
+                    });
+                });
                 
                 // Trigger filter update
                 if (typeof updateSectionsAndFoldersFilters === 'function') {
@@ -249,10 +350,10 @@ function renderSelectedCourses() {
             });
             
             coursesGrid.appendChild(courseCard);
-        });
-        
-        courseItemsContainer.appendChild(coursesGrid);
     });
+    
+    // Append the single grid to container (no category headers/separators)
+    courseItemsContainer.appendChild(coursesGrid);
 }
 
 // Sync sidebar category changes to tier card categories
