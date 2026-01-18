@@ -81,6 +81,8 @@ $selected_category = optional_param('category', '', PARAM_TEXT);
 $selected_level = optional_param('level', '', PARAM_TEXT);
 $selected_subject = optional_param('subject', '', PARAM_TEXT);
 $selected_book_type = optional_param('book_type', '', PARAM_TEXT);
+$page = optional_param('page', 1, PARAM_INT); // Current page number
+$per_page = 20; // Books per page
 
 // Parse multiple levels and subjects if passed as arrays
 $selected_levels = [];
@@ -153,11 +155,28 @@ if (!empty($selected_subjects)) {
     $sql_params['subject'] = $selected_subject;
 }
 
-
+// Only fetch books if at least one filter is selected
+$total_books = 0;
+$total_pages = 0;
 if ($has_filters && !empty($sql_conditions)) {
+    // First, get total count
+    $count_sql = "SELECT COUNT(*) FROM {theme_remui_kids_books}";
+    $count_sql .= " WHERE " . implode(" AND ", $sql_conditions);
+    $total_books = $DB->count_records_sql($count_sql, $sql_params);
+    $total_pages = $total_books > 0 ? ceil($total_books / $per_page) : 0;
+    
+    // Ensure page is within valid range
+    if ($page < 1) $page = 1;
+    if ($total_pages > 0 && $page > $total_pages) $page = $total_pages;
+    
+    // Calculate offset
+    $offset = ($page - 1) * $per_page;
+    
+    // Fetch books with pagination
     $sql = "SELECT * FROM {theme_remui_kids_books}";
     $sql .= " WHERE " . implode(" AND ", $sql_conditions);
     $sql .= " ORDER BY timecreated DESC";
+    $sql .= " LIMIT " . (int)$per_page . " OFFSET " . (int)$offset;
     
     // Execute query to get books matching all selected filters
     $books = $DB->get_records_sql($sql, $sql_params);
@@ -216,6 +235,13 @@ echo $OUTPUT->header();
             <?php include(__DIR__ . '/includes/sidebar.php'); ?>
 
             <div class="main-content">
+                <!-- Page Header -->
+                <div class="ebooks-page-header">
+                    <div class="container">
+                        <h1 class="page-title">E-books</h1>
+                    </div>
+                </div>
+
                 <!-- Filter Cards Section -->
                 <div class="ebooks-filter-section">
                     <!-- SELECT LEVELS (Multiple Selection) -->
@@ -350,9 +376,8 @@ echo $OUTPUT->header();
                 </div>
 
 
-                <!-- Books Display Grid - Only show when filters are applied -->
-                <?php if ($has_filters): ?>
-                <div class="books-grid-section">
+                <!-- Books Display Grid - Always present, shown/hidden via JavaScript -->
+                <div class="books-grid-section" style="<?php echo $has_filters ? '' : 'display: none;'; ?>">
                     <h3 class="section-title">Books Available</h3>
                     <div class="books-grid" id="booksGrid">
                         <?php if (empty($books)): ?>
@@ -426,8 +451,52 @@ echo $OUTPUT->header();
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
+                    
+                    <!-- Pagination Controls -->
+                    <?php if ($has_filters && $total_pages > 1): ?>
+                    <div class="pagination-container" id="paginationContainer">
+                        <div class="pagination">
+                            <button type="button" class="pagination-btn pagination-prev" <?php echo $page <= 1 ? 'disabled' : ''; ?> data-page="<?php echo $page - 1; ?>">
+                                <i class="fa fa-chevron-left"></i> Previous
+                            </button>
+                            
+                            <div class="pagination-pages">
+                                <?php
+                                // Show page numbers (max 5 visible at a time)
+                                $start_page = max(1, $page - 2);
+                                $end_page = min($total_pages, $page + 2);
+                                
+                                if ($start_page > 1): ?>
+                                    <button type="button" class="pagination-page" data-page="1">1</button>
+                                    <?php if ($start_page > 2): ?>
+                                        <span class="pagination-ellipsis">...</span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                
+                                <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                    <button type="button" class="pagination-page <?php echo $i == $page ? 'active' : ''; ?>" data-page="<?php echo $i; ?>">
+                                        <?php echo $i; ?>
+                                    </button>
+                                <?php endfor; ?>
+                                
+                                <?php if ($end_page < $total_pages): ?>
+                                    <?php if ($end_page < $total_pages - 1): ?>
+                                        <span class="pagination-ellipsis">...</span>
+                                    <?php endif; ?>
+                                    <button type="button" class="pagination-page" data-page="<?php echo $total_pages; ?>"><?php echo $total_pages; ?></button>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <button type="button" class="pagination-btn pagination-next" <?php echo $page >= $total_pages ? 'disabled' : ''; ?> data-page="<?php echo $page + 1; ?>">
+                                Next <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="pagination-info">
+                            Showing <?php echo count($books); ?> of <?php echo $total_books; ?> books (Page <?php echo $page; ?> of <?php echo $total_pages; ?>)
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -726,18 +795,23 @@ body {
 /* Page Header - Clean Style */
 .ebooks-page-header {
     background: white;
-    padding: 30px 0;
+    padding: 15px 0;
     margin: 0 0 30px 0 !important;
     border-bottom: 1px solid #e9ecef;
     width: 100% !important;
     max-width: 100% !important;
 }
 
+.ebooks-page-header .container {
+    max-width: 100%;
+    padding: 0 15px;
+}
+
 .ebooks-page-header .page-title {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #1e40af;
-    margin: 0 0 10px 0;
+    margin: 0;
     line-height: 1.2;
 }
 
@@ -1173,6 +1247,184 @@ body {
 
 .books-grid-section {
     margin-top: 30px;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.pagination-btn {
+    padding: 10px 18px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-page {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-page:hover:not(.active) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.pagination-page.active {
+    background: #4361ee;
+    color: white;
+    border-color: #4361ee;
+    cursor: default;
+}
+
+.pagination-ellipsis {
+    padding: 0 8px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.pagination-info {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.pagination-btn {
+    padding: 10px 18px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-page {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-page:hover:not(.active) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.pagination-page.active {
+    background: #4361ee;
+    color: white;
+    border-color: #4361ee;
+    cursor: default;
+}
+
+.pagination-ellipsis {
+    padding: 0 8px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.pagination-info {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 10px;
 }
 
 .section-title {
@@ -1893,7 +2145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update filter visibility and filter books
                 updateFilterVisibility();
-                filterBooks();
+                filterBooks(true);
             }
         });
     });
@@ -1951,7 +2203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update filter visibility and filter books
                 updateFilterVisibility();
-                filterBooks();
+                filterBooks(true);
             }
         });
     });
@@ -2202,7 +2454,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFilterVisibility();
     
     // Function to filter books dynamically via AJAX
-    function filterBooks() {
+    function filterBooks(resetPage = false) {
         const selectedLevels = [];
         document.querySelectorAll('#levelFilterCards input[type="checkbox"]:checked').forEach(cb => {
             selectedLevels.push(cb.value);
@@ -2228,13 +2480,50 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Show books section
-        const booksSection = document.querySelector('.books-grid-section');
-        if (booksSection) {
-            booksSection.style.display = 'block';
+        // Show books section immediately
+        // Ensure books section exists, create if it doesn't
+        let booksSection = document.querySelector('.books-grid-section');
+        if (!booksSection) {
+            // Create books section if it doesn't exist
+            booksSection = document.createElement('div');
+            booksSection.className = 'books-grid-section';
+            booksSection.innerHTML = '<h3 class="section-title">Books Available</h3><div class="books-grid" id="booksGrid"></div>';
+            // Insert after the filter sections or before the end of main content
+            const filterBoxes = document.querySelector('.filter-boxes') || document.querySelector('.ebooks-filter-section');
+            if (filterBoxes && filterBoxes.parentNode) {
+                filterBoxes.parentNode.insertBefore(booksSection, filterBoxes.nextSibling);
+            } else {
+                const mainContent = document.querySelector('.main-content') || document.querySelector('.ebooks-content');
+                if (mainContent) {
+                    mainContent.appendChild(booksSection);
+                }
+            }
         }
         
-        // Build URL with filters
+        // Show books section immediately
+        booksSection.style.display = 'block';
+        // Scroll to books section smoothly
+        setTimeout(() => {
+            booksSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+        
+        // Get or create booksGrid element
+        let booksGrid = document.getElementById('booksGrid');
+        if (!booksGrid) {
+            booksGrid = booksSection.querySelector('.books-grid');
+            if (!booksGrid) {
+                booksGrid = document.createElement('div');
+                booksGrid.className = 'books-grid';
+                booksGrid.id = 'booksGrid';
+                booksSection.appendChild(booksGrid);
+            }
+        }
+        
+        // Get current page - reset to 1 when filters change, keep current when paginating
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentPage = resetPage ? 1 : (parseInt(urlParams.get('page')) || 1);
+        
+        // Build URL with filters and pagination
         const url = new URL(window.location.origin + window.location.pathname);
         selectedLevels.forEach(level => {
             url.searchParams.append('levels[]', level);
@@ -2245,12 +2534,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (bookType) {
             url.searchParams.set('book_type', bookType);
         }
+        url.searchParams.set('page', currentPage);
         
         // Show loading state
-        const booksGrid = document.getElementById('booksGrid');
-        if (booksGrid) {
-            booksGrid.innerHTML = '<div class="no-books"><i class="fa fa-spinner fa-spin fa-3x"></i><p>Loading books...</p></div>';
-        }
+        booksGrid.innerHTML = '<div class="no-books"><i class="fa fa-spinner fa-spin fa-3x"></i><p>Loading books...</p></div>';
         
         // Fetch books via AJAX
         fetch(url.toString())
@@ -2264,13 +2551,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (newBooksGrid && booksGrid) {
                     booksGrid.innerHTML = newBooksGrid.innerHTML;
                     
+                    // Update pagination controls
+                    const newPagination = doc.getElementById('paginationContainer');
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    if (newPagination && paginationContainer) {
+                        paginationContainer.innerHTML = newPagination.innerHTML;
+                        attachPaginationListeners();
+                    } else if (newPagination) {
+                        const paginationDiv = document.createElement('div');
+                        paginationDiv.id = 'paginationContainer';
+                        paginationDiv.className = 'pagination-container';
+                        paginationDiv.innerHTML = newPagination.innerHTML;
+                        booksSection.appendChild(paginationDiv);
+                        attachPaginationListeners();
+                    } else if (paginationContainer) {
+                        paginationContainer.remove();
+                    }
+                    
                     // Re-attach event listeners for view buttons after AJAX update
-                    attachBookViewerListeners();
+                    if (typeof attachBookViewerListeners === 'function') {
+                        attachBookViewerListeners();
+                    }
                     
                     // Handle image errors after AJAX update
                     setTimeout(() => {
-                        handleImageErrors();
+                        if (typeof handleImageErrors === 'function') {
+                            handleImageErrors();
+                        }
                     }, 100);
+                } else if (booksGrid) {
+                    // If no books found in response, show empty state
+                    booksGrid.innerHTML = '<div class="no-books"><i class="fa fa-book-open fa-3x"></i><p>No books found matching the selected filters.</p></div>';
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    if (paginationContainer) {
+                        paginationContainer.remove();
+                    }
                 }
             })
             .catch(error => {
@@ -2353,10 +2668,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update filter visibility and filter books
                 updateFilterVisibility();
-                filterBooks();
+                filterBooks(true);
             }
         });
     });
+    
+    // Initialize: If filters are present in URL on page load, show books immediately
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasFiltersOnLoad = urlParams.has('levels[]') || urlParams.has('subjects[]') || urlParams.has('book_type') || 
+                             Array.from(urlParams.keys()).some(key => key.startsWith('levels[') || key.startsWith('subjects['));
+    if (hasFiltersOnLoad) {
+        // Show books section immediately on page load with filters
+        const booksSection = document.querySelector('.books-grid-section');
+        if (booksSection) {
+            booksSection.style.display = 'block';
+        }
+        // Load books based on URL parameters immediately
+        filterBooks(false);
+    }
+    
+    // Pagination event handlers
+    function attachPaginationListeners() {
+        document.querySelectorAll('.pagination-btn, .pagination-page').forEach(btn => {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.disabled || this.classList.contains('active')) return;
+                
+                const page = parseInt(this.getAttribute('data-page'));
+                if (page && page > 0) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('page', page);
+                    history.pushState({}, '', url.toString());
+                    filterBooks(false);
+                    const booksSection = document.querySelector('.books-grid-section');
+                    if (booksSection) {
+                        booksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    }
+    
+    // Attach pagination listeners on page load
+    attachPaginationListeners();
 });
 
 // Cover image preview
