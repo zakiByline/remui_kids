@@ -36,6 +36,15 @@ function populateTierCardCategories() {
             } else if (categoryNameLower.includes('level 3')) {
                 iconClass = 'fa-graduation-cap';
                 description = 'Advanced concepts and school readiness';
+            } else if (categoryNameLower.includes('foundation')) {
+                iconClass = 'fa-graduation-cap';
+                description = 'Grade 1 to 5';
+            } else if (categoryNameLower.includes('intermediate')) {
+                iconClass = 'fa-graduation-cap';
+                description = 'Grade 6-8';
+            } else if (categoryNameLower.includes('advanced')) {
+                iconClass = 'fa-graduation-cap';
+                description = 'Grade 9-12';
             }
             
             // Create icon
@@ -243,6 +252,17 @@ function renderSelectedCourses() {
             } else if (courseNameLower.includes('science')) {
                 iconClass = 'fa-flask';
                 description = 'Nature, experiments, and exploring the world';
+            } else if (courseNameLower.includes('grade')) {
+                // Grade cards use graduation cap icon
+                iconClass = 'fa-graduation-cap';
+                // Extract grade number for description
+                const gradeMatch = courseNameLower.match(/grade\s*(\d+)/);
+                if (gradeMatch) {
+                    const gradeNum = parseInt(gradeMatch[1]);
+                    description = 'Grade ' + gradeNum;
+                } else {
+                    description = '';
+                }
             }
             
             // Create icon

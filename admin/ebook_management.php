@@ -47,6 +47,38 @@ $PAGE->set_title('E-Book Management');
 $PAGE->set_heading('');
 $PAGE->set_pagelayout('standard');
 
+// Check if Foundation/Intermediate/Advanced categories exist in the system
+// Get all course categories to check for Foundation/Intermediate/Advanced
+$has_foundation_categories = false;
+
+// Get all category IDs from all courses
+$category_sql = "SELECT DISTINCT c.category
+                 FROM {course} c
+                 WHERE c.id != 1
+                 AND c.visible = 1";
+
+$all_category_ids = $DB->get_fieldset_sql($category_sql);
+
+// Check if any category names match Foundation, Intermediate, or Advanced
+if (!empty($all_category_ids)) {
+    list($cat_insql, $cat_params) = $DB->get_in_or_equal($all_category_ids, SQL_PARAMS_NAMED, 'cat');
+    $category_names_sql = "SELECT DISTINCT LOWER(name) as name_lower
+                           FROM {course_categories}
+                           WHERE id {$cat_insql}";
+    $category_names = $DB->get_fieldset_sql($category_names_sql, $cat_params);
+    
+    // Check if Foundation, Intermediate, or Advanced exists (case-insensitive)
+    $foundation_keywords = ['foundation', 'intermediate', 'advanced'];
+    foreach ($category_names as $cat_name) {
+        foreach ($foundation_keywords as $keyword) {
+            if (strpos($cat_name, $keyword) !== false) {
+                $has_foundation_categories = true;
+                break 2; // Break both loops
+            }
+        }
+    }
+}
+
 // Get filter parameters
 $selected_level = optional_param('level', '', PARAM_TEXT);
 $selected_subject = optional_param('subject', '', PARAM_TEXT);
@@ -176,88 +208,194 @@ echo $OUTPUT->header();
                     <!-- SELECT LEVELS (Multiple Selection) -->
                     <h3 class="filter-section-header">LEVELS</h3>
                     <div class="filter-cards-container" id="levelFilterCards">
-                        <label class="filter-card level-card level-1 <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'selected' : ''; ?>" data-level="KG Level 1">
-                            <input type="checkbox" name="ebook_levels[]" value="KG Level 1" class="filter-level-input" <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'checked' : ''; ?>>
-                            <div class="filter-card-checkbox level-checkbox"></div>
-                            <div class="level-card-icon-wrapper">
-                                <div class="filter-card-icon level-icon" style="background: #ccfbf1; color: #0d9488;">
-                                    <i class="fa fa-graduation-cap"></i>
+                        <?php if ($has_foundation_categories): ?>
+                            <!-- Foundation, Intermediate, Advanced Categories -->
+                            <label class="filter-card level-card foundation-card <?php echo in_array('Foundation', $selected_levels) || $selected_level == 'Foundation' ? 'selected' : ''; ?>" data-level="Foundation">
+                                <input type="checkbox" name="ebook_levels[]" value="Foundation" class="filter-level-input" <?php echo in_array('Foundation', $selected_levels) || $selected_level == 'Foundation' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #ccfbf1; color: #0d9488;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="filter-card-content level-card-content">
-                                <h4 class="filter-card-title">KG - Level 1</h4>
-                                <p class="filter-card-description">Foundation skills and early learning concepts</p>
-                            </div>
-                        </label>
-                        
-                        <label class="filter-card level-card level-2 <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'selected' : ''; ?>" data-level="KG Level 2">
-                            <input type="checkbox" name="ebook_levels[]" value="KG Level 2" class="filter-level-input" <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'checked' : ''; ?>>
-                            <div class="filter-card-checkbox level-checkbox"></div>
-                            <div class="level-card-icon-wrapper">
-                                <div class="filter-card-icon level-icon" style="background: #f3e8ff; color: #a855f7;">
-                                    <i class="fa fa-graduation-cap"></i>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">Foundation</h4>
+                                    <p class="filter-card-description">Grade 1 to 5</p>
                                 </div>
-                            </div>
-                            <div class="filter-card-content level-card-content">
-                                <h4 class="filter-card-title">KG - Level 2</h4>
-                                <p class="filter-card-description">Building on basics with new challenges</p>
-                            </div>
-                        </label>
-                        
-                        <label class="filter-card level-card level-3 <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'selected' : ''; ?>" data-level="KG Level 3">
-                            <input type="checkbox" name="ebook_levels[]" value="KG Level 3" class="filter-level-input" <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'checked' : ''; ?>>
-                            <div class="filter-card-checkbox level-checkbox"></div>
-                            <div class="level-card-icon-wrapper">
-                                <div class="filter-card-icon level-icon" style="background: #fce7f3; color: #ec4899;">
-                                    <i class="fa fa-graduation-cap"></i>
+                            </label>
+                            
+                            <label class="filter-card level-card intermediate-card <?php echo in_array('Intermediate', $selected_levels) || $selected_level == 'Intermediate' ? 'selected' : ''; ?>" data-level="Intermediate">
+                                <input type="checkbox" name="ebook_levels[]" value="Intermediate" class="filter-level-input" <?php echo in_array('Intermediate', $selected_levels) || $selected_level == 'Intermediate' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #f3e8ff; color: #a855f7;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="filter-card-content level-card-content">
-                                <h4 class="filter-card-title">KG - Level 3</h4>
-                                <p class="filter-card-description">Advanced concepts and school readiness</p>
-                            </div>
-                        </label>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">Intermediate</h4>
+                                    <p class="filter-card-description">Grade 6-8</p>
+                                </div>
+                            </label>
+                            
+                            <label class="filter-card level-card advanced-card <?php echo in_array('Advanced', $selected_levels) || $selected_level == 'Advanced' ? 'selected' : ''; ?>" data-level="Advanced">
+                                <input type="checkbox" name="ebook_levels[]" value="Advanced" class="filter-level-input" <?php echo in_array('Advanced', $selected_levels) || $selected_level == 'Advanced' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #fce7f3; color: #ec4899;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">Advanced</h4>
+                                    <p class="filter-card-description">Grade 9-12</p>
+                                </div>
+                            </label>
+                        <?php else: ?>
+                            <!-- KG Levels (default) -->
+                            <label class="filter-card level-card level-1 <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'selected' : ''; ?>" data-level="KG Level 1">
+                                <input type="checkbox" name="ebook_levels[]" value="KG Level 1" class="filter-level-input" <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #ccfbf1; color: #0d9488;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">KG - Level 1</h4>
+                                    <p class="filter-card-description">Foundation skills and early learning concepts</p>
+                                </div>
+                            </label>
+                            
+                            <label class="filter-card level-card level-2 <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'selected' : ''; ?>" data-level="KG Level 2">
+                                <input type="checkbox" name="ebook_levels[]" value="KG Level 2" class="filter-level-input" <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #f3e8ff; color: #a855f7;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">KG - Level 2</h4>
+                                    <p class="filter-card-description">Building on basics with new challenges</p>
+                                </div>
+                            </label>
+                            
+                            <label class="filter-card level-card level-3 <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'selected' : ''; ?>" data-level="KG Level 3">
+                                <input type="checkbox" name="ebook_levels[]" value="KG Level 3" class="filter-level-input" <?php echo in_array('KG Level 3', $selected_levels) || $selected_level == 'KG Level 3' ? 'checked' : ''; ?>>
+                                <div class="filter-card-checkbox level-checkbox"></div>
+                                <div class="level-card-icon-wrapper">
+                                    <div class="filter-card-icon level-icon" style="background: #fce7f3; color: #ec4899;">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="filter-card-content level-card-content">
+                                    <h4 class="filter-card-title">KG - Level 3</h4>
+                                    <p class="filter-card-description">Advanced concepts and school readiness</p>
+                                </div>
+                            </label>
+                        <?php endif; ?>
                     </div>
 
                     <!-- SELECT SUBJECTS (Multiple Selection) - Only shown when level is selected -->
                     <div class="filter-section-wrapper" id="subjectSectionWrapper" style="<?php echo (empty($selected_levels) && !$selected_level) ? 'display: none;' : ''; ?>">
                         <h3 class="filter-section-header">SUBJECTS</h3>
                         <div class="filter-cards-container" id="subjectFilterCards">
-                        <label class="filter-card subject-english <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'selected' : ''; ?>" data-subject="English">
-                            <input type="checkbox" name="ebook_subjects[]" value="English" class="filter-subject-input" <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
-                                <i class="fa fa-book"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">English</h4>
-                                <p class="filter-card-description">Reading, writing, phonics, and language arts</p>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
-                        
-                        <label class="filter-card subject-maths <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'selected' : ''; ?>" data-subject="Maths">
-                            <input type="checkbox" name="ebook_subjects[]" value="Maths" class="filter-subject-input" <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
-                                <i class="fa fa-calculator"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">Maths</h4>
-                                <p class="filter-card-description">Numbers, counting, shapes, and problem solving</p>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
-                        
-                        <label class="filter-card subject-science <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'selected' : ''; ?>" data-subject="Science">
-                            <input type="checkbox" name="ebook_subjects[]" value="Science" class="filter-subject-input" <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
-                                <i class="fa fa-flask"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">Science</h4>
-                                <p class="filter-card-description">Nature, experiments, and exploring the world</p>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
+                        <?php if ($has_foundation_categories): ?>
+                            <!-- Grade Cards (1-12) for Foundation/Intermediate/Advanced -->
+                            <?php
+                            // Generate all grade cards (1-12) - JavaScript will show/hide based on selected levels
+                            $grades_to_show = [];
+                            for ($grade = 1; $grade <= 12; $grade++) {
+                                $grades_to_show[] = 'Grade ' . $grade;
+                            }
+                            
+                            // Grade color mapping (same as view_course.php)
+                            $grade_colors = [
+                                'Grade 1' => ['bg' => '#fee2e2', 'color' => '#dc2626', 'border' => '#fecaca'],
+                                'Grade 2' => ['bg' => '#fed7aa', 'color' => '#ea580c', 'border' => '#fdba74'],
+                                'Grade 3' => ['bg' => '#fef3c7', 'color' => '#d97706', 'border' => '#fde68a'],
+                                'Grade 4' => ['bg' => '#fef9c3', 'color' => '#ca8a04', 'border' => '#fde047'],
+                                'Grade 5' => ['bg' => '#ecfccb', 'color' => '#65a30d', 'border' => '#d9f99d'],
+                                'Grade 6' => ['bg' => '#d1fae5', 'color' => '#059669', 'border' => '#a7f3d0'],
+                                'Grade 7' => ['bg' => '#ccfbf1', 'color' => '#0d9488', 'border' => '#99f6e4'],
+                                'Grade 8' => ['bg' => '#cffafe', 'color' => '#0891b2', 'border' => '#a5f3fc'],
+                                'Grade 9' => ['bg' => '#dbeafe', 'color' => '#2563eb', 'border' => '#bfdbfe'],
+                                'Grade 10' => ['bg' => '#e0e7ff', 'color' => '#4f46e5', 'border' => '#c7d2fe'],
+                                'Grade 11' => ['bg' => '#e9d5ff', 'color' => '#9333ea', 'border' => '#ddd6fe'],
+                                'Grade 12' => ['bg' => '#fce7f3', 'color' => '#ec4899', 'border' => '#fbcfe8'],
+                            ];
+                            
+                            foreach ($grades_to_show as $grade): 
+                                $grade_lower = strtolower($grade);
+                                $grade_num = (int)str_replace('Grade ', '', $grade);
+                                $colors = isset($grade_colors[$grade]) ? $grade_colors[$grade] : ['bg' => '#f3f4f6', 'color' => '#6b7280', 'border' => '#e5e7eb'];
+                                
+                                // Determine initial visibility based on selected levels (or show all if none selected)
+                                $is_visible = true;
+                                if (!empty($selected_levels) || $selected_level) {
+                                    $is_visible = false;
+                                    if ((in_array('Foundation', $selected_levels) || $selected_level == 'Foundation') && $grade_num >= 1 && $grade_num <= 5) {
+                                        $is_visible = true;
+                                    }
+                                    if ((in_array('Intermediate', $selected_levels) || $selected_level == 'Intermediate') && $grade_num >= 6 && $grade_num <= 8) {
+                                        $is_visible = true;
+                                    }
+                                    if ((in_array('Advanced', $selected_levels) || $selected_level == 'Advanced') && $grade_num >= 9 && $grade_num <= 12) {
+                                        $is_visible = true;
+                                    }
+                                }
+                            ?>
+                            <label class="filter-card subject-grade grade-<?php echo $grade_num; ?> <?php echo in_array($grade, $selected_subjects) || $selected_subject == $grade ? 'selected' : ''; ?> <?php echo !$is_visible ? 'grade-card-hidden' : ''; ?>" data-subject="<?php echo htmlspecialchars($grade); ?>" data-grade-num="<?php echo $grade_num; ?>" style="<?php echo !$is_visible ? 'display: none;' : ''; ?>">
+                                <input type="checkbox" name="ebook_subjects[]" value="<?php echo htmlspecialchars($grade); ?>" class="filter-subject-input" <?php echo in_array($grade, $selected_subjects) || $selected_subject == $grade ? 'checked' : ''; ?>>
+                                <div class="filter-card-icon" style="background: <?php echo $colors['bg']; ?>; color: <?php echo $colors['color']; ?>;">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <div class="filter-card-content">
+                                    <h4 class="filter-card-title"><?php echo htmlspecialchars($grade); ?></h4>
+                                    <p class="filter-card-description"><?php echo htmlspecialchars($grade); ?></p>
+                                </div>
+                                <div class="filter-card-checkbox"></div>
+                            </label>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <!-- English, Maths, Science (default for KG Levels) -->
+                            <label class="filter-card subject-english <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'selected' : ''; ?>" data-subject="English">
+                                <input type="checkbox" name="ebook_subjects[]" value="English" class="filter-subject-input" <?php echo in_array('English', $selected_subjects) || $selected_subject == 'English' ? 'checked' : ''; ?>>
+                                <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="filter-card-content">
+                                    <h4 class="filter-card-title">English</h4>
+                                    <p class="filter-card-description">Reading, writing, phonics, and language arts</p>
+                                </div>
+                                <div class="filter-card-checkbox"></div>
+                            </label>
+                            
+                            <label class="filter-card subject-maths <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'selected' : ''; ?>" data-subject="Maths">
+                                <input type="checkbox" name="ebook_subjects[]" value="Maths" class="filter-subject-input" <?php echo in_array('Maths', $selected_subjects) || $selected_subject == 'Maths' ? 'checked' : ''; ?>>
+                                <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                                    <i class="fa fa-calculator"></i>
+                                </div>
+                                <div class="filter-card-content">
+                                    <h4 class="filter-card-title">Maths</h4>
+                                    <p class="filter-card-description">Numbers, counting, shapes, and problem solving</p>
+                                </div>
+                                <div class="filter-card-checkbox"></div>
+                            </label>
+                            
+                            <label class="filter-card subject-science <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'selected' : ''; ?>" data-subject="Science">
+                                <input type="checkbox" name="ebook_subjects[]" value="Science" class="filter-subject-input" <?php echo in_array('Science', $selected_subjects) || $selected_subject == 'Science' ? 'checked' : ''; ?>>
+                                <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
+                                    <i class="fa fa-flask"></i>
+                                </div>
+                                <div class="filter-card-content">
+                                    <h4 class="filter-card-title">Science</h4>
+                                    <p class="filter-card-description">Nature, experiments, and exploring the world</p>
+                                </div>
+                                <div class="filter-card-checkbox"></div>
+                            </label>
+                        <?php endif; ?>
                         </div>
                     </div>
 
@@ -2349,14 +2487,58 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle cascading filter logic
     function updateFilterVisibility() {
-        const selectedLevels = document.querySelectorAll('#levelFilterCards input[type="checkbox"]:checked');
+        const selectedLevels = [];
+        document.querySelectorAll('#levelFilterCards input[type="checkbox"]:checked').forEach(cb => {
+            selectedLevels.push(cb.value);
+        });
         const selectedSubjects = document.querySelectorAll('#subjectFilterCards input[type="checkbox"]:checked');
         const subjectSection = document.getElementById('subjectSectionWrapper');
         const bookTypeSection = document.getElementById('bookTypeSectionWrapper');
         
+        // Check if we're using Foundation/Intermediate/Advanced (grades) or KG Levels (subjects)
+        const hasFoundationCategories = document.querySelector('.foundation-card, .intermediate-card, .advanced-card') !== null;
+        
         // Show/hide subject section based on level selection
         if (selectedLevels.length > 0) {
             if (subjectSection) subjectSection.style.display = 'block';
+            
+            // If using Foundation/Intermediate/Advanced, dynamically show/hide grade cards based on selected levels
+            if (hasFoundationCategories) {
+                const gradeCards = document.querySelectorAll('#subjectFilterCards .subject-grade');
+                gradeCards.forEach(gradeCard => {
+                    const gradeNum = parseInt(gradeCard.getAttribute('data-grade-num') || gradeCard.textContent.match(/Grade\s+(\d+)/)?.[1] || 0);
+                    
+                    if (isNaN(gradeNum) || gradeNum < 1 || gradeNum > 12) {
+                        return; // Skip if not a valid grade number
+                    }
+                    
+                    let shouldShow = false;
+                    if (selectedLevels.includes('Foundation') && gradeNum >= 1 && gradeNum <= 5) {
+                        shouldShow = true;
+                    }
+                    if (selectedLevels.includes('Intermediate') && gradeNum >= 6 && gradeNum <= 8) {
+                        shouldShow = true;
+                    }
+                    if (selectedLevels.includes('Advanced') && gradeNum >= 9 && gradeNum <= 12) {
+                        shouldShow = true;
+                    }
+                    
+                    // Show/hide grade card
+                    if (shouldShow) {
+                        gradeCard.style.display = '';
+                        gradeCard.classList.remove('grade-card-hidden');
+                    } else {
+                        gradeCard.style.display = 'none';
+                        gradeCard.classList.add('grade-card-hidden');
+                        // Uncheck and deselect hidden grade cards
+                        const checkbox = gradeCard.querySelector('input[type="checkbox"]');
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            gradeCard.classList.remove('selected');
+                        }
+                    }
+                });
+            }
         } else {
             if (subjectSection) subjectSection.style.display = 'none';
             // Clear subject selections when levels are cleared
