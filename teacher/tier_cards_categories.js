@@ -28,10 +28,10 @@ function populateTierCardCategories() {
             const categoryNameLower = category.name.toLowerCase();
             
             if (categoryNameLower.includes('level 1')) {
-                iconClass = 'fa-baby';
+                iconClass = 'fa-graduation-cap';
                 description = 'Foundation skills and early learning concepts';
             } else if (categoryNameLower.includes('level 2')) {
-                iconClass = 'fa-smile';
+                iconClass = 'fa-graduation-cap';
                 description = 'Building on basics with new challenges';
             } else if (categoryNameLower.includes('level 3')) {
                 iconClass = 'fa-graduation-cap';
