@@ -5129,7 +5129,6 @@ echo $OUTPUT->header();
                                     echo '<button class="resource-card-action-btn download-btn" onclick="event.stopPropagation(); downloadResourceFile(\'' . htmlspecialchars($fileurlstring, ENT_QUOTES) . '\')">';
                                     echo '<i class="fa fa-download"></i> Download';
                                     echo '</button>';
-                                    echo '<div class="resource-card-favorite"><i class="fa fa-star-o"></i></div>';
                                     echo '</div>';
                                     echo '</div>';
                                     echo '</div>'; // End resource-card
