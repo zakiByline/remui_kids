@@ -329,7 +329,7 @@ echo $OUTPUT->header();
                                 <div class="book-preview-area">
                                     <?php if ($book->book_link && !empty(trim($book->book_link))): ?>
                                         <div class="book-preview-cover-container">
-                                            <iframe src="<?php echo htmlspecialchars($book->book_link); ?>#page=1&zoom=page-fit" class="book-preview-cover-iframe" frameborder="0" allowfullscreen></iframe>
+                                            <iframe src="<?php echo htmlspecialchars($book->book_link); ?>#page=1&zoom=page-fit" class="book-preview-cover-iframe" frameborder="0" allowfullscreen loading="eager"></iframe>
                                         </div>
                                         <div class="book-preview-placeholder" style="display: none;">
                                     <?php else: ?>
@@ -2522,6 +2522,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         attachBookViewerListeners();
                     }
                     
+                    // Preload iframes immediately after books are loaded
+                    if (typeof preloadBookPreviewIframes === 'function') {
+                        preloadBookPreviewIframes();
+                    }
+                    
                     // Handle image errors after AJAX update
                     setTimeout(() => {
                         if (typeof handleImageErrors === 'function') {
@@ -2899,6 +2904,32 @@ window.onclick = function(event) {
     
     // Initial attachment of listeners
     attachBookViewerListeners();
+    
+    // Preload iframes immediately for faster loading
+    function preloadBookPreviewIframes() {
+        document.querySelectorAll('.book-preview-cover-iframe').forEach(iframe => {
+            if (iframe.src && !iframe.hasAttribute('data-preloaded')) {
+                iframe.setAttribute('data-preloaded', 'true');
+                // Ensure iframe starts loading immediately
+                iframe.setAttribute('loading', 'eager');
+                // Create prefetch link for faster loading
+                try {
+                    const preloadLink = document.createElement('link');
+                    preloadLink.rel = 'prefetch';
+                    preloadLink.href = iframe.src;
+                    preloadLink.as = 'document';
+                    if (!document.querySelector(`link[href="${iframe.src}"]`)) {
+                        document.head.appendChild(preloadLink);
+                    }
+                } catch(e) {
+                    // Ignore errors for prefetch
+                }
+            }
+        });
+    }
+    
+    // Call preload on initial page load
+    preloadBookPreviewIframes();
     
     // Handle image loading errors gracefully - prevent 404 console errors
     function handleImageErrors() {
