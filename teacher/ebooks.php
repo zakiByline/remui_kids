@@ -185,8 +185,8 @@ echo $OUTPUT->header();
                     <div class="filter-cards-container" id="levelFilterCards">
                         <label class="filter-card level-1 <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'selected' : ''; ?>" data-level="KG Level 1">
                             <input type="checkbox" name="ebook_levels[]" value="KG Level 1" class="filter-level-input" <?php echo in_array('KG Level 1', $selected_levels) || $selected_level == 'KG Level 1' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
-                                <i class="fa fa-smile-o"></i>
+                            <div class="filter-card-icon" style="background: #ccfbf1; color: #0d9488;">
+                                <i class="fa fa-graduation-cap"></i>
                             </div>
                             <div class="filter-card-content">
                                 <h4 class="filter-card-title">KG - Level 1</h4>
@@ -198,7 +198,7 @@ echo $OUTPUT->header();
                         <label class="filter-card level-2 <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'selected' : ''; ?>" data-level="KG Level 2">
                             <input type="checkbox" name="ebook_levels[]" value="KG Level 2" class="filter-level-input" <?php echo in_array('KG Level 2', $selected_levels) || $selected_level == 'KG Level 2' ? 'checked' : ''; ?>>
                             <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
-                                <i class="fa fa-smile-o"></i>
+                                <i class="fa fa-graduation-cap"></i>
                             </div>
                             <div class="filter-card-content">
                                 <h4 class="filter-card-title">KG - Level 2</h4>
@@ -816,12 +816,12 @@ body {
 
 /* Level card colors */
 .filter-card.level-1.selected {
-    border-color: #3b82f6;
-    color: #3b82f6;
+    border-color: #0d9488;
+    color: #0d9488;
 }
 
 .filter-card.level-1.selected .filter-card-icon {
-    background: #3b82f6;
+    background: #0d9488;
 }
 
 .filter-card.level-2.selected {
