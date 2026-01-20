@@ -1734,6 +1734,7 @@ body {
     gap: 4px;
 }
 
+
 .pagination-page {
     min-width: 40px;
     height: 40px;
