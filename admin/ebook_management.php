@@ -184,6 +184,44 @@ if ($has_filters && !empty($sql_conditions)) {
     if (!$books) {
         $books = [];
     }
+    
+    // Fix cover image paths - convert old/invalid paths to correct format
+    foreach ($books as $book) {
+        if (!empty($book->cover_image)) {
+            $cover_image = trim($book->cover_image);
+            
+            // If path contains dataroot or doesn't start with http/https, fix it
+            if (strpos($cover_image, 'dataroot') !== false || strpos($cover_image, 'theme_remui_kids_books') !== false) {
+                // Extract filename from the path
+                $filename = basename($cover_image);
+                // Set to correct path
+                $corrected_path = $CFG->wwwroot . '/theme/remui_kids/pix/ebooks/' . $filename;
+                
+                // Check if file exists in the new location
+                $file_path = __DIR__ . '/../../pix/ebooks/' . $filename;
+                if (file_exists($file_path)) {
+                    $book->cover_image = $corrected_path;
+                } else {
+                    // File doesn't exist, clear the cover_image so placeholder shows
+                    $book->cover_image = '';
+                }
+            } elseif (!preg_match('/^https?:\/\//', $cover_image)) {
+                // If it doesn't start with http/https and doesn't start with /, assume it's just a filename
+                if (strpos($cover_image, '/') === false) {
+                    $corrected_path = $CFG->wwwroot . '/theme/remui_kids/pix/ebooks/' . $cover_image;
+                    $file_path = __DIR__ . '/../../pix/ebooks/' . $cover_image;
+                    if (file_exists($file_path)) {
+                        $book->cover_image = $corrected_path;
+                    } else {
+                        $book->cover_image = '';
+                    }
+                } else {
+                    // If it starts with /, prepend wwwroot
+                    $book->cover_image = $CFG->wwwroot . $cover_image;
+                }
+            }
+        }
+    }
 }
 
 echo $OUTPUT->header();
@@ -426,30 +464,16 @@ echo $OUTPUT->header();
                                 </div>
                                 <div class="filter-card-checkbox"></div>
                             </label>
-                            
-                            <label class="filter-card book-type-practice <?php echo strtolower($selected_book_type) == 'practice book' ? 'selected' : ''; ?>" data-book-type="Practice Book">
-                                <input type="radio" name="ebook_book_type" value="Practice Book" class="filter-book-type-input" <?php echo strtolower($selected_book_type) == 'practice book' ? 'checked' : ''; ?>>
-                                <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
-                                    <i class="fa fa-pencil"></i>
-                                </div>
-                                <div class="filter-card-content">
-                                    <h4 class="filter-card-title">Practice Book</h4>
-                                    <p class="filter-card-description">Exercises and practice materials for skill development</p>
-                                </div>
-                                <div class="filter-card-checkbox"></div>
-                            </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Add Book Button (shown when filters are selected) -->
-                <?php if ($has_filters): ?>
+                <!-- Add Book Button (always visible) -->
                 <div class="add-book-section">
                     <button class="btn-add-book" onclick="openAddBookModal()">
                         <i class="fa fa-plus-circle"></i> Add New Book
                     </button>
                 </div>
-                <?php endif; ?>
 
                 <!-- Books Display Grid - Always present, shown/hidden via JavaScript -->
                 <div class="books-grid-section" style="<?php echo $has_filters ? '' : 'display: none;'; ?>">
@@ -465,7 +489,12 @@ echo $OUTPUT->header();
                             <div class="book-card-new" data-book-id="<?php echo $book->id; ?>" data-level="<?php echo htmlspecialchars($book->level); ?>" data-subject="<?php echo htmlspecialchars($book->subject); ?>" data-book-type="<?php echo htmlspecialchars($book->book_type); ?>">
                                 <!-- Preview Area -->
                                 <div class="book-preview-area">
-                                    <?php if ($book->book_link && !empty(trim($book->book_link))): ?>
+                                    <?php if (!empty($book->cover_image) && !empty(trim($book->cover_image))): ?>
+                                        <div class="book-preview-cover-container">
+                                            <img src="<?php echo htmlspecialchars($book->cover_image); ?>" alt="<?php echo htmlspecialchars($book->title); ?>" class="book-preview-image">
+                                        </div>
+                                        <div class="book-preview-placeholder" style="display: none;">
+                                    <?php elseif ($book->book_link && !empty(trim($book->book_link))): ?>
                                         <div class="book-preview-cover-container">
                                             <iframe src="<?php echo htmlspecialchars($book->book_link); ?>#page=1&zoom=page-fit" class="book-preview-cover-iframe" frameborder="0" allowfullscreen loading="eager"></iframe>
                                         </div>
@@ -631,9 +660,41 @@ echo $OUTPUT->header();
         </div>
         <form id="bookForm" enctype="multipart/form-data">
             <input type="hidden" id="bookId" name="book_id">
-            <input type="hidden" id="bookLevel" name="level" value="<?php echo htmlspecialchars(!empty($selected_levels) ? $selected_levels[0] : $selected_level); ?>">
-            <input type="hidden" id="bookSubject" name="subject" value="<?php echo htmlspecialchars(!empty($selected_subjects) ? $selected_subjects[0] : $selected_subject); ?>">
-            <input type="hidden" id="bookType" name="book_type" value="<?php echo htmlspecialchars($selected_book_type); ?>">
+            
+            <div class="form-group">
+                <label for="bookLevel">Level/Category *</label>
+                <select id="bookLevel" name="level" required>
+                    <option value="">-- Select Level --</option>
+                    <option value="Foundation" <?php echo (!empty($selected_levels) && in_array('Foundation', $selected_levels)) || $selected_level == 'Foundation' ? 'selected' : ''; ?>>Foundation</option>
+                    <option value="Intermediate" <?php echo (!empty($selected_levels) && in_array('Intermediate', $selected_levels)) || $selected_level == 'Intermediate' ? 'selected' : ''; ?>>Intermediate</option>
+                    <option value="Advanced" <?php echo (!empty($selected_levels) && in_array('Advanced', $selected_levels)) || $selected_level == 'Advanced' ? 'selected' : ''; ?>>Advanced</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bookSubject">Subject/Grade *</label>
+                <select id="bookSubject" name="subject" required>
+                    <option value="">-- Select Subject --</option>
+                    <?php if ($has_foundation_categories): ?>
+                        <?php for ($grade = 1; $grade <= 12; $grade++): ?>
+                            <option value="Grade <?php echo $grade; ?>" <?php echo (!empty($selected_subjects) && in_array('Grade ' . $grade, $selected_subjects)) || $selected_subject == 'Grade ' . $grade ? 'selected' : ''; ?>>Grade <?php echo $grade; ?></option>
+                        <?php endfor; ?>
+                    <?php else: ?>
+                        <option value="English" <?php echo (!empty($selected_subjects) && in_array('English', $selected_subjects)) || $selected_subject == 'English' ? 'selected' : ''; ?>>English</option>
+                        <option value="Maths" <?php echo (!empty($selected_subjects) && in_array('Maths', $selected_subjects)) || $selected_subject == 'Maths' ? 'selected' : ''; ?>>Maths</option>
+                        <option value="Science" <?php echo (!empty($selected_subjects) && in_array('Science', $selected_subjects)) || $selected_subject == 'Science' ? 'selected' : ''; ?>>Science</option>
+                    <?php endif; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bookType">Book Type *</label>
+                <select id="bookType" name="book_type" required>
+                    <option value="">-- Select Book Type --</option>
+                    <option value="Student Book" <?php echo strtolower($selected_book_type) == 'student book' ? 'selected' : ''; ?>>Student Book</option>
+                    <option value="Teacher Book" <?php echo strtolower($selected_book_type) == 'teacher book' ? 'selected' : ''; ?>>Teacher Book</option>
+                </select>
+            </div>
             
             <div class="form-group">
                 <label for="bookTitle">Book Title *</label>
@@ -1363,15 +1424,6 @@ body {
     background: #a855f7;
 }
 
-.filter-card.book-type-practice.selected {
-    border-color: #f59e0b;
-    color: #f59e0b;
-}
-
-.filter-card.book-type-practice.selected .filter-card-icon {
-    background: #f59e0b;
-}
-
 .filter-section {
     margin-bottom: 30px;
     padding: 20px;
@@ -1758,7 +1810,8 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="url"],
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 12px;
     border: 2px solid #e0e0e0;
@@ -1768,9 +1821,20 @@ body {
     box-sizing: border-box;
 }
 
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+    background-color: white;
+}
+
 .form-group input[type="text"]:focus,
 .form-group input[type="url"]:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: #667eea;
 }
@@ -1950,8 +2014,11 @@ body {
 }
 
 .book-preview-image {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 110%;
+    display: flex;
+    margin: auto;
+    align-items: center;
     object-fit: cover;
 }
 
@@ -2930,6 +2997,15 @@ function editBook(bookId) {
             document.getElementById('bookTitle').value = data.title;
             document.getElementById('bookDescription').value = data.description || '';
             document.getElementById('bookLink').value = data.book_link;
+            if (data.level) {
+                document.getElementById('bookLevel').value = data.level;
+            }
+            if (data.subject) {
+                document.getElementById('bookSubject').value = data.subject;
+            }
+            if (data.book_type) {
+                document.getElementById('bookType').value = data.book_type;
+            }
             if (data.cover_image) {
                 document.getElementById('coverPreview').innerHTML = '<img src="' + data.cover_image + '" alt="Cover Preview">';
             }

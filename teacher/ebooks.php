@@ -512,18 +512,6 @@ echo $OUTPUT->header();
                             </div>
                             <div class="filter-card-checkbox"></div>
                         </label>
-                        
-                        <label class="filter-card book-type-practice <?php echo strtolower($selected_book_type) == 'practice book' ? 'selected' : ''; ?>" data-book-type="Practice Book">
-                            <input type="radio" name="ebook_book_type" value="Practice Book" class="filter-book-type-input" <?php echo strtolower($selected_book_type) == 'practice book' ? 'checked' : ''; ?>>
-                            <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
-                                <i class="fa fa-pencil"></i>
-                            </div>
-                            <div class="filter-card-content">
-                                <h4 class="filter-card-title">Practice Book</h4>
-                                <p class="filter-card-description">Exercises and practice materials for skill development</p>
-                            </div>
-                            <div class="filter-card-checkbox"></div>
-                        </label>
                         </div>
                     </div>
                 </div>
@@ -543,7 +531,12 @@ echo $OUTPUT->header();
                             <div class="book-card-new" data-book-id="<?php echo $book->id; ?>" data-level="<?php echo htmlspecialchars($book->level); ?>" data-subject="<?php echo htmlspecialchars($book->subject); ?>" data-book-type="<?php echo htmlspecialchars($book->book_type); ?>">
                                 <!-- Preview Area -->
                                 <div class="book-preview-area">
-                                    <?php if ($book->book_link && !empty(trim($book->book_link))): ?>
+                                    <?php if (!empty($book->cover_image) && !empty(trim($book->cover_image))): ?>
+                                        <div class="book-preview-cover-container">
+                                            <img src="<?php echo htmlspecialchars($book->cover_image); ?>" alt="<?php echo htmlspecialchars($book->title); ?>" class="book-preview-image">
+                                        </div>
+                                        <div class="book-preview-placeholder" style="display: none;">
+                                    <?php elseif ($book->book_link && !empty(trim($book->book_link))): ?>
                                         <div class="book-preview-cover-container">
                                             <iframe src="<?php echo htmlspecialchars($book->book_link); ?>#page=1&zoom=page-fit" class="book-preview-cover-iframe" frameborder="0" allowfullscreen loading="eager"></iframe>
                                         </div>
@@ -1152,17 +1145,20 @@ body {
     background: transparent;
 }
 
-.filter-card.level-card.level-1.selected .level-checkbox {
+.filter-card.level-card.level-1.selected .level-checkbox,
+.filter-card.level-card.foundation-card.selected .level-checkbox {
     background: #0d9488;
     border-color: #0d9488;
 }
 
-.filter-card.level-card.level-2.selected .level-checkbox {
+.filter-card.level-card.level-2.selected .level-checkbox,
+.filter-card.level-card.intermediate-card.selected .level-checkbox {
     background: #a855f7;
     border-color: #a855f7;
 }
 
-.filter-card.level-card.level-3.selected .level-checkbox {
+.filter-card.level-card.level-3.selected .level-checkbox,
+.filter-card.level-card.advanced-card.selected .level-checkbox {
     background: #ec4899;
     border-color: #ec4899;
 }
@@ -1242,64 +1238,97 @@ body {
 }
 
 /* Level card colors - Always show colored borders */
-.filter-card.level-card.level-1 {
+.filter-card.level-card.level-1,
+.filter-card.level-card.foundation-card {
     border-color: #0d9488;
     border-width: 2px;
 }
 
-.filter-card.level-card.level-1.selected {
+.filter-card.level-card.level-1.selected,
+.filter-card.level-card.foundation-card.selected {
+    border-color: #0d9488;
     color: #0d9488;
     box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
 }
 
-.filter-card.level-card.level-1 .filter-card-icon.level-icon {
+.filter-card.level-card.level-1 .filter-card-icon.level-icon,
+.filter-card.level-card.foundation-card .filter-card-icon.level-icon {
     background: #ccfbf1;
     color: #0d9488;
 }
 
-.filter-card.level-card.level-1.selected .filter-card-icon.level-icon {
+.filter-card.level-card.level-1.selected .filter-card-icon.level-icon,
+.filter-card.level-card.foundation-card.selected .filter-card-icon.level-icon {
     background: #0d9488;
     color: white;
 }
 
-.filter-card.level-card.level-2 {
+.filter-card.level-card.level-1.selected .level-checkbox,
+.filter-card.level-card.foundation-card.selected .level-checkbox {
+    background: #0d9488;
+    border-color: #0d9488;
+}
+
+.filter-card.level-card.level-2,
+.filter-card.level-card.intermediate-card {
     border-color: #a855f7;
     border-width: 2px;
 }
 
-.filter-card.level-card.level-2.selected {
+.filter-card.level-card.level-2.selected,
+.filter-card.level-card.intermediate-card.selected {
+    border-color: #a855f7;
     color: #a855f7;
     box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
 }
 
-.filter-card.level-card.level-2 .filter-card-icon.level-icon {
+.filter-card.level-card.level-2 .filter-card-icon.level-icon,
+.filter-card.level-card.intermediate-card .filter-card-icon.level-icon {
     background: #f3e8ff;
     color: #a855f7;
 }
 
-.filter-card.level-card.level-2.selected .filter-card-icon.level-icon {
+.filter-card.level-card.level-2.selected .filter-card-icon.level-icon,
+.filter-card.level-card.intermediate-card.selected .filter-card-icon.level-icon {
     background: #a855f7;
     color: white;
 }
 
-.filter-card.level-card.level-3 {
+.filter-card.level-card.level-2.selected .level-checkbox,
+.filter-card.level-card.intermediate-card.selected .level-checkbox {
+    background: #a855f7;
+    border-color: #a855f7;
+}
+
+.filter-card.level-card.level-3,
+.filter-card.level-card.advanced-card {
     border-color: #ec4899;
     border-width: 2px;
 }
 
-.filter-card.level-card.level-3.selected {
+.filter-card.level-card.level-3.selected,
+.filter-card.level-card.advanced-card.selected {
+    border-color: #ec4899;
     color: #ec4899;
     box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
 }
 
-.filter-card.level-card.level-3 .filter-card-icon.level-icon {
+.filter-card.level-card.level-3 .filter-card-icon.level-icon,
+.filter-card.level-card.advanced-card .filter-card-icon.level-icon {
     background: #fce7f3;
     color: #ec4899;
 }
 
-.filter-card.level-card.level-3.selected .filter-card-icon.level-icon {
+.filter-card.level-card.level-3.selected .filter-card-icon.level-icon,
+.filter-card.level-card.advanced-card.selected .filter-card-icon.level-icon {
     background: #ec4899;
     color: white;
+}
+
+.filter-card.level-card.level-3.selected .level-checkbox,
+.filter-card.level-card.advanced-card.selected .level-checkbox {
+    background: #ec4899;
+    border-color: #ec4899;
 }
 
 /* Subject card colors */
@@ -1340,6 +1369,11 @@ body {
     background: #3b82f6;
 }
 
+.filter-card.book-type-student.selected .filter-card-checkbox {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
 .filter-card.book-type-teacher.selected {
     border-color: #a855f7;
     color: #a855f7;
@@ -1349,13 +1383,178 @@ body {
     background: #a855f7;
 }
 
-.filter-card.book-type-practice.selected {
-    border-color: #f59e0b;
-    color: #f59e0b;
+.filter-card.book-type-teacher.selected .filter-card-checkbox {
+    background: #a855f7;
+    border-color: #a855f7;
 }
 
-.filter-card.book-type-practice.selected .filter-card-icon {
-    background: #f59e0b;
+/* Grade level card colors - Border and checkbox match icon color when selected */
+.filter-card.subject-grade.grade-1.selected {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+.filter-card.subject-grade.grade-1.selected .filter-card-icon {
+    background: #dc2626;
+}
+
+.filter-card.subject-grade.grade-1.selected .filter-card-checkbox {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.filter-card.subject-grade.grade-2.selected {
+    border-color: #ea580c;
+    color: #ea580c;
+}
+
+.filter-card.subject-grade.grade-2.selected .filter-card-icon {
+    background: #ea580c;
+}
+
+.filter-card.subject-grade.grade-2.selected .filter-card-checkbox {
+    background: #ea580c;
+    border-color: #ea580c;
+}
+
+.filter-card.subject-grade.grade-3.selected {
+    border-color: #d97706;
+    color: #d97706;
+}
+
+.filter-card.subject-grade.grade-3.selected .filter-card-icon {
+    background: #d97706;
+}
+
+.filter-card.subject-grade.grade-3.selected .filter-card-checkbox {
+    background: #d97706;
+    border-color: #d97706;
+}
+
+.filter-card.subject-grade.grade-4.selected {
+    border-color: #ca8a04;
+    color: #ca8a04;
+}
+
+.filter-card.subject-grade.grade-4.selected .filter-card-icon {
+    background: #ca8a04;
+}
+
+.filter-card.subject-grade.grade-4.selected .filter-card-checkbox {
+    background: #ca8a04;
+    border-color: #ca8a04;
+}
+
+.filter-card.subject-grade.grade-5.selected {
+    border-color: #65a30d;
+    color: #65a30d;
+}
+
+.filter-card.subject-grade.grade-5.selected .filter-card-icon {
+    background: #65a30d;
+}
+
+.filter-card.subject-grade.grade-5.selected .filter-card-checkbox {
+    background: #65a30d;
+    border-color: #65a30d;
+}
+
+.filter-card.subject-grade.grade-6.selected {
+    border-color: #059669;
+    color: #059669;
+}
+
+.filter-card.subject-grade.grade-6.selected .filter-card-icon {
+    background: #059669;
+}
+
+.filter-card.subject-grade.grade-6.selected .filter-card-checkbox {
+    background: #059669;
+    border-color: #059669;
+}
+
+.filter-card.subject-grade.grade-7.selected {
+    border-color: #0d9488;
+    color: #0d9488;
+}
+
+.filter-card.subject-grade.grade-7.selected .filter-card-icon {
+    background: #0d9488;
+}
+
+.filter-card.subject-grade.grade-7.selected .filter-card-checkbox {
+    background: #0d9488;
+    border-color: #0d9488;
+}
+
+.filter-card.subject-grade.grade-8.selected {
+    border-color: #0891b2;
+    color: #0891b2;
+}
+
+.filter-card.subject-grade.grade-8.selected .filter-card-icon {
+    background: #0891b2;
+}
+
+.filter-card.subject-grade.grade-8.selected .filter-card-checkbox {
+    background: #0891b2;
+    border-color: #0891b2;
+}
+
+.filter-card.subject-grade.grade-9.selected {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.filter-card.subject-grade.grade-9.selected .filter-card-icon {
+    background: #2563eb;
+}
+
+.filter-card.subject-grade.grade-9.selected .filter-card-checkbox {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.filter-card.subject-grade.grade-10.selected {
+    border-color: #4f46e5;
+    color: #4f46e5;
+}
+
+.filter-card.subject-grade.grade-10.selected .filter-card-icon {
+    background: #4f46e5;
+}
+
+.filter-card.subject-grade.grade-10.selected .filter-card-checkbox {
+    background: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.filter-card.subject-grade.grade-11.selected {
+    border-color: #9333ea;
+    color: #9333ea;
+}
+
+.filter-card.subject-grade.grade-11.selected .filter-card-icon {
+    background: #9333ea;
+}
+
+.filter-card.subject-grade.grade-11.selected .filter-card-checkbox {
+    background: #9333ea;
+    border-color: #9333ea;
+}
+
+.filter-card.subject-grade.grade-12.selected {
+    border-color: #ec4899;
+    color: #ec4899;
+}
+
+.filter-card.subject-grade.grade-12.selected .filter-card-icon {
+    background: #ec4899;
+}
+
+.filter-card.subject-grade.grade-12.selected .filter-card-checkbox {
+    background: #ec4899;
+    border-color: #ec4899;
 }
 
 .filter-section {
@@ -1758,8 +1957,11 @@ body {
 }
 
 .book-preview-image {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 110%;
+    display: flex;
+    margin: auto;
+    align-items: center;
     object-fit: cover;
 }
 
