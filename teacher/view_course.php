@@ -5719,12 +5719,18 @@ echo $OUTPUT->header();
                                     }
                                     echo '</div>';
                                     echo '<div class="resource-card-actions">';
-                                    echo '<button class="resource-card-action-btn view-btn" data-file-type="' . htmlspecialchars(strtolower($file_extension), ENT_QUOTES) . '" onclick="previewTeacherFile(this.closest(\'.resource-card\'))">';
-                                    echo '<i class="fa fa-eye"></i> View';
-                                    echo '</button>';
-                                    echo '<button class="resource-card-action-btn download-btn" onclick="event.stopPropagation(); downloadResourceFile(\'' . htmlspecialchars($fileurlstring, ENT_QUOTES) . '\')">';
-                                    echo '<i class="fa fa-download"></i> Download';
-                                    echo '</button>';
+                                    // Hide View button for Word documents (docx/doc)
+                                    if (!in_array(strtolower($file_extension), ['docx', 'doc'])) {
+                                        echo '<button class="resource-card-action-btn view-btn" data-file-type="' . htmlspecialchars(strtolower($file_extension), ENT_QUOTES) . '" onclick="previewTeacherFile(this.closest(\'.resource-card\'))">';
+                                        echo '<i class="fa fa-eye"></i> View';
+                                        echo '</button>';
+                                    }
+                                    // Hide Download button for HTML files
+                                    if (!in_array(strtolower($file_extension), ['html', 'htm'])) {
+                                        echo '<button class="resource-card-action-btn download-btn" onclick="event.stopPropagation(); downloadResourceFile(\'' . htmlspecialchars($fileurlstring, ENT_QUOTES) . '\')">';
+                                        echo '<i class="fa fa-download"></i> Download';
+                                        echo '</button>';
+                                    }
                                     echo '</div>';
                                     echo '</div>';
                                     echo '</div>'; // End resource-card
@@ -5999,11 +6005,15 @@ echo $OUTPUT->header();
                                     }
                                     echo '</div>';
                                     echo '<div class="resource-card-actions">';
+                                    // Hide View button for Word documents (docx/doc)
                                     $view_btn_file_type = !empty($resourcefileext) ? strtolower($resourcefileext) : strtolower($mod_name);
-                                    echo '<button class="resource-card-action-btn view-btn" data-file-type="' . htmlspecialchars($view_btn_file_type, ENT_QUOTES) . '" onclick="event.stopPropagation(); openResource(this.closest(\'.resource-card\'), ' . $cm->id . ', \'' . addslashes($cm->name) . '\', \'' . $mod_name . '\')">';
-                                    echo '<i class="fa fa-eye"></i> View';
-                                    echo '</button>';
-                                    if ($resourcefileurl && $resourcefileext !== 'link') {
+                                    if (!in_array($view_btn_file_type, ['docx', 'doc'])) {
+                                        echo '<button class="resource-card-action-btn view-btn" data-file-type="' . htmlspecialchars($view_btn_file_type, ENT_QUOTES) . '" onclick="event.stopPropagation(); openResource(this.closest(\'.resource-card\'), ' . $cm->id . ', \'' . addslashes($cm->name) . '\', \'' . $mod_name . '\')">';
+                                        echo '<i class="fa fa-eye"></i> View';
+                                        echo '</button>';
+                                    }
+                                    // Hide Download button for HTML files
+                                    if ($resourcefileurl && $resourcefileext !== 'link' && !in_array(strtolower($resourcefileext), ['html', 'htm'])) {
                                         echo '<button class="resource-card-action-btn download-btn" onclick="event.stopPropagation(); downloadResourceFile(\'' . htmlspecialchars($resourcefileurl, ENT_QUOTES) . '\')">';
                                         echo '<i class="fa fa-download"></i> Download';
                                         echo '</button>';
@@ -7699,7 +7709,10 @@ function previewTeacherFile(cardElement) {
     const ext = (cardElement.dataset.fileExt || '').toLowerCase();
     const name = cardElement.dataset.fileName || 'Resource';
     const previewUrl = cardElement.dataset.previewUrl || ''; // Preview URL for PPT files
-    const allowDownload = cardElement.dataset.allowDownload !== 'false';
+    const allowDownloadAttr = cardElement.dataset.allowDownload !== 'false';
+    // Hide download button for HTML files
+    const isHTML = ext === 'html' || ext === 'htm';
+    const allowDownload = allowDownloadAttr && !isHTML;
     const previewType = cardElement.dataset.previewType || '';
     openPPTPlayer(url, name, ext, { allowDownload, previewType, previewUrl: previewUrl });
 }
@@ -7713,16 +7726,21 @@ function openResource(cardElement, cmid, name, modname) {
     const allowDownloadAttr = dataset.allowDownload;
     const previewType = dataset.previewType || '';
     const allowDownload = allowDownloadAttr !== 'false' && modname !== 'url';
+    // Hide download button for HTML files
+    const isHTML = dataExt === 'html' || dataExt === 'htm';
+    const finalAllowDownload = allowDownload && !isHTML;
 
     if (dataUrl) {
-        openPPTPlayer(dataUrl, name, dataExt, { allowDownload, previewType, previewUrl: previewUrl });
+        openPPTPlayer(dataUrl, name, dataExt, { allowDownload: finalAllowDownload, previewType, previewUrl: previewUrl });
         return;
     }
 
     const url = '<?php echo $CFG->wwwroot; ?>/mod/' + modname + '/view.php?id=' + cmid;
 
     if (modname === 'resource' || modname === 'folder') {
-        openPPTPlayer(url, name, dataExt, { allowDownload: true, previewType: '', previewUrl: previewUrl });
+        // Hide download button for HTML files
+        const isHTML = dataExt === 'html' || dataExt === 'htm';
+        openPPTPlayer(url, name, dataExt, { allowDownload: !isHTML, previewType: '', previewUrl: previewUrl });
     } else if (modname === 'url') {
         window.open(url, '_blank');
     } else {
@@ -7748,7 +7766,8 @@ function openPPTPlayer(url, title, ext, options = {}) {
     const isSpreadsheet = spreadsheetExtensions.includes(extension);
     const isPPT = pptExtensions.includes(extension);
     const isDOCX = extension === 'docx'; // DOCX files - show first image preview
-    const allowDownload = options.allowDownload !== false && extension !== 'link' && options.previewType !== 'url';
+    const isHTML = extension === 'html' || extension === 'htm'; // HTML files - hide download button
+    const allowDownload = options.allowDownload !== false && extension !== 'link' && options.previewType !== 'url' && !isHTML;
     const isExternalLink = options.previewType === 'url' || extension === 'link';
     const previewUrl = options.previewUrl || ''; // Preview URL for PPT and DOCX files
     let viewerUrl = url;
