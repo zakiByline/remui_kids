@@ -2200,6 +2200,8 @@ if (!$skip_dashboard_logic && (($PAGE->pagelayout == 'mydashboard' && $PAGE->pag
                 'shortname' => format_string($course->shortname)
             ];
         }
+
+        $templatecontext['resource_categories'] = theme_remui_kids_get_teacher_resource_categories();
         
         // Get competency analytics (overall by default)
         $templatecontext['competency_analytics'] = theme_remui_kids_get_teacher_competency_analytics(0);
