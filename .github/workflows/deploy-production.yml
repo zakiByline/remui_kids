@@ -33,3 +33,4 @@ jobs:
             git pull origin $BRANCH
             php ../../admin/cli/purge_caches.php
           EOF
+
