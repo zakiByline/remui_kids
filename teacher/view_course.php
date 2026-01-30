@@ -598,6 +598,140 @@ echo $OUTPUT->header();
     z-index: 1051 !important;
 }
 
+/* Hide notification and message icons in topbar for this page only */
+.navbar [data-region="notifications"],
+.navbar .popover-region-notifications,
+.navbar [data-region="notifications-popover"],
+.navbar .nav-item[data-region="notifications"],
+.navbar .notification-area,
+.navbar [data-region="messages"],
+.navbar .popover-region-messages,
+.navbar [data-region="messages-popover"],
+.navbar .nav-item[data-region="messages"],
+.navbar .message-area,
+.navbar .popover-region,
+.navbar #nav-notification-popover-container,
+.navbar #nav-message-popover-container,
+.navbar .popover-region-container[data-region="notifications"],
+.navbar .popover-region-container[data-region="messages"],
+.navbar .nav-link[data-toggle="popover"][data-region="notifications"],
+.navbar .nav-link[data-toggle="popover"][data-region="messages"],
+.navbar a[href*="message"],
+.navbar a[href*="notification"],
+.navbar .icon-bell,
+.navbar .fa-bell,
+.navbar .icon-envelope,
+.navbar .fa-envelope,
+.navbar .edw-icon-Notification,
+.navbar .edw-icon-Message {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide dark mode / night mode toggle in topbar for this page only */
+.navbar .nav-darkmode,
+.navbar .nav-item.nav-darkmode,
+.navbar [data-dm],
+.navbar .dm-toggle,
+.navbar .darkmodeicon,
+.navbar .lightmodeicon,
+.navbar .edw-icon-Dark-mode,
+.navbar .edw-icon-Light-mode,
+.navbar a.dm-toggle {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide edit mode toggle in topbar for this page only */
+.navbar .editingmode,
+.navbar .editmode,
+.navbar [data-key="editmode"],
+.navbar .editmode-switch,
+.navbar .editmode-toggle,
+.navbar a[href*="editmode"],
+.navbar a[href*="edit=on"],
+.navbar a[href*="edit=off"],
+.navbar .usermenu .editmode,
+.navbar #usernavigation .editmode,
+.navbar .navbar-nav .editmode {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide all user menu dropdown items except logout */
+.navbar #user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .usermenu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar [data-region="usermenu"] .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .dropdown-menu#user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .carousel-item .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #usermenu-carousel .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #user-action-menu a.dropdown-item:not([href*="logout"]):not([href*="logout.php"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Show logout button */
+.navbar #user-action-menu .dropdown-item[href*="logout"],
+.navbar #user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .usermenu .dropdown-item[href*="logout"],
+.navbar .usermenu .dropdown-item[href*="logout.php"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout.php"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .carousel-item .dropdown-item[href*="logout"],
+.navbar .carousel-item .dropdown-item[href*="logout.php"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout.php"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    margin: 0.25rem 0 !important;
+    padding: 0.5rem 1rem !important;
+    pointer-events: auto !important;
+}
+
+/* Hide all dividers in user menu (they're not needed if only logout is visible) */
+.navbar #user-action-menu .dropdown-divider,
+.navbar .usermenu .dropdown-divider,
+.navbar [data-region="usermenu"] .dropdown-divider {
+    display: none !important;
+}
+
+/* Hide submenu navigation links (carousel navigation) */
+.navbar #user-action-menu .carousel-navigation-link,
+.navbar .usermenu .carousel-navigation-link {
+    display: none !important;
+}
+
 /* Teacher Course View Wrapper */
 .teacher-course-view-wrapper {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -3120,6 +3254,259 @@ echo $OUTPUT->header();
     border-color: #059669 !important;
 }
 
+/* Grade Cards - Different colors for each grade (1-12) */
+/* Grade 1 - Red */
+.course-card[data-course-name*="Grade 1" i] .course-card-icon,
+.course-card[data-course-name*="grade 1" i] .course-card-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+.course-card[data-course-name*="Grade 1" i],
+.course-card[data-course-name*="grade 1" i] {
+    border-color: #fecaca;
+}
+.course-card[data-course-name*="Grade 1" i].checked,
+.course-card[data-course-name*="grade 1" i].checked {
+    border: 3px solid #dc2626;
+    background: #fef2f2;
+}
+.course-card[data-course-name*="Grade 1" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 1" i].checked .course-card-checkbox {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+
+/* Grade 2 - Orange */
+.course-card[data-course-name*="Grade 2" i] .course-card-icon,
+.course-card[data-course-name*="grade 2" i] .course-card-icon {
+    background: #fed7aa;
+    color: #ea580c;
+}
+.course-card[data-course-name*="Grade 2" i],
+.course-card[data-course-name*="grade 2" i] {
+    border-color: #fdba74;
+}
+.course-card[data-course-name*="Grade 2" i].checked,
+.course-card[data-course-name*="grade 2" i].checked {
+    border: 3px solid #ea580c;
+    background: #fff7ed;
+}
+.course-card[data-course-name*="Grade 2" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 2" i].checked .course-card-checkbox {
+    background: #ea580c !important;
+    border-color: #ea580c !important;
+}
+
+/* Grade 3 - Amber */
+.course-card[data-course-name*="Grade 3" i] .course-card-icon,
+.course-card[data-course-name*="grade 3" i] .course-card-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+.course-card[data-course-name*="Grade 3" i],
+.course-card[data-course-name*="grade 3" i] {
+    border-color: #fde68a;
+}
+.course-card[data-course-name*="Grade 3" i].checked,
+.course-card[data-course-name*="grade 3" i].checked {
+    border: 3px solid #d97706;
+    background: #fffbeb;
+}
+.course-card[data-course-name*="Grade 3" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 3" i].checked .course-card-checkbox {
+    background: #d97706 !important;
+    border-color: #d97706 !important;
+}
+
+/* Grade 4 - Yellow */
+.course-card[data-course-name*="Grade 4" i] .course-card-icon,
+.course-card[data-course-name*="grade 4" i] .course-card-icon {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+.course-card[data-course-name*="Grade 4" i],
+.course-card[data-course-name*="grade 4" i] {
+    border-color: #fde047;
+}
+.course-card[data-course-name*="Grade 4" i].checked,
+.course-card[data-course-name*="grade 4" i].checked {
+    border: 3px solid #ca8a04;
+    background: #fefce8;
+}
+.course-card[data-course-name*="Grade 4" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 4" i].checked .course-card-checkbox {
+    background: #ca8a04 !important;
+    border-color: #ca8a04 !important;
+}
+
+/* Grade 5 - Lime */
+.course-card[data-course-name*="Grade 5" i] .course-card-icon,
+.course-card[data-course-name*="grade 5" i] .course-card-icon {
+    background: #ecfccb;
+    color: #65a30d;
+}
+.course-card[data-course-name*="Grade 5" i],
+.course-card[data-course-name*="grade 5" i] {
+    border-color: #d9f99d;
+}
+.course-card[data-course-name*="Grade 5" i].checked,
+.course-card[data-course-name*="grade 5" i].checked {
+    border: 3px solid #65a30d;
+    background: #f7fee7;
+}
+.course-card[data-course-name*="Grade 5" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 5" i].checked .course-card-checkbox {
+    background: #65a30d !important;
+    border-color: #65a30d !important;
+}
+
+/* Grade 6 - Green */
+.course-card[data-course-name*="Grade 6" i] .course-card-icon,
+.course-card[data-course-name*="grade 6" i] .course-card-icon {
+    background: #d1fae5;
+    color: #059669;
+}
+.course-card[data-course-name*="Grade 6" i],
+.course-card[data-course-name*="grade 6" i] {
+    border-color: #a7f3d0;
+}
+.course-card[data-course-name*="Grade 6" i].checked,
+.course-card[data-course-name*="grade 6" i].checked {
+    border: 3px solid #059669;
+    background: #ecfdf5;
+}
+.course-card[data-course-name*="Grade 6" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 6" i].checked .course-card-checkbox {
+    background: #059669 !important;
+    border-color: #059669 !important;
+}
+
+/* Grade 7 - Teal */
+.course-card[data-course-name*="Grade 7" i] .course-card-icon,
+.course-card[data-course-name*="grade 7" i] .course-card-icon {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+.course-card[data-course-name*="Grade 7" i],
+.course-card[data-course-name*="grade 7" i] {
+    border-color: #99f6e4;
+}
+.course-card[data-course-name*="Grade 7" i].checked,
+.course-card[data-course-name*="grade 7" i].checked {
+    border: 3px solid #0d9488;
+    background: #f0fdfa;
+}
+.course-card[data-course-name*="Grade 7" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 7" i].checked .course-card-checkbox {
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+}
+
+/* Grade 8 - Cyan */
+.course-card[data-course-name*="Grade 8" i] .course-card-icon,
+.course-card[data-course-name*="grade 8" i] .course-card-icon {
+    background: #cffafe;
+    color: #0891b2;
+}
+.course-card[data-course-name*="Grade 8" i],
+.course-card[data-course-name*="grade 8" i] {
+    border-color: #a5f3fc;
+}
+.course-card[data-course-name*="Grade 8" i].checked,
+.course-card[data-course-name*="grade 8" i].checked {
+    border: 3px solid #0891b2;
+    background: #ecfeff;
+}
+.course-card[data-course-name*="Grade 8" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 8" i].checked .course-card-checkbox {
+    background: #0891b2 !important;
+    border-color: #0891b2 !important;
+}
+
+/* Grade 9 - Blue */
+.course-card[data-course-name*="Grade 9" i] .course-card-icon,
+.course-card[data-course-name*="grade 9" i] .course-card-icon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+.course-card[data-course-name*="Grade 9" i],
+.course-card[data-course-name*="grade 9" i] {
+    border-color: #bfdbfe;
+}
+.course-card[data-course-name*="Grade 9" i].checked,
+.course-card[data-course-name*="grade 9" i].checked {
+    border: 3px solid #2563eb;
+    background: #eff6ff;
+}
+.course-card[data-course-name*="Grade 9" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 9" i].checked .course-card-checkbox {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Grade 10 - Indigo */
+.course-card[data-course-name*="Grade 10" i] .course-card-icon,
+.course-card[data-course-name*="grade 10" i] .course-card-icon {
+    background: #e0e7ff;
+    color: #4f46e5;
+}
+.course-card[data-course-name*="Grade 10" i],
+.course-card[data-course-name*="grade 10" i] {
+    border-color: #c7d2fe;
+}
+.course-card[data-course-name*="Grade 10" i].checked,
+.course-card[data-course-name*="grade 10" i].checked {
+    border: 3px solid #4f46e5;
+    background: #eef2ff;
+}
+.course-card[data-course-name*="Grade 10" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 10" i].checked .course-card-checkbox {
+    background: #4f46e5 !important;
+    border-color: #4f46e5 !important;
+}
+
+/* Grade 11 - Purple */
+.course-card[data-course-name*="Grade 11" i] .course-card-icon,
+.course-card[data-course-name*="grade 11" i] .course-card-icon {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+.course-card[data-course-name*="Grade 11" i],
+.course-card[data-course-name*="grade 11" i] {
+    border-color: #ddd6fe;
+}
+.course-card[data-course-name*="Grade 11" i].checked,
+.course-card[data-course-name*="grade 11" i].checked {
+    border: 3px solid #9333ea;
+    background: #faf5ff;
+}
+.course-card[data-course-name*="Grade 11" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 11" i].checked .course-card-checkbox {
+    background: #9333ea !important;
+    border-color: #9333ea !important;
+}
+
+/* Grade 12 - Pink */
+.course-card[data-course-name*="Grade 12" i] .course-card-icon,
+.course-card[data-course-name*="grade 12" i] .course-card-icon {
+    background: #fce7f3;
+    color: #ec4899;
+}
+.course-card[data-course-name*="Grade 12" i],
+.course-card[data-course-name*="grade 12" i] {
+    border-color: #fbcfe8;
+}
+.course-card[data-course-name*="Grade 12" i].checked,
+.course-card[data-course-name*="grade 12" i].checked {
+    border: 3px solid #ec4899;
+    background: #fdf2f8;
+}
+.course-card[data-course-name*="Grade 12" i].checked .course-card-checkbox,
+.course-card[data-course-name*="grade 12" i].checked .course-card-checkbox {
+    background: #ec4899 !important;
+    border-color: #ec4899 !important;
+}
+
 .course-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -3323,6 +3710,105 @@ echo $OUTPUT->header();
 
 .category-card[data-category-name*="Level 3"].checked .category-card-checkbox::after,
 .category-card[data-category-name*="level 3"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* Foundation - Teal/Blue-Green Theme (similar to Level 1) */
+.category-card[data-category-name*="Foundation" i],
+.category-card[data-category-name*="foundation"] {
+    border-color: #14b8a6;
+}
+
+.category-card[data-category-name*="Foundation" i] .category-card-icon,
+.category-card[data-category-name*="foundation"] .category-card-icon {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+
+.category-card[data-category-name*="Foundation" i].checked,
+.category-card[data-category-name*="foundation"].checked {
+    border: 3px solid #14b8a6;
+    background: #f0fdfa;
+}
+
+.category-card[data-category-name*="Foundation" i].checked .category-card-checkbox,
+.category-card[data-category-name*="foundation"].checked .category-card-checkbox {
+    background: #14b8a6 !important;
+    border-color: #14b8a6 !important;
+}
+
+.category-card[data-category-name*="Foundation" i].checked .category-card-checkbox::after,
+.category-card[data-category-name*="foundation"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* Intermediate - Purple Theme (similar to Level 2) */
+.category-card[data-category-name*="Intermediate" i],
+.category-card[data-category-name*="intermediate"] {
+    border-color: #9333ea;
+}
+
+.category-card[data-category-name*="Intermediate" i] .category-card-icon,
+.category-card[data-category-name*="intermediate"] .category-card-icon {
+    background: #e9d5ff;
+    color: #9333ea;
+}
+
+.category-card[data-category-name*="Intermediate" i].checked,
+.category-card[data-category-name*="intermediate"].checked {
+    border: 3px solid #9333ea;
+    background: #faf5ff;
+}
+
+.category-card[data-category-name*="Intermediate" i].checked .category-card-checkbox,
+.category-card[data-category-name*="intermediate"].checked .category-card-checkbox {
+    background: #9333ea !important;
+    border-color: #9333ea !important;
+}
+
+.category-card[data-category-name*="Intermediate" i].checked .category-card-checkbox::after,
+.category-card[data-category-name*="intermediate"].checked .category-card-checkbox::after {
+    content: '\2713';
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* Advanced - Pink Theme (similar to Level 3) */
+.category-card[data-category-name*="Advanced" i],
+.category-card[data-category-name*="advanced"] {
+    border-color: #ec4899;
+}
+
+.category-card[data-category-name*="Advanced" i] .category-card-icon,
+.category-card[data-category-name*="advanced"] .category-card-icon {
+    background: #fce7f3;
+    color: #ec4899;
+}
+
+.category-card[data-category-name*="Advanced" i].checked,
+.category-card[data-category-name*="advanced"].checked {
+    border: 3px solid #ec4899;
+    background: #fdf2f8;
+}
+
+.category-card[data-category-name*="Advanced" i].checked .category-card-checkbox,
+.category-card[data-category-name*="advanced"].checked .category-card-checkbox {
+    background: #ec4899 !important;
+    border-color: #ec4899 !important;
+}
+
+.category-card[data-category-name*="Advanced" i].checked .category-card-checkbox::after,
+.category-card[data-category-name*="advanced"].checked .category-card-checkbox::after {
     content: '\2713';
     color: #ffffff;
     font-size: 0.875rem;
@@ -4925,6 +5411,10 @@ echo $OUTPUT->header();
                                 
                                 // Pass main categories data to JavaScript for tier card expansion (with courses)
                                 $main_categories_array = [];
+                                
+                                // Track which category names we've already added to avoid duplicates (case-insensitive)
+                                $added_category_names = [];
+                                
                                 foreach ($main_categories as $main_cat_id => $main_cat_info) {
                                     $courses_array = [];
                                     // Get courses for this category from category_tree
@@ -4936,12 +5426,118 @@ echo $OUTPUT->header();
                                             ];
                                         }
                                     }
-                                    $main_categories_array[] = [
-                                        'id' => (int)$main_cat_id,
-                                        'name' => $main_cat_info['name'],
-                                        'courses' => $courses_array
+                                    $category_name_lower = mb_strtolower(trim($main_cat_info['name']), 'UTF-8');
+                                    
+                                    // Only add if we haven't already added a category with this name (case-insensitive)
+                                    if (!in_array($category_name_lower, $added_category_names, true)) {
+                                        $main_categories_array[] = [
+                                            'id' => (int)$main_cat_id,
+                                            'name' => $main_cat_info['name'],
+                                            'courses' => $courses_array
+                                        ];
+                                        $added_category_names[] = $category_name_lower;
+                                    }
+                                }
+                                
+                                // Add Foundation, Intermediate, and Advanced categories (for different LMS instances)
+                                // Only add if they don't already exist in the database categories
+                                // Order: Foundation first, then Intermediate, then Advanced
+                                
+                                // Grade courses for Foundation (Grade 1-5)
+                                $foundation_grades = [];
+                                for ($grade = 1; $grade <= 5; $grade++) {
+                                    $foundation_grades[] = [
+                                        'id' => -100 - $grade, // Use negative IDs starting from -101
+                                        'name' => 'Grade ' . $grade
                                     ];
                                 }
+                                
+                                // Grade courses for Intermediate (Grade 6-8)
+                                $intermediate_grades = [];
+                                for ($grade = 6; $grade <= 8; $grade++) {
+                                    $intermediate_grades[] = [
+                                        'id' => -100 - $grade, // Use negative IDs starting from -106
+                                        'name' => 'Grade ' . $grade
+                                    ];
+                                }
+                                
+                                // Grade courses for Advanced (Grade 9-12)
+                                $advanced_grades = [];
+                                for ($grade = 9; $grade <= 12; $grade++) {
+                                    $advanced_grades[] = [
+                                        'id' => -100 - $grade, // Use negative IDs starting from -109
+                                        'name' => 'Grade ' . $grade
+                                    ];
+                                }
+                                
+                                $additional_categories = [
+                                    [
+                                        'id' => -1, // Use negative ID to avoid conflicts
+                                        'name' => 'Foundation',
+                                        'courses' => $foundation_grades,
+                                        'sort_order' => 1 // For sorting
+                                    ],
+                                    [
+                                        'id' => -2,
+                                        'name' => 'Intermediate',
+                                        'courses' => $intermediate_grades,
+                                        'sort_order' => 2
+                                    ],
+                                    [
+                                        'id' => -3,
+                                        'name' => 'Advanced',
+                                        'courses' => $advanced_grades,
+                                        'sort_order' => 3
+                                    ]
+                                ];
+                                
+                                // Only add additional categories if they don't already exist (case-insensitive check)
+                                foreach ($additional_categories as $additional_cat) {
+                                    $additional_name_lower = mb_strtolower(trim($additional_cat['name']), 'UTF-8');
+                                    // Check if this name already exists (case-insensitive)
+                                    $exists = false;
+                                    foreach ($added_category_names as $existing_name) {
+                                        if ($existing_name === $additional_name_lower) {
+                                            $exists = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!$exists) {
+                                        $main_categories_array[] = $additional_cat;
+                                        $added_category_names[] = $additional_name_lower;
+                                    }
+                                }
+                                
+                                // Sort categories: Foundation, Intermediate, Advanced first, then others alphabetically
+                                usort($main_categories_array, function($a, $b) {
+                                    $a_name_lower = mb_strtolower(trim($a['name']), 'UTF-8');
+                                    $b_name_lower = mb_strtolower(trim($b['name']), 'UTF-8');
+                                    
+                                    // Define priority order for Foundation, Intermediate, Advanced
+                                    $priority = [
+                                        'foundation' => 1,
+                                        'intermediate' => 2,
+                                        'advanced' => 3
+                                    ];
+                                    
+                                    $a_priority = isset($priority[$a_name_lower]) ? $priority[$a_name_lower] : 999;
+                                    $b_priority = isset($priority[$b_name_lower]) ? $priority[$b_name_lower] : 999;
+                                    
+                                    // If both have priority, sort by priority
+                                    if ($a_priority < 999 && $b_priority < 999) {
+                                        return $a_priority <=> $b_priority;
+                                    }
+                                    // If only one has priority, it comes first
+                                    if ($a_priority < 999) {
+                                        return -1;
+                                    }
+                                    if ($b_priority < 999) {
+                                        return 1;
+                                    }
+                                    // Otherwise, sort alphabetically
+                                    return strcmp($a['name'], $b['name']);
+                                });
+                                
                                 echo 'window.mainCategoriesData = ' . json_encode($main_categories_array, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';';
 
                                 echo '    const urlSearchParams = new URLSearchParams(window.location.search);';
