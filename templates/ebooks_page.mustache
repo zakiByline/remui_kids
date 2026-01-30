@@ -178,6 +178,233 @@
 .stat-number { font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
 .stat-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
 
+/* Filter Cards Section */
+.ebooks-filter-section {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-section-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.filter-cards-container {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.filter-card {
+    flex: 1;
+    min-width: 280px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.filter-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.filter-card.selected {
+    border-width: 2px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.filter-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    color: #64748b;
+}
+
+.filter-card.selected .filter-card-icon {
+    color: white;
+}
+
+.filter-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.filter-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px 0;
+}
+
+.filter-card.selected .filter-card-title {
+    color: #1e293b;
+}
+
+.filter-card-description {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+}
+
+.filter-card-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.filter-card-checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.filter-card input[type="checkbox"],
+.filter-card input[type="radio"] {
+    display: none;
+}
+
+.filter-card.selected .filter-card-checkbox {
+    background: currentColor;
+    border-color: currentColor;
+}
+
+.filter-card.selected .filter-card-checkbox::after {
+    content: '\2713';
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Category card colors */
+.filter-card.category-plan.selected {
+    border-color: #a855f7;
+    color: #a855f7;
+}
+
+.filter-card.category-plan.selected .filter-card-icon {
+    background: #a855f7;
+}
+
+.filter-card.category-plan.selected .filter-card-badge {
+    background: #f3e8ff;
+    color: #a855f7;
+}
+
+.filter-card.category-teach.selected {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.filter-card.category-teach.selected .filter-card-icon {
+    background: #10b981;
+}
+
+.filter-card.category-teach.selected .filter-card-badge {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.filter-card.category-assess.selected {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.filter-card.category-assess.selected .filter-card-icon {
+    background: #f59e0b;
+}
+
+.filter-card.category-assess.selected .filter-card-badge {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+/* Level card colors */
+.filter-card.level-1.selected {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filter-card.level-1.selected .filter-card-icon {
+    background: #3b82f6;
+}
+
+.filter-card.level-2.selected {
+    border-color: #a855f7;
+    color: #a855f7;
+}
+
+.filter-card.level-2.selected .filter-card-icon {
+    background: #a855f7;
+}
+
+.filter-card.level-3.selected {
+    border-color: #ec4899;
+    color: #ec4899;
+}
+
+.filter-card.level-3.selected .filter-card-icon {
+    background: #ec4899;
+}
+
+/* Subject card colors */
+.filter-card.subject-english.selected {
+    border-color: #ec4899;
+    color: #ec4899;
+}
+
+.filter-card.subject-english.selected .filter-card-icon {
+    background: #ec4899;
+}
+
+.filter-card.subject-maths.selected {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filter-card.subject-maths.selected .filter-card-icon {
+    background: #3b82f6;
+}
+
+.filter-card.subject-science.selected {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.filter-card.subject-science.selected .filter-card-icon {
+    background: #10b981;
+}
+
 /* E-book Cards Grid */
 .ebooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
 
@@ -322,6 +549,22 @@
     .ebook-title {
         font-size: 1.2rem;
     }
+    
+    .ebooks-filter-section {
+        padding: 20px;
+    }
+    
+    .filter-cards-container {
+        flex-direction: column;
+    }
+    
+    .filter-card {
+        min-width: 100%;
+    }
+    
+    .filter-section-header {
+        font-size: 16px;
+    }
 }
 </style>
 
@@ -410,6 +653,136 @@
     </div>
 </div>
 
+<!-- Filter Cards Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ebooks-filter-section">
+            <!-- SELECT CATEGORY (Single Selection) -->
+            <h3 class="filter-section-header">1 SELECT CATEGORY</h3>
+            <div class="filter-cards-container" id="categoryFilterCards">
+                <label class="filter-card category-plan" data-category="plan">
+                    <input type="radio" name="ebook_category" value="plan" class="filter-category-input">
+                    <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
+                        <i class="fa fa-lightbulb-o"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">PLAN</h4>
+                        <p class="filter-card-description">Organize your lesson plans and curriculum to create engaging educational content.</p>
+                        <span class="filter-card-badge" style="background: #f3e8ff; color: #a855f7;">{{category_plan_count}} resources</span>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card category-teach" data-category="teach">
+                    <input type="radio" name="ebook_category" value="teach" class="filter-category-input">
+                    <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
+                        <i class="fa fa-desktop"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">TEACH</h4>
+                        <p class="filter-card-description">Deliver lessons and share activities that help students learn confidently.</p>
+                        <span class="filter-card-badge" style="background: #d1fae5; color: #10b981;">{{category_teach_count}} resources</span>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card category-assess" data-category="assess">
+                    <input type="radio" name="ebook_category" value="assess" class="filter-category-input">
+                    <div class="filter-card-icon" style="background: #fef3c7; color: #f59e0b;">
+                        <i class="fa fa-clipboard-check"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">ASSESS</h4>
+                        <p class="filter-card-description">Manage assignments and quizzes to track progress and provide feedback.</p>
+                        <span class="filter-card-badge" style="background: #fef3c7; color: #f59e0b;">{{category_assess_count}} resources</span>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+            </div>
+
+            <!-- SELECT LEVELS (Multiple Selection) -->
+            <h3 class="filter-section-header">2 SELECT LEVELS (multiple)</h3>
+            <div class="filter-cards-container" id="levelFilterCards">
+                <label class="filter-card level-1" data-level="1">
+                    <input type="checkbox" name="ebook_levels[]" value="1" class="filter-level-input">
+                    <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                        <i class="fa fa-smile-o"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">KG - Level 1</h4>
+                        <p class="filter-card-description">Foundation skills and early learning concepts</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card level-2" data-level="2">
+                    <input type="checkbox" name="ebook_levels[]" value="2" class="filter-level-input">
+                    <div class="filter-card-icon" style="background: #f3e8ff; color: #a855f7;">
+                        <i class="fa fa-smile-o"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">KG - Level 2</h4>
+                        <p class="filter-card-description">Building on basics with new challenges</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card level-3" data-level="3">
+                    <input type="checkbox" name="ebook_levels[]" value="3" class="filter-level-input">
+                    <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">KG - Level 3</h4>
+                        <p class="filter-card-description">Advanced concepts and school readiness</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+            </div>
+
+            <!-- SELECT SUBJECTS (Multiple Selection) -->
+            <h3 class="filter-section-header">3 SELECT SUBJECTS (multiple)</h3>
+            <div class="filter-cards-container" id="subjectFilterCards">
+                <label class="filter-card subject-english" data-subject="english">
+                    <input type="checkbox" name="ebook_subjects[]" value="english" class="filter-subject-input">
+                    <div class="filter-card-icon" style="background: #fce7f3; color: #ec4899;">
+                        <i class="fa fa-book"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">English</h4>
+                        <p class="filter-card-description">Reading, writing, phonics, and language arts</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card subject-maths" data-subject="maths">
+                    <input type="checkbox" name="ebook_subjects[]" value="maths" class="filter-subject-input">
+                    <div class="filter-card-icon" style="background: #dbeafe; color: #3b82f6;">
+                        <i class="fa fa-calculator"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">Maths</h4>
+                        <p class="filter-card-description">Numbers, counting, shapes, and problem solving</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+                
+                <label class="filter-card subject-science" data-subject="science">
+                    <input type="checkbox" name="ebook_subjects[]" value="science" class="filter-subject-input">
+                    <div class="filter-card-icon" style="background: #d1fae5; color: #10b981;">
+                        <i class="fa fa-flask"></i>
+                    </div>
+                    <div class="filter-card-content">
+                        <h4 class="filter-card-title">Science</h4>
+                        <p class="filter-card-description">Nature, experiments, and exploring the world</p>
+                    </div>
+                    <div class="filter-card-checkbox"></div>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- E-books Content -->
 <div class="row">
     <div class="col-12">
@@ -462,5 +835,85 @@
         {{/has_ebooks}}
     </div>
 </div>
+
+<script>
+// Filter Cards Interaction
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle category filter cards (single selection - radio)
+    const categoryCards = document.querySelectorAll('#categoryFilterCards .filter-card');
+    categoryCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
+        
+        card.addEventListener('click', function(e) {
+            // Uncheck all category cards
+            categoryCards.forEach(c => {
+                c.classList.remove('selected');
+                const r = c.querySelector('input[type="radio"]');
+                if (r) r.checked = false;
+            });
+            
+            // Check clicked card
+            card.classList.add('selected');
+            if (radio) radio.checked = true;
+        });
+        
+        // Update card state based on radio state
+        if (radio && radio.checked) {
+            card.classList.add('selected');
+        }
+    });
+    
+    // Handle level filter cards (multiple selection - checkbox)
+    const levelCards = document.querySelectorAll('#levelFilterCards .filter-card');
+    levelCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        
+        card.addEventListener('click', function(e) {
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            }
+        });
+        
+        // Update card state based on checkbox state
+        if (checkbox && checkbox.checked) {
+            card.classList.add('selected');
+        }
+    });
+    
+    // Handle subject filter cards (multiple selection - checkbox)
+    const subjectCards = document.querySelectorAll('#subjectFilterCards .filter-card');
+    subjectCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        
+        card.addEventListener('click', function(e) {
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            }
+        });
+        
+        // Update card state based on checkbox state
+        if (checkbox && checkbox.checked) {
+            card.classList.add('selected');
+        }
+    });
+    
+    // Prevent label from triggering input twice
+    document.querySelectorAll('.filter-card input').forEach(input => {
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+});
+</script>
 
 {{/custom_ebooks}}

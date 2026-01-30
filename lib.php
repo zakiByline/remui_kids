@@ -168,12 +168,112 @@ function theme_remui_kids_render_parent_dashboard(): void {
 }
 
 /**
+ * Redirect teachers to Resources page after login
+ *
+ * @param moodle_page $page
+ */
+function theme_remui_kids_maybe_redirect_teacher(moodle_page $page): void {
+    global $CFG, $USER, $DB;
+
+    if (CLI_SCRIPT || AJAX_SCRIPT) {
+        return;
+    }
+
+    if (!isloggedin() || isguestuser()) {
+        return;
+    }
+
+    // Don't redirect admins
+    if (is_siteadmin()) {
+        return;
+    }
+
+    // Check if user is a teacher (in course context or system context)
+    $isteacher = false;
+    $teacherroles = $DB->get_records_select('role', "shortname IN ('editingteacher','teacher','manager')");
+    $roleids = array_keys($teacherroles);
+
+    if (!empty($roleids)) {
+        $systemcontext = context_system::instance();
+        
+        // Check system context first
+        list($insql, $params) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED, 'r');
+        $params['userid'] = $USER->id;
+        $params['systemcontextid'] = $systemcontext->id;
+        
+        $has_system_role = $DB->record_exists_sql(
+            "SELECT ra.id
+             FROM {role_assignments} ra
+             WHERE ra.userid = :userid 
+             AND ra.contextid = :systemcontextid 
+             AND ra.roleid {$insql}",
+            $params
+        );
+        
+        if ($has_system_role) {
+            $isteacher = true;
+        } else {
+            // Check course context
+            $params['ctxlevel'] = CONTEXT_COURSE;
+            $teacher_courses = $DB->get_records_sql(
+                "SELECT DISTINCT ctx.instanceid as courseid
+                 FROM {role_assignments} ra
+                 JOIN {context} ctx ON ra.contextid = ctx.id
+                 WHERE ra.userid = :userid AND ctx.contextlevel = :ctxlevel AND ra.roleid {$insql}
+                 LIMIT 1",
+                $params
+            );
+
+            if (!empty($teacher_courses)) {
+                $isteacher = true;
+            }
+        }
+    }
+
+    if (!$isteacher) {
+        return;
+    }
+
+    $path = $page->url->get_path();
+    $fullurl = $page->url->out(false);
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $sitepath = trim(parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '', '/');
+    $baseprefix = $sitepath === '' ? '' : '/' . $sitepath;
+
+    // Check if user is accessing /my/ or home page
+    $myregex = '#^' . preg_quote($baseprefix . '/my', '#') . '(/index\.php)?$#';
+    $rootregex = $baseprefix === ''
+        ? '#^/(index\.php)?$#'
+        : '#^' . preg_quote($baseprefix, '#') . '(/index\.php)?$#';
+
+    // Do not interfere if already on teacher pages, login, logout, or admin pages
+    if (preg_match('#/theme/remui_kids/teacher/#', $path) || 
+        preg_match('#/theme/remui_kids/teacher/#', $script) ||
+        preg_match('#/login/#', $path) ||
+        preg_match('#/logout/#', $path) ||
+        preg_match('#/admin/#', $path) ||
+        preg_match('#/theme/remui_kids/admin/#', $path) ||
+        stripos($fullurl, '/theme/remui_kids/teacher/') !== false ||
+        stripos($fullurl, '/admin/') !== false) {
+        return;
+    }
+
+    // Redirect to Resources page if accessing /my/ or home
+    if (preg_match($myregex, $path) || preg_match($rootregex, $path)) {
+        redirect(new moodle_url('/theme/remui_kids/teacher/view_course.php'));
+    }
+}
+
+/**
  * Inject additional CSS and JS into admin pages
  *
  * @param theme_config $theme The theme config object.
  */
 function theme_remui_kids_page_init($page) {
     global $PAGE, $OUTPUT, $USER, $CFG;
+    
+    // Redirect teachers to Resources page after login
+    theme_remui_kids_maybe_redirect_teacher($page);
     
     // ========================================
     // THEME VALIDATION - Fix invalid theme references
@@ -441,6 +541,7 @@ function theme_remui_kids_before_standard_html_head($page = null, $output = null
 function theme_remui_kids_before_http_headers() {
     global $PAGE;
     theme_remui_kids_maybe_redirect_parent($PAGE);
+    theme_remui_kids_maybe_redirect_teacher($PAGE);
 }
 
 /**
@@ -7366,6 +7467,102 @@ function theme_remui_kids_get_teacher_profile_data() {
             'total_students_count' => 0
         ];
     }
+}
+
+/**
+ * Get the main (top-level) category for the provided course category ID.
+ *
+ * @param int|null $categoryid
+ * @return \stdClass|null
+ */
+function theme_remui_kids_get_main_course_category($categoryid) {
+    global $DB;
+
+    if (empty($categoryid)) {
+        return null;
+    }
+
+    $currentcat = $DB->get_record('course_categories', ['id' => $categoryid], 'id, parent, name', IGNORE_MISSING);
+    if (!$currentcat) {
+        return null;
+    }
+
+    while ($currentcat && $currentcat->parent != 0) {
+        $parentcat = $DB->get_record('course_categories', ['id' => $currentcat->parent], 'id, parent, name', IGNORE_MISSING);
+        if (!$parentcat) {
+            break;
+        }
+        $currentcat = $parentcat;
+    }
+
+    return $currentcat;
+}
+
+/**
+ * Return the teacher-facing categories (main categories plus matching courses) used on the dashboard.
+ *
+ * @return array
+ */
+function theme_remui_kids_get_teacher_resource_categories() {
+    global $USER, $DB;
+
+    $courses = enrol_get_all_users_courses($USER->id, true);
+    if (empty($courses)) {
+        return [];
+    }
+
+    $categorymap = [];
+
+    foreach ($courses as $course) {
+        if (empty($course->category) || $course->id <= 1 || empty($course->visible)) {
+            continue;
+        }
+
+        $hasHiddenSections = $DB->record_exists_select(
+            'course_sections',
+            'course = :course AND section > 0 AND visible = 0',
+            ['course' => $course->id]
+        );
+        if (!$hasHiddenSections) {
+            continue;
+        }
+
+        $maincategory = theme_remui_kids_get_main_course_category($course->category);
+        if (!$maincategory) {
+            continue;
+        }
+
+        $maincatid = $maincategory->id;
+        if (!isset($categorymap[$maincatid])) {
+            $categorymap[$maincatid] = [
+                'id' => $maincatid,
+                'name' => format_string($maincategory->name),
+                'courses' => []
+            ];
+        }
+
+        $categorymap[$maincatid]['courses'][$course->id] = [
+            'id' => $course->id,
+            'name' => format_string($course->fullname),
+            'shortname' => format_string($course->shortname)
+        ];
+    }
+
+    foreach ($categorymap as &$category) {
+        uasort($category['courses'], function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+        $category['courses'] = array_values($category['courses']);
+        $category['courses_count'] = count($category['courses']);
+        $category['courses_json'] = json_encode($category['courses'], JSON_HEX_APOS | JSON_HEX_QUOT);
+    }
+    unset($category);
+
+    uasort($categorymap, function ($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+
+    return array_values($categorymap);
 }
 
 /**
