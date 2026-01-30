@@ -1,9 +1,12 @@
 name: Deploy to Production
 
+# Deploy when code is pushed to production (or prod_* branches).
+# Push from your local machine or CI—do not push from the server (GitHub auth will fail).
 on:
   push:
     branches:
       - production
+      - 'prod_*'
 
 jobs:
   deploy:
@@ -20,9 +23,13 @@ jobs:
           ssh-keyscan -p ${{ secrets.PROD_PORT }} -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy theme
+        env:
+          BRANCH: ${{ github.ref_name }}
         run: |
-          ssh -p ${{ secrets.PROD_PORT }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << 'EOF'
+          ssh -p ${{ secrets.PROD_PORT }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << EOF
             cd /home/kodeit/public_html/kg.kodeit.digital/theme/remui_kids
-            git pull origin production
+            git fetch origin
+            git checkout $BRANCH
+            git pull origin $BRANCH
             php ../../admin/cli/purge_caches.php
           EOF
