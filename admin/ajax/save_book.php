@@ -19,6 +19,7 @@ if (!is_siteadmin()) {
     exit;
 }
 
+
 // Get form data
 $book_id = optional_param('book_id', 0, PARAM_INT);
 $level = required_param('level', PARAM_TEXT);
