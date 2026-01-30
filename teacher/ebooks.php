@@ -2079,6 +2079,96 @@ body {
         font-size: 16px;
     }
 }
+
+/* Hide notification and message icons in topbar for this page only */
+.navbar [data-region="notifications"],
+.navbar .popover-region-notifications,
+.navbar [data-region="notifications-popover"],
+.navbar .nav-item[data-region="notifications"],
+.navbar .notification-area,
+.navbar [data-region="messages"],
+.navbar .popover-region-messages,
+.navbar [data-region="messages-popover"],
+.navbar .nav-item[data-region="messages"],
+.navbar .message-area,
+.navbar .popover-region,
+.navbar #nav-notification-popover-container,
+.navbar #nav-message-popover-container,
+.navbar .popover-region-container[data-region="notifications"],
+.navbar .popover-region-container[data-region="messages"],
+.navbar .nav-link[data-toggle="popover"][data-region="notifications"],
+.navbar .nav-link[data-toggle="popover"][data-region="messages"],
+.navbar a[href*="message"],
+.navbar a[href*="notification"],
+.navbar .icon-bell,
+.navbar .fa-bell,
+.navbar .icon-envelope,
+.navbar .fa-envelope,
+.navbar .edw-icon-Notification,
+.navbar .edw-icon-Message {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide all user menu dropdown items except logout */
+.navbar #user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .usermenu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar [data-region="usermenu"] .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .dropdown-menu#user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .carousel-item .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #usermenu-carousel .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #user-action-menu a.dropdown-item:not([href*="logout"]):not([href*="logout.php"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Show logout button */
+.navbar #user-action-menu .dropdown-item[href*="logout"],
+.navbar #user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .usermenu .dropdown-item[href*="logout"],
+.navbar .usermenu .dropdown-item[href*="logout.php"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout.php"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .carousel-item .dropdown-item[href*="logout"],
+.navbar .carousel-item .dropdown-item[href*="logout.php"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout.php"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    margin: 0.25rem 0 !important;
+    padding: 0.5rem 1rem !important;
+    pointer-events: auto !important;
+}
+
+/* Hide all dividers in user menu (they're not needed if only logout is visible) */
+.navbar #user-action-menu .dropdown-divider,
+.navbar .usermenu .dropdown-divider,
+.navbar [data-region="usermenu"] .dropdown-divider {
+    display: none !important;
+}
+
+/* Hide submenu navigation links (carousel navigation) */
+.navbar #user-action-menu .carousel-navigation-link,
+.navbar .usermenu .carousel-navigation-link {
+    display: none !important;
+}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

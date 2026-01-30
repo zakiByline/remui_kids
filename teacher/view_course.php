@@ -3753,6 +3753,96 @@ echo $OUTPUT->header();
         max-width: 100%;
     }
 }
+
+/* Hide notification and message icons in topbar for this page only */
+.navbar [data-region="notifications"],
+.navbar .popover-region-notifications,
+.navbar [data-region="notifications-popover"],
+.navbar .nav-item[data-region="notifications"],
+.navbar .notification-area,
+.navbar [data-region="messages"],
+.navbar .popover-region-messages,
+.navbar [data-region="messages-popover"],
+.navbar .nav-item[data-region="messages"],
+.navbar .message-area,
+.navbar .popover-region,
+.navbar #nav-notification-popover-container,
+.navbar #nav-message-popover-container,
+.navbar .popover-region-container[data-region="notifications"],
+.navbar .popover-region-container[data-region="messages"],
+.navbar .nav-link[data-toggle="popover"][data-region="notifications"],
+.navbar .nav-link[data-toggle="popover"][data-region="messages"],
+.navbar a[href*="message"],
+.navbar a[href*="notification"],
+.navbar .icon-bell,
+.navbar .fa-bell,
+.navbar .icon-envelope,
+.navbar .fa-envelope,
+.navbar .edw-icon-Notification,
+.navbar .edw-icon-Message {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide all user menu dropdown items except logout */
+.navbar #user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .usermenu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar [data-region="usermenu"] .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .dropdown-menu#user-action-menu .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar .carousel-item .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #usermenu-carousel .dropdown-item:not([href*="logout"]):not([href*="logout.php"]),
+.navbar #user-action-menu a.dropdown-item:not([href*="logout"]):not([href*="logout.php"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Show logout button */
+.navbar #user-action-menu .dropdown-item[href*="logout"],
+.navbar #user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .usermenu .dropdown-item[href*="logout"],
+.navbar .usermenu .dropdown-item[href*="logout.php"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout"],
+.navbar [data-region="usermenu"] .dropdown-item[href*="logout.php"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout"],
+.navbar .dropdown-menu#user-action-menu .dropdown-item[href*="logout.php"],
+.navbar .carousel-item .dropdown-item[href*="logout"],
+.navbar .carousel-item .dropdown-item[href*="logout.php"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout"],
+.navbar #usermenu-carousel .dropdown-item[href*="logout.php"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    margin: 0.25rem 0 !important;
+    padding: 0.5rem 1rem !important;
+    pointer-events: auto !important;
+}
+
+/* Hide all dividers in user menu (they're not needed if only logout is visible) */
+.navbar #user-action-menu .dropdown-divider,
+.navbar .usermenu .dropdown-divider,
+.navbar [data-region="usermenu"] .dropdown-divider {
+    display: none !important;
+}
+
+/* Hide submenu navigation links (carousel navigation) */
+.navbar #user-action-menu .carousel-navigation-link,
+.navbar .usermenu .carousel-navigation-link {
+    display: none !important;
+}
 </style>
 
 <div class="teacher-course-view-wrapper">
@@ -3792,7 +3882,7 @@ echo $OUTPUT->header();
                                 <!-- Icon on Left -->
                                 <div class="tier-card-icon-section">
                                     <div class="tier-card-icon icon-all">
-                                        <i class="fa fa-th"></i>
+                        <i class="fa fa-th"></i>
                                     </div>
                                 </div>
                                 
@@ -5582,12 +5672,40 @@ function toggleFilterSection(element) {
 
 // Populate sections and folders filters based on selected courses
 function updateSectionsAndFoldersFilters() {
-    // Get all selected course IDs
+    // Get all selected course IDs from sidebar checkboxes
     const selectedCourseIds = [];
     document.querySelectorAll('#categoryFilters input[type="checkbox"][data-filter-type="course"]:checked').forEach(checkbox => {
         const courseId = checkbox.getAttribute('data-course-id');
         if (courseId) {
             selectedCourseIds.push(parseInt(courseId));
+        }
+    });
+    
+    // Also check for courses selected via tier cards (course cards with .checked class)
+    document.querySelectorAll('.course-card.checked').forEach(courseCard => {
+        const courseId = courseCard.getAttribute('data-course-id');
+        if (courseId) {
+            const courseIdInt = parseInt(courseId);
+            if (!selectedCourseIds.includes(courseIdInt)) {
+                selectedCourseIds.push(courseIdInt);
+            }
+        }
+        // Also check for all-course-ids attribute (for deduplicated courses)
+        const allCourseIdsAttr = courseCard.getAttribute('data-all-course-ids');
+        if (allCourseIdsAttr) {
+            try {
+                const allCourseIds = JSON.parse(allCourseIdsAttr);
+                if (Array.isArray(allCourseIds)) {
+                    allCourseIds.forEach(cid => {
+                        const cidInt = parseInt(cid);
+                        if (cidInt && !selectedCourseIds.includes(cidInt)) {
+                            selectedCourseIds.push(cidInt);
+                        }
+                    });
+                }
+            } catch (e) {
+                // Ignore JSON parse errors
+            }
         }
     });
     
@@ -5640,7 +5758,7 @@ function updateSectionsAndFoldersFilters() {
     // Keep it visible but disabled when no subsections are selected
     if (foldersFilterSelect) {
         if (selectedSubsections.length > 0) {
-            foldersFilterSelect.disabled = false;
+        foldersFilterSelect.disabled = false;
             if (foldersFilterSection) {
                 foldersFilterSection.style.display = 'block';
             }
@@ -5992,47 +6110,47 @@ function updateSectionsAndFoldersFilters() {
             });
         
             // Also collect from resource cards - only from selected subsections
-            allCards.forEach(card => {
-                const cardCourseId = parseInt(card.getAttribute('data-course-id')) || 0;
-                if (selectedCourseIds.includes(cardCourseId)) {
-                    const cardSection = decodeHtmlEntities(card.getAttribute('data-section') || '');
-                    const cardFolder = decodeHtmlEntities(card.getAttribute('data-folder-name') || '');
-                    
+        allCards.forEach(card => {
+            const cardCourseId = parseInt(card.getAttribute('data-course-id')) || 0;
+            if (selectedCourseIds.includes(cardCourseId)) {
+                const cardSection = decodeHtmlEntities(card.getAttribute('data-section') || '');
+                const cardFolder = decodeHtmlEntities(card.getAttribute('data-folder-name') || '');
+                
                     // Add folder only if it matches one of the selected subsections
-                    if (cardFolder && cardFolder.trim() !== '') {
+                if (cardFolder && cardFolder.trim() !== '') {
                         if (cardSection && selectedSubsectionsFromCheckbox.includes(cardSection)) {
-                            foldersSet.add(cardFolder);
-                        }
+                        foldersSet.add(cardFolder);
                     }
                 }
-            });
-            
-            // Sort folders and populate select
-            const foldersArray = Array.from(foldersSet).sort();
-            
-            // Add folders without emoji
-            foldersArray.forEach(folder => {
-                const option = document.createElement('option');
-                option.value = folder;
-                option.textContent = folder;
-                foldersFilterSelect.appendChild(option);
-            });
-            
-            // Show message if no folders found
-            if (foldersArray.length === 0) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'No folders found...';
-                option.disabled = true;
-                foldersFilterSelect.appendChild(option);
             }
-            
-            // Restore the selected value if it still exists in the new options
-            if (currentSelectedValue && Array.from(foldersFilterSelect.options).some(opt => opt.value === currentSelectedValue)) {
-                foldersFilterSelect.value = currentSelectedValue;
-            } else {
-                // If the previously selected value no longer exists, reset to "All Folders"
-                foldersFilterSelect.value = '';
+        });
+        
+        // Sort folders and populate select
+        const foldersArray = Array.from(foldersSet).sort();
+        
+        // Add folders without emoji
+        foldersArray.forEach(folder => {
+            const option = document.createElement('option');
+            option.value = folder;
+            option.textContent = folder;
+            foldersFilterSelect.appendChild(option);
+        });
+        
+        // Show message if no folders found
+            if (foldersArray.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No folders found...';
+            option.disabled = true;
+            foldersFilterSelect.appendChild(option);
+        }
+        
+        // Restore the selected value if it still exists in the new options
+        if (currentSelectedValue && Array.from(foldersFilterSelect.options).some(opt => opt.value === currentSelectedValue)) {
+            foldersFilterSelect.value = currentSelectedValue;
+        } else {
+            // If the previously selected value no longer exists, reset to "All Folders"
+            foldersFilterSelect.value = '';
             }
         }
     }
@@ -6309,9 +6427,9 @@ function filterResources() {
         });
     } else {
         // Fallback to select dropdown if no checkboxes are checked
-        const sectionSelect = document.getElementById('sectionsFilterSelect');
-        if (sectionSelect && sectionSelect.value) {
-            selectedSections.push(decodeHtmlEntities(sectionSelect.value));
+    const sectionSelect = document.getElementById('sectionsFilterSelect');
+    if (sectionSelect && sectionSelect.value) {
+        selectedSections.push(decodeHtmlEntities(sectionSelect.value));
         }
     }
     
@@ -6965,7 +7083,7 @@ function clearSearch() {
 function resetAllFilters() {
     document.getElementById('resourceSearch').value = '';
     
-    // Uncheck all filter checkboxes
+    // Uncheck all filter checkboxes (but NOT tier card selections - those are navigation, not filters)
     document.querySelectorAll('#resourceTypeFilters input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
     });
@@ -6988,8 +7106,14 @@ function resetAllFilters() {
         foldersFilterSelect.value = '';
     }
     
-    // Update sections and folders filters (will hide them if no courses selected)
-    updateSectionsAndFoldersFilters();
+    // Update sections and folders filters
+    // This will check tier card selections, so sections filter will remain visible if tier cards have courses selected
+    // Use a small timeout to ensure tier card state is properly detected
+    setTimeout(function() {
+        if (typeof updateSectionsAndFoldersFilters === 'function') {
+            updateSectionsAndFoldersFilters();
+        }
+    }, 50);
     
     // Reset to page 1
     currentPage = 1;
